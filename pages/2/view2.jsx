@@ -26,13 +26,13 @@ const view2 = () => {
         <p className="text-gray-600 mb-8 text-center sm:text-left">Para ti, que buscas un lugar para pasar un buen rato.</p>
 
         <div className="flex flex-wrap space-y-4 sm:space-y-0 sm:space-x-4 mb-8 justify-center sm:justify-start">
-          <button className="px-4 py-2 border border-[#EDE6D7] font-semibold text-[#2F4F4F] rounded-full">
+          <button className="w-full sm:w-auto px-4 py-2 border border-[#EDE6D7] font-semibold text-[#2F4F4F] rounded-full">
             Con accesibilidad
           </button>
-          <button className="px-4 py-2 border border-[#EDE6D7] font-semibold text-[#2F4F4F] rounded-full">
+          <button className="w-full sm:w-auto px-4 py-2 border border-[#EDE6D7] font-semibold text-[#2F4F4F] rounded-full">
             Más cercanos
           </button>
-          <button className="px-4 py-2 border border-[#EDE6D7] font-semibold text-[#2F4F4F] rounded-full">
+          <button className="w-full sm:w-auto px-4 py-2 border border-[#EDE6D7] font-semibold text-[#2F4F4F] rounded-full">
             Mejor valorados
           </button>
         </div>
