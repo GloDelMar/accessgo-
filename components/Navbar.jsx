@@ -1,18 +1,43 @@
-import React, { useState } from 'react'; 
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
 const Navbar = () => {
   const router = useRouter();
-  const [menuVisible, setMenuVisible] = useState(false);
+  const menuRef = useRef(null);  // Crear una referencia al menú
+  
+  // Declara el estado para manejar la visibilidad del menú
+  const [menuVisible, setMenuVisible] = useState(false); 
 
+  // Función para alternar la visibilidad del menú
   const toggleMenu = () => {
-    setMenuVisible((prev) => !prev);
+    setMenuVisible(!menuVisible);  // Cambia el estado de false a true y viceversa
   };
 
+  // Función para cerrar el menú
   const closeMenu = () => {
-    setMenuVisible(false);
+    setMenuVisible(false);  // Cierra el menú estableciendo el estado en false
   };
+
+  // useEffect para agregar un event listener al documento
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // Si el clic es fuera del menú, cerrar el menú
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        closeMenu();
+      }
+    };
+
+    // Agregar el listener de clics cuando el menú esté visible
+    if (menuVisible) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    // Remover el listener cuando el menú se cierre
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [menuVisible]);
 
   return (
     <header className="bg-white border-b shadow-md p-2">
@@ -56,19 +81,25 @@ const Navbar = () => {
               <img src="/menu.svg" alt="menú desplegable" />
             </button>
 
-            {menuVisible && ( 
-              <div className="absolute right-0 mt-2 w-48 bg-white text-gray-800 rounded shadow-lg">
-                <Link legacyBehavior href="/login" >
-                  <a className="block px-4 py-2 hover:bg-gray-100" onClick={closeMenu}>Iniciar Sesión</a>
-                </Link>
-                <Link legacyBehavior href="/voluntario11" >
-                  <a className="block px-4 py-2 hover:bg-gray-100" onClick={closeMenu}>Ser Voluntario</a>
-                </Link>
-                <Link legacyBehavior href="/donacion12">
-                  <a className="block px-4 py-2 hover:bg-gray-100" onClick={closeMenu}>Donar a la página</a>
-                </Link>
-              </div>
-            )}
+            {menuVisible && (
+        <div ref={menuRef} className="absolute right-0 mt-2 w-48 bg-white text-gray-800 rounded shadow-lg">
+          <Link legacyBehavior href="/login">
+            <a className="block px-4 py-2 hover:bg-gray-100" onClick={closeMenu}>Iniciar Sesión</a>
+          </Link>
+          <Link legacyBehavior href="/2/view2">
+            <a className="block px-4 py-2 hover:bg-gray-100" onClick={closeMenu}>Realizar una búsqueda</a>
+          </Link>
+          <Link legacyBehavior href="/voluntario11">
+            <a className="block px-4 py-2 hover:bg-gray-100" onClick={closeMenu}>Ser Voluntario</a>
+          </Link>
+          <Link legacyBehavior href="/donacion12">
+            <a className="block px-4 py-2 hover:bg-gray-100" onClick={closeMenu}>Donar a la página</a>
+          </Link>
+          <Link legacyBehavior href="/">
+            <a className="block px-4 py-2 hover:bg-gray-100" onClick={closeMenu}>Cerrar Sesión</a>
+          </Link>
+        </div>
+      )}
           </div>
         </div>
       </nav>
