@@ -12,7 +12,7 @@ const LoginPage = () => {
         </div>
 
         <div className='flex flex-col items-center justify-center w-full'>
-          <Link legacyBehavior href="/7/vistaPerfilUsuario"> 
+          <Link legacyBehavior href="/5/autentificacion"> 
             <a className='my-[40px] text-[#2F4F4F] font-bold'>¿Olvidaste tu contraseña?</a>
           </Link>
         </div>
