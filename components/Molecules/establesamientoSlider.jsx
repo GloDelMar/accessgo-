@@ -10,11 +10,13 @@ const EstablecimientoSlider = () => {
     <Carousel>
       {locales.map((local, index) => (
         <Link legacyBehavior key={index} href="/2/view2">
-          <a className="relative border rounded-md w-[90%] max-w-[215px] mx-auto h-[257px]">
+          <a className="relative border rounded-md w-[90%] max-w-[200px] mx-auto h-[251px] overflow-hidden">
+           
             <img 
               src={local.img} 
               alt={`Imagen de ${local.label}`} 
-              className="w-full h-full object-cover rounded-md"
+              className="w-full h-[251px] object-cover"
+            
             />
             <div className="absolute bottom-0 left-0 p-2 bg-gradient-to-t from-black to-transparent w-full text-white">
               <h4 className="text-[15px] font-bold">{local.label}</h4>
