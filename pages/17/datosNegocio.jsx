@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 
 const Header = () => (
   <header className="flex overflow-hidden flex-wrap gap-5 justify-between self-stretch px-10 py-3 w-full bg-white shadow-[0px_8px_32px_rgba(0,0,0,0.08)] max-md:px-5 max-md:max-w-full">
@@ -179,12 +180,11 @@ const BusinessForm = () => (
     <BusinessSchedule />
     <BusinessAddress />
     <BusinessPhotos />
-    <button
-      type="submit"
-      className="self-center px-16 py-3.5 mt-16 max-w-full text-lg font-semibold text-orange-100 whitespace-nowrap rounded-lg bg-slate-700 shadow-[0px_6px_28px_rgba(0,0,0,0.16)] w-[250px] max-md:px-5 max-md:mt-10"
-    >
-      Continuar
-    </button>
+    <Link legacyBehavior href="/21/view21"> 
+      <a className="self-center px-16 py-3.5 mt-16 max-w-full text-lg font-semibold text-orange-100 whitespace-nowrap rounded-lg bg-slate-700 shadow-[0px_6px_28px_rgba(0,0,0,0.16)] w-[250px] max-md:px-5 max-md:mt-10">
+        Continuar
+      </a>
+    </Link>
   </form>
 );
 
