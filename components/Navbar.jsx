@@ -4,36 +4,36 @@ import Link from 'next/link';
 
 const Navbar = () => {
   const router = useRouter();
-  const menuRef = useRef(null);  // Crear una referencia al menú
+  const menuRef = useRef(null); 
   
-  // Declara el estado para manejar la visibilidad del menú
+ 
   const [menuVisible, setMenuVisible] = useState(false); 
 
-  // Función para alternar la visibilidad del menú
+ 
   const toggleMenu = () => {
-    setMenuVisible(!menuVisible);  // Cambia el estado de false a true y viceversa
+    setMenuVisible(!menuVisible);  
   };
 
-  // Función para cerrar el menú
+ 
   const closeMenu = () => {
-    setMenuVisible(false);  // Cierra el menú estableciendo el estado en false
+    setMenuVisible(false);  
   };
 
-  // useEffect para agregar un event listener al documento
+ 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // Si el clic es fuera del menú, cerrar el menú
+      
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         closeMenu();
       }
     };
 
-    // Agregar el listener de clics cuando el menú esté visible
+   
     if (menuVisible) {
       document.addEventListener('mousedown', handleClickOutside);
     }
 
-    // Remover el listener cuando el menú se cierre
+   
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
