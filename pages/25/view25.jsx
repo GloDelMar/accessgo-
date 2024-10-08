@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useState } from 'react';
 
 const View25 = () => {
@@ -70,12 +71,14 @@ const View25 = () => {
             </div>
 
             <div>
+            <Link legacyBehavior href="/login" >
               <button
                 type="submit"
                 className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-full text-[#2F4F4F] bg-[#F0EAE0] hover:bg-[#E5DFD5] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#F0EAE0]"
               >
                 Inicia Sesion
               </button>
+            </Link>
             </div>
           </form>
         </div>
