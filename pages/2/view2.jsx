@@ -16,7 +16,7 @@ export const categories = [
   { name: 'Hoteles', rating: 5 },
   { name: 'Turismo', rating: 5 },
   { name: 'Espacios Comerciales', rating: 5 },
-] 
+]
 
 const view2 = () => {
   return (
