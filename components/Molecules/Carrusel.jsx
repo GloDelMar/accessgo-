@@ -6,7 +6,6 @@ const Carousel = ({ children }) => {
   const length = React.Children.count(children);
   const carouselRef = useRef();
 
-  // Clonamos el primer y el último elemento
   const clonedChildren = [
     React.cloneElement(children[length - 1]),
     ...children,
@@ -53,7 +52,7 @@ const Carousel = ({ children }) => {
     }
   };
 
-  // Función para deshabilitar deslizamiento táctil
+ 
   const handleTouchStart = (e) => {
     e.preventDefault();
   };
@@ -65,8 +64,8 @@ const Carousel = ({ children }) => {
   return (
     <div
       className="relative w-full overflow-hidden"
-      onTouchStart={handleTouchStart} // Desactiva el inicio de toques
-      onTouchMove={handleTouchMove}   // Desactiva el movimiento táctil
+      onTouchStart={handleTouchStart} 
+      onTouchMove={handleTouchMove}  
     >
       <div
         ref={carouselRef}
