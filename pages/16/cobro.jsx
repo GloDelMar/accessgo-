@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Link from "next/link";
 
 const Header = () => (
   <header className="flex overflow-hidden gap-5 justify-between self-stretch px-6 py-3 w-full text-xs font-semibold text-white whitespace-nowrap bg-white shadow-[0px_8px_32px_rgba(0,0,0,0.08)]">
@@ -119,12 +120,12 @@ const PaymentForm = () => {
         onChange={handleInputChange}
         className="px-8 pt-2 pb-5 mt-10 max-w-full text-center whitespace-nowrap border-b border-black shadow-[0px_4px_4px_rgba(0,0,0,0.25)] w-[239px]"
       />
-      <button
+      <Link legacyBehavior href="/22/sesionPremium"><button
         type="submit"
         className="self-center mt-8 px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
       >
         Pagar
-      </button>
+      </button></Link>
     </form>
   );
 };
