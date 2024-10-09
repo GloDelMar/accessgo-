@@ -1,26 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
 
-const Header = () => (
-  <header className="flex overflow-hidden flex-wrap gap-5 justify-between self-stretch px-10 py-3 w-full bg-white shadow-[0px_8px_32px_rgba(0,0,0,0.08)] max-md:px-5 max-md:max-w-full">
-    <div className="flex gap-1.5 my-auto text-sm font-medium text-green-600">
-      <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/d28aefeba461c1862228836d6e11f7884983ed8cb5dc869829b5b909d656ab38?placeholderIfAbsent=true&apiKey=94b7d1b7a1ff491ea399fe140abd93c0" alt="" className="object-contain shrink-0 w-10 aspect-[1.33]" />
-      <div className="my-auto">
-        <span className="font-extrabold text-yellow-500">A</span>
-        <span className="font-extrabold">ccess</span>
-        <span className="font-extrabold text-slate-700">G</span>
-        <span className="font-extrabold">o</span>
-      </div>
-    </div>
-    <nav className="flex gap-3.5 text-xs font-semibold text-white whitespace-nowrap">
-      <button className="flex gap-3 items-center py-1 pr-2 pl-5 my-auto rounded-2xl bg-slate-700 min-h-[28px]">
-        <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/6f90f1c2279400d2bb1af1bb06f0d952eaf5612816f1734378cc728bc738ecf7?placeholderIfAbsent=true&apiKey=94b7d1b7a1ff491ea399fe140abd93c0" alt="" className="object-contain shrink-0 self-stretch my-auto w-5 aspect-square" />
-        <span className="self-stretch my-auto">¡Únete!</span>
-      </button>
-      <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/f2dc8d2c5604f18eed715acf3b05000739b04fcf0dc25823b9beda56836cb9d4?placeholderIfAbsent=true&apiKey=94b7d1b7a1ff491ea399fe140abd93c0" alt="User profile" className="object-contain shrink-0 w-10 rounded-none aspect-square" />
-    </nav>
-  </header>
-);
 
 const ProfilePhoto = () => (
   <section className="flex flex-col justify-end px-6 pt-10 pb-3.5 mt-10 max-w-full text-sm bg-white rounded-2xl border border-gray-100 border-solid shadow-lg w-[300px] max-md:pl-5">
@@ -180,18 +160,18 @@ const BusinessForm = () => (
     <BusinessSchedule />
     <BusinessAddress />
     <BusinessPhotos />
-    <Link legacyBehavior href="/21/view21"> 
-      <a className="self-center px-16 py-3.5 mt-16 max-w-full text-lg font-semibold text-orange-100 whitespace-nowrap rounded-lg bg-slate-700 shadow-[0px_6px_28px_rgba(0,0,0,0.16)] w-[250px] max-md:px-5 max-md:mt-10">
+   <div className="flex flex-row justify-center mt-4 space-x-4 md:space-x-[200px]" ><Link legacyBehavior href="/cardFree09"> 
+      <a className="w-[155px] h-[40px] bg-[#2F4F4F] text-white rounded-lg flex items-center justify-center">
         Continuar
       </a>
-    </Link>
+    </Link></div> 
   </form>
 );
 
 const View17 = () => {
   return (
     <main className="flex overflow-hidden flex-col items-center pb-28 bg-white max-w-[744px] max-md:pb-24">
-      <Header />
+   
       <section className="mt-10 text-2xl font-bold text-center text-slate-700 max-md:max-w-full">
         <h1 className="text-slate-700">¡Cuentanos sobre ustedes!</h1>
         <p className="text-xl text-slate-700 mt-4">
@@ -200,6 +180,7 @@ const View17 = () => {
       </section>
       <ProfilePhoto />
       <BusinessForm />
+     
     </main>
   );
 };
