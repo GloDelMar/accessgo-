@@ -1,39 +1,11 @@
 import React, { useState } from "react";
 import Link from "next/link";
 
-const Header = () => (
-  <header className="flex overflow-hidden gap-5 justify-between self-stretch px-6 py-3 w-full text-xs font-semibold text-white whitespace-nowrap bg-white shadow-[0px_8px_32px_rgba(0,0,0,0.08)]">
-    <img
-      loading="lazy"
-      src="https://cdn.builder.io/api/v1/image/assets/TEMP/5f6c57ac530e9aea0bcce56e8d6f6f0dfccaa63ed5b40b176571b072d009c450?placeholderIfAbsent=true&apiKey=94b7d1b7a1ff491ea399fe140abd93c0"
-      alt="Company logo"
-      className="object-contain shrink-0 my-auto aspect-[2.7] w-[81px]"
-    />
-    <div className="flex gap-5">
-      <div className="flex gap-3 items-center py-1 pr-2 pl-5 my-auto rounded-2xl bg-slate-700 min-h-[28px]">
-        <img
-          loading="lazy"
-          src="https://cdn.builder.io/api/v1/image/assets/TEMP/6f90f1c2279400d2bb1af1bb06f0d952eaf5612816f1734378cc728bc738ecf7?placeholderIfAbsent=true&apiKey=94b7d1b7a1ff491ea399fe140abd93c0"
-          alt=""
-          className="object-contain shrink-0 self-stretch my-auto w-5 aspect-square"
-        />
-        <span className="self-stretch my-auto">¡Únete!</span>
-      </div>
-      <img
-        loading="lazy"
-        src="https://cdn.builder.io/api/v1/image/assets/TEMP/9f4a1143553897deb07016ae8eaf6d7b170c228b2e103c0027ac4203ad0a0322?placeholderIfAbsent=true&apiKey=94b7d1b7a1ff491ea399fe140abd93c0"
-        alt="User profile"
-        className="object-contain shrink-0 w-10 rounded-none aspect-square"
-      />
-    </div>
-  </header>
-);
 
 const PlanOption = ({ type, price, isSelected, onSelect }) => (
   <div
-    className={`flex gap-5 justify-between px-7 py-3 mt-10 w-full text-center whitespace-nowrap bg-white rounded-xl border border-solid max-w-[249px] shadow-[0px_4px_4px_rgba(0,0,0,0.25)] cursor-pointer ${
-      isSelected ? "border-blue-500" : "border-black"
-    }`}
+    className={`flex gap-5 justify-between px-7 py-3 mt-10 w-full text-center whitespace-nowrap bg-white rounded-xl border border-solid max-w-[249px] shadow-[0px_4px_4px_rgba(0,0,0,0.25)] cursor-pointer ${isSelected ? "border-blue-500" : "border-black"
+      }`}
     onClick={onSelect}
   >
     <div className="self-start font-medium">{type}</div>
@@ -120,12 +92,7 @@ const PaymentForm = () => {
         onChange={handleInputChange}
         className="px-8 pt-2 pb-5 mt-10 max-w-full text-center whitespace-nowrap border-b border-black shadow-[0px_4px_4px_rgba(0,0,0,0.25)] w-[239px]"
       />
-      <Link legacyBehavior href="/22/sesionPremium"><button
-        type="submit"
-        className="self-center mt-8 px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-      >
-        Pagar
-      </button></Link>
+
     </form>
   );
 };
@@ -140,22 +107,34 @@ const View16 = () => {
   ];
 
   return (
-    <main className="flex overflow-hidden flex-col items-center pb-44 mx-auto w-full text-xl bg-white max-w-[480px] text-slate-700">
-      <Header />
+    <main className="flex overflow-hidden flex-col items-center pb-44 mx-auto w-full text-xl bg-white max-w-[480px] md:max-w-[700px] text-slate-700">
+
       <h1 className="mt-9 font-bold leading-3">¡Elige tu plan!</h1>
       <p className="mt-8 text-sm font-bold text-center">
         ¡Aqui puedes elegir el plan que te interese mas!
       </p>
-      {planOptions.map((plan, index) => (
-        <PlanOption
-          key={index}
-          type={plan.type}
-          price={plan.price}
-          isSelected={selectedPlan === index}
-          onSelect={() => setSelectedPlan(index)}
-        />
-      ))}
-      <PaymentForm />
+      <div className="flex flex-col space-x-[95px] md:flex-row">
+        <div className="flex flex-col mt-2 items-center">
+          {planOptions.map((plan, index) => (
+            <PlanOption
+              key={index}
+              type={plan.type}
+              price={plan.price}
+              isSelected={selectedPlan === index}
+              onSelect={() => setSelectedPlan(index)}
+            />
+          ))}</div>
+        <PaymentForm />
+      </div>
+      <div className="flex flex-row justify-center mt-5 space-x-4 md:space-x-[200px]">
+        <button className="w-[155px] h-[40px] bg-white border-2 rounded-lg">
+          <Link legacyBehavior href="/"><a>Cancelar</a></Link>
+        </button>
+        <button className="w-[155px] h-[40px] bg-[#2F4F4F] text-white rounded-lg flex items-center justify-center">
+          <Link legacyBehavior href="/22/sesionPremium"><a>Pagar</a></Link>
+        </button>
+      </div>
+
     </main>
   );
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import Link from 'next/link'; // Asegúrate de importar Link
+import Link from 'next/link'; 
 
 const PlanCard = ({ title, icon, features, buttonText, link }) => (
   <section className="flex flex-col items-start px-5 pt-7 pb-12 mt-10 w-full text-base bg-white rounded-2xl border border-gray-100 border-solid shadow-lg max-w-[328px] text-slate-700">
@@ -16,17 +16,19 @@ const PlanCard = ({ title, icon, features, buttonText, link }) => (
       ))}
     </ul>
     <Link legacyBehavior href={link}>
-      <button className="self-center px-6 py-3.5 mt-10 max-w-full text-xl font-semibold text-center text-white rounded-lg bg-slate-700 shadow-[0px_6px_28px_rgba(0,0,0,0.16)] w-[202px]">
-        {buttonText}
-      </button>
+      <div className="flex justify-center w-full mt-5">
+        <button className="w-[155px] h-[40px] bg-[#2F4F4F] text-white rounded-lg flex items-center justify-center">
+          {buttonText}
+        </button>
+      </div>
     </Link>
   </section>
 );
 
 const CancelButton = ({ cancelLink }) => (
   <Link legacyBehavior href={cancelLink}>
-    <button className="px-16 py-5 mt-10 w-full text-xl text-center whitespace-nowrap bg-white rounded-lg border border-gray-800 border-solid max-w-[250px] text-slate-700">
-      cancelar
+    <button className="w-[155px] h-[40px] bg-white border-2 rounded-lg mt-5">
+      Cancelar
     </button>
   </Link>
 );
@@ -61,22 +63,25 @@ const View15 = () => {
   ];
 
   return (
-    <main className="flex overflow-hidden flex-col items-center pb-44 mx-auto w-full bg-white max-w-[480px]">
+    <main className="flex overflow-hidden flex-col items-center pb-44 mx-auto w-full bg-white  md:w-full">
       <h1 className="mt-7 text-xl font-bold leading-3 text-slate-700">
         ¡ AccessoGo!
       </h1>
       <p className="mt-6 text-sm font-bold text-center text-gray-600">
         ¡Aqui puedes elegir el plan que te interese mas!
       </p>
+      <div className="flex flex-col items-center md:items-center  justify-center gap-16 mt-10 md:flex-row md:gap-12">
       {plans.map((plan, index) => (
         <PlanCard key={index} {...plan} />
-      ))}
+      ))} </div>
+
       <CancelButton cancelLink="/2/view2" /> 
       <style jsx>{`
         builder-component {
           max-width: none !important;
         }
       `}</style>
+     
     </main>
   );
 };
