@@ -160,7 +160,8 @@ const BusinessForm = () => (
     <BusinessSchedule />
     <BusinessAddress />
     <BusinessPhotos />
-   <div className="flex flex-row justify-center mt-4 space-x-4 md:space-x-[200px]" ><Link legacyBehavior href="/cardFree09"> 
+   <div className="flex flex-row justify-center mt-4 space-x-4 md:space-x-[200px]" >
+    <Link legacyBehavior href="/cardFree09"> 
       <a className="w-[155px] h-[40px] bg-[#2F4F4F] text-white rounded-lg flex items-center justify-center">
         Continuar
       </a>
