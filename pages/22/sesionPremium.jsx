@@ -1,25 +1,7 @@
 import React from 'react';
 
-const Header = () => {
-  return (
-    <header className="flex overflow-hidden flex-wrap gap-5 justify-between items-center pt-4 pr-20 pb-1 pl-10 w-full text-sm font-medium bg-white shadow-[0px_8px_32px_rgba(0,0,0,0.08)] max-md:px-5 max-md:max-w-full">
-      <div className="flex gap-1.5 self-stretch my-auto text-green-600">
-        <img loading="lazy" src="http://b.io/ext_10-" alt="" className="object-contain shrink-0 w-10 aspect-[1.33]" />
-        <div className="my-auto">
-          <span className="font-extrabold text-yellow-500">A</span>
-          <span className="font-extrabold">ccess</span>
-          <span className="font-extrabold text-slate-700">G</span>
-          <span className="font-extrabold">o</span>
-        </div>
-      </div>
-      <nav className="flex gap-10 items-center self-stretch my-auto text-slate-600">
-        <a href="#" className="self-stretch my-auto w-[35px]">Inicio</a>
-        <a href="#" className="self-stretch my-auto w-24">Cerrar Sesion</a>
-      </nav>
-      <img loading="lazy" src="http://b.io/ext_11-" alt="" className="object-contain shrink-0 self-start aspect-square w-[45px]" />
-    </header>
-  );
-};
+import Link from 'next/link';
+
 
 const ProfileSection = ({ name, rating, comments }) => {
   return (
@@ -219,7 +201,7 @@ const View22 = () => {
 
   return (
     <div className="flex overflow-hidden flex-col pb-16 bg-white">
-      <Header />
+   
       <div className="flex flex-col pl-20 mt-5 w-full max-md:pl-5 max-md:max-w-full">
         <div className="self-end w-full max-w-[1063px] max-md:max-w-full">
           <div className="flex gap-5 max-md:flex-col">
@@ -243,6 +225,14 @@ const View22 = () => {
         <PromotionList promotions={promotions} />
         <MenuList menuItems={menuItems} />
         <VisitorChart events={chartEvents} />
+      </div>
+      <div className="flex flex-row justify-center mt-4 space-x-4 md:space-x-[200px]">
+        <button className="w-[155px] h-[40px] bg-white border-2 rounded-lg">
+          <Link legacyBehavior href="/cardPremium10"><a>Cancelar</a></Link>
+        </button>
+        <button className="w-[155px] h-[40px] bg-[#2F4F4F] text-white rounded-lg flex items-center justify-center">
+          <Link legacyBehavior href="/cardPremium10"><a>Guardar Cambios</a></Link>
+        </button>
       </div>
     </div>
   );
