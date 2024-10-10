@@ -72,7 +72,7 @@ const view6 = () => {
               text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none
               focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]'
                   >
-                    Inicia Sesion
+                    Continuar
                   </button>
                 </Link>
               </div>
