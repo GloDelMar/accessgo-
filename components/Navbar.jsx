@@ -73,7 +73,7 @@ const Navbar = () => {
             </Link>
           )}
 
-          <div className="relative md:hidden">
+          <div className="relative">
             <button 
               onClick={toggleMenu} 
               className="bg-[#ECEFF1] hover:bg-[#B0BEC5] text-white p-2 rounded"
@@ -85,6 +85,12 @@ const Navbar = () => {
         <div ref={menuRef} className="absolute right-0 mt-2 w-48 bg-white text-gray-800 rounded shadow-lg">
           <Link legacyBehavior href="/login">
             <a className="block px-4 py-2 hover:bg-gray-100" onClick={closeMenu}>Iniciar Sesión</a>
+          </Link>
+          <Link legacyBehavior href="#">
+            <a className="block px-4 py-2 hover:bg-gray-100" onClick={closeMenu}>Editar datos</a>
+          </Link>
+          <Link legacyBehavior href="/">
+            <a className="block px-4 py-2 hover:bg-gray-100" onClick={closeMenu}>Ir a inicio</a>
           </Link>
           <Link legacyBehavior href="/2/view2">
             <a className="block px-4 py-2 hover:bg-gray-100" onClick={closeMenu}>Realizar una búsqueda</a>
