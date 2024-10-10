@@ -111,14 +111,7 @@ const HomeContent = () => {
         <div className="my-4  mt-[40px] flex text-center justify-center">
           <h3 className="text-2xl font-bold mb-2">¡Juntos podemos hacer del mundo un lugar más accesible para todos!</h3>
         </div>
-        <div className="flex justify-center text-sm space-x-2 my-[40px]">
-          <Link legacyBehavior href="/voluntario11" >
-            <StyledButton variant="verdeCurvo">¿Quieres ser voluntario?</StyledButton>
-          </Link>
-          <Link legacyBehavior href="/donacion12" >
-            <StyledButton variant="verdeCurvo">¿Quieres hacer un donativo?</StyledButton>
-          </Link>
-        </div>
+       
       </div>
     </div>
   );
