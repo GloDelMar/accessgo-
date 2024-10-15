@@ -2,13 +2,55 @@ import React from 'react';
 import { Form, Input } from '../Molecules/FormStyles'; 
 import Link from 'next/link';
 
+import { useForm } from 'react-hook-form';
+import { login } from '@/pages/api/api';
+import { toast, Toaster } from 'sonner';
+import { useRouter } from 'next/router';
+
+
+
+
+
 const LoginForm = () => {
+
+
+    const router = useRouter()
+    const {
+      handleSubmit,
+      register,
+      formState: { errors },
+      setError
+    } = useForm();
+  
+    async function onSubmit(data) {
+      try {
+        const token = await login(data.email, data.password);
+        if (token) {
+          window.localStorage.setItem("token", token);
+          toast.success('Logged in');
+          router.push("/")
+          return
+        } else {
+          toast.error('Usuario o contrasena incorrectos');
+          setError('root.credentials', {
+            type: 'manual',
+            message: 'Credenciales invalidas'
+          });
+        }
+      } catch (error) {
+        toast.error('Error al iniciar sesion');
+        console.error('[login error]', error);
+      }
+    }
 
   
   return (
     <Form onSubmit={(e) => e.preventDefault()} className="grid gap-4">
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-[#546E7A] mb-1">
+        <label htmlFor="email" className="block text-sm font-medium text-[#546E7A] mb-1"
+        {...register('email', {
+          required: { value: true, message: 'Nombre de usuario requerido' }
+        })}>
           Correo Electrónico
         </label>
         <Input
@@ -44,6 +86,12 @@ const LoginForm = () => {
               id="password"
               placeholder="Introduce tu contraseña"
               className="w-full px-3 py-2 border text-xs md:text-sm border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#263238] placeholder-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50"
+              {...register('password', {
+                required: {
+                  value: true,
+                  message: 'Contrasena requerida'
+                }
+              })}
             />
             <span 
               onClick={() => {
@@ -64,6 +112,10 @@ const LoginForm = () => {
             </button>
             </Link>
         </div>
+        {errors.root?.credentials && (
+        <p className='text-red-500 text-center'>Credenciales Invalidas</p>
+      )}
+      <Toaster />
     </Form>
   );
 };
