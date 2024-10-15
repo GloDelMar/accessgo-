@@ -1,21 +1,28 @@
-import { Link, StyledButton, } from '@/components/atoms/Index';
+import { Link, StyledButton } from '@/components/atoms/Index';
 import { InputWithLabel } from '@/components/atoms/Input';
-import Image from 'next/image';
-import { useState } from 'react';
+import mapboxgl from 'mapbox-gl';
+import { useEffect, useRef, useState } from 'react';
+
+mapboxgl.accessToken = 'pk.eyJ1IjoiYWNjZXNnbyIsImEiOiJjbTI4NGVjNnowc2RqMmxwdnptcXAwbmhuIn0.0jG0XG0mwx_LHjdJ23Qx4A';
 
 const View23 = () => {
+  const mapDiv = useRef(null);
 
-  const [selectedDays, setselectedDays] = useState([])
+  useEffect(() => {
+    if (mapDiv.current) {
+      const map = new mapboxgl.Map({
+        container: mapDiv.current, // container ID
+        style: 'mapbox://styles/mapbox/streets-v12', // style URL
+        center: [-100.3899, 20.5888], // starting position [lng, lat]
+        zoom: 9, // starting zoom
+      });
+    }
+  }, []);
 
-  const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo', 'Todos los días']
+  const [selectedDays, setselectedDays] = useState([]);
 
-  /**
-   * Alterna la selección de un día dado en el estado selectedDays.
-   * Si el día ya está seleccionado, se eliminará de la selección.
-   * Si el día no está seleccionado, se añadirá a la selección.
-   *
-   * @param {string} day - El día a alternar en el estado selectedDays.
-   */
+  const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo', 'Todos los días'];
+
   const toggleDay = (day) => setselectedDays(prev => prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day]);
 
   return (
@@ -36,7 +43,8 @@ const View23 = () => {
               Actualizar foto de perfil
             </button>
             <br />
-            <InputWithLabel placeholder='Nombre' />
+            <InputWithLabel
+              placeholder='Nombre' />
           </div>
 
           <div className="space-y-6">
@@ -123,13 +131,7 @@ const View23 = () => {
                 placeholder='Ingresar dato'
               />
             </div>
-            <div className="aspect-video relative rounded-md overflow-hidden">
-              <Image
-                src="/mapa21.png"
-                alt="Mapa"
-                layout="fill"
-                objectFit="cover"
-              />
+            <div className="aspect-video relative rounded-md overflow-hidden" ref={mapDiv} style={{ height: '400px' }}>
             </div>
           </div>
         </div>
