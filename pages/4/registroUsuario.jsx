@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-
+import { Form, Input } from "@/components/Molecules/FormStyles";
 
 
 
@@ -11,67 +11,56 @@ import Link from "next/link";
           <h1 className='text-center text-[#2F4F4F] text-2xl p-10 font-bold'>
             Bienvenid@ a AccessGo
           </h1>
-
-          <div className='text-center flex justify-center p-10 '>
-            <form>
+     
+          <div className='text-center flex justify-center '>
+            <Form>
               <div>
-                <input
+                <Input
                   type='text'
                   name='email'
-                  placeholder='Correo Electronico'
-                  className='px-10 py-2 border bg-[#F6F9FF] m-2 rounded-md text-sm font-medium text-[#546E7A] hover:bg-[#ECEFF1] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#B0BEC5] '
+                  placeholder='Correo Electronico o WhatsApp'
+                  className='w-full px-3 py-2 border text-xs md:text-sm border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#263238] placeholder-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50'
                 />
               </div>
 
-              <div>
-                <input
+              <div className="relative">
+                <Input
                   type='password'
                   name='contraseña'
                   placeholder='Contraseña'
-                  className='px-10 py-2 border bg-[#F6F9FF]  m-2 rounded-md text-sm font-medium text-[#546E7A] hover:bg-[#ECEFF1] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#B0BEC5] '
+                  className='w-full px-3 py-2 border text-xs md:text-sm border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#263238] placeholder-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50'
                 />
+                 <span 
+              onClick={() => {
+                const input = document.getElementById('password');
+                input.type = input.type === 'password' ? 'text' : 'password';
+              }} 
+              className="absolute right-3 top-3 text-[#546E7A] hover:underline hover:cursor-pointer text-xs md:text-sm"
+            >
+              Mostrar
+            </span>
               </div>
 
-              <div>
-                <input
+              <div className="relative">
+                <Input
                   type='password'
                   name='confirmacion'
                   placeholder='Confirma Contraseña'
-                  className='px-10 py-2 border bg-[#F6F9FF] m-2  rounded-md text-sm font-medium text-[#546E7A] hover:bg-[#ECEFF1] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#B0BEC5] '
+                  className='w-full px-3 py-2 border text-xs md:text-sm border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#263238] placeholder-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50'
                 />
+                 <span 
+              onClick={() => {
+                const input = document.getElementById('password');
+                input.type = input.type === 'password' ? 'text' : 'password';
+              }} 
+              className="absolute right-3 top-3 text-[#546E7A] hover:underline hover:cursor-pointer text-xs md:text-sm"
+            >
+              Mostrar
+            </span>
               </div>
-            </form>
+            </Form>
           </div>
-          <div className='text-center flex justify-center p-10 '>
-            <form>
-              <div>
-                <input
-                  type='text'
-                  name='Whatsaap'
-                  placeholder='Numero de WhatsApp'
-                  className='px-10 py-2 border bg-[#F6F9FF] m-2  rounded-md text-sm font-medium text-[#546E7A] hover:bg-[#ECEFF1] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#B0BEC5] '
-                />
-              </div>
-
-              <div>
-                <input
-                  type='password'
-                  name='contraseña'
-                  placeholder='Contraseña'
-                  className='px-10 py-2 border bg-[#F6F9FF] m-2  rounded-md text-sm font-medium text-[#546E7A] hover:bg-[#ECEFF1] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#B0BEC5] '
-                />
-              </div>
-
-              <div>
-                <input
-                  type='password'
-                  name='confirmacion'
-                  placeholder='Confirma Contraseña'
-                  className='px-10 py-2 border bg-[#F6F9FF] m-2  rounded-md text-sm font-medium text-[#546E7A] hover:bg-[#ECEFF1] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#B0BEC5] '
-                />
-              </div>
-            </form>
-          </div>
+         
           <div className='flex justify-center items-center py-5'>
             <Link legacyBehavior href='/5/autentificacion'>
               <button
