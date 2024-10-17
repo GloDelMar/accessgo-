@@ -78,4 +78,3 @@ import { Form, Input } from "@/components/Molecules/FormStyles";
 }
 
 export default view4; 
-
