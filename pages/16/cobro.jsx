@@ -108,12 +108,12 @@ const View16 = () => {
 
   return (
     <main className="flex overflow-hidden flex-col items-center pb-44 mx-auto w-full text-xl bg-white max-w-[480px] md:max-w-[700px] text-slate-700">
-
+      
       <h1 className="mt-9 font-bold leading-3">¡Elige tu plan!</h1>
       <p className="mt-8 text-sm font-bold text-center">
         ¡Aqui puedes elegir el plan que te interese mas!
       </p>
-      <div className="flex flex-col space-x-[95px] md:flex-row">
+      <div className="flex flex-col md:space-x-[95px] md:flex-row">
         <div className="flex flex-col mt-2 items-center">
           {planOptions.map((plan, index) => (
             <PlanOption
@@ -131,7 +131,7 @@ const View16 = () => {
           <Link legacyBehavior href="/"><a>Cancelar</a></Link>
         </button>
         <button className="w-[155px] h-[40px] bg-[#2F4F4F] text-white rounded-lg flex items-center justify-center">
-          <Link legacyBehavior href="/17/datosNegocio"><a>Pagar</a></Link>
+          <Link legacyBehavior href="/23/view23"><a>Pagar</a></Link>
         </button>
       </div>
 
