@@ -25,6 +25,7 @@
     "react-slick": "^0.30.2",
     "slick-carousel": "^1.8.1",
     "sonner": "^1.5.0",
+    "stripe": "^17.2.0",
     "swiper": "^11.1.14",
     "toastr": "^2.1.4"
   },
