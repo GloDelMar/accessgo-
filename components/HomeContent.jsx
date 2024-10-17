@@ -1,9 +1,9 @@
-
 import EstablecimientoSlider from "./Molecules/establesamientoSlider";
 import ParticipaSlider from "./Molecules/participaSlider";
 import Image from 'next/image'
 import Link from 'next/link';
 import { StyledButton } from "./atoms/Index";
+import LocalesList from "./atoms/establecimientosList"; // Solo mantenemos una vez esta línea
 
 
 export const categories = [
