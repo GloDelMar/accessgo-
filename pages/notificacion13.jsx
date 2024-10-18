@@ -67,16 +67,6 @@ export default function Notificacion() {
         </label>
       </div>
       <div className='flex flex-row justify-between items center mt-10 md:mt-20 md:mb-10'>
-<<<<<<<<< Temporary merge branch 1
-        <button className='w-[155px] h-[40px] md:w-[250px] md:h-[50px] border border-[#263238] rounded-lg'>
-          Cancelar
-        </button>
-        <Link legacyBehavior href='/4/registroUsuario'>
-          <a className='w-[155px] h-[40px] md:w-[250px] md:h-[50px] bg-[#2F4F4F] text-white rounded-lg flex items-center justify-center shadow-md shadow-gray-400'>
-            Continuar
-          </a>
-        </Link>
-=========
         <div>
           <Link legacyBehavior href='/2/view2'>
             <button className='w-[155px] h-[40px] md:w-[250px] md:h-[50px] border border-[#263238] rounded-lg'>
@@ -85,14 +75,14 @@ export default function Notificacion() {
           </Link>
         </div>
         <div>
-          <Link legacyBehavior href='/formularioAccesibilidad'>
+          <Link legacyBehavior href='/4/registroUsuario'>
             <button className='w-[155px] h-[40px] md:w-[250px] md:h-[50px] bg-[#2F4F4F] text-white rounded-lg flex items-center justify-center shadow-md shadow-gray-400'>
               Continuar
             </button>
           </Link>
         </div>
->>>>>>>>> Temporary merge branch 2
-      </div>
-    </div>
+</div>
+</div>
+
   );
 }
