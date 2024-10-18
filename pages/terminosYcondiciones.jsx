@@ -64,7 +64,7 @@ export default function terminosYcondiciones() {
         <div className='flex flex-row justify-center items center mt-10 md:mt-20 md:mb-10'>
        
         <div>
-          <Link legacyBehavior href='/2/view2'>
+          <Link legacyBehavior href='/4/registroUsuario'>
             <button className='w-[155px] h-[40px] md:w-[250px] md:h-[50px] bg-[#2F4F4F] text-white rounded-lg flex items-center justify-center shadow-md shadow-gray-400'>
               Continuar
             </button>
