@@ -1,5 +1,6 @@
 import { Stripe } from "stripe";
 import ButtonCheckout from "@/components/ButtonCheckout";
+import Link from "next/link";
 
 async function loadPrices() {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -15,7 +16,7 @@ async function PricingPage() {
   console.log(prices);
 
   return (
-    <main className="flex overflow-hidden flex-col items-center pb-44 mx-auto w-full text-xl bg-white max-w-[480px] md:max-w-[700px] text-slate-700">
+    <main className="flex overflow-hidden flex-col items-center  justify-center pb-44 mx-auto w-full text-xl bg-white max-w-[480px] md:max-w-[700px] text-slate-700">
       <div>
         <header className="flex flex-col">
           <h1 className="mt-9 font-bold leading-3 text-center">¡Elige tu plan!</h1>
@@ -31,6 +32,12 @@ async function PricingPage() {
             </div>
           ))}
         </div>
+
+        <div className="flex flex-row justify-center mt-5 space-x-4 md:space-x-[200px] mt-16">
+        <button className="w-[155px] h-[40px] bg-white border-2 rounded-lg border border-black">
+          <Link legacyBehavior href="http://localhost:3000/15/planesEmpresa"><a>Cancelar</a></Link>
+        </button>
+      </div>
       </div>
     </main>
   );
