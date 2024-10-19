@@ -58,7 +58,7 @@ const View15 = () => {
         'Datos y estadísticas sobre las visitas a tu negocio'
       ],
       buttonText: '¡UNETE AHORA!',
-      link: '/16/cobro' 
+      link: '/planes' 
     }
   ];
 

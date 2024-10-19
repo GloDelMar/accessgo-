@@ -15,8 +15,8 @@ export async function POST(request) {
         quantity: 1,
       },
     ],
-    success_url: "http://localhost:3000/success",
-    cancel_url: "http://localhost:3000/pricing",
+    success_url: "http://localhost:3000/17/datosNegocio",
+    cancel_url: "http://localhost:3000/planes",
   });
 
   return NextResponse.json({
