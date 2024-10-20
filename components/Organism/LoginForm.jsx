@@ -46,24 +46,10 @@ const LoginForm = () => {
   
   return (
     <Form onSubmit={(e) => e.preventDefault()} className="grid gap-4">
-      <div>
-        <label htmlFor="email" className="block text-sm font-medium text-[#546E7A] mb-1"
-        {...register('email', {
-          required: { value: true, message: 'Nombre de usuario requerido' }
-        })}>
-          Correo Electrónico
-        </label>
-        <Input
-          type="email"
-          id="email"
-          placeholder="Introduce tu correo"
-          className="w-full px-3 py-2 border text-xs md:text-sm border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#263238] placeholder-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50"
-        />
-      </div>
-
+     
       <div>
         <label htmlFor="whatsapp" className="block text-sm font-medium text-[#546E7A] mb-1">
-          Número de WhatsApp
+          Correo Electrónico o Número de WhatsApp
         </label>
         <Input
           type="tel"
