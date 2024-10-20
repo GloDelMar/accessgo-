@@ -63,17 +63,18 @@ const View15 = () => {
   ];
 
   return (
-    <main className="flex overflow-hidden flex-col items-center pb-44 mx-auto w-full bg-white  md:w-full">
+    <main className="flex overflow-hidden flex-col items-center pb-44 mx-auto w-full bg-white md:w-full">
       <h1 className="mt-7 text-xl font-bold leading-3 text-slate-700">
         ¡ AccessoGo!
       </h1>
       <p className="mt-6 text-sm font-bold text-center text-gray-600">
         ¡Aqui puedes elegir el plan que te interese mas!
       </p>
-      <div className="flex flex-col items-center md:items-center  justify-center gap-16 mt-10 md:flex-row md:gap-12">
-      {plans.map((plan, index) => (
-        <PlanCard key={index} {...plan} />
-      ))} </div>
+      <div className="flex flex-col items-start justify-start gap-16 mt-10 md:flex-row md:gap-12 md:items-start">
+        {plans.map((plan, index) => (
+          <PlanCard key={index} {...plan} />
+        ))}
+      </div>
 
       <CancelButton cancelLink="/2/view2" /> 
       <style jsx>{`
@@ -81,7 +82,6 @@ const View15 = () => {
           max-width: none !important;
         }
       `}</style>
-     
     </main>
   );
 };
