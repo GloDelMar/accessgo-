@@ -131,7 +131,7 @@ const View16 = () => {
           <Link legacyBehavior href="/"><a>Cancelar</a></Link>
         </button>
         <button className="w-[155px] h-[40px] bg-[#2F4F4F] text-white rounded-lg flex items-center justify-center">
-          <Link legacyBehavior href="/17/datosNegocio"><a>Pagar</a></Link>
+          <Link legacyBehavior href="/23/view23"><a>Pagar</a></Link>
         </button>
       </div>
 
