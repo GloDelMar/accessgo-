@@ -67,7 +67,6 @@ export default function Notificacion() {
         </label>
       </div>
       <div className='flex flex-row justify-between items center mt-10 md:mt-20 md:mb-10'>
-
         <div>
           <Link legacyBehavior href='/2/view2'>
             <button className='w-[155px] h-[40px] md:w-[250px] md:h-[50px] border border-[#263238] rounded-lg'>
@@ -82,8 +81,9 @@ export default function Notificacion() {
             </button>
           </Link>
         </div>
-
       </div>
     </div>
+
+
   );
 }

@@ -1,231 +1,193 @@
-import React from 'react';
+import React, { useState } from 'react'; // Importa useState solo una vez
 
-import Link from 'next/link';
+const ProfileCard = ({ name }) => (
+  <div className="flex flex-col w-[31%] max-md:ml-0 max-md:w-full">
+    <div className="flex flex-col grow px-5 py-10 w-full text-2xl font-medium leading-none text-center text-black whitespace-nowrap bg-white rounded-3xl border border-gray-100 border-solid shadow-lg max-md:mt-10">
+      <img
+        loading="lazy"
+        src="https://cdn.builder.io/api/v1/image/assets/TEMP/6e3daf47cc4d48f90b028d56cf11af6dab8ced9625bcc7732ba4f52e4ab6ed6e?placeholderIfAbsent=true&apiKey=94b7d1b7a1ff491ea399fe140abd93c0"
+        alt="Profile picture"
+        className="object-contain aspect-[0.9] rounded-[100px] w-[188px]"
+      />
+      <div className="self-center mt-12 max-md:mt-10">{name}</div>
+    </div>
+  </div>
+);
 
+const RatingSection = () => {
+  const [showAllComments, setShowAllComments] = useState(false);
+  const comments = [
+    "Lorem ipsum es el texto que se usa habitualmente en diseño gráfico en demostraciones",
+    "Lorem ipsum es el texto que se usa habitualmente en diseño gráfico en demostraciones",
+    "Additional comment 1",
+    "Additional comment 2",
+  ];
 
-const ProfileSection = ({ name, rating, comments }) => {
+  const displayedComments = showAllComments ? comments : comments.slice(0, 2);
+
   return (
-    <div className="flex gap-5 max-md:flex-col">
-      <div className="flex flex-col w-[31%] max-md:ml-0 max-md:w-full">
-        <div className="flex flex-col grow px-5 py-10 w-full text-2xl font-medium leading-none text-center text-black whitespace-nowrap bg-white rounded-3xl border border-gray-100 border-solid shadow-lg max-md:mt-10">
-          <img loading="lazy" src="http://b.io/ext_12-" alt={`Profile picture of ${name}`} className="object-contain aspect-[0.9] rounded-[100px] w-[188px]" />
-          <div className="self-center mt-12 max-md:mt-10">{name}</div>
+    <div className="flex flex-col ml-5 w-[69%] max-md:ml-0 max-md:w-full">
+      <section className="flex flex-col items-start px-8 pt-6 pb-11 mx-auto w-full text-xl font-medium text-center text-cyan-900 bg-white rounded-[30px] shadow-[0px_4px_4px_rgba(0,0,0,0.25)] max-md:px-5 max-md:mt-10 max-md:max-w-full">
+        <div className="flex gap-4 leading-tight">
+          <div className="grow">Tu calificación es de :</div>
+          <img
+            loading="lazy"
+            src="https://cdn.builder.io/api/v1/image/assets/TEMP/3ad3e0d4f70d2d1a1e52ea1e08da5b3651e93af814fe7e929b73d7b9efaa942c?placeholderIfAbsent=true&apiKey=94b7d1b7a1ff491ea399fe140abd93c0"
+            alt="Rating stars"
+            className="object-contain shrink-0 my-auto w-28 max-w-full aspect-[5.59]"
+          />
         </div>
-      </div>
-      <div className="flex flex-col ml-5 w-[69%] max-md:ml-0 max-md:w-full">
-        <div className="flex flex-col items-start px-8 pt-6 pb-11 mx-auto w-full text-xl font-medium text-center text-cyan-900 bg-white rounded-[30px] shadow-[0px_4px_4px_rgba(0,0,0,0.25)] max-md:px-5 max-md:mt-10 max-md:max-w-full">
-          <div className="flex gap-4 leading-tight">
-            <div className="grow">Tu calificación es de :</div>
-            <img loading="lazy" src="http://b.io/ext_13-" alt={`Rating: ${rating}`} className="object-contain shrink-0 my-auto w-28 max-w-full aspect-[5.59]" />
-          </div>
-          <div className="mt-10 leading-tight">Ultimos comentarios:</div>
-          <div className="flex gap-5 self-stretch mt-10 text-xs leading-6 text-slate-700">
-            {comments.map((comment, index) => (
-              <div key={index} className="px-2 pt-1.5 pb-4 bg-lime-50">{comment}</div>
-            ))}
-          </div>
-          <button className="px-2.5 py-0.5 mt-11 text-base bg-lime-50 rounded-[30px] max-md:mt-10">Todos los comentarios</button>
+        <h3 className="mt-10 leading-tight">Ultimos comentarios:</h3>
+        <div className="flex flex-col gap-5 self-stretch mt-10 text-xs leading-6 text-slate-700">
+          {displayedComments.map((comment, index) => (
+            <div key={index} className="px-2 pt-1.5 pb-4 bg-lime-50">
+              {comment}
+            </div>
+          ))}
         </div>
-      </div>
+        <button
+          className="px-2.5 py-0.5 mt-11 text-base bg-lime-50 rounded-[30px] max-md:mt-10"
+          onClick={() => setShowAllComments(!showAllComments)}
+        >
+          {showAllComments ? "Mostrar menos" : "Todos los comentarios"}
+        </button>
+      </section>
     </div>
   );
 };
 
-const SideMenu = () => {
+const ImageGallery = () => {
+  const images = [
+    // Lista de imágenes...
+  ];
+
   return (
-    <nav className="px-4 py-40 w-full text-sm text-black bg-zinc-300 max-md:py-24 max-md:pr-5 max-md:mt-10">
-      <ul>
-        <li>Editar perfil</li>
-        <li>Editar Accesibilidad</li>
-        <li>editar</li>
-        <li>direccion</li>
-      </ul>
-    </nav>
+    <div className="flex flex-wrap gap-10 self-start mt-12 max-md:mt-10">
+      {images.map((image, index) => (
+        <img
+          key={index}
+          loading="lazy"
+          src={image.src}
+          alt={image.alt}
+          className={image.className}
+        />
+      ))}
+    </div>
   );
 };
 
-const ImageCarousel = ({ images }) => {
-  return (
-    <section>
-      <h2 className="self-start mt-20 ml-64 text-xl font-medium leading-tight text-center text-cyan-900 max-md:mt-10 max-md:ml-2.5">Cambia tus imagenes</h2>
-      <div className="flex flex-wrap gap-5 justify-between self-center mt-12 ml-5 max-w-full w-[794px] max-md:mt-10">
-        <img loading="lazy" src="http://b.io/ext_14-" alt="" className="object-contain shrink-0 my-auto bg-gray-500 rounded-3xl aspect-[1.09] w-[60px]" />
-        {images.map((image, index) => (
-          <img key={index} loading="lazy" src={image} alt="" className="object-contain shrink-0 max-w-full aspect-[1.24] w-[119px]" />
-        ))}
-        <img loading="lazy" src="http://b.io/ext_15-" alt="" className="object-contain shrink-0 my-auto bg-gray-500 rounded-3xl aspect-[1.11] w-[58px]" />
-      </div>
-    </section>
-  );
-};
+const EventTable = () => {
+  const [events, setEvents] = useState([
+    { evento: 'Evento de ejemplo', fecha: '2024-10-18', horario: '10:00 AM' },
+  ]);
 
-const EventList = ({ events }) => {
-  return (
-    <section>
-      <h2 className="self-start mt-10 text-xl font-medium leading-snug text-slate-600 max-md:ml-0.5">Todos tus Eventos</h2>
-      <div className="flex flex-col items-start self-center pt-4 pr-5 pb-7 pl-2.5 mt-3 w-full text-xl font-bold tracking-wider leading-none uppercase rounded-2xl bg-slate-700 bg-opacity-50 max-w-[1204px] text-slate-700 max-md:max-w-full">
-        {events.map((event, index) => (
-          <div key={index} className="flex flex-wrap gap-3 w-full max-w-[980px] max-md:max-w-full">
-            <div className="px-16 py-3 text-lg font-semibold tracking-wider leading-none bg-white rounded-md max-md:px-5">
-              <span className="text-xl font-bold">{event.name}</span>
-            </div>
-            <div className="px-14 py-3 whitespace-nowrap bg-white rounded-md max-md:px-5">{event.date}</div>
-            <div className="px-10 py-3 whitespace-nowrap bg-white rounded-md max-md:px-5">{event.time}</div>
-            <div className="px-16 py-3 whitespace-nowrap bg-white rounded-md max-md:px-5">EDITAR</div>
-          </div>
-        ))}
-        <button className="px-11 py-5 my-auto whitespace-nowrap bg-white rounded-3xl max-md:px-5">AGREGAR</button>
-      </div>
-    </section>
-  );
-};
-
-const PromotionList = ({ promotions }) => {
-  return (
-    <section>
-      <h2 className="self-start mt-20 text-xl font-medium leading-snug text-slate-600 max-md:mt-10 max-md:ml-0.5">Todas tus Promociones</h2>
-      <div className="flex flex-col items-start self-center pt-4 pr-5 pb-7 pl-2.5 mt-4 w-full text-xl font-bold tracking-wider leading-none uppercase rounded-2xl bg-slate-700 bg-opacity-50 max-w-[1204px] text-slate-700 max-md:max-w-full">
-        {promotions.map((promotion, index) => (
-          <div key={index} className="flex flex-wrap gap-3 w-full max-w-[980px] max-md:max-w-full">
-            <div className="px-16 py-3 text-lg tracking-wider leading-none bg-white rounded-md max-md:px-5">
-              <span className="text-xl">{promotion.name}</span>
-            </div>
-            <div className="px-14 py-3 whitespace-nowrap bg-white rounded-md max-md:px-5">{promotion.date}</div>
-            <div className="px-10 py-3 whitespace-nowrap bg-white rounded-md max-md:px-5">{promotion.time}</div>
-            <div className="px-16 py-3 whitespace-nowrap bg-white rounded-md max-md:px-5">EDITAR</div>
-          </div>
-        ))}
-        <button className="px-11 py-5 my-auto whitespace-nowrap bg-white rounded-3xl max-md:px-5">AGREGAR</button>
-      </div>
-    </section>
-  );
-};
-
-const MenuList = ({ menuItems }) => {
-  return (
-    <section>
-      <h2 className="self-start mt-20 text-xl font-medium leading-snug text-slate-600 max-md:mt-10 max-md:ml-0.5">TU MENU</h2>
-      <div className="flex flex-col items-start self-center pt-4 pr-5 pb-7 pl-2.5 mt-5 w-full text-xl font-bold tracking-wider leading-none uppercase rounded-2xl bg-slate-700 bg-opacity-50 max-w-[1204px] text-slate-700 max-md:max-w-full">
-        {menuItems.map((item, index) => (
-          <div key={index} className="flex flex-wrap gap-3 w-full max-w-[980px] max-md:max-w-full">
-            <div className="px-16 py-3 text-lg tracking-wider leading-none bg-white rounded-md max-md:px-5">
-              <span className="text-xl">{item.name}</span>
-            </div>
-            <div className="px-16 py-3 whitespace-nowrap bg-white rounded-md max-md:px-5">{item.date}</div>
-            <div className="px-14 py-3 whitespace-nowrap bg-white rounded-md max-md:px-5">{item.time}</div>
-            <div className="px-16 py-3 whitespace-nowrap bg-white rounded-md max-md:px-5">EDITAR</div>
-          </div>
-        ))}
-        <button className="px-11 py-5 my-auto whitespace-nowrap bg-white rounded-3xl max-md:px-5">AGREGAR</button>
-      </div>
-    </section>
-  );
-};
-
-const VisitorChart = ({ events }) => {
-  return (
-    <section className="flex flex-col self-center mt-20 max-w-full rounded-lg w-[704px] max-md:mt-10">
-      <div className="flex flex-col justify-center p-5 w-full bg-white rounded-lg border border-gray-100 border-solid shadow-lg max-w-[704px] max-md:max-w-full">
-        <h2 className="flex gap-10 items-center self-start text-xl font-medium leading-snug text-gray-700">
-          <div className="flex gap-4 items-center self-stretch my-auto min-w-[240px]">
-            <img loading="lazy" src="http://b.io/ext_16-" alt="" className="object-contain shrink-0 self-stretch my-auto w-10 aspect-square" />
-            <div className="self-stretch my-auto">Cuantas personas visitaron tu perfil</div>
-          </div>
-        </h2>
-        <div className="mt-6 w-full rounded-none">
-          <div className="flex gap-5 max-md:flex-col">
-            <div className="flex flex-col w-6/12 max-md:ml-0 max-md:w-full">
-              <div className="flex flex-col grow justify-center mr-0 text-xs font-semibold text-neutral-500 max-md:max-w-full">
-                <div className="flex flex-col justify-center items-end w-full max-w-[664px] max-md:max-w-full">
-                  <div className="flex flex-col justify-center items-end leading-none whitespace-nowrap max-md:max-w-full">
-                    {[100, 75, 50, 25, 0].map((value, index) => (
-                      <div key={index} className="flex flex-wrap gap-2 items-end mt-10 max-md:max-w-full">
-                        <div>{value}</div>
-                        <div className="shrink-0 h-px border border-dashed bg-neutral-400 border-neutral-400 min-w-[240px] w-[624px]" />
-                      </div>
-                    ))}
-                  </div>
-                  <div className="flex flex-wrap gap-8 justify-between items-center mt-4 max-w-full leading-snug w-[616px]">
-                    {events.map((event, index) => (
-                      <div key={index} className="self-stretch my-auto">{event}</div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="flex flex-col ml-5 w-6/12 max-md:ml-0 max-md:w-full">
-              <img loading="lazy" src="http://b.io/ext_17-" alt="Visitor chart" className="object-contain mt-5 w-full rounded-none aspect-[3.29] max-md:max-w-full" />
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-const View22 = () => {
-  const profileData = {
-    name: 'nombre',
-    rating: '4.5',
-    comments: [
-      'Lorem ipsum es el texto que se usa habitualmente en diseño gráfico en demostraciones',
-      'Lorem ipsum es el texto que se usa habitualmente en diseño gráfico en demostraciones'
-    ]
+  const addEvent = () => {
+    setEvents([...events, { evento: '', fecha: '', horario: '' }]);
   };
 
-  const carouselImages = [
-    "http://b.io/ext_18-", "http://b.io/ext_19-", "http://b.io/ext_20-", "http://b.io/ext_21-"];
+  const updateEvent = (index, field, value) => {
+    const updatedEvents = [...events];
+    updatedEvents[index][field] = value;
+    setEvents(updatedEvents);
+  };
 
-  const events = [
-    { name: "EVENTO", date: "31-12-25", time: "22:00-02:00" },
-    { name: "EVENTO", date: "FECHA", time: "HORARIO" },
-    { name: "EVENTO", date: "FECHA", time: "HORARIO" },
-    { name: "EVENTO", date: "FECHA", time: "HORARIO" }
-  ];
-
-  const promotions = [
-    { name: "PROMOCION", date: "31-12-25", time: "22:00-02:00" },
-    { name: "PROMOCION", date: "FECHA", time: "HORARIO" },
-    { name: "PROMOCION", date: "FECHA", time: "HORARIO" },
-    { name: "PROMOCION", date: "FECHA", time: "HORARIO" }
-  ];
-
-  const menuItems = [
-    { name: "PLATILLO", date: "01-31", time: "22:00-02:00" },
-    { name: "PLATILLO", date: "FECHA", time: "HORARIO" },
-    { name: "PLATILLO", date: "FECHA", time: "HORARIO" },
-    { name: "PLATILLO", date: "FECHA", time: "HORARIO" }
-  ];
-
-  const chartEvents = ["¡Celebra México!", "Día de muertos", "Haloween with Pride", "New Year", "Carnival with Pride", "Pride 2023"];
+  const deleteEvent = (index) => {
+    const updatedEvents = events.filter((_, i) => i !== index);
+    setEvents(updatedEvents);
+  };
 
   return (
-    <div className="flex overflow-hidden flex-col pb-16 bg-white">
-   
-      <div className="flex flex-col pl-20 mt-5 w-full max-md:pl-5 max-md:max-w-full">
-        <div className="self-end w-full max-w-[1063px] max-md:max-w-full">
-          <div className="flex gap-5 max-md:flex-col">
-            <div className="flex flex-col w-[84%] max-md:ml-0 max-md:w-full">
-              <div className="flex flex-col mt-5 w-full max-md:mt-10 max-md:max-w-full">
-                <div className="self-center text-6xl font-bold leading-none text-slate-700 max-md:text-4xl">
-                  ¡Bienvenido!
-                </div>
-                <div className="mt-14 max-md:mt-10 max-md:max-w-full">
-                  <ProfileSection {...profileData} />
-                </div>
-              </div>
-            </div>
-            <div className="flex flex-col ml-5 w-[16%] max-md:ml-0 max-md:w-full">
-              <SideMenu />
+    <div className="overflow-x-auto w-full mt-10">
+      <table className="min-w-full bg-white border border-gray-300">
+        <thead>
+          <tr>
+            <th className="py-2 px-4 border-b">EVENTO</th>
+            <th className="py-2 px-4 border-b">FECHA</th>
+            <th className="py-2 px-4 border-b">HORARIO</th>
+            <th className="py-2 px-4 border-b">EDITAR</th>
+            <th className="py-2 px-4 border-b">ELIMINAR</th>
+          </tr>
+        </thead>
+        <tbody>
+          {events.map((event, index) => (
+            <tr key={index}>
+              <td className="py-2 px-4 border-b">
+                <input
+                  type="text"
+                  value={event.evento}
+                  onChange={(e) => updateEvent(index, 'evento', e.target.value)}
+                  className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300"
+                />
+              </td>
+              <td className="py-2 px-4 border-b">
+                <input
+                  type="date"
+                  value={event.fecha}
+                  onChange={(e) => updateEvent(index, 'fecha', e.target.value)}
+                  className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300"
+                />
+              </td>
+              <td className="py-2 px-4 border-b">
+                <input
+                  type="time"
+                  value={event.horario}
+                  onChange={(e) => updateEvent(index, 'horario', e.target.value)}
+                  className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300"
+                />
+              </td>
+              <td className="py-2 px-4 border-b">
+                <button
+                  className="px-3 py-1 text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                  onClick={() => alert('Editar evento en desarrollo')}
+                >
+                  Editar
+                </button>
+              </td>
+              <td className="py-2 px-4 border-b">
+                <button
+                  className="px-3 py-1 text-white bg-red-500 rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300"
+                  onClick={() => deleteEvent(index)}
+                >
+                  Eliminar
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <button
+        className="mt-4 px-4 py-2 text-white bg-green-500 rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300"
+        onClick={addEvent}
+      >
+        Agregar Nueva Fila
+      </button>
+    </div>
+  );
+};
+
+// Exporta solo el componente principal como default
+const sesionPremium = () => {
+  return (
+    <main className="flex overflow-hidden flex-col items-center px-20 pt-28 bg-white pb-[1572px] max-md:px-5 max-md:py-24">
+      <div className="flex flex-col ml-7 max-w-full w-[806px]">
+        <h1 className="self-center text-6xl font-bold leading-none text-slate-700 max-md:text-4xl">
+          ¡Bienvenido!
+        </h1>
+        <div className="flex flex-col pl-3.5 mt-14 w-full max-md:mt-10 max-md:max-w-full">
+          <div className="max-md:max-w-full">
+            <div className="flex gap-5 max-md:flex-col">
+              <ProfileCard name="nombre" />
+              <RatingSection />
             </div>
           </div>
+          <h2 className="self-start mt-20 ml-4 text-xl font-medium leading-tight text-center text-cyan-900 max-md:mt-10 max-md:ml-2.5">
+            Cambia tus imagenes
+          </h2>
         </div>
-        <ImageCarousel images={carouselImages} />
-        <EventList events={events} />
-        <PromotionList promotions={promotions} />
-        <MenuList menuItems={menuItems} />
-        <VisitorChart events={chartEvents} />
+        <ImageGallery />
+        <EventTable />
       </div>
+
       <div className="flex flex-row justify-center mt-4 space-x-4 md:space-x-[200px]">
         <button className="w-[155px] h-[40px] bg-white border-2 rounded-lg">
           <Link legacyBehavior href="/cardPremium10"><a>Cancelar</a></Link>
@@ -234,8 +196,9 @@ const View22 = () => {
           <Link legacyBehavior href="/22/sesionPremium"><a>Guardar Cambios</a></Link>
         </button>
       </div>
-    </div>
+    </div>  </main>
+
   );
 };
 
-export default View22;
+export default sesionPremium;
