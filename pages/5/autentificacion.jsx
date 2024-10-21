@@ -1,84 +1,135 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from 'next/router';
-
+import { verifyUserCode, sendVerificationCode } from '../api/api_verification';
 
 const View5 = () => {
   const router = useRouter();
-  const [tipoUsuario, setTipoUsuario] = useState("");
+  const [code, setCode] = useState(""); // Estado para el código de verificación
+  const [error, setError] = useState(""); // Estado para manejar errores
+  const [canResend, setCanResend] = useState(true);
+  const [timer, setTimer] = useState(null);
+  const [loading, setLoading] = useState(false); // Estado de carga
 
+ 
   useEffect(() => {
-    // Recuperamos el tipo de usuario del localStorage
-    const usuarioGuardado = localStorage.getItem('tipoUsuario');
+    return () => {
+      if (timer) clearInterval(timer); // Limpiar el intervalo si el componente se desmonta
+    };
+  }, [timer]);
 
-    if (usuarioGuardado) {
-      setTipoUsuario(usuarioGuardado);
+  const handleSendAgain = async () => {
+    try {
+      const userId = localStorage.getItem('userId'); // Obtener userId de localStorage
+      await sendVerificationCode(userId);
+      setCanResend(false);
+      setTimer(3600); // 3600 segundos para una hora
+
+      // Configurar temporizador
+      const countdown = setInterval(() => {
+        setTimer((prev) => {
+          if (prev <= 1) {
+            clearInterval(countdown);
+            setCanResend(true);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      setTimer(countdown); // Almacenar el temporizador para limpiar más tarde
+    } catch (error) {
+      console.error('Error al enviar el código de verificación:', error);
     }
-  }, []);
+  };
 
-  // Función para manejar la redirección después de la verificación
-  const handleRedirect = () => {
-    if (tipoUsuario === 'empresa') {
-      // Redirigir al formulario de accesibilidad si es una empresa
+
+
+  const handleVerification = async () => {
+    try {
+      const userId = localStorage.getItem('userId'); // Obtener userId de localStorage
+      const userType = localStorage.getItem('tipoUsuario'); // Obtener tipo de usuario de localStorage
+      setLoading(true); // Activar el estado de carga
+  
+      // Comprobar si userId es nulo o indefinido
+      if (!userId) {
+        throw new Error('userId no está disponible en localStorage');
+      }
+  
+      // Mover el console.log aquí
+      console.log('Verificando código con los siguientes datos:', { userId, code });
+  
+      // Verificar el código pasando userId y código
+      const isVerified = await verifyUserCode(userId, code);
+  
+      if (isVerified) {
+        handleRedirect(userType); // Redirigir según tipo de usuario
+      } else {
+        setError('Código de verificación inválido o expirado.');
+      }
+    } catch (error) {
+      console.error('Error al verificar el código:', error);
+      setError('Error al verificar el código. Inténtalo de nuevo.');
+    } finally {
+      setLoading(false); // Desactivar el estado de carga
+    }
+  };
+  
+
+  const handleRedirect = (userType) => {
+    if (userType === 'company') {
       router.push('/formularioAccesibilidad');
-    } else if (tipoUsuario === 'usuario') {
-      // Redirigir a la página de datos del usuario si es un usuario normal
+    } else if (userType === 'user') {
       router.push('/6/datosUsuario');
     } else {
       console.log("Tipo de usuario no definido.");
     }
+    // Borrar el userId del localStorage después de la redirección
+    localStorage.removeItem('userId');
+    localStorage.removeItem('tipoUsuario'); // Corregido el nombre
   };
 
   return (
-    <>
-      <div className='max-w-md w-full mx-auto'>
-      <h1 className='text-center text-2xl text-[#2F4F4F] p-10 font-bold'>
-          ¡Revisa tu correo o tu WhatsApp!
-        </h1>
-        <h3 className='text-center text-[#2F4F4F] p-10 font-bold'>
-          Te hemos enviado un código de verificación. A continuación, escribe el código que te enviamos para validar tu cuenta.
-        </h3>
+    <div className='max-w-md w-full mx-auto'>
+      <h1 className='text-center text-2xl text-[#2F4F4F] p-10 font-extrabold'>
+        ¡Revisa tu correo o tu WhatsApp!
+      </h1>
+      <h3 className='text-center text-[#2F4F4F] p-1 font-extrabold'>
+        Te hemos enviado un código de verificación. A continuación, escribe el código que te enviamos para validar tu cuenta.
+      </h3>
 
-        <div className='text-center flex justify-center p-40 '>
-          <div>
-            <div>
-            <a className='text-center flex justify-center text-[#2F4F4F] p-10 font-bold'>
-                Confirma Tu Código
-              </a>
-              <input
-                type='text'
-                name='codigo'
-                placeholder='Código de verificación'
-                  className='px-10 py-2 border bg-[#F6F9FF] text-center rounded-md text-sm font-medium text-[#546E7A] hover:bg-[#ECEFF1] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#B0BEC5] '
-              />
-            </div>
-          </div>
-        </div>
-
-        {tipoUsuario === 'empresa' ? (
-          <p className='text-center text-[#2F4F4F] p-5'>
-            Como empresa, asegúrate de completar todos los pasos requeridos para configurar tu perfil.
-          </p>
-        ) : (
-          <p className='text-center text-[#2F4F4F] p-5'>
-            Como usuario, puedes explorar los establecimientos que hemos seleccionado para ti.
-          </p>
-        )}
-
-<div className='flex justify-center items-center py-5'>
-          <button
-            onClick={handleRedirect}
-            className='px-6 py-2 border border-transparent rounded-md shadow-sm
-            text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none
-            focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]'
-          >
-            Iniciar Sesión
-          </button>
+      <div className='text-center flex justify-center p-10'>
+        <div>
+          <a className='text-center flex justify-center text-[#2F4F4F] p-1 font-bold'>
+            Confirma Tu Código
+          </a>
+          <input
+            type='text'
+            name='code'
+            value={code}
+            onChange={(e) => setCode(e.target.value)} // Actualizar estado con el código ingresado
+            placeholder='555-555'
+            className='px-10 py-2 border bg-[#F6F9FF] text-center rounded-md text-sm font-medium text-[#546E7A] hover:bg-[#ECEFF1] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#B0BEC5]'
+          />
         </div>
       </div>
-    </>
+
+      <div className='flex justify-center items-center py-5'>
+        <button
+          onClick={handleVerification} // Llamar función de verificación
+          disabled={loading} // Deshabilitar el botón si está en carga
+          className='px-6 py-2 border border-transparent rounded-md shadow-sm text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]'
+        >
+          {loading ? 'Verificando...' : 'Iniciar Sesión'}
+        </button>
+      </div>
+
+      {/* Mostrar el botón de enviar de nuevo */}
+      <button onClick={handleSendAgain} disabled={!canResend}>
+        {canResend ? 'Enviar de nuevo' : `Esperar ${Math.floor(timer / 60)}:${timer % 60}`}
+      </button>
+
+      {error && <p className="text-red-600 text-center">{error}</p>} {/* Mostrar errores */}
+    </div>
   );
 };
 
 export default View5;
-
-

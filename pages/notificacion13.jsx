@@ -81,8 +81,9 @@ export default function Notificacion() {
             </button>
           </Link>
         </div>
-</div>
-</div>
+      </div>
+    </div>
+
 
   );
 }
