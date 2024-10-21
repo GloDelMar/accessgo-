@@ -26,14 +26,13 @@ export const sendVerificationCode = async (email) => {
 
 export const verifyUserCode = async (userId, code) => {
     try {
+        
         const response = await fetch(`http://localhost:8080/api/verification/verify-code`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ userId, code,
-verified:true
-             }),
+            body: JSON.stringify({ userId, code }),
         });
 
         if (!response.ok) {
@@ -41,7 +40,23 @@ verified:true
         }
 
         const data = await response.json();
-        return data.message;
+
+        console.log('VERIFYUSERCODE',data);
+
+        const updateResponse = await fetch(`http://localhost:8080/api/users/${userId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ verified: true }),
+        });
+
+        if (!updateResponse.ok) {
+            throw new Error('Error al actualizar el estado de verificación del usuario');
+        }
+
+        const updateData = await updateResponse.json();
+        return updateData.message;
     } catch (error) {
         console.error(error);
         throw error;
