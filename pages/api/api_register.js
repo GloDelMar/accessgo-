@@ -6,7 +6,7 @@ export const createAccount = async (email, password, type) => {
     const body = {
       email,
       password,
-      type     
+      type: 'user'
     };
 
     // Mostrar en consola el objeto que se enviará

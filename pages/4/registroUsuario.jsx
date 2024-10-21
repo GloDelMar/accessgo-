@@ -23,7 +23,7 @@ const View4 = () => {
     }
   }, []);
 
-  const type = tipoUsuario
+  const type = tipoUsuario;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,11 +37,8 @@ const View4 = () => {
       const response = await createAccount(email, password, type);
       console.log(response);
       if (response.success) {
-
         // Guardar el _id del usuario en localStorage
         localStorage.setItem('userId', response.data.register._id); // Asegúrate de que 'data._id' sea la ruta correcta para acceder al ID.
-
-     
 
         // Si la cuenta se creó exitosamente, enviar el código de verificación
         await sendVerificationCode(email);
@@ -66,7 +63,6 @@ const View4 = () => {
       setError(`Error al crear cuenta o enviar código: ${error.message}. Inténtalo de nuevo.`);
     }
   };
-
 
   return (
     <>
