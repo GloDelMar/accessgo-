@@ -116,13 +116,13 @@ const View5 = () => {
           {loading ? 'Verificando...' : 'Confirmar'}
         </button>
       </div>
-<div className="flex flex-col items-center mt-5 ">
-      {/* Mostrar el botón de enviar de nuevo */}
-      <button onClick={handleSendAgain} disabled={!canResend} className="w-[155px] h-[40px] bg-white border-2 rounded-lg">
-        {canResend ? 'Reenviar código' : 'Esperar 1:00'} {/* Cambia esto por un contador si deseas */}
-      </button>
+      <div className="flex flex-col items-center mt-5 ">
+        {/* Mostrar el botón de enviar de nuevo */}
+        <button onClick={handleSendAgain} disabled={!canResend} className="w-[155px] h-[40px] bg-white border-2 rounded-lg">
+          {canResend ? 'Reenviar código' : 'Esperar 1:00'} {/* Cambia esto por un contador si deseas */}
+        </button>
 
-      {error && <p className="text-red-600 text-center">{error}</p>} {/* Mostrar errores */}
+        {error && <p className="text-red-600 text-center">{error}</p>} {/* Mostrar errores */}
       </div>
     </div>
   );
