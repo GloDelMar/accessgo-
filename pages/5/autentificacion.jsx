@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from 'next/router';
-import { verifyUserCode, sendVerificationCode } from '../api/api_verification';
+import { verifyUserCode, sendVerificationCode, updateVerificationStatus } from '../api/api_verification';
 
 const View5 = () => {
   const router = useRouter();
@@ -10,10 +10,9 @@ const View5 = () => {
   const [timer, setTimer] = useState(null);
   const [loading, setLoading] = useState(false); // Estado de carga
 
- 
   useEffect(() => {
     return () => {
-      if (timer) clearInterval(timer); // Limpiar el intervalo si el componente se desmonta
+      if (timer) clearTimeout(timer); // Limpiar el temporizador si el componente se desmonta
     };
   }, [timer]);
 
@@ -22,45 +21,43 @@ const View5 = () => {
       const userId = localStorage.getItem('userId'); // Obtener userId de localStorage
       await sendVerificationCode(userId);
       setCanResend(false);
-      setTimer(3600); // 3600 segundos para una hora
 
-      // Configurar temporizador
-      const countdown = setInterval(() => {
-        setTimer((prev) => {
-          if (prev <= 1) {
-            clearInterval(countdown);
-            setCanResend(true);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
+      // Iniciar el temporizador de reenvío
+      const countdown = setTimeout(() => {
+        setCanResend(true);
+      }, 3600000); // 1 hora en milisegundos
+
       setTimer(countdown); // Almacenar el temporizador para limpiar más tarde
     } catch (error) {
       console.error('Error al enviar el código de verificación:', error);
+      setError('Error al enviar el código. Inténtalo de nuevo.');
     }
   };
 
-
-
   const handleVerification = async () => {
+    if (code.length !== 6) {
+      setError('El código debe tener 6 caracteres.');
+      return;
+    }
+
     try {
       const userId = localStorage.getItem('userId'); // Obtener userId de localStorage
       const userType = localStorage.getItem('tipoUsuario'); // Obtener tipo de usuario de localStorage
       setLoading(true); // Activar el estado de carga
-  
+
       // Comprobar si userId es nulo o indefinido
       if (!userId) {
         throw new Error('userId no está disponible en localStorage');
       }
-  
+
       // Mover el console.log aquí
       console.log('Verificando código con los siguientes datos:', { userId, code });
-  
+
       // Verificar el código pasando userId y código
       const isVerified = await verifyUserCode(userId, code);
-  
+
       if (isVerified) {
+        await updateVerificationStatus(userId);
         handleRedirect(userType); // Redirigir según tipo de usuario
       } else {
         setError('Código de verificación inválido o expirado.');
@@ -72,7 +69,6 @@ const View5 = () => {
       setLoading(false); // Desactivar el estado de carga
     }
   };
-  
 
   const handleRedirect = (userType) => {
     if (userType === 'company') {
@@ -82,8 +78,7 @@ const View5 = () => {
     } else {
       console.log("Tipo de usuario no definido.");
     }
-    // Borrar el userId del localStorage después de la redirección
-    localStorage.removeItem('userId');
+
     localStorage.removeItem('tipoUsuario'); // Corregido el nombre
   };
 
@@ -118,16 +113,17 @@ const View5 = () => {
           disabled={loading} // Deshabilitar el botón si está en carga
           className='px-6 py-2 border border-transparent rounded-md shadow-sm text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]'
         >
-          {loading ? 'Verificando...' : 'Iniciar Sesión'}
+          {loading ? 'Verificando...' : 'Confirmar'}
         </button>
       </div>
+      <div className="flex flex-col items-center mt-5 ">
+        {/* Mostrar el botón de enviar de nuevo */}
+        <button onClick={handleSendAgain} disabled={!canResend} className="w-[155px] h-[40px] bg-white border-2 rounded-lg">
+          {canResend ? 'Reenviar código' : 'Esperar 1:00'} {/* Cambia esto por un contador si deseas */}
+        </button>
 
-      {/* Mostrar el botón de enviar de nuevo */}
-      <button onClick={handleSendAgain} disabled={!canResend}>
-        {canResend ? 'Enviar de nuevo' : `Esperar ${Math.floor(timer / 60)}:${timer % 60}`}
-      </button>
-
-      {error && <p className="text-red-600 text-center">{error}</p>} {/* Mostrar errores */}
+        {error && <p className="text-red-600 text-center">{error}</p>} {/* Mostrar errores */}
+      </div>
     </div>
   );
 };

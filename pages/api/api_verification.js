@@ -26,7 +26,7 @@ export const sendVerificationCode = async (email) => {
 
 export const verifyUserCode = async (userId, code) => {
     try {
-        
+        // Hacer la solicitud para verificar el código
         const response = await fetch(`http://localhost:8080/api/verification/verify-code`, {
             method: 'POST',
             headers: {
@@ -39,27 +39,36 @@ export const verifyUserCode = async (userId, code) => {
             throw new Error('Error al verificar el código');
         }
 
+        // Obtener los datos de la respuesta de la verificación
         const data = await response.json();
 
-        console.log('VERIFYUSERCODE',data);
-
-        const updateResponse = await fetch(`http://localhost:8080/api/users/${userId}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ verified: true }),
-        });
-
-        if (!updateResponse.ok) {
-            throw new Error('Error al actualizar el estado de verificación del usuario');
-        }
-
-        const updateData = await updateResponse.json();
-        return updateData.message;
+        // Asumir que quieres devolver algún mensaje de éxito o datos de la respuesta
+        return data.message || 'Código verificado con éxito';
     } catch (error) {
         console.error(error);
         throw error;
     }
 };
 
+export const updateVerificationStatus = async (userId)=> {
+    try {
+        const response = await fetch('http://localhost:8080/api/verification/verified-true', {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userId }) // Envía el userId en el cuerpo de la solicitud
+        });
+
+        if (!response.ok) {
+            // Maneja errores de respuesta
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Error al actualizar el estado de verificación.');
+        }
+
+        const data = await response.json();
+        console.log('Estado de verificación actualizado:', data);
+    } catch (error) {
+        console.error('Error en la actualización del estado de verificación:', error);
+    }
+}
