@@ -164,14 +164,14 @@ const EventTable = () => {
     </div>
   );
 };
-//Mensaje de Bienvenida
+
 // Exporta solo el componente principal como default
 const sesionPremium = () => {
   return (
     <main className="flex overflow-hidden flex-col items-center px-20 pt-28 bg-white pb-[1572px] max-md:px-5 max-md:py-24">
       <div className="flex flex-col ml-7 max-w-full w-[806px]">
         <h1 className="self-center text-6xl font-bold leading-none text-slate-700 max-md:text-4xl">
-          ¡Bienvenido! 
+          ¡Bienvenido!
         </h1>
         <div className="flex flex-col pl-3.5 mt-14 w-full max-md:mt-10 max-md:max-w-full">
           <div className="max-md:max-w-full">
@@ -187,17 +187,7 @@ const sesionPremium = () => {
         <ImageGallery />
         <EventTable />
       </div>
-
-      <div className="flex flex-row justify-center mt-4 space-x-4 md:space-x-[200px]">
-        <button className="w-[155px] h-[40px] bg-white border-2 rounded-lg">
-          <Link legacyBehavior href="/cardPremium10"><a>Cancelar</a></Link>
-        </button>
-        <button className="w-[155px] h-[40px] bg-[#2F4F4F] text-white rounded-lg flex items-center justify-center">
-          <Link legacyBehavior href="/22/sesionPremium"><a>Guardar Cambios</a></Link>
-        </button>
-      </div>
-    </div>  </main>
-
+    </main>
   );
 };
 
