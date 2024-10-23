@@ -15,13 +15,14 @@ const view6 = () => {
 
         <div className='flex flex-col md:flex-row md:justify-between md:items-start md:space-x-8 lg:flex-row lg:justify-between lg:items-start lg:space-x-8 px-4'>
           <div className='lg:w-1/3 text-center lg:text-left mb-8 lg:mb-0'>
-            <h3 className='text-xl text-[#2F4F4F] mb-4'>Datos personales</h3>
+            <h3 className='text-xl text-center text-[#2F4F4F] mb-4'>Datos personales</h3>
             <div className='flex justify-center lg:justify-start'>
+              
               <Image
                 src='/iconoframe.png'
                 alt='Foto de perfil'
-                width={150}
-                height={150}
+                width={300}
+                height={300}
                 className='rounded-full'
               />
             </div>
@@ -48,12 +49,15 @@ const view6 = () => {
               </div>
 
               <div className='mb-4'>
-                <input
-                  type='date'
-                  name='fechanacimiento'
-                  placeholder='Fecha de Nacimiento'
-                  className='w-full px-4 py-2 border bg-[#F9F9F9] rounded-md text-sm font-medium text-[#546E7A] hover:bg-[#ECEFF1] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#B0BEC5]'
-                />
+                <div>
+                  <a>Fecha de Nacimiento</a>
+                  <input
+                    type='date'
+                    name='fechanacimiento'
+                    placeholder='Fecha de Nacimiento'
+                    className='w-full px-4 py-2 border bg-[#F9F9F9] rounded-md text-sm font-medium text-[#546E7A] hover:bg-[#ECEFF1] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#B0BEC5]'
+                  />
+                </div>
               </div>
 
               <div className='mb-4'>
