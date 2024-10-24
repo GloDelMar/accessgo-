@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "autoprefixer": "^10.4.20",
+    "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
     "leaflet": "^1.9.4",
     "mapbox-gl": "^3.7.0",
