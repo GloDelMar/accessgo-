@@ -196,7 +196,8 @@ const sesionPremium = () => {
           <Link legacyBehavior href="/22/sesionPremium"><a>Guardar Cambios</a></Link>
         </button>
       </div>
-    </div>
+      </main>
+   
 
   );
 };
