@@ -6,7 +6,9 @@ const view6 = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [dataNombre, setDataNombre] = useState('');
   const [dataApellido, setDataApellido] = useState('');
-  const [datafecha, setDataFecha] = useState('');
+  const [dataFecha, setDataFecha] = useState('');
+  const [dataBio, setDataBio] = useState('');
+
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -19,7 +21,8 @@ const view6 = () => {
   };
   console.log(dataNombre);
   console.log(dataApellido);
-  console.log(datafecha);
+  console.log(dataFecha);
+  console.log(dataBio);
   return (
     <>
       <h1 className='text-center text-2xl p-4 font-bold text-[#2F4F4F]'>
@@ -96,7 +99,7 @@ const view6 = () => {
                 <a>Fecha de Nacimiento</a>
                 <input
                   type='date'
-                  value={datafecha}
+                  value={dataFecha}
                   onChange={(event) => {
                     setDataFecha(event.target.value);
                   }}
@@ -111,6 +114,10 @@ const view6 = () => {
               <textarea
                 name='descripcion'
                 type='textarea'
+                value={dataBio}
+                onChange={(event) => {
+                  setDataBio(event.target.value);
+                }}
                 placeholder='¿Te gustaría describir un poco de ti?'
                 className='w-full px-4 py-2 border bg-[#F9F9F9] rounded-md text-sm font-medium text-[#546E7A] hover:bg-[#ECEFF1] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#B0BEC5] h-32'
               />
