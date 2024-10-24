@@ -50,7 +50,7 @@ const SignUp = () => {
             </div>
             <div className="mb-2">
               {/* Agregar tipo de usuario como 'usuario' y redirigir */}
-              <a onClick={() => handleUserType('usuario', '/terminosYcondiciones')} className="flex items-center rounded-full justify-between bg-[#F5F0E5] hover:bg-[#E0D7C6] px-4 py-2 cursor-pointer">
+              <a onClick={() => handleUserType('user', '/terminosYcondiciones')} className="flex items-center rounded-full justify-between bg-[#F5F0E5] hover:bg-[#E0D7C6] px-4 py-2 cursor-pointer">
                 <Image src="/iconosLogin/icons8-whatsapp-50.png" alt="Logo de WhatsApp" width={30} height={30} />
                 <span className="text-xs md:text-lg">Continúa con email o WhatsApp</span>
               </a>
@@ -60,7 +60,7 @@ const SignUp = () => {
             <h3 className="text-[#2F4F4F] text-lg font-bold mb-2">Regístrate como empresa</h3>
             <div className="mt-2 w-[250px] md:w-[350px]">
               {/* Agregar tipo de usuario como 'empresa' y redirigir */}
-              <a onClick={() => handleUserType('empresa', '/notificacion13')} className="flex items-center rounded-full justify-between bg-[#F5F0E5] hover:bg-[#E0D7C6] px-4 py-2 cursor-pointer">
+              <a onClick={() => handleUserType('company', '/notificacion13')} className="flex items-center rounded-full justify-between bg-[#F5F0E5] hover:bg-[#E0D7C6] px-4 py-2 cursor-pointer">
                 <Image src="/iconosLogin/icons8-empresa-24.png" alt="Icono de personas de empresa" width={30} height={30} />
                 <span className="text-xs md:text-lg">Soy empresa</span>
               </a>
