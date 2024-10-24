@@ -65,7 +65,7 @@ export default function terminosYcondiciones() {
        
         <div>
           <Link legacyBehavior href='/4/registroUsuario'>
-            <button className='w-[155px] h-[40px] md:w-[250px] md:h-[50px] bg-[#2F4F4F] text-white rounded-lg flex items-center justify-center shadow-md shadow-gray-400'>
+            <button className='px-6 py-2 border border-transparent rounded-md shadow-sm text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]'>
               Continuar
             </button>
           </Link>
