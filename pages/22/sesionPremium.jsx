@@ -188,7 +188,7 @@ const sesionPremium = () => {
         <EventTable />
       </div>
 
-      <div className="flex flex-row justify-center mt-4 space-x-4 md:space-x-[200px]">
+     <div className="flex flex-row justify-center mt-4 space-x-4 md:space-x-[200px]">
         <button className="w-[155px] h-[40px] bg-white border-2 rounded-lg">
           <Link legacyBehavior href="/cardPremium10"><a>Cancelar</a></Link>
         </button>
@@ -197,7 +197,7 @@ const sesionPremium = () => {
         </button>
       </div>
       </main>
-   
+
 
   );
 };
