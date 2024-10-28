@@ -196,10 +196,8 @@ const sesionPremium = () => {
         <button className="w-[155px] h-[40px] bg-[#2F4F4F] text-white rounded-lg flex items-center justify-center">
           <Link legacyBehavior href="/22/sesionPremium"><a>Guardar Cambios</a></Link>
         </button>
-        </div>
-      
-    </main>
-
+      </div>
+      </main>
   );
 };
 

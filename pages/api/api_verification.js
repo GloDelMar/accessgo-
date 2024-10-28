@@ -1,7 +1,7 @@
 export const sendVerificationCode = async (email) => {
     try {
         const requestBody = JSON.stringify({ email });
-        console.log('Datos enviados en la solicitud:', requestBody);
+       
 
         const response = await fetch(`http://localhost:8080/api/verification/send-code`, {
             method: 'POST',
@@ -26,8 +26,7 @@ export const sendVerificationCode = async (email) => {
 
 export const verifyUserCode = async (userId, code) => {
     try {
-        // Hacer la solicitud para verificar el código
-        const response = await fetch(`http://localhost:8080/api/verification/verify-code`, {
+       const response = await fetch(`http://localhost:8080/api/verification/verify-code`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -39,10 +38,10 @@ export const verifyUserCode = async (userId, code) => {
             throw new Error('Error al verificar el código');
         }
 
-        // Obtener los datos de la respuesta de la verificación
+       
         const data = await response.json();
 
-        // Asumir que quieres devolver algún mensaje de éxito o datos de la respuesta
+       
         return data.message || 'Código verificado con éxito';
     } catch (error) {
         console.error(error);
