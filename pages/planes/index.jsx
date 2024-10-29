@@ -1,15 +1,21 @@
 import { useEffect, useState } from "react";
-import Stripe from "stripe"; // Asegúrate de que la importación sea correcta
+import Stripe from "stripe";
 import ButtonCheckout from "@/components/Molecules/ButtonCheckout";
 import Link from "next/link";
 
 async function loadPrices() {
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY); // Verifica que la clave esté definida
-  const prices = await stripe.prices.list(); // Asegúrate de usar await aquí
-  const sortedPrices = prices.data.sort(
-    (a, b) => a.unit_amount - b.unit_amount
-  );
-  return sortedPrices;
+  const response = await fetch('/api/prices');
+  if (!response.ok) {
+    throw new Error('Error al cargar los precios');
+  }
+  return await response.json();
+
+  // const stripe = new Stripe(process.env.STRIPE_SECRET_KEY); // Verifica que la clave esté definida
+  // const prices = await stripe.prices.list(); // Asegúrate de usar await aquí
+  // const sortedPrices = prices.data.sort(
+  //   (a, b) => a.unit_amount - b.unit_amount
+  // );
+  // return sortedPrices;
 }
 
 function PricingPage() {
@@ -20,7 +26,7 @@ function PricingPage() {
   useEffect(() => {
     const fetchPrices = async () => {
       try {
-        const pricesData = await loadPrices(); // Llama a la función para cargar precios
+        const pricesData = await loadPrices(); 
         setPrices(pricesData);
       } catch (err) {
         setError(err);
@@ -40,10 +46,10 @@ function PricingPage() {
       <div>
         <header className="flex flex-col">
           <h1 className="mt-9 font-bold leading-3 text-center">¡Elige tu plan!</h1>
-          <p className="mt-8 text-sm font-bold text-center">¡Aquí puedes elegir el plan que te interese más!</p>
+          <p className="mt-8 text-sm font-bold text-center mt-10">¡Aquí puedes elegir el plan que te interese más!</p>
         </header>
 
-        <div className="flex flex-col md:flex-col justify-center">
+        <div className="flex flex-col md:flex-col justify-center mt-10">
           {prices.map((price) => (
             <div key={price.id} className="flex flex-col mt-2 items-center">
               <h3>{price.nickname}</h3>
@@ -53,8 +59,8 @@ function PricingPage() {
           ))}
         </div>
 
-        <div className="flex flex-row justify-center mt-5 space-x-4 md:space-x-[200px] mt-16">
-          <button className="w-[155px] h-[40px] bg-white border-2 rounded-lg border border-black">
+        <div className="flex flex-row justify-center mt-5 space-x-4 md:space-x-[200px]">
+          <button className="w-[155px] h-[40px] bg-white border-2 rounded-lg border border-black mt-20">
             <Link legacyBehavior href="http://localhost:3000/15/planesEmpresa"><a>Cancelar</a></Link>
           </button>
         </div>
