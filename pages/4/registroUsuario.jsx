@@ -46,24 +46,29 @@ const View4 = () => {
         } else if (type === "company") {
           userId = response.data.company._id;
         }
+        console.log("respuesta", response);
   
         // Inicia sesión automáticamente después de crear la cuenta
-        const token = await login(email, password);
+        const token = await login(email, password); // Asegúrate de que no se necesite un token aquí.
   
-        // Guarda el token y el ID del usuario en el localStorage
-        localStorage.setItem('token', token);
-        localStorage.setItem('userId', userId);
+        if (token) { // Asegúrate de que se recibe un token válido.
+          // Guarda el token y el ID del usuario en el localStorage
+          localStorage.setItem('token', token);
+          localStorage.setItem('userId', userId);
   
-        // Envia el código de verificación
-        await sendVerificationCode(email);
+          // Envía el código de verificación
+          await sendVerificationCode(email);
   
-        // Redirige a la pantalla de autenticación
-        router.push('/5/autentificacion');
+          // Redirige a la pantalla de autenticación
+          router.push('/5/autentificacion');
   
-        // Limpia los campos
-        setEmail('');
-        setPassword('');
-        setConfirmPassword('');
+          // Limpia los campos
+          setEmail('');
+          setPassword('');
+          setConfirmPassword('');
+        } else {
+          setError('Error al iniciar sesión. Inténtalo de nuevo.');
+        }
       } else {
         setError('Error al crear la cuenta. Inténtalo de nuevo.');
       }
@@ -71,7 +76,7 @@ const View4 = () => {
       setError(`Error al crear cuenta o enviar código: ${error.message}`);
     }
   };
-
+  
   return (
     <div>
       <h1 className='text-center text-[#2F4F4F] text-2xl p-10 font-bold'>
