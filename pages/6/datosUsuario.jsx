@@ -1,13 +1,50 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
+import { useRouter } from 'next/router';
 
-const view6 = () => {
+const View6 = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [dataNombre, setDataNombre] = useState('');
   const [dataApellido, setDataApellido] = useState('');
   const [dataFecha, setDataFecha] = useState('');
   const [dataBio, setDataBio] = useState('');
+  const router = useRouter(); // Agregar el hook de enrutamiento
+
+  const handleSubmit = async () => {
+    event.preventDefault();
+    const userData = {
+      firstName: dataNombre,
+      lastName: dataApellido,
+      birthDate: dataFecha,
+      biography: dataBio
+      //imagen: selectedImage,
+    };
+    const id = '671e5c70fdec850c41a94a5f';
+    try {
+      const response = await fetch(`http://localhost:8080/api/users/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData)
+      });
+      console.log(userData);
+      if (response.ok) {
+        const jsonResponse = await response.json();
+        console.log('Usuario creado:', jsonResponse);
+        router.push('/7/perfilUsuario'); // Navegar a la siguiente página
+      } else {
+        console.error('Error al crear el usuario:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error en la solicitud:', error);
+    }
+
+    const jsonData = JSON.stringify(userData);
+    console.log(jsonData, 'objeto de respuesta');
+    // Aquí puedes manejar la lógica para enviar los datos
+    // console.log(dataNombre, dataApellido, dataFecha, dataBio);
+  };
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -19,14 +56,11 @@ const view6 = () => {
       reader.readAsDataURL(file);
     }
   };
-  console.log(dataNombre);
-  console.log(dataApellido);
-  console.log(dataFecha);
-  console.log(dataBio);
+
   return (
     <>
       <h1 className='text-center text-2xl p-4 font-bold text-[#2F4F4F]'>
-        ¡Cuentanos un poco de ti!
+        ¡Cuéntanos un poco de ti!
       </h1>
       <h3 className='text-center text-[#2F4F4F] px-4 pb-10'>
         Para personalizar tu perfil te pedimos que llenes los siguientes campos
@@ -66,15 +100,13 @@ const view6 = () => {
           </div>
         </div>
 
-        <div className='lg:w-2/3 flex flex-col items-center  lg:items-start'>
-          <form className='w-full max-w-lg'>
+        <div className='lg:w-2/3 flex flex-col items-center lg:items-start'>
+          <form className='w-full max-w-lg' onSubmit={handleSubmit}>
             <div className='mb-4'>
               <input
                 type='text'
                 value={dataNombre}
-                onChange={(event) => {
-                  setDataNombre(event.target.value);
-                }}
+                onChange={(event) => setDataNombre(event.target.value)}
                 name='Nombre'
                 placeholder='Nombre'
                 className='w-full px-4 py-2 border bg-[#F9F9F9] rounded-md text-sm font-medium text-[#546E7A] hover:bg-[#ECEFF1] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#B0BEC5]'
@@ -85,9 +117,7 @@ const view6 = () => {
               <input
                 type='text'
                 value={dataApellido}
-                onChange={(event) => {
-                  setDataApellido(event.target.value);
-                }}
+                onChange={(event) => setDataApellido(event.target.value)}
                 name='apellido'
                 placeholder='Apellido'
                 className='w-full px-4 py-2 border bg-[#F9F9F9] rounded-md text-sm font-medium text-[#546E7A] hover:bg-[#ECEFF1] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#B0BEC5]'
@@ -96,15 +126,12 @@ const view6 = () => {
 
             <div className='mb-4'>
               <div>
-                <a>Fecha de Nacimiento</a>
+                <label>Fecha de Nacimiento</label>
                 <input
                   type='date'
                   value={dataFecha}
-                  onChange={(event) => {
-                    setDataFecha(event.target.value);
-                  }}
+                  onChange={(event) => setDataFecha(event.target.value)}
                   name='fechanacimiento'
-                  placeholder='Fecha de Nacimiento'
                   className='w-full px-4 py-2 border bg-[#F9F9F9] rounded-md text-sm font-medium text-[#546E7A] hover:bg-[#ECEFF1] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#B0BEC5]'
                 />
               </div>
@@ -113,26 +140,23 @@ const view6 = () => {
             <div className='mb-4'>
               <textarea
                 name='descripcion'
-                type='textarea'
                 value={dataBio}
-                onChange={(event) => {
-                  setDataBio(event.target.value);
-                }}
+                onChange={(event) => setDataBio(event.target.value)}
                 placeholder='¿Te gustaría describir un poco de ti?'
                 className='w-full px-4 py-2 border bg-[#F9F9F9] rounded-md text-sm font-medium text-[#546E7A] hover:bg-[#ECEFF1] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#B0BEC5] h-32'
               />
             </div>
 
             <div className='flex justify-center items-center py-5'>
-              <Link legacyBehavior href='/7/perfilUsuario'>
-                <button
-                  className='px-6 py-2 border border-transparent rounded-md shadow-sm
-              text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none
-              focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]'
-                >
-                  Continuar
-                </button>
-              </Link>
+              <button
+                type='submit'
+                // onClick={handleSubmit}
+                className='px-6 py-2 border border-transparent rounded-md shadow-sm
+                text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none
+                focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]'
+              >
+                Continuar
+              </button>
             </div>
           </form>
         </div>
@@ -141,4 +165,4 @@ const view6 = () => {
   );
 };
 
-export default view6;
+export default View6;
