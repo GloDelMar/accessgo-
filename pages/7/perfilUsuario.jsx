@@ -32,8 +32,7 @@ const View7 = () => {
             <Image
               src={userData.data.user?.profilePicture || defaultProfilePic} // Usar la imagen de perfil o la predeterminada
               alt="Foto de perfil"
-              width={150}
-              height={150}
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 50vw" 
               className="rounded-full mx-auto mb-4"
             />
             <h2 className="text-xl font-semibold mb-2">{userData.data.user?.firstName} {userData.data.user?.lastName}</h2>
