@@ -2,7 +2,7 @@ const API_URL = "http://localhost:8080"
 
 
 export function getUserById(id) {
-    return fetch(`${API_URL}/api/${id}`, {
+    return fetch(`${API_URL}/api/users/${id}`, {
       method: "GET", 
       headers: {
         "Content-Type": "application/json",

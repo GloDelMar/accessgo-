@@ -71,3 +71,26 @@ export const updateVerificationStatus = async (userId)=> {
         console.error('Error en la actualización del estado de verificación:', error);
     }
 }
+
+export function loginUser(email, password) {
+    return fetch(`http://localhost:8080/auth`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Credenciales incorrectas')
+        }
+        return response.json()
+    })
+    .then(data => {
+        
+        localStorage.setItem('token', data.data.token)
+        console.log("recibo",data.data.token )
+        return data;
+    })
+ }
+ 
