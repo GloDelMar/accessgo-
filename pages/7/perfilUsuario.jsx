@@ -6,21 +6,38 @@ const defaultProfilePic = '/6073873.png';
 
 const View7 = () => {
   const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true); // Estado de carga
+  const [error, setError] = useState(null); // Estado de error
+  const userId = localStorage.getItem("userId");
 
   useEffect(() => {
     const fetchUserData = async () => {
+      if (!userId) {
+        setError("User ID not found."); // Manejar caso sin userId
+        setLoading(false);
+        return;
+      }
+
       try {
-        const data = await getUserById("671c5a6928bb533dd0718d91"); // ID del usuario
+        const data = await getUserById(userId);
         setUserData(data);
       } catch (error) {
         console.error(error);
+        setError("Failed to fetch user data."); // Manejo de error
+      } finally {
+        setLoading(false); // Cambiar estado de carga al final
       }
     };
-    fetchUserData();
-  }, []);
 
-  if (!userData) {
+    fetchUserData();
+  }, [userId]); // Añadir userId como dependencia
+
+  if (loading) {
     return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p className="text-red-500 text-center">{error}</p>; // Mostrar error si existe
   }
 
   return (
@@ -30,11 +47,11 @@ const View7 = () => {
         <div className="w-full lg:w-1/3 flex flex-col items-center">
           <div className="bg-gradient-to-b from-[#ECEFF1] to-white w-full max-w-[231px] h-auto rounded-[25px] shadow-md p-6 text-center">
             <Image
-              src={userData.data.user?.profilePicture || defaultProfilePic} // Usar la imagen de perfil o la predeterminada
-              alt="Foto de perfil"
-              width={150}
-              height={150}
-              className="rounded-full mx-auto mb-4"
+                src={userData.data.user?.profilePicture || defaultProfilePic}
+                alt="Foto de perfil"
+                width={50} 
+                height={50} 
+                className="rounded-full mx-auto mb-4"
             />
             <h2 className="text-xl font-semibold mb-2">{userData.data.user?.firstName} {userData.data.user?.lastName}</h2>
           </div>
