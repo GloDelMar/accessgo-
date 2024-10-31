@@ -24,13 +24,14 @@ const View23 = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     const formData = {
-      nombreNegocio: dataNombreNegocio,
+      companyName: dataNombreNegocio,
       rfc: dataRfc,
+      phone: dataTel,
       nombrePersonaMoral: dataNombrePersonaM,
       apellidoPersonaMoral: dataApellidoPersonaM,
       giroNegocio: dataGiroNegocio,
       descripcion: dataDescripcion,
-      direccion: dataDireccion,
+      address: dataDireccion,
       diasSeleccionados: selectedDays
     };
     console.log(JSON.stringify(formData));
