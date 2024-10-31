@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.682.0",
     "@stripe/stripe-js": "^4.9.0",
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.7",

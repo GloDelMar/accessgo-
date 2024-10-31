@@ -2,13 +2,16 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 
+//imports para imagenes en S3
+import UploadS3Form from '@/components/Molecules/UploadS3Form';
+
 const View6 = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [dataNombre, setDataNombre] = useState('');
   const [dataApellido, setDataApellido] = useState('');
   const [dataFecha, setDataFecha] = useState('');
   const [dataBio, setDataBio] = useState('');
-  const router = useRouter(); // Agregar el hook de enrutamiento
+  const router = useRouter(); 
 
   const handleSubmit = async () => {
     event.preventDefault();
@@ -42,8 +45,7 @@ const View6 = () => {
 
     const jsonData = JSON.stringify(userData);
     console.log(jsonData, 'objeto de respuesta');
-    // Aquí puedes manejar la lógica para enviar los datos
-    // console.log(dataNombre, dataApellido, dataFecha, dataBio);
+   
   };
 
   const handleImageChange = (event) => {
@@ -96,7 +98,9 @@ const View6 = () => {
                 className='hidden'
                 onChange={handleImageChange}
               />
+              
             </label>
+            <UploadS3Form/>
           </div>
         </div>
 
