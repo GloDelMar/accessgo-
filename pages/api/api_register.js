@@ -9,10 +9,7 @@ export const createAccount = async (email, password, type) => {
       type: 'user'
     };
 
-    // Mostrar en consola el objeto que se enviará
-    console.log("Datos enviados en la solicitud:", body);
-
-    // Realizar la solicitud de registro
+       // Realizar la solicitud de registro
     const response = await fetch(`${API_URL}/api/register`, {
       method: 'POST',
       headers: {
