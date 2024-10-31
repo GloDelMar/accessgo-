@@ -1,46 +1,61 @@
-import { NextResponse } from "next/server";
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import formidable from 'formidable';
+import fs from 'fs';
 
 const s3Client = new S3Client({
-    region: process.env.AWS_S3_REGION,
-    credentials: {
-        accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID,
-        secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY,
-    }
+  region: process.env.AWS_S3_REGION,
+  credentials: {
+    accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY
+  }
 });
 
-async function uploadFileToS3(file, fileName) {
-    const fileBuffer = file;
-    console.log(fileName);
+async function uploadFileToS3(fileBuffer, fileName) {
+  const params = {
+    Bucket: process.env.AWS_S3_BUCKET_NAME,
+    Key: `${fileName}`,
+    Body: fileBuffer,
+    ContentType: 'image/jpeg'
+  };
 
-    const params = {
-        Bucket: process.env.AWS_S3_BUCKET_NAME,
-        Key: `${fileName}`,
-        Body: fileBuffer,
-        ContentType: "image/jpg"
-    }
-
-    const command = new PutObjectCommand(params);
-    await s3Client.send(command);
-    return fileName;
+  const command = new PutObjectCommand(params);
+  await s3Client.send(command);
+  return fileName;
 }
 
+export const config = {
+  api: {
+    bodyParser: false
+  }
+};
 
-export default async function handler(request) {
-    try {
-        const formData = await request.formData();
-        const file = formData.get("file");
+export default async function handler(req, res) {
+  const form = formidable({ multiples: false });
 
-        if (!file) {
-            return NextResponse.json({ error: "File is required." }, { status: 400 });
-        }
-
-        const buffer = Buffer.from(await file.arrayBuffer());
-        const fileName = await uploadFileToS3(buffer, file.name);
-
-        return NextResponse.json({ success: true, fileName });
-    } catch (error) {
-        console.error("Error uploading to S3:", error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+  form.parse(req, async (err, fields, files) => {
+    if (err) {
+      console.error('Error parsing the file:', err);
+      return res.status(400).json({ error: 'Failed to parse file.' });
     }
+
+    console.log(files);
+    const file = files.file[0];
+
+    if (!file) {
+      return res.status(400).json({ error: 'File is required.' });
+    }
+
+    if (!file.filepath) {
+      return res.status(400).json({ error: 'File path is undefined.' });
+    }
+
+    try {
+      const buffer = await fs.promises.readFile(file.filepath);
+      const fileName = await uploadFileToS3(buffer, file.originalFilename);
+      return res.status(200).json({ success: true, fileName });
+    } catch (uploadError) {
+      console.error('Error uploading to S3:', uploadError);
+      return res.status(500).json({ error: 'Failed to upload file.' });
+    }
+  });
 }
