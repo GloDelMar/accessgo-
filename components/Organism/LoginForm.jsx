@@ -21,6 +21,7 @@ const LoginForm = () => {
 
   async function onSubmit(e) {
     e.preventDefault();
+    console.log('Formulario enviado');
     try {
       const response = await axios.post('http://localhost:8080/api/auth', {
         email,
@@ -42,7 +43,12 @@ const LoginForm = () => {
         });
       }
     } catch (error) {
-      toast.error('Error al iniciar sesion');
+      toast.error('Error al iniciar sesion', {
+        style: {
+          background: 'red',
+          color: 'white'
+        }
+      });
       console.error('[login error]', error);
     }
   }
