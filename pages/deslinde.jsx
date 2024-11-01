@@ -1,6 +1,14 @@
 import Link from 'next/link';
+import { useState } from 'react';
 
-export default function deslinde() {
+export default function Deslinde() {
+  const [isAgreed, setIsAgreed] = useState(false); // Estado para el checkbox
+
+  // Función para manejar el cambio del checkbox
+  const handleCheckboxChange = () => {
+    setIsAgreed(!isAgreed);
+  };
+
   return (
     <div className='w-full h-full lg:w-2/3 flex flex-col text-[#2F4F4F] mt-2 md:px-10 lg:px-0'>
       <div className='flex flex-col text-center '>
@@ -10,7 +18,7 @@ export default function deslinde() {
 
         <div className='w-full h-full flex flex-col justify-center items-center font-semibold text-sm md:text-base lg:text-xl'>
           <p className='mt-6'>
-            En AccesGo estamos conscientes que la información proporcionada por
+            En AccessoGo estamos conscientes que la información proporcionada por
             nuestros usuarios al momento de su registro es de tipo sensible y
             por lo tanto de vital importancia a no ser expuesta a divulgación
             sin su previo consentimiento.
@@ -19,8 +27,8 @@ export default function deslinde() {
 
         <div className='w-full h-full flex flex-col justify-center items-center font-semibold text-sm md:text-base lg:text-xl'>
           <p className='mt-6'>
-            Es por esto que te  recordamos que los archivos de tipo imagen y 
-            texto  que compartas en nuestra comunidad quedan bajo tu responsabilidad.
+            Es por esto que te recordamos que los archivos de tipo imagen y 
+            texto que compartas en nuestra comunidad quedan bajo tu responsabilidad.
           </p>
           <p className='mt-6'>
             Así mismo. El uso incorrecto de esta plataforma por medio de este
@@ -53,14 +61,23 @@ export default function deslinde() {
       </div>
       <div className='flex flex-row justify-center my-10 font-extrabold text-[#2F4F4F]'>
         <label>
-          <input type='checkbox' /> Estoy de acuerdo con la informacion que aqui
-          se muestra
+          <input
+            type='checkbox'
+            checked={isAgreed}
+            onChange={handleCheckboxChange}
+          />{' '}
+          Estoy de acuerdo con la información que aquí se muestra
         </label>
       </div>
-      <div className='flex flex-row justify-center items center p-10 mt-10 md:mt-20 md:mb-10'>
+      <div className='flex flex-row justify-center items-center p-10 mt-10 md:mt-20 md:mb-10'>
         <div>
-          <Link legacyBehavior href='/4/registroUsuario'>
-            <button className='w-[155px] h-[40px] md:w-[250px] md:h-[50px] bg-[#2F4F4F] text-white rounded-lg flex items-center justify-center shadow-md shadow-gray-400'>
+          <Link legacyBehavior href={isAgreed ? '/4/registroUsuario' : '#'} passHref>
+            <button
+              className={`w-[155px] h-[40px] md:w-[250px] md:h-[50px] bg-[#2F4F4F] text-white rounded-lg flex items-center justify-center shadow-md shadow-gray-400 ${
+                isAgreed ? '' : 'opacity-50 cursor-not-allowed'
+              }`}
+              disabled={!isAgreed} // Deshabilitar el botón si no está chequeado
+            >
               Continuar
             </button>
           </Link>
