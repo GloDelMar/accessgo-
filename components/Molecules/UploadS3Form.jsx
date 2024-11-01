@@ -34,14 +34,16 @@ const UploadS3Form = () => {
 
   return (
     <>
-      <h1>Upload Files to S3 Bucket</h1>
-
-      <form onSubmit={handleSubmit}>
+      <div>
+      <form onSubmit={handleSubmit} className="flex flex-col justify-center items-center text-xl text-center text-[#2F4F4F] mb-4">
         <input type="file" accept="image/*" onChange={handleFileChange} />
         <button type="submit" disabled={!file || uploading}>
-          {uploading ? "Uploading..." : "Upload"}
+          {uploading ? "enviando..." : "Subir foto"}
         </button>
       </form>
+
+      </div>
+
     </>
   );
 };

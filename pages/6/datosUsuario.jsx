@@ -11,7 +11,7 @@ const View6 = () => {
   const [dataApellido, setDataApellido] = useState('');
   const [dataFecha, setDataFecha] = useState('');
   const [dataBio, setDataBio] = useState('');
-  const router = useRouter(); 
+  const router = useRouter();
 
   const handleSubmit = async () => {
     event.preventDefault();
@@ -45,7 +45,6 @@ const View6 = () => {
 
     const jsonData = JSON.stringify(userData);
     console.log(jsonData, 'objeto de respuesta');
-   
   };
 
   const handleImageChange = (event) => {
@@ -92,16 +91,16 @@ const View6 = () => {
                   className='rounded-full'
                 />
               )}
+              {/* aqui haremos que la imagen de arriba traiga la imagen que se subio al s3, y la muestre al  usuario */}
               <input
                 type='file'
                 id='imgUsuario'
                 className='hidden'
                 onChange={handleImageChange}
               />
-              
             </label>
-            <UploadS3Form/>
           </div>
+          <UploadS3Form />
         </div>
 
         <div className='lg:w-2/3 flex flex-col items-center lg:items-start'>
