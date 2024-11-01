@@ -173,7 +173,7 @@ const View23 = () => {
                 value={address}
                 onChange={handleAddressChange}
               />
-              <button onClick={handleSearch} className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md">Buscar en el mapa</button>
+              <button onClick={handleSearch} className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md">Buscar</button>
             </div>
             <div className="aspect-video relative rounded-md overflow-hidden" ref={mapDiv} style={{ height: '400px' }}>
             </div>
@@ -192,3 +192,6 @@ const View23 = () => {
 };
 
 export default View23;
+
+
+//VOY A TRABAJAR ESTA PAGINA 

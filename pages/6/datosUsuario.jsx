@@ -19,7 +19,7 @@ const View6 = () => {
       biography: dataBio
       //imagen: selectedImage,
     };
-    const id = '671e5c70fdec850c41a94a5f';
+    const id = localStorage.getItem('userId');
     try {
       const response = await fetch(`http://localhost:8080/api/users/${id}`, {
         method: 'PUT',
