@@ -1,189 +1,330 @@
-import React from 'react';
-import Link from 'next/link';
+import { InputWithLabel } from '@/components/atoms/Input';
+import mapboxgl from 'mapbox-gl';
+import Image from 'next/image';
+import { router } from 'next/router';
+import { useEffect, useRef, useState } from 'react';
 
+mapboxgl.accessToken =
+  'pk.eyJ1IjoiYWNjZXNnbyIsImEiOiJjbTI4NGVjNnowc2RqMmxwdnptcXAwbmhuIn0.0jG0XG0mwx_LHjdJ23Qx4A';
 
-const ProfilePhoto = () => (
-  <section className="flex flex-col justify-end px-6 pt-10 pb-3.5 mt-10 max-w-full text-sm bg-white rounded-2xl border border-gray-100 border-solid shadow-lg w-[300px] max-md:pl-5">
-    <div className="flex flex-col justify-center items-center self-center px-3 leading-5 text-center text-white bg-white rounded-full border border-gray-300 border-solid fill-white h-[168px] stroke-[1px] stroke-gray-300 w-[168px]">
-      <div className="flex relative flex-col justify-center items-center w-full aspect-square">
-        <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/062252b061b7fa1097135895d1fade6188fa81c25d6513b506274d614aa49657?placeholderIfAbsent=true&apiKey=94b7d1b7a1ff491ea399fe140abd93c0" alt="Current profile" className="object-cover absolute inset-0 size-full" />
-        <div className="flex relative flex-col px-6 py-9 w-full h-36 rounded-full bg-neutral-700 bg-opacity-70 max-md:pr-5">
-          <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/bc421f796df26da330e3f41c0f03e1819e9987f7fff1c3edaa67d8cb5f8d684e?placeholderIfAbsent=true&apiKey=94b7d1b7a1ff491ea399fe140abd93c0" alt="" className="object-contain self-center w-6 aspect-square" />
-          <p className="mt-2">
-            Actualizar foto <br /> de perfil
-          </p>
-        </div>
-      </div>
-    </div>
-    <div className="px-8 py-5 mt-5 font-medium leading-6 text-gray-800 whitespace-nowrap bg-gray-100 rounded-lg max-md:px-5">
-      Nombre
-    </div>
-  </section>
-);
+const View23 = () => {
+  const mapDiv = useRef(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [dataNombreNegocio, setDataNombreNegocio] = useState('');
+  const [dataRfc, setDataRfc] = useState('');
+  const [dataTel, setDataTel] = useState('');
+  const [dataNombrePersonaM, setDataNombrePersonaM] = useState('');
+  const [dataApellidoPersonaM, setDataApellidoPersonaM] = useState('');
+  const [dataGiroNegocio, setDataGiroNegocio] = useState('');
+  const [dataHoraIni, setDataHoraIni] = useState('');
+  const [dataHoraFin, setDataHoraFin] = useState('');
+  const [dataDescripcion, setDataDescripcion] = useState('');
+  const [dataDireccion, setDataDireccion] = useState('');
 
-const BusinessDetails = () => (
-  <section>
-    <h2 className="text-xl font-bold text-gray-800 mb-6">Datos del negocio</h2>
-    <div className="flex gap-5 justify-between max-w-full w-[334px]">
-      <div className="flex flex-col">
-        <label htmlFor="businessName" className="text-base font-medium text-slate-500">
-          Nombre comercial
-        </label>
-        <p className="self-start mt-3 text-xs font-medium text-slate-500">
-          Nombre comercial de tu negocio
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const formData = {
+      nombreNegocio: dataNombreNegocio,
+      rfc: dataRfc,
+      nombrePersonaMoral: dataNombrePersonaM,
+      apellidoPersonaMoral: dataApellidoPersonaM,
+      giroNegocio: dataGiroNegocio,
+      descripcion: dataDescripcion,
+      direccion: dataDireccion,
+      diasSeleccionados: selectedDays
+    };
+    console.log(JSON.stringify(formData));
+    // Aquí puedes enviar formData a tu API o realizar otra acción necesaria
+    router.push('/21/view21');
+  };
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSelectedImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  useEffect(() => {
+    if (mapDiv.current) {
+      const map = new mapboxgl.Map({
+        container: mapDiv.current,
+        style: 'mapbox://styles/mapbox/streets-v12',
+        center: [-100.3899, 20.5888],
+        zoom: 9
+      });
+    }
+  }, []);
+
+  const [selectedDays, setselectedDays] = useState([]);
+
+  const days = [
+    'Lunes',
+    'Martes',
+    'Miércoles',
+    'Jueves',
+    'Viernes',
+    'Sábado',
+    'Domingo',
+    'Todos los días'
+  ];
+
+  const toggleDay = (day) =>
+    setselectedDays((prev) =>
+      prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]
+    );
+  console.log(
+    dataNombreNegocio,
+    dataRfc,
+    dataNombrePersonaM,
+    dataApellidoPersonaM,
+    dataGiroNegocio,
+    dataDescripcion,
+    dataHoraIni,
+    dataHoraFin,
+    dataDireccion,
+    selectedDays,
+    dataTel
+  );
+  return (
+    <>
+      <div className='max-w-5xl mx-auto p-4 md:p-6 bg-white rounded-lg shadow-sm'>
+        <h1 className='text-2xl font-bold text-center mb-6 text-[#263238]'>
+          ¡Cuentanos sobre ustedes!
+        </h1>
+        <p className='text-center mb-8 text-[#546E7A]'>
+          Para personalizar el perfil te pedimos que respondas los siguientes
+          campos
         </p>
-      </div>
-      <label htmlFor="rfc" className="self-end mt-20 text-xs font-medium text-slate-500 max-md:mt-10">
-        RFC
-      </label>
-    </div>
-    <div className="flex flex-wrap gap-4 mt-3 text-sm leading-none text-slate-500 max-md:max-w-full">
-      <input
-        id="businessName"
-        type="text"
-        placeholder="Ingresar dato"
-        className="overflow-hidden grow px-5 py-3 rounded-lg border border-gray-400 border-solid bg-stone-50 w-fit max-md:pr-5"
-      />
-      <input
-        id="rfc"
-        type="text"
-        placeholder="Ingresar dato"
-        className="overflow-hidden grow px-5 py-3 rounded-lg border border-gray-400 border-solid bg-stone-50 w-fit max-md:pr-5"
-      />
-    </div>
-    <label htmlFor="legalRepresentative" className="block mt-8 text-base font-medium text-slate-500">
-      Persona moral
-    </label>
-    <p className="mt-3 text-xs font-medium text-slate-500">
-      Nombre y apellido representante legal del negocio
-    </p>
-    <input
-      id="legalRepresentative"
-      type="text"
-      placeholder="Ingresar dato"
-      className="overflow-hidden px-5 py-3 mt-3 text-sm leading-none rounded-lg border border-gray-400 border-solid bg-stone-50 text-slate-500 max-md:pr-5 max-md:max-w-full w-full"
-    />
-    <div className="mt-4 max-md:max-w-full">
-      <div className="flex gap-5 max-md:flex-col">
-        <div className="flex flex-col w-6/12 max-md:ml-0 max-md:w-full">
-          <label htmlFor="businessType" className="text-xs font-medium text-slate-500">
-            Giro de tu negocio
-          </label>
-          <select
-            id="businessType"
-            className="flex overflow-hidden gap-10 justify-center px-5 py-3 mt-3 text-sm leading-none rounded-lg border border-gray-400 border-solid bg-stone-50 text-slate-500"
+
+        <div className='grid lg:grid-cols-[300px,1fr] gap-8'>
+          <div className='flex flex-col items-center'>
+            <label htmlFor='imgUsuario' className='cursor-pointer'>
+              {selectedImage ? (
+                <Image
+                  src={selectedImage}
+                  alt='Foto de perfil'
+                  width={300}
+                  height={300}
+                  className='rounded-full'
+                />
+              ) : (
+                <Image
+                  src='/iconoframe.png'
+                  alt='Foto de perfil'
+                  width={300}
+                  height={300}
+                  className='rounded-full'
+                />
+              )}
+              <input
+                type='file'
+                id='imgUsuario'
+                className='hidden'
+                onChange={handleImageChange}
+              />
+            </label>
+          </div>
+
+          <div className='space-y-6'>
+            <h2 className='text-xl font-semibold text-[#263238]'>
+              Datos del negocio
+            </h2>
+            <div className='grid md:grid-cols-2 gap-4'>
+              <div>
+                <InputWithLabel
+                  type='text'
+                  value={dataNombreNegocio}
+                  onChange={(event) => {
+                    setDataNombreNegocio(event.target.value);
+                  }}
+                  label='Nombre comercial de tu negocio'
+                  id='nombre-comercial'
+                  placeholder='Ingresar dato'
+                />
+              </div>
+              <div>
+                <InputWithLabel
+                  type='text'
+                  value={dataRfc}
+                  onChange={(event) => {
+                    setDataRfc(event.target.value);
+                  }}
+                  label='RFC'
+                  id='rfc'
+                  placeholder='Ingresar dato'
+                />
+              </div>
+              <div>
+                <InputWithLabel
+                  type='number'
+                  value={dataTel}
+                  onChange={(event) => {
+                    setDataTel(event.target.value);
+                  }}
+                  label='Telefono'
+                  id='telefono'
+                  placeholder='Ingresar dato'
+                />
+              </div>
+            </div>
+            <div>
+              <label
+                htmlFor='persona-moral'
+                className='block text-sm font-medium text-[#546E7A] mb-1'
+              >
+                Persona moral
+              </label>
+
+              <InputWithLabel
+                type='text'
+                value={dataNombrePersonaM}
+                onChange={(event) => {
+                  setDataNombrePersonaM(event.target.value);
+                }}
+                label='Nombre del representante legal'
+                id='persona-moral'
+                placeholder='Ingresar dato'
+              />
+
+              <InputWithLabel
+                type='text'
+                value={dataApellidoPersonaM}
+                onChange={(event) => {
+                  setDataApellidoPersonaM(event.target.value);
+                }}
+                label='Apellido del representante legal'
+                id='persona-moral'
+                placeholder='Ingresar dato'
+              />
+            </div>
+            <div className='grid md:grid-cols-2 gap-4'>
+              <div>
+                <label
+                  htmlFor='giro'
+                  className='block text-sm font-medium text-[#546E7A] mb-1'
+                >
+                  Giro de tu negocio
+                </label>
+                <input
+                  id='giro'
+                  type='text'
+                  value={dataGiroNegocio}
+                  onChange={(event) => {
+                    setDataGiroNegocio(event.target.value);
+                  }}
+                  className='w-full px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50'
+                ></input>
+              </div>
+              <div>
+                <label
+                  htmlFor='horario'
+                  className='block text-sm font-medium text-[#546E7A] mb-1'
+                >
+                  Horario de servicio
+                </label>
+                <div className='flex items-center space-x-2'>
+                  <input
+                    type='time'
+                    value={dataHoraIni}
+                    onChange={(event) => {
+                      setDataHoraIni(event.target.value);
+                    }}
+                    className='flex-1 px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50'
+                  />
+                  <span className='text-[#546E7A]'>a</span>
+                  <input
+                    type='time'
+                    value={dataHoraFin}
+                    onChange={(event) => {
+                      setDataHoraFin(event.target.value);
+                    }}
+                    className='flex-1 px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50'
+                  />
+                </div>
+              </div>
+            </div>
+            <div className='grid md:grid-cols-2 gap-4'>
+              <div>
+                <label
+                  htmlFor='descripcion'
+                  className='block text-sm font-medium text-[#546E7A] mb-1'
+                >
+                  Descripción de tu negocio
+                </label>
+                <textarea
+                  type='text'
+                  value={dataDescripcion}
+                  onChange={(event) => {
+                    setDataDescripcion(event.target.value);
+                  }}
+                  id='descripcion'
+                  placeholder='Ingresar dato'
+                  className='w-full h-[100px] px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#263238] placeholder-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50'
+                />
+              </div>
+              <div>
+                <span className='block text-sm font-medium text-[#546E7A] mb-2'>
+                  Días de servicio
+                </span>
+                <div className='grid grid-cols-2 sm:grid-cols-3 gap-2'>
+                  {days.map((day) => (
+                    <div key={day} className='flex items-center'>
+                      <input
+                        id={day}
+                        type='checkbox'
+                        checked={selectedDays.includes(day)}
+                        onChange={() => toggleDay(day)}
+                        className='h-4 w-4 text-[#4CAF50] focus:ring-[#4CAF50] bg-[#F9F9F9] rounded'
+                      />
+                      <label
+                        htmlFor={day}
+                        className='ml-2 block text-sm text-[#546E7A]'
+                      >
+                        {day}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div>
+              <InputWithLabel
+                type='text'
+                value={dataDireccion}
+                onChange={(event) => {
+                  setDataDireccion(event.target.value);
+                }}
+                label='Dirección de tu negocio'
+                id='direccion'
+                placeholder='Ingresar dato'
+              />
+            </div>
+            <div
+              className='aspect-video relative rounded-md overflow-hidden'
+              ref={mapDiv}
+              style={{ height: '400px' }}
+            ></div>
+          </div>
+        </div>
+        <div className='mt-8 flex justify-center md:justify-end space-x-4'>
+          <button
+            type='submit'
+            onClick={handleSubmit}
+            className='px-6 py-2 border border-transparent rounded-md shadow-sm
+                text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none
+                focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]'
           >
-            <option>Giro de tu negocio</option>
-          </select>
-          <label htmlFor="businessDescription" className="mt-4 text-xs font-medium text-slate-500">
-            Descripción de tu negocio
-          </label>
-          <textarea
-            id="businessDescription"
-            placeholder="Ingresar dato"
-            className="overflow-hidden px-5 pt-3 pb-20 mt-3 max-w-full text-sm leading-none rounded-lg border border-gray-400 border-solid bg-stone-50 text-slate-500 w-[300px] max-md:pr-5 max-md:mr-0.5"
-          ></textarea>
+            Continuar
+          </button>
         </div>
       </div>
-    </div>
-  </section>
-);
-
-const BusinessSchedule = () => {
-  const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo', 'Todos los días'];
-
-  return (
-    <section className="mt-8">
-      <h3 className="text-xs font-medium text-slate-500 mb-3">Horario de servicio</h3>
-      <div className="flex gap-3.5 mt-3 max-md:ml-0.5">
-        <div className="flex overflow-hidden gap-5 justify-end px-4 py-3 rounded-lg border border-gray-400 border-solid bg-stone-50">
-          <span>00:00 pm</span>
-          <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/1c8ab00046bc25944d00f25850f6950a38fee8546ced4186830651a8f8199867?placeholderIfAbsent=true&apiKey=94b7d1b7a1ff491ea399fe140abd93c0" alt="" className="object-contain shrink-0 w-4 aspect-square" />
-        </div>
-        <span className="my-auto text-xs font-medium text-slate-500">a:</span>
-        <div className="flex overflow-hidden gap-5 justify-end px-4 py-3 rounded-lg border border-gray-400 border-solid bg-stone-50">
-          <span>00:00 pm</span>
-          <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/e52672a3756ebcf7528678e92472d05ea1c773ce37e296223264eecc0fcfa971?placeholderIfAbsent=true&apiKey=94b7d1b7a1ff491ea399fe140abd93c0" alt="" className="object-contain shrink-0 w-4 aspect-square" />
-        </div>
-      </div>
-      <h3 className="mt-4 ml-4 text-xs font-medium text-slate-500 max-md:ml-2.5">DÍAS de servicio</h3>
-      <div className="flex flex-wrap gap-3 mt-4 whitespace-nowrap max-md:mr-0.5">
-        {days.map((day, index) => (
-          <div key={index} className="flex items-center gap-2">
-            <img loading="lazy" src={`http://b.io/ext_${9 + index}-`} alt="" className="object-contain shrink-0 w-6 aspect-square" />
-            <span>{day}</span>
-          </div>
-        ))}
-      </div>
-    </section>
+    </>
   );
 };
 
-const BusinessAddress = () => (
-  <section className="mt-8">
-    <label htmlFor="businessAddress" className="text-xs font-medium text-slate-500">
-      Dirección de tu negocio
-    </label>
-    <input
-      id="businessAddress"
-      type="text"
-      className="flex shrink-0 mt-3 w-full h-12 bg-white rounded-lg border border-gray-400 border-solid"
-      placeholder="Ingrese la dirección"
-    />
-  </section>
-);
-
-const BusinessPhotos = () => (
-  <section className="flex overflow-hidden flex-col mt-4 w-full rounded-xl bg-neutral-200 shadow-[0px_0px_12px_rgba(89,89,89,0.16)] max-md:mr-1.5 max-md:max-w-full">
-    <div className="px-20 pt-9 pb-16 w-full max-md:px-5 max-md:max-w-full">
-      <div className="flex gap-5 max-md:flex-col">
-        <div className="flex flex-col w-[46%] max-md:ml-0 max-md:w-full">
-          <div className="flex flex-col grow mt-20 max-md:mt-10">
-            <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/2d9167d6ec6e943346445f079ef965169f62e783713964fb675b42c3912ef86f?placeholderIfAbsent=true&apiKey=94b7d1b7a1ff491ea399fe140abd93c0" alt="Business photo 1" className="object-contain self-end aspect-[1.2] w-[59px]" />
-            <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/2d9167d6ec6e943346445f079ef965169f62e783713964fb675b42c3912ef86f?placeholderIfAbsent=true&apiKey=94b7d1b7a1ff491ea399fe140abd93c0" alt="Business photo 2" className="object-contain aspect-[1.2] w-[59px]" />
-          </div>
-        </div>
-        <div className="flex flex-col ml-5 w-[54%] max-md:ml-0 max-md:w-full">
-          <div className="flex gap-10 items-start max-md:mt-10">
-            <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/e12af4bfe0fc912796434818e8480a420d0d8675df775ad31d8e16e0cc2ad52a?placeholderIfAbsent=true&apiKey=94b7d1b7a1ff491ea399fe140abd93c0" alt="Business photo 3" className="object-contain shrink-0 self-end mt-11 aspect-[1.09] w-[59px] max-md:mt-10" />
-            <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/e12af4bfe0fc912796434818e8480a420d0d8675df775ad31d8e16e0cc2ad52a?placeholderIfAbsent=true&apiKey=94b7d1b7a1ff491ea399fe140abd93c0" alt="Business photo 4" className="object-contain shrink-0 self-start aspect-[1.09] w-[59px]" />
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-);
-
-const BusinessForm = () => (
-  <form className="flex flex-col pt-8 pb-20 pl-4 mt-14 w-full bg-white rounded-2xl border border-gray-100 border-solid shadow-lg max-w-[633px] max-md:mt-10 max-md:max-w-full">
-    <BusinessDetails />
-    <BusinessSchedule />
-    <BusinessAddress />
-    <BusinessPhotos />
-   <div className="flex flex-row justify-center mt-4 space-x-4 md:space-x-[200px]" >
-    <Link legacyBehavior href="/cardFree09"> 
-      <a className="w-[155px] h-[40px] bg-[#2F4F4F] text-white rounded-lg flex items-center justify-center">
-        Continuar
-      </a>
-    </Link></div> 
-  </form>
-);
-
-const View17 = () => {
-  return (
-    <main className="flex overflow-hidden flex-col items-center pb-28 bg-white max-w-[744px] max-md:pb-24">
-   
-      <section className="mt-10 text-2xl font-bold text-center text-slate-700 max-md:max-w-full">
-        <h1 className="text-slate-700">¡Cuentanos sobre ustedes!</h1>
-        <p className="text-xl text-slate-700 mt-4">
-          Para personalizar el perfil te pedimos que respondas los siguientes campos
-        </p>
-      </section>
-      <ProfilePhoto />
-      <BusinessForm />
-     
-    </main>
-  );
-};
-
-export default View17;
+export default View23;
