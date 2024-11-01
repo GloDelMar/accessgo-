@@ -6,38 +6,50 @@ const defaultProfilePic = '/6073873.png';
 
 const View7 = () => {
   const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true); // Estado de carga
-  const [error, setError] = useState(null); // Estado de error
-  const userId = localStorage.getItem("userId");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [userId, setUserId] = useState(null); // Estado para userId
+
+  useEffect(() => {
+    // Verificar si estamos en el navegador
+    if (typeof window !== "undefined") {
+      const storedUserId = localStorage.getItem("userId");
+      setUserId(storedUserId);
+      console.log("Valor de userId:", storedUserId); // Mostrar el valor de userId
+    }
+  }, []); // Ejecutar solo una vez al montar el componente
 
   useEffect(() => {
     const fetchUserData = async () => {
       if (!userId) {
-        setError("User ID not found."); // Manejar caso sin userId
+        setError("User ID not found.");
         setLoading(false);
         return;
       }
 
       try {
         const data = await getUserById(userId);
+        console.log("Datos del usuario:", data); // Mostrar los datos recibidos de la API
         setUserData(data);
       } catch (error) {
         console.error(error);
-        setError("Failed to fetch user data."); // Manejo de error
+        setError("Failed to fetch user data.");
       } finally {
-        setLoading(false); // Cambiar estado de carga al final
+        setLoading(false);
       }
     };
 
-    fetchUserData();
-  }, [userId]); // Añadir userId como dependencia
+    if (userId) {
+      fetchUserData();
+    }
+  }, [userId]);
 
   if (loading) {
     return <p>Loading...</p>;
   }
 
   if (error) {
-    return <p className="text-red-500 text-center">{error}</p>; // Mostrar error si existe
+    return <p className="text-red-500 text-center">{error}</p>;
   }
 
   return (
@@ -45,12 +57,12 @@ const View7 = () => {
       <h1 className="text-center text-[#2F4F4F] text-2xl p-10 font-bold">¡Bienvenid@ a AccessGo!</h1>
       <div className="flex flex-col items-center lg:flex-row lg:justify-around lg:items-start lg:space-x-8 px-4">
         <div className="w-full lg:w-1/3 flex flex-col items-center">
-          <div className="bg-gradient-to-b from-[#ECEFF1] to-white w-full max-w-[231px] h-auto rounded-[25px] shadow-md p-6 text-center">
+          <div className="flex md:gap-4 bg-[#F5F0E5] md:h-[250px] p-4 rounded-[25px] flex-col md:justify-center items-center">
             <Image
                 src={userData.data.user?.profilePicture || defaultProfilePic}
                 alt="Foto de perfil"
-                width={50} 
-                height={50} 
+                width={150} 
+                height={150} 
                 className="rounded-full mx-auto mb-4"
             />
             <h2 className="text-xl font-semibold mb-2">{userData.data.user?.firstName} {userData.data.user?.lastName}</h2>
@@ -62,8 +74,8 @@ const View7 = () => {
         </div>
         <div className="flex flex-col items-center lg:w-1/3 mt-8 lg:mt-0">
           <h3 className="text-2xl text-[#2F4F4F] mb-4">Sobre mí</h3>
-          <div className="bg-white p-6 rounded-md mb-4 text-[#2F4F4F] shadow-lg w-full max-w-lg">
-            <p className="text-gray-600">{userData.data.user?.aboutMe || 'Información no disponible.'}</p>
+          <div className="bg-[#F6F9FF] p-6 rounded-md mb-4 text-[#2F4F4F] shadow-lg w-full max-w-lg">
+            <p className="text-gray-600">{userData.data.user?.biography || 'Información no disponible.'}</p>
           </div>
         </div>
       </div>

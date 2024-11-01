@@ -10,16 +10,16 @@ const View6 = () => {
   const [dataBio, setDataBio] = useState('');
   const router = useRouter(); // Agregar el hook de enrutamiento
 
-  const handleSubmit = async () => {
-    event.preventDefault();
+  const handleSubmit = async (event) => { // Agregar el event como argumento
+    event.preventDefault(); // Prevenir el comportamiento predeterminado
     const userData = {
       firstName: dataNombre,
       lastName: dataApellido,
       birthDate: dataFecha,
-      biography: dataBio
-      //imagen: selectedImage,
+      biography: dataBio,
+      // imagen: selectedImage, // Si deseas incluir la imagen en el objeto
     };
-    const id = '671e5c70fdec850c41a94a5f';
+    const id = '671e5c70fdec850c41a94a5f'; // ID del usuario que se va a actualizar
     try {
       const response = await fetch(`http://localhost:8080/api/users/${id}`, {
         method: 'PUT',
@@ -31,10 +31,10 @@ const View6 = () => {
       console.log(userData);
       if (response.ok) {
         const jsonResponse = await response.json();
-        console.log('Usuario creado:', jsonResponse);
+        console.log('Usuario actualizado:', jsonResponse);
         router.push('/7/perfilUsuario'); // Navegar a la siguiente página
       } else {
-        console.error('Error al crear el usuario:', response.statusText);
+        console.error('Error al actualizar el usuario:', response.statusText);
       }
     } catch (error) {
       console.error('Error en la solicitud:', error);
@@ -42,8 +42,6 @@ const View6 = () => {
 
     const jsonData = JSON.stringify(userData);
     console.log(jsonData, 'objeto de respuesta');
-    // Aquí puedes manejar la lógica para enviar los datos
-    // console.log(dataNombre, dataApellido, dataFecha, dataBio);
   };
 
   const handleImageChange = (event) => {
@@ -150,7 +148,6 @@ const View6 = () => {
             <div className='flex justify-center items-center py-5'>
               <button
                 type='submit'
-                // onClick={handleSubmit}
                 className='px-6 py-2 border border-transparent rounded-md shadow-sm
                 text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none
                 focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]'

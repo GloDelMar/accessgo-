@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Input } from '../Molecules/FormStyles';
-
-
 import { useForm } from 'react-hook-form';
-import { login } from '@/pages/api/api_login';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { toast, Toaster } from 'sonner';
@@ -11,12 +8,11 @@ import { toast, Toaster } from 'sonner';
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
   const router = useRouter();
+  
   const {
-    register,
     formState: { errors },
-    setError
+    setError,
   } = useForm();
 
   async function onSubmit(e) {
@@ -24,25 +20,27 @@ const LoginForm = () => {
     try {
       const response = await axios.post('http://localhost:8080/api/auth', {
         email,
-        password
+        password,
       });
-      console.log(response);
 
-      const token = await login(email, password);
+     
+      const { token } = response.data.data;
+
       if (token) {
         window.localStorage.setItem('token', token);
         toast.success('Logged in');
-        router.push('/7/perfilUsuario');
-        return;
+
+       
+        router.push('/2/view2');
       } else {
-        toast.error('Usuario o contrasena incorrectos');
+        toast.error('Usuario o contraseña incorrectos');
         setError('root.credentials', {
           type: 'manual',
-          message: 'Credenciales invalidas'
+          message: 'Credenciales invalidas',
         });
       }
     } catch (error) {
-      toast.error('Error al iniciar sesion');
+      toast.error('Error al iniciar sesión');
       console.error('[login error]', error);
     }
   }
@@ -96,8 +94,8 @@ const LoginForm = () => {
 
       <div className='mt-8 flex justify-center '>
         <button 
-         href="7/perfilUsuario"
-        className='px-6 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-black bg-[#F5F0E5] hover:bg-[#E0D7C6] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]'>
+          className='px-6 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-black bg-[#F5F0E5] hover:bg-[#E0D7C6] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]'
+        >
           INICIAR SESIÓN
         </button>
       </div>
