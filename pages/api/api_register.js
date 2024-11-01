@@ -2,13 +2,16 @@ const API_URL = "http://localhost:8080";
 
 export const createAccount = async (email, password, type) => {
   try {
-    const body = { email, password, type };
+    // Construir el objeto con la estructura solicitada
+    const body = {
+      email,
+      password,
+      type,
+    };
 
-    // Seleccionar la URL en función del tipo de cuenta (ejemplo)
-    // const endpoint = type === 'empresa' ? '/api/empresas' : '/api/usuarios'; // Agrega tu lógica aquí
-
-    const response = await fetch(`${API_URL}/api/users`, { // Corrección aquí
-      method: "POST",
+       // Realizar la solicitud de registro
+    const response = await fetch(`${API_URL}/api/users`, {
+      method: 'POST',
       headers: {
         "Content-Type": "application/json",
       },
