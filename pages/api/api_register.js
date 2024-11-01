@@ -11,12 +11,9 @@ export const createAccount = async (email, password, type) => {
       type,
     };
 
-    // Determinar el endpoint según el tipo de cuenta
-    const endpoint = type === "user" ? `${API_URL}/api/users` : `${API_URL}/api/company`;
-
-    // Realizar la solicitud de registro
-    const response = await fetch(endpoint, {
-      method: "POST",
+       // Realizar la solicitud de registro
+    const response = await fetch(`${API_URL}/api/users`, {
+      method: 'POST',
       headers: {
         "Content-Type": "application/json",
       },
