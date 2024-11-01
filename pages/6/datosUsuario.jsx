@@ -16,8 +16,8 @@ const View6 = () => {
       firstName: dataNombre,
       lastName: dataApellido,
       birthDate: dataFecha,
-      biography: dataBio
-      //imagen: selectedImage,
+      biography: dataBio,
+      imagen: selectedImage,
     };
     const id = '671e5c70fdec850c41a94a5f';
     try {
