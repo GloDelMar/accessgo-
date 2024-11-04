@@ -2,8 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 // Componente de botón estilizado con variantes
-const StyledButton = ({ children, onClick, className, type, variant, ...props }) => {
-  // Definición de clases CSS según la variante del botón
+const StyledButton = React.forwardRef(({ 
+  children, 
+  onClick, 
+  className, 
+  type, 
+  variant, 
+  name, 
+  ...props 
+}, ref) => {
+  onClick = onClick || (() => {});
+  className = className || '';
+  type = type || 'button';
+  variant = variant || 'default';
   let buttonClass;
 
   switch (variant) {
@@ -32,30 +43,23 @@ const StyledButton = ({ children, onClick, className, type, variant, ...props })
   return (
     <button
       type={type}
+      name={name}
       onClick={onClick}
       className={`${buttonClass} ${className}`}
       {...props}
+      ref={ref}
     >
       {children}
     </button>
   );
-};
+});
+
+StyledButton.displayName = 'StyledButton';
 
 // Definición de tipos de props para el componente StyledButton
 StyledButton.propTypes = {
-  children: PropTypes.node.isRequired,
-  onClick: PropTypes.func,
   className: PropTypes.string,
-  type: PropTypes.string,
-  variant: PropTypes.oneOf(['default', 'blanco', 'continue']),
-};
-
-// Valores por defecto para las props del componente StyledButton
-StyledButton.defaultProps = {
-  type: 'button',
-  variant: 'default',
-  className: '',
-  onClick: () => { },
+  onClick: PropTypes.func,
 };
 
 export default StyledButton;
