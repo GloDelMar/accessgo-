@@ -4,7 +4,27 @@ import { router } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 
 const View18 = () => {
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImageEvento, setSelectedImageEvento] = useState(null);
+  const [selectedImagePromocion, setSelectedImagePromocion] = useState(null);
+  const [selectedImageAmenidad, setSelectedImageAmenidad] = useState(null);
+
+  const handleImageChange = (event, type) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (type === 'evento') {
+          setSelectedImageEvento(reader.result);
+        } else if (type === 'promocion') {
+          setSelectedImagePromocion(reader.result);
+        } else if (type === 'amenidad') {
+          setSelectedImageAmenidad(reader.result);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const [dataNombreEvento, setDataNombreEvento] = useState('');
   const [datadDescEvento, setDataDescEvento] = useState('');
   const [dataFechaEvento, setDataFechaEvento] = useState('');
@@ -41,22 +61,13 @@ const View18 = () => {
       amenityDescription: datadDescAmenidad,
       hourStartAmenity: dataHoraInicioAmen,
       hourEndAmenity: dataHoraFinAmen,
-      images: selectedImage
+      imagEvent: selectedImageEvento,
+      imgPromo: selectedImagePromocion,
+      imgAmenity: selectedImageAmenidad
     };
     console.log(JSON.stringify(formData));
-    // Aquí puedes enviar formData a tu API o realizar otra acción necesaria
-    router.push('/22/sesionPremium');
-  };
 
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setSelectedImage(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
+    router.push('/22/sesionPremium');
   };
 
   console.log(
@@ -73,18 +84,20 @@ const View18 = () => {
     dataNombreAmenidad,
     datadDescAmenidad,
     dataHoraInicioAmen,
-    dataHoraFinAmen,
-    selectedImage
+    dataHoraFinAmen
   );
   return (
     <>
-      <div>
+      <div className='m-10'>
         <h1 className='text-2xl font-bold text-center mb-6 text-[#263238]'>
-          Este espacio es para dar a conocer tus proximos Eventos
+          Este espacio es para dar a conocer tus Redes Sociales y tus proximos
+        </h1>
+        <h1 className='text-2xl font-bold text-center mb-6 text-[#263238]'>
+          Eventos, Promociones y Amenidades
         </h1>
 
-        <div className=''>
-          <div className=''>
+        <div>
+          <div>
             <div className='grid md:grid-cols-2 gap-4'>
               <div>
                 <InputWithLabel
@@ -95,7 +108,7 @@ const View18 = () => {
                   }}
                   label='Facebook'
                   id='facebook'
-                  placeholder=' '
+                  placeholder=''
                 />
               </div>
               <div>
@@ -135,13 +148,13 @@ const View18 = () => {
                 />
               </div>
             </div>
-            <div>
+            <div className='mt-10 flex justify-center'>
               <button
-                className='px-6 py-2 border border-transparent rounded-md shadow-sm
+                className='px-12 py-2 border border-transparent rounded-md shadow-sm
                 text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none
                 focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]'
               >
-                listo
+                Listo
               </button>
             </div>
 
@@ -167,13 +180,13 @@ const View18 = () => {
               </div>
 
               <label
-                htmlFor='imgUsuario'
-                className='cursor-pointer mt-5 row-span-4'
+                htmlFor='imgEvento'
+                className='cursor-pointer mt-5 row-span-4 justify-items-center'
               >
-                {selectedImage ? (
+                {selectedImageEvento ? (
                   <Image
-                    src={selectedImage}
-                    alt='Foto de perfil'
+                    src={selectedImageEvento}
+                    alt='Imagen de Evento'
                     width={300}
                     height={300}
                     className=''
@@ -181,17 +194,17 @@ const View18 = () => {
                 ) : (
                   <Image
                     src='/iconoframe.png'
-                    alt='Foto de perfil'
-                    width={300}
-                    height={300}
+                    alt='Imagen Evento'
+                    width={150}
+                    height={150}
                     className='rounded-full'
                   />
                 )}
                 <input
                   type='file'
-                  id='imgUsuario'
+                  id='imgEvento'
                   className='hidden'
-                  onChange={handleImageChange}
+                  onChange={(event) => handleImageChange(event, 'evento')}
                 />
               </label>
               <div>
@@ -256,11 +269,22 @@ const View18 = () => {
                   />
                 </div>
               </div>
-              <div>
+              <div className='mt-10 flex justify-center'>
                 <button
-                  className='px-6 py-2 border border-transparent rounded-md shadow-sm
+                  className='px-12 py-2 border border-transparent rounded-md shadow-sm
                 text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none
                 focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]'
+                  onClick={() => {
+                    const formData = {
+                      eventName: dataNombreEvento,
+                      eventDescription: datadDescEvento,
+                      dateEvent: dataFechaEvento,
+                      hourStartEvent: dataHoraInicioEvento,
+                      hourEndEvent: dataHoraFinEvento,
+                      images: selectedImageEvento
+                    };
+                    sendData(formData, 'evento');
+                  }}
                 >
                   Listo
                 </button>
@@ -289,13 +313,13 @@ const View18 = () => {
               </div>
 
               <label
-                htmlFor='imgUsuario'
-                className='cursor-pointer mt-5 row-span-4'
+                htmlFor='imgPromocion'
+                className='cursor-pointer mt-5 row-span-4 justify-items-center'
               >
-                {selectedImage ? (
+                {selectedImagePromocion ? (
                   <Image
-                    src={selectedImage}
-                    alt='Foto de perfil'
+                    src={selectedImagePromocion}
+                    alt='Imagen de Promocion'
                     width={300}
                     height={300}
                     className=''
@@ -303,17 +327,17 @@ const View18 = () => {
                 ) : (
                   <Image
                     src='/iconoframe.png'
-                    alt='Foto de perfil'
-                    width={300}
-                    height={300}
+                    alt='Imagen Promocion'
+                    width={150}
+                    height={150}
                     className='rounded-full'
                   />
                 )}
                 <input
                   type='file'
-                  id='imgUsuario'
+                  id='imgPromocion'
                   className='hidden'
-                  onChange={handleImageChange}
+                  onChange={(event) => handleImageChange(event, 'promocion')}
                 />
               </label>
               <div>
@@ -378,11 +402,22 @@ const View18 = () => {
                   />
                 </div>
               </div>
-              <div>
+              <div className='mt-10 flex justify-center'>
                 <button
-                  className='px-6 py-2 border border-transparent rounded-md shadow-sm
+                  className='px-12 py-2 border border-transparent rounded-md shadow-sm
                 text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none
                 focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]'
+                  onClick={() => {
+                    const formData = {
+                      eventName: dataNombreEvento,
+                      eventDescription: datadDescEvento,
+                      dateEvent: dataFechaEvento,
+                      hourStartEvent: dataHoraInicioEvento,
+                      hourEndEvent: dataHoraFinEvento,
+                      images: selectedImagePromocion
+                    };
+                    sendData(formData, 'promocion');
+                  }}
                 >
                   Listo
                 </button>
@@ -411,13 +446,13 @@ const View18 = () => {
               </div>
 
               <label
-                htmlFor='imgUsuario'
-                className='cursor-pointer mt-5 row-span-4'
+                htmlFor='imgAmenidad'
+                className='cursor-pointer mt-5 row-span-4 justify-items-center'
               >
-                {selectedImage ? (
+                {selectedImageAmenidad ? (
                   <Image
-                    src={selectedImage}
-                    alt='Foto de perfil'
+                    src={selectedImageAmenidad}
+                    alt='Imagen Amenidad'
                     width={300}
                     height={300}
                     className=''
@@ -425,17 +460,17 @@ const View18 = () => {
                 ) : (
                   <Image
                     src='/iconoframe.png'
-                    alt='Foto de perfil'
-                    width={300}
-                    height={300}
+                    alt='Imagen Amenidad'
+                    width={150}
+                    height={150}
                     className='rounded-full'
                   />
                 )}
                 <input
                   type='file'
-                  id='imgUsuario'
+                  id='imgAmenidad'
                   className='hidden'
-                  onChange={handleImageChange}
+                  onChange={(event) => handleImageChange(event, 'amenidad')}
                 />
               </label>
               <div>
@@ -484,11 +519,22 @@ const View18 = () => {
                   />
                 </div>
               </div>
-              <div>
+              <div className='mt-10 flex justify-center'>
                 <button
-                  className='px-6 py-2 border border-transparent rounded-md shadow-sm
+                  className='px-12 py-2 border border-transparent rounded-md shadow-sm
                 text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none
                 focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]'
+                  onClick={() => {
+                    const formData = {
+                      eventName: dataNombreEvento,
+                      eventDescription: datadDescEvento,
+                      dateEvent: dataFechaEvento,
+                      hourStartEvent: dataHoraInicioEvento,
+                      hourEndEvent: dataHoraFinEvento,
+                      images: selectedImageAmenidad
+                    };
+                    sendData(formData, 'amenidad');
+                  }}
                 >
                   Listo
                 </button>
@@ -496,7 +542,7 @@ const View18 = () => {
             </div>
           </div>
         </div>
-        <div className='mt-8 flex justify-center md:justify-end space-x-4'>
+        <div className='mt-20 flex justify-center  space-x-4'>
           <button
             type='submit'
             onClick={handleSubmit}

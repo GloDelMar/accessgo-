@@ -1,29 +1,15 @@
-import { useState } from 'react';
 import Link from 'next/link';
 
-
-
-
-export default function Notificacion() {
-
-    const [activarBotonContinuar, setActivarBotonContinuar]=useState(false);
-
-    const [checkboxSelected, setCheckboxSeleccted]=useState([]);
-
-    const handleChangeCheckBox = e => {
-
-    }
-
-
+export default function terminosYcondiciones() {
   return (
-    <div className='w-full h-full lg:w-2/3 flex flex-col text-[#2F4F4F] mt-2 md:px-10 lg:px-0'>
+    <div className='w-full h-full lg:w-2/3 flex flex-col text-[#2F4F4F] mb-20 mt-5 md:px-10 lg:px-0'>
       <div className='flex flex-col text-center '>
         <p className='text-base md:text-[40px] lg:text-[56px] font-bold mt-8'>
           ¡Bienvenido a AccessoGo!
         </p>
 
         <div className='w-full h-full flex flex-col justify-center items-center font-semibold text-sm md:text-base lg:text-xl'>
-          <p className='mt-6'>
+          <p className='mt-20'>
             En AccesoGo. Invitamos a las empresas a unirse a esta causa tan
             importante y a marcar una diferencia real en la vida de muchas
             personas. Regístrate y elige entre las opciones de perfil que
@@ -74,28 +60,8 @@ export default function Notificacion() {
           </p>
         </div>
       </div>
-      <div className='flex flex-row justify-center my-10 font-extrabold text-[#2F4F4F]'>
-        <label>
-          <input type='checkbox' /> He leido y acepto los terminos y condiciones
-          mencionados.
-        </label>
-      </div>
-      <div className='flex flex-row justify-between items center mt-10 md:mt-20 md:mb-10'>
-        <div>
-          <Link legacyBehavior href='/2/view2'>
-            <button className='w-[155px] h-[40px] md:w-[250px] md:h-[50px] border border-[#263238] rounded-lg'>
-              Cancelar
-            </button>
-          </Link>
-        </div>
-        <div>
-          <Link legacyBehavior href='/formularioAccesibilidad'>
-            <button className='w-[155px] h-[40px] md:w-[250px] md:h-[50px] bg-[#2F4F4F] text-white rounded-lg flex items-center justify-center shadow-md shadow-gray-400'>
-              Continuar
-            </button>
-          </Link>
-        </div>
-      </div>
+
+      
     </div>
   );
 }

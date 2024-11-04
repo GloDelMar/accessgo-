@@ -50,7 +50,7 @@ const SignUp = () => {
             </div>
             <div className="mb-2">
               {/* Agregar tipo de usuario como 'usuario' y redirigir */}
-              <a onClick={() => handleUserType('user', '/terminosYcondiciones')} className="flex items-center rounded-full justify-between bg-[#F5F0E5] hover:bg-[#E0D7C6] px-4 py-2 cursor-pointer">
+              <a onClick={() => handleUserType('user', '/limiteDeResp')} className="flex items-center rounded-full justify-between bg-[#F5F0E5] hover:bg-[#E0D7C6] px-4 py-2 cursor-pointer">
                 <Image src="/iconosLogin/icons8-whatsapp-50.png" alt="Logo de WhatsApp" width={30} height={30} />
                 <span className="text-xs md:text-lg">Continúa con email o WhatsApp</span>
               </a>

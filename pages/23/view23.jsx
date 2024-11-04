@@ -182,7 +182,7 @@ const View23 = () => {
 
         <div className="mt-8 flex justify-center md:justify-end space-x-4">
           <StyledButton variant="blancoCuadrado">CANCELAR</StyledButton>
-          <Link legacyBehavior href="/cardFree09">
+          <Link legacyBehavior href="/22/sesionPremium">
             <StyledButton variant="verdeCuadrado">CONTINUAR</StyledButton>
           </Link>
         </div>
