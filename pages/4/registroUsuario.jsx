@@ -4,6 +4,7 @@ import { Form, Input } from "@/components/Molecules/FormStyles";
 import { createAccount } from "../api/api_register";
 import { sendVerificationCode } from "../api/api_verification";
 import { login } from "../api/api_login";
+import { toast } from "sonner";
 
 const View4 = () => {
   const router = useRouter();
@@ -55,6 +56,7 @@ const View4 = () => {
           // Guarda el token y el ID del usuario en el localStorage
           localStorage.setItem('token', token);
           localStorage.setItem('userId', userId);
+          toast.success('Cuenta creada');
   
           // Envía el código de verificación
           await sendVerificationCode(email);
