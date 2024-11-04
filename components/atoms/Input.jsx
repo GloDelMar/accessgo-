@@ -1,63 +1,40 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 
-// Componente de entrada de texto
-const Input = ({ id, type, name, value, onChange, placeholder }) => {
-  return (
-    <div className="input-container">
-      <input
-        id={id}
-        type={type}
-        name={name}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        aria-label={name}
-        className="input-field w-full px-3 py-2 border border-gray-400 bg-gray-100 rounded-md text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent focus:bg-blue-50"
-      />
-    </div>
-  );
-};
+const Input = ({ name = '', label = '', placeholder = '', value = '', onChange = () => {} }) => (
+  <div className="input-with-label">
+    {label && <label htmlFor={name} className="block text-sm font-medium text-[#546E7A] mb-1">{label}</label>}
+    <input
+      id={name}
+      name={name}
+      placeholder={placeholder}
+      value={value}
+      onChange={onChange}
+      className="w-full px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50"
+    />
+  </div>
+);
 
-// Definición de tipos de props para el componente Input
 Input.propTypes = {
-  id: PropTypes.string,
-  type: PropTypes.string,
   name: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
+  label: PropTypes.string,
   placeholder: PropTypes.string,
+  value: PropTypes.string,
+  onChange: PropTypes.func,
 };
 
-// Valores por defecto para las props del componente Input
-Input.defaultProps = {
-  type: 'text',
-  placeholder: '',
-};
+export const InputWithLabel = ({ label, ...props }) => (
+  <div className="input-with-label">
+    {label && <label htmlFor={props.name} className="block text-sm font-medium text-[#546E7A] mb-1">{label}</label>}
+    <Input {...props} />
+  </div>
+);
 
-// Componente de entrada de texto con etiqueta
-const InputWithLabel = ({ label, ...props }) => {
-  return (
-    <div className="input-with-label mb-4">
-      {label && (
-        <label htmlFor={props.id} className="input-label block text-sm font-medium text-gray-600 mb-1">
-          {label}
-        </label>
-      )}
-      <Input {...props} />
-    </div>
-  );
-};
-
-// Definición de tipos de props para el componente InputWithLabel
 InputWithLabel.propTypes = {
   label: PropTypes.string,
-  id: PropTypes.string,
-  type: PropTypes.string,
   name: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string,
+  value: PropTypes.string,
+  onChange: PropTypes.func,
 };
 
-export { Input, InputWithLabel };
+export default Input;
