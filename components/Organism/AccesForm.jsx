@@ -35,7 +35,7 @@ const AccessForm = () => {
     {visibleCondition && <Checkpoints condition={visibleCondition} establishment={selectedEstablishment} />}
     <div className="flex flex-row justify-center mt-4 space-x-4 md:space-x-[200px]">
       <Button className="w-[155px] h-[40px] bg-white border-2 rounded-lg">
-        <Link legacyBehavior href="/"><a>Cancelar</a></Link>
+        <Link legacyBehavior href="/2/view2"><a>Cancelar</a></Link>
       </Button>
       <Button className="w-[155px] h-[40px] bg-[#2F4F4F] text-white rounded-lg flex items-center justify-center">
         <Link legacyBehavior href="/15/planesEmpresa"><a>Continuar</a></Link>
