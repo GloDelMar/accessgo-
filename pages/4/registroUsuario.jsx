@@ -3,7 +3,8 @@ import { useRouter } from "next/router";
 import { Form, Input } from "@/components/Molecules/FormStyles";
 import { createAccount } from "../api/api_register";
 import { sendVerificationCode } from "../api/api_verification";
-import { createCompany } from "../api/api_company";
+import { login } from "../api/api_login";
+import { toast } from "sonner";
 
 const View4 = () => {
   const router = useRouter();
@@ -55,8 +56,14 @@ const View4 = () => {
         }
         console.log("respuesta", response);
   
-        // Guarda el ID del usuario
-        localStorage.setItem('userId', userId);
+        // Inicia sesión automáticamente después de crear la cuenta
+        const token = await login(email, password); // Asegúrate de que no se necesite un token aquí.
+  
+        if (token) { // Asegúrate de que se recibe un token válido.
+          // Guarda el token y el ID del usuario en el localStorage
+          localStorage.setItem('token', token);
+          localStorage.setItem('userId', userId);
+          toast.success('Cuenta creada');
   
         // Envía el código de verificación
         await sendVerificationCode(email);

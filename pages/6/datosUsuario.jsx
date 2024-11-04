@@ -19,7 +19,7 @@ const View6 = () => {
       biography: dataBio,
       // imagen: selectedImage, // Si deseas incluir la imagen en el objeto
     };
-    const id = '671e5c70fdec850c41a94a5f'; // ID del usuario que se va a actualizar
+    const id = localStorage.getItem('userId');
     try {
       const response = await fetch(`http://localhost:8080/api/users/${id}`, {
         method: 'PUT',
