@@ -5,11 +5,15 @@ import axios from 'axios';
 import { toast, Toaster } from 'react-hot-toast';
 import { useRouter } from 'next/router';
 
+const userId = "672aa50d63f859a0dde75573"
+
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
   
+localStorage.setItem("userId", userId)
+
   const {
     formState: { errors },
     setError,

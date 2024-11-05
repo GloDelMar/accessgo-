@@ -1,5 +1,8 @@
+import { createComment } from "./api/api_comment";
+import { getCompanyById } from "./api/api_company";
 
 
+ const companyId = "671e7e6e09c9a96dab5c9c0f"
 export default function CardFree() {
   return (
     <div className='flex flex-col justify-center max-w-screen-sm  h-full md:p-4 lg:p-8'>

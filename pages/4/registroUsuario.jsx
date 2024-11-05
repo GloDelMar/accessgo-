@@ -5,6 +5,7 @@ import { createAccount } from "../api/api_register";
 import { sendVerificationCode } from "../api/api_verification";
 import { login } from "../api/api_login";
 import { toast } from "sonner";
+import { createCompany } from "../api/api_company";
 
 const View4 = () => {
   const router = useRouter();
@@ -23,19 +24,19 @@ const View4 = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     console.log("Datos recibidos en handleSubmit:", {
       email,
       password,
       confirmPassword,
       type
     });
-  
+
     if (password !== confirmPassword) {
       setError('Las contraseñas no coinciden');
       return;
     }
-  
+
     try {
       console.log("tipo de usuario", type);
       let response;
@@ -46,7 +47,7 @@ const View4 = () => {
       } else if (type === "company") {
         response = await createCompany(email, password, type);
       }
-  
+
       if (response && response.success) {
         let userId;
         if (type === "user") {
@@ -55,34 +56,35 @@ const View4 = () => {
           userId = response.data.company._id;
         }
         console.log("respuesta", response);
-  
+
         // Inicia sesión automáticamente después de crear la cuenta
         const token = await login(email, password); // Asegúrate de que no se necesite un token aquí.
-  
+
         if (token) { // Asegúrate de que se recibe un token válido.
           // Guarda el token y el ID del usuario en el localStorage
           localStorage.setItem('token', token);
           localStorage.setItem('userId', userId);
           toast.success('Cuenta creada');
-  
-        // Envía el código de verificación
-        await sendVerificationCode(email);
-  
-        // Redirige a la pantalla de autenticación
-        router.push('/5/autentificacion');
-  
-        // Limpia los campos
-        setEmail('');
-        setPassword('');
-        setConfirmPassword('');
-      } else {
-        setError('Error al crear la cuenta. Inténtalo de nuevo.');
+
+          // Envía el código de verificación
+          await sendVerificationCode(email);
+
+          // Redirige a la pantalla de autenticación
+          router.push('/5/autentificacion');
+
+          // Limpia los campos
+          setEmail('');
+          setPassword('');
+          setConfirmPassword('');
+        } else {
+          setError('Error al crear la cuenta. Inténtalo de nuevo.');
+        }
       }
     } catch (error) {
       setError(`Error al crear cuenta o enviar código: ${error.message}`);
     }
   };
-  
+
   return (
     <div>
       <h1 className='text-center text-[#2F4F4F] text-2xl p-10 font-bold'>
