@@ -65,25 +65,7 @@ const View2 = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="mb-6 flex flex-col md:flex-row space-y-4 md:space-x-4">
-        {/* Input para buscar por nombre o tipo de establecimiento */}
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={handleSearch}
-          placeholder="Nombre o tipo de establecimiento"
-          className="w-full md:w-1/2 px-4 py-2 border border-gray-300 rounded-lg"
-        />
-
-        {/* Input para buscar por ubicación geográfica */}
-        <input
-          type="text"
-          value={searchLocation}
-          onChange={handleLocationSearch}
-          placeholder="Ubicación geográfica (ej. Cancún)"
-          className="w-full md:w-1/2 px-4 py-2 border border-gray-300 rounded-lg"
-        />
-      </div>
+      
 
       <div className="flex flex-wrap space-y-4 sm:space-y-0 sm:space-x-4 mb-8 justify-center sm:justify-start">
         <button onClick={() => handleFilter('accesibilidad')} className="w-full sm:w-auto px-4 py-2 border border-[#EDE6D7] font-semibold text-[#2F4F4F] rounded-full">

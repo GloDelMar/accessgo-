@@ -40,3 +40,26 @@ export const updateUser = async (userId, userData) => {
     throw error; // Re-lanza el error para manejarlo en el componente
   }
 };
+
+export const UserProfile = async () => {
+  try {
+    const token = localStorage.getItem("token"); // Asegúrate de que el token esté guardado en localStorage o en algún lugar seguro
+
+    const response = await fetch(`${API_URL}/api/users`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, 
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al obtener el perfil del usuario");
+    }
+
+    const userData = await response.json();
+    console.log("Datos del usuario:", userData);
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};

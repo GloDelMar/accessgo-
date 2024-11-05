@@ -9,6 +9,8 @@ const AccessForm = () => {
   const [selectedEstablishment, setSelectedEstablishment] = useState('');
   const [visibleCondition, setVisibleCondition] = useState(null);
 
+
+  
   const handleEstablishmentChange = (e) => {
     setSelectedEstablishment(e.target.value);
     setVisibleCondition(null);  // Reiniciar visibleCondition al cambiar el tipo de establecimiento
