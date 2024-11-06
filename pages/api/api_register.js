@@ -1,3 +1,5 @@
+
+
 const API_URL = "http://localhost:8080";
 
 export const createAccount = async (email, password, type) => {
@@ -6,26 +8,27 @@ export const createAccount = async (email, password, type) => {
     const body = {
       email,
       password,
-      type: 'user'
+      type,
     };
 
        // Realizar la solicitud de registro
-    const response = await fetch(`${API_URL}/api/register`, {
+    const response = await fetch(`${API_URL}/api/users`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(body),
     });
 
+    // Manejar errores de la respuesta
     if (!response.ok) {
-      let errorMessage = 'Error en la solicitud';
+      let errorMessage = "Error en la solicitud";
       try {
         const errorData = await response.json();
         errorMessage = errorData.message || errorMessage;
       } catch (jsonError) {
         if (response.status >= 500) {
-          errorMessage = 'Error del servidor. Intenta nuevamente más tarde.';
+          errorMessage = "Error del servidor. Intenta nuevamente más tarde.";
         }
       }
       throw new Error(errorMessage);
@@ -33,7 +36,7 @@ export const createAccount = async (email, password, type) => {
 
     return await response.json(); // Devolver los datos de la cuenta creada
   } catch (error) {
-    console.error('Error en la solicitud de registro:', error.message);
+    console.error("Error en la solicitud de registro:", error.message);
     throw error; // Propagar el error al frontend
   }
 };

@@ -45,8 +45,8 @@ function PricingPage() {
             ¡Aquí puedes elegir el plan que te interese más!
           </p>
         </header>
-
-        <div className='flex flex-col md:flex-col justify-center mt-10'>
+       
+    <div className='flex flex-col md:flex-col justify-center mt-10'>
           {prices.map((price) => (
             <div key={price.id} className='flex flex-col mt-2 items-center'>
               <h3>{price.nickname}</h3>
@@ -56,6 +56,7 @@ function PricingPage() {
           ))}
         </div>
 
+
         <div className='flex flex-row justify-center mt-5 space-x-4 md:space-x-[200px]'>
           <button className='w-[155px] h-[40px] bg-white border-2 rounded-lg border border-black mt-20'>
             <Link legacyBehavior href='http://localhost:3000/15/planesEmpresa'>
@@ -63,6 +64,7 @@ function PricingPage() {
             </Link>
           </button>
         </div>
+
       </div>
     </main>
   );

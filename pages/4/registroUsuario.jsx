@@ -3,6 +3,8 @@ import { useRouter } from "next/router";
 import { Form, Input } from "@/components/Molecules/FormStyles";
 import { createAccount } from "../api/api_register";
 import { sendVerificationCode } from "../api/api_verification";
+import { login } from "../api/api_login";
+import { toast } from "sonner";
 
 const View4 = () => {
   const router = useRouter();
@@ -10,34 +12,65 @@ const View4 = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
-  const [tipoUsuario, setTipoUsuario] = useState('');
+  const [type, settype] = useState('');
 
   useEffect(() => {
-    const usuarioGuardado = localStorage.getItem('tipoUsuario');
-    if (usuarioGuardado) {
-      setTipoUsuario(usuarioGuardado);
+    const type = localStorage.getItem('tipoUsuario');
+    if (type) {
+      settype(type);
     }
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
+    console.log("Datos recibidos en handleSubmit:", {
+      email,
+      password,
+      confirmPassword,
+      type
+    });
+  
     if (password !== confirmPassword) {
       setError('Las contraseñas no coinciden');
       return;
     }
-
+  
     try {
-      // Crear cuenta sin verificar si el correo ya existe
-      const response = await createAccount(email, password, tipoUsuario);
-
+      console.log("tipo de usuario", type);
+      const response = await createAccount(email, password, type);
+  
       if (response.success) {
-        localStorage.setItem('userId', response.data.register._id);
-        await sendVerificationCode(email);
-        router.push('/5/autentificacion'); // Redirigir a la verificación después de crear la cuenta
-        setEmail('');
-        setPassword('');
-        setConfirmPassword('');
+        let userId;
+        if (type === "user") {
+          userId = response.data.user._id;
+        } else if (type === "company") {
+          userId = response.data.company._id;
+        }
+        console.log("respuesta", response);
+  
+        // Inicia sesión automáticamente después de crear la cuenta
+        const token = await login(email, password); // Asegúrate de que no se necesite un token aquí.
+  
+        if (token) { // Asegúrate de que se recibe un token válido.
+          // Guarda el token y el ID del usuario en el localStorage
+          localStorage.setItem('token', token);
+          localStorage.setItem('userId', userId);
+          toast.success('Cuenta creada');
+  
+          // Envía el código de verificación
+          await sendVerificationCode(email);
+  
+          // Redirige a la pantalla de autenticación
+          router.push('/5/autentificacion');
+  
+          // Limpia los campos
+          setEmail('');
+          setPassword('');
+          setConfirmPassword('');
+        } else {
+          setError('Error al iniciar sesión. Inténtalo de nuevo.');
+        }
       } else {
         setError('Error al crear la cuenta. Inténtalo de nuevo.');
       }
@@ -45,7 +78,7 @@ const View4 = () => {
       setError(`Error al crear cuenta o enviar código: ${error.message}`);
     }
   };
-
+  
   return (
     <div>
       <h1 className='text-center text-[#2F4F4F] text-2xl p-10 font-bold'>
