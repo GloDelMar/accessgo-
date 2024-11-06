@@ -1,62 +1,73 @@
-import React, { useState } from "react";
-import Link from "next/link";
+import { useEffect, useState } from 'react';
+import Stripe from 'stripe';
+import ButtonCheckout from '@/components/Molecules/ButtonCheckout';
+import Link from 'next/link';
 
+async function loadPrices() {
+  const response = await fetch('/api/prices');
+  if (!response.ok) {
+    throw new Error('Error al cargar los precios');
+  }
+  return await response.json();
+}
 
-const PlanOption = ({ type, price, isSelected, onSelect }) => (
-  <div
-    className={`flex gap-5 justify-between px-7 py-3 mt-10 w-full text-center whitespace-nowrap bg-white rounded-xl border border-solid max-w-[249px] shadow-[0px_4px_4px_rgba(0,0,0,0.25)] cursor-pointer ${isSelected ? "border-blue-500" : "border-black"
-      }`}
-    onClick={onSelect}
-  >
-    <div className="self-start font-medium">{type}</div>
-    <div className="font-bold">{price}</div>
-  </div>
-);
+function PricingPage() {
+  const [prices, setPrices] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
+  useEffect(() => {
+    const fetchPrices = async () => {
+      try {
+        const pricesData = await loadPrices();
+        setPrices(pricesData);
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    fetchPrices();
+  }, []);
 
-
-const View16 = () => {
-  const [selectedPlan, setSelectedPlan] = useState(null);
-
-  const planOptions = [
-    { type: "MENSUAL", price: "$1700" },
-    { type: "SEMESTRAL", price: "$9000" },
-    { type: "ANUAL", price: "$18000" },
-  ];
+  if (loading) return <div>Cargando...</div>;
+  if (error) return <div>Error al cargar los precios: {error.message}</div>;
 
   return (
-    <main className="flex overflow-hidden flex-col items-center pb-44 mx-auto w-full text-xl bg-white max-w-[480px] md:max-w-[700px] text-slate-700">
-      
-      <h1 className="mt-9 font-bold leading-3">¡Elige tu plan!</h1>
-      <p className="mt-8 text-sm font-bold text-center">
-        ¡Aqui puedes elegir el plan que te interese mas!
-      </p>
-      <div className="flex flex-col md:space-x-[95px] md:flex-row">
-        <div className="flex flex-col mt-2 items-center">
-          {planOptions.map((plan, index) => (
-            <PlanOption
-              key={index}
-              type={plan.type}
-              price={plan.price}
-              isSelected={selectedPlan === index}
-              onSelect={() => setSelectedPlan(index)}
-            />
-          ))}</div>
-        
-      </div>
-      <div className="flex flex-row justify-center mt-5 space-x-4 md:space-x-[200px]">
-        
-        <button className="w-[155px] h-[40px] bg-white border-2 rounded-lg">
-          <Link legacyBehavior href="/"><a>Cancelar</a></Link>
-        </button>
-        <button className="w-[155px] h-[40px] bg-[#2F4F4F] text-white rounded-lg flex items-center justify-center">
-          <Link legacyBehavior href="/23/view23"><a>Pagar</a></Link>
-        </button>
-      </div>
+    <main className='flex overflow-hidden flex-col items-center justify-center pb-44 mx-auto w-full text-xl bg-white max-w-[480px] md:max-w-[700px] text-slate-700'>
+      <div>
+        <header className='flex flex-col'>
+          <h1 className='mt-9 font-bold leading-3 text-center'>
+            ¡Elige tu plan!
+          </h1>
+          <p className='mt-8 text-sm font-bold text-center mt-10'>
+            ¡Aquí puedes elegir el plan que te interese más!
+          </p>
+        </header>
+       
+    <div className='flex flex-col md:flex-col justify-center mt-10'>
+          {prices.map((price) => (
+            <div key={price.id} className='flex flex-col mt-2 items-center'>
+              <h3>{price.nickname}</h3>
+              <h2 className='text-3xl font-bold'>{price.unit_amount / 100}$</h2>
+              <ButtonCheckout priceId={price.id} />
+            </div>
+          ))}
+        </div>
 
+
+        <div className='flex flex-row justify-center mt-5 space-x-4 md:space-x-[200px]'>
+          <button className='w-[155px] h-[40px] bg-white border-2 rounded-lg border border-black mt-20'>
+            <Link legacyBehavior href='http://localhost:3000/15/planesEmpresa'>
+              <a>Cancelar</a>
+            </Link>
+          </button>
+        </div>
+
+      </div>
     </main>
   );
-};
+}
 
-export default View16;
+export default PricingPage;
