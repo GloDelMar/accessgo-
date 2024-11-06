@@ -6,14 +6,20 @@ const defaultProfilePic = '/6073873.png';
 
 const View7 = () => {
   const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true); // Estado de carga
-  const [error, setError] = useState(null); // Estado de error
-  const userId = localStorage.getItem("userId");
+  const [loading, setLoading] = useState(true); 
+  const [error, setError] = useState(null); 
+  const [userId, setUserId] = useState(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setUserId(localStorage.getItem("userId"));
+    }
+  }, []);
 
   useEffect(() => {
     const fetchUserData = async () => {
       if (!userId) {
-        setError("User ID not found."); // Manejar caso sin userId
+        setError("User ID not found."); 
         setLoading(false);
         return;
       }
@@ -23,21 +29,23 @@ const View7 = () => {
         setUserData(data);
       } catch (error) {
         console.error(error);
-        setError("Failed to fetch user data."); // Manejo de error
+        setError("Failed to fetch user data."); 
       } finally {
-        setLoading(false); // Cambiar estado de carga al final
+        setLoading(false); 
       }
     };
 
-    fetchUserData();
-  }, [userId]); // Añadir userId como dependencia
+    if (userId) {
+      fetchUserData();
+    }
+  }, [userId]); 
 
   if (loading) {
     return <p>Loading...</p>;
   }
 
   if (error) {
-    return <p className="text-red-500 text-center">{error}</p>; // Mostrar error si existe
+    return <p className="text-red-500 text-center">{error}</p>; 
   }
 
   return (
@@ -63,7 +71,7 @@ const View7 = () => {
         <div className="flex flex-col items-center lg:w-1/3 mt-8 lg:mt-0">
           <h3 className="text-2xl text-[#2F4F4F] mb-4">Sobre mí</h3>
           <div className="bg-white p-6 rounded-md mb-4 text-[#2F4F4F] shadow-lg w-full max-w-lg">
-            <p className="text-gray-600">{userData.data.user?.aboutMe || 'Información no disponible.'}</p>
+            <p className="text-gray-600">{userData.data.user?.biography || 'Información no disponible.'}</p>
           </div>
         </div>
       </div>

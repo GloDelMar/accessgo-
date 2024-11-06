@@ -4,7 +4,7 @@ import { Form, Input } from "@/components/Molecules/FormStyles";
 import { createAccount } from "../api/api_register";
 import { sendVerificationCode } from "../api/api_verification";
 import { login } from "../api/api_login";
-import { toast } from "sonner";
+import { toast, Toaster } from "sonner";
 
 const View4 = () => {
   const router = useRouter();
@@ -23,23 +23,23 @@ const View4 = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     console.log("Datos recibidos en handleSubmit:", {
       email,
       password,
       confirmPassword,
       type
     });
-  
+
     if (password !== confirmPassword) {
       setError('Las contraseñas no coinciden');
       return;
     }
-  
+
     try {
       console.log("tipo de usuario", type);
       const response = await createAccount(email, password, type);
-  
+
       if (response.success) {
         let userId;
         if (type === "user") {
@@ -48,22 +48,29 @@ const View4 = () => {
           userId = response.data.company._id;
         }
         console.log("respuesta", response);
-  
+
         // Inicia sesión automáticamente después de crear la cuenta
         const token = await login(email, password); // Asegúrate de que no se necesite un token aquí.
-  
+
         if (token) { // Asegúrate de que se recibe un token válido.
           // Guarda el token y el ID del usuario en el localStorage
           localStorage.setItem('token', token);
           localStorage.setItem('userId', userId);
-          toast.success('Cuenta creada');
-  
+          toast.success('Cuenta creada',{
+            style: {
+              background: 'blue',
+              color: 'white'
+            }
+          });
+
           // Envía el código de verificación
           await sendVerificationCode(email);
-  
+
           // Redirige a la pantalla de autenticación
-          router.push('/5/autentificacion');
-  
+          setTimeout(() => {
+            router.push('/5/autentificacion');
+          }, 2000);
+
           // Limpia los campos
           setEmail('');
           setPassword('');
@@ -75,10 +82,16 @@ const View4 = () => {
         setError('Error al crear la cuenta. Inténtalo de nuevo.');
       }
     } catch (error) {
-      setError(`Error al crear cuenta o enviar código: ${error.message}`);
+      console.error("Error al crear cuenta o enviar código:", error);
+      toast.error(`${error.message}`, {
+        style: {
+          background: 'red',
+          color: 'white'
+        }
+      });
     }
   };
-  
+
   return (
     <div>
       <h1 className='text-center text-[#2F4F4F] text-2xl p-10 font-bold'>
@@ -148,6 +161,7 @@ const View4 = () => {
           </button>
         </Form>
       </div>
+      <Toaster position="top-center" />
     </div>
   );
 };
