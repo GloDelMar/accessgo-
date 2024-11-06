@@ -6,18 +6,15 @@ const defaultProfilePic = '/6073873.png';
 
 const View7 = () => {
   const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [userId, setUserId] = useState(null); // Estado para userId
+  const [loading, setLoading] = useState(true); 
+  const [error, setError] = useState(null); 
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
-    // Verificar si estamos en el navegador
     if (typeof window !== "undefined") {
-      const storedUserId = localStorage.getItem("userId");
-      setUserId(storedUserId);
-      console.log("Valor de userId:", storedUserId); // Mostrar el valor de userId
+      setUserId(localStorage.getItem("userId"));
     }
-  }, []); // Ejecutar solo una vez al montar el componente
+  }, []);
 
   useEffect(() => {
     const fetchUserData = async () => {
