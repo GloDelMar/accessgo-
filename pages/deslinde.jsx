@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 
-export default function deslinde() {
+const Deslinde = () => {
 
    const [isChecked, setIsChecked] = useState(false);
 
@@ -88,3 +88,5 @@ export default function deslinde() {
     </div>
   );
 }
+
+export default Deslinde;
