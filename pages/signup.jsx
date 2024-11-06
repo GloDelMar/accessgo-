@@ -24,11 +24,33 @@ const SignUp = () => {
             <h3 className="text-[#2F4F4F] text-lg mt-2 font-bold">Regístrate como persona</h3>
           </div>
           <div className="w-[250px] md:w-[350px] mt-4">
-                 
-           
+            <div className="mb-2">
+              <Link legacyBehavior href="#">
+                <a className="flex items-center rounded-full justify-between bg-[#F5F0E5] hover:bg-[#E0D7C6] px-4 py-2">
+                  <Image src="/iconosLogin/icons8-logo-de-google-50.png" alt="Logo de Google" width={30} height={30} />
+                  <span className="text-xs md:text-lg">Continúa con Google</span>
+                </a>
+              </Link>
+            </div>
+            <div className="mb-2">
+              <Link legacyBehavior href="#">
+                <a className="flex items-center rounded-full justify-between bg-[#F5F0E5] hover:bg-[#E0D7C6] px-4 py-2">
+                  <Image src="/iconosLogin/icons8-facebook-50.png" alt="Logo de Facebook" width={30} height={30} />
+                  <span className="text-xs md:text-lg">Continúa con Facebook</span>
+                </a>
+              </Link>
+            </div>
+            <div className="mb-2">
+              <Link legacyBehavior href="#">
+                <a className="flex items-center rounded-full justify-between bg-[#F5F0E5] hover:bg-[#E0D7C6] px-4 py-2">
+                  <Image src="/iconosLogin/icons8-mac-os-50.png" alt="Logo de Apple" width={30} height={30} />
+                  <span className="text-xs md:text-lg">Continúa con Apple</span>
+                </a>
+              </Link>
+            </div>
             <div className="mb-2">
               {/* Agregar tipo de usuario como 'usuario' y redirigir */}
-              <a onClick={() => handleUserType('user', '/terminosYcondiciones')} className="flex items-center rounded-full justify-between bg-[#F5F0E5] hover:bg-[#E0D7C6] px-4 py-2 cursor-pointer">
+              <a onClick={() => handleUserType('user', '/deslinde')} className="flex items-center rounded-full justify-between bg-[#F5F0E5] hover:bg-[#E0D7C6] px-4 py-2 cursor-pointer">
                 <Image src="/iconosLogin/icons8-whatsapp-50.png" alt="Logo de WhatsApp" width={30} height={30} />
                 <span className="text-xs md:text-lg">Continúa con email o WhatsApp</span>
               </a>
