@@ -1,327 +1,515 @@
-import React from 'react';
+import { InputWithLabel } from '@/components/atoms/Input';
+import Image from 'next/image';
+import { router } from 'next/router';
+import { useEffect, useRef, useState } from 'react';
 
-function Header() {
-  return (
-    <header className="flex overflow-hidden flex-wrap gap-5 justify-between self-stretch px-10 py-3 w-full bg-white shadow-[0px_8px_32px_rgba(0,0,0,0.08)] max-md:px-5 max-md:max-w-full">
-      <div className="flex gap-1.5 my-auto text-sm font-medium text-green-600">
-        <img loading="lazy" src="http://b.io/ext_20-" alt="" className="object-contain shrink-0 w-10 aspect-[1.33]" />
-        <div className="my-auto">
-          <span className="font-extrabold text-yellow-500">A</span>
-          <span className="font-extrabold">ccess</span>
-          <span className="font-extrabold text-slate-700">G</span>
-          <span className="font-extrabold">o</span>
-        </div>
-      </div>
-      <div className="flex gap-3.5 text-xs font-semibold text-white whitespace-nowrap">
-        <div className="flex gap-3 items-center py-1 pr-2 pl-5 my-auto rounded-2xl bg-slate-700 min-h-[28px]">
-          <img loading="lazy" src="http://b.io/ext_21-" alt="" className="object-contain shrink-0 self-stretch my-auto w-5 aspect-square" />
-          <div className="self-stretch my-auto">¡Únete!</div>
-        </div>
-        <img loading="lazy" src="http://b.io/ext_22-" alt="" className="object-contain shrink-0 w-10 rounded-none aspect-square" />
-      </div>
-    </header>
+const View18 = () => {
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [dataNombreEvento, setDataNombreEvento] = useState('');
+  const [datadDescEvento, setDataDescEvento] = useState('');
+  const [dataFechaEvento, setDataFechaEvento] = useState('');
+  const [dataHoraInicioEvento, setDataHoraInicioEvento] = useState('');
+  const [dataHoraFinEvento, setDataHoraFinEvento] = useState('');
+  const [dataNombrePromocion, setDataNombrePromocion] = useState('');
+  const [dataDescPromocion, setDataDescPromocion] = useState('');
+  const [dataFechaPromocion, setDataFechaPromocion] = useState('');
+  const [dataHoraInicioPromocion, setDataHoraInicioPromocion] = useState('');
+  const [dataHoraFinPromocion, setDataHoraFinPromocion] = useState('');
+  const [dataNombreAmenidad, setDataNombreAmenidad] = useState('');
+  const [datadDescAmenidad, setDataDescAmenidad] = useState('');
+  const [dataHoraInicioAmen, setDataHoraInicioAmen] = useState('');
+  const [dataHoraFinAmen, setDataHoraFinAmen] = useState('');
+  const [dataFacebook, setDataFacebook] = useState('');
+  const [dataInstagram, setDataInstagram] = useState('');
+  const [dataX, setDataX] = useState('');
+  const [dataTiktok, setDataTiktok] = useState('');
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const formData = {
+      eventName: dataNombreEvento,
+      eventDescription: datadDescEvento,
+      dateEvent: dataFechaEvento,
+      hourStartEvent: dataHoraInicioEvento,
+      hourEndEvent: dataHoraFinEvento,
+      namePromotion: dataNombrePromocion,
+      promotionDescription: dataDescPromocion,
+      datePromotion: dataFechaPromocion,
+      hourStartPromotion: dataHoraInicioPromocion,
+      hourEndPromotion: dataHoraFinPromocion,
+      nameAmenity: dataNombreAmenidad,
+      amenityDescription: datadDescAmenidad,
+      hourStartAmenity: dataHoraInicioAmen,
+      hourEndAmenity: dataHoraFinAmen,
+      images: selectedImage
+    };
+    console.log(JSON.stringify(formData));
+    // Aquí puedes enviar formData a tu API o realizar otra acción necesaria
+    router.push('/22/sesionPremium');
+  };
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSelectedImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  console.log(
+    dataNombreEvento,
+    datadDescEvento,
+    dataFechaEvento,
+    dataHoraInicioEvento,
+    dataHoraFinEvento,
+    dataNombrePromocion,
+    dataDescPromocion,
+    dataFechaPromocion,
+    dataHoraInicioPromocion,
+    dataHoraFinPromocion,
+    dataNombreAmenidad,
+    datadDescAmenidad,
+    dataHoraInicioAmen,
+    dataHoraFinAmen,
+    selectedImage
   );
-}
-
-function SocialMediaSection() {
-  const socialMedias = [
-    { name: 'facebook', icon: 'https://cdn.builder.io/api/v1/image/assets/TEMP/72bdc2e79652a9f256dedaef67126ca05409a4b7ecf6e69697a2a291e73c317d?placeholderIfAbsent=true&apiKey=94b7d1b7a1ff491ea399fe140abd93c0' },
-    { name: 'X', icon: 'https://cdn.builder.io/api/v1/image/assets/TEMP/4fc71aed47a1e9c483da2e5e5522f8399dd48e791344d4c7e4c4c2a38c2953b4?placeholderIfAbsent=true&apiKey=94b7d1b7a1ff491ea399fe140abd93c0' },
-    { name: 'Instagram', icon: 'https://cdn.builder.io/api/v1/image/assets/TEMP/b7b5bb2852aa4228092338b702e05cabfdf93febf6933db1723a7aa015e8b540?placeholderIfAbsent=true&apiKey=94b7d1b7a1ff491ea399fe140abd93c0' },
-    { name: 'tik tok', icon: 'https://cdn.builder.io/api/v1/image/assets/TEMP/d3014b6b4996c301f4594bb96f5c4fc3d50e8a0525573b428dfafabd62307abd?placeholderIfAbsent=true&apiKey=94b7d1b7a1ff491ea399fe140abd93c0' }
-  ];
-
   return (
-    <section className="flex flex-col px-1.5 pt-2 pb-7 mt-10 w-full bg-white border border-gray-100 border-solid shadow-lg max-w-[632px] rounded-[30px] text-slate-500 max-md:max-w-full">
-      <h2 className="self-start ml-7 text-base font-medium text-black max-md:ml-2.5">
-        Datos De Redes Sociales
-      </h2>
-      <div className="flex flex-wrap gap-5 mt-9 w-full whitespace-nowrap max-md:mr-0.5 max-md:max-w-full">
-        {socialMedias.map((media, index) => (
-          <div key={index} className="flex overflow-hidden flex-1 flex-auto gap-10 justify-center items-start px-5 py-1.5 text-sm leading-none rounded-lg border border-gray-400 border-solid bg-stone-50">
-            <img loading="lazy" src={media.icon} alt={`${media.name} icon`} className="object-contain shrink-0 self-start w-7 aspect-square" />
-            <div className="my-auto">{media.name}</div>
-          </div>
-        ))}
-      </div>
-      <button className="self-center px-8 py-3.5 mt-10 max-w-full text-xl font-semibold text-white whitespace-nowrap rounded-lg bg-slate-700 shadow-[0px_6px_28px_rgba(0,0,0,0.16)] w-[114px] max-md:px-5">
-        LISTO
-      </button>
-    </section>
-  );
-}
+    <>
+      <div>
+        <h1 className='text-2xl font-bold text-center mb-6 text-[#263238]'>
+          Este espacio es para dar a conocer tus proximos Eventos
+        </h1>
 
-function ImageUploader({ label }) {
-  return (
-    <div className="flex overflow-hidden flex-col grow px-16 py-3.5 w-full rounded-lg border border-gray-400 border-solid bg-stone-50 max-md:px-5 max-md:mt-4">
-      <div className="self-start text-xs leading-tight text-slate-500">{label}</div>
-      <div className="flex flex-col justify-center items-center self-center px-3 mt-2 text-sm leading-5 text-center text-white bg-white rounded-full border border-gray-300 border-solid fill-white h-[168px] stroke-[1px] stroke-gray-300 w-[168px]">
-        <div className="flex relative flex-col justify-center items-center w-full aspect-square">
-          <img loading="lazy" src="http://b.io/ext_23-" alt="" className="object-cover absolute inset-0 size-full" />
-          <div className="flex relative flex-col px-6 py-9 w-full h-36 rounded-full bg-neutral-700 bg-opacity-70 max-md:pr-5">
-            <img loading="lazy" src="http://b.io/ext_24-" alt="" className="object-contain self-center w-6 aspect-square" />
-            <div className="mt-2">
-              Actualizar foto <br /> de perfil
+        <div className=''>
+          <div className=''>
+            <div className='grid md:grid-cols-2 gap-4'>
+              <div>
+                <InputWithLabel
+                  type='text'
+                  value={dataFacebook}
+                  onChange={(event) => {
+                    setDataFacebook(event.target.value);
+                  }}
+                  label='Facebook'
+                  id='facebook'
+                  placeholder=' '
+                />
+              </div>
+              <div>
+                <InputWithLabel
+                  type='text'
+                  value={dataInstagram}
+                  onChange={(event) => {
+                    setDataInstagram(event.target.value);
+                  }}
+                  label='Instagram'
+                  id='instagram'
+                  placeholder=' '
+                />
+              </div>
+              <div>
+                <InputWithLabel
+                  type='text'
+                  value={dataX}
+                  onChange={(event) => {
+                    setDataX(event.target.value);
+                  }}
+                  label=' X '
+                  id='x'
+                  placeholder=' '
+                />
+              </div>
+              <div>
+                <InputWithLabel
+                  type='text'
+                  value={dataTiktok}
+                  onChange={(event) => {
+                    setDataTiktok(event.target.value);
+                  }}
+                  label=' Tik Tok '
+                  id='tiktok'
+                  placeholder=' '
+                />
+              </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+            <div>
+              <button
+                className='px-6 py-2 border border-transparent rounded-md shadow-sm
+                text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none
+                focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]'
+              >
+                listo
+              </button>
+            </div>
 
-function EventForm() {
-  return (
-    <form className="flex flex-col px-2 pt-2 pb-10 mt-10 w-full bg-white border border-gray-100 border-solid shadow-lg max-w-[632px] rounded-[30px] max-md:max-w-full">
-      <h2 className="self-start ml-6 text-base font-medium text-black max-md:ml-2.5">
-        Datos del evento
-      </h2>
-      <div className="mt-3 max-md:max-w-full">
-        <div className="flex gap-5 max-md:flex-col">
-          <div className="flex flex-col w-6/12 max-md:ml-0 max-md:w-full">
-            <div className="flex flex-col items-start w-full text-xs font-medium text-black max-md:mt-3.5">
-              <label htmlFor="eventName">Nombre de tu evento</label>
-              <input
-                id="eventName"
-                type="text"
-                className="overflow-hidden self-stretch px-5 py-3 mt-3 w-full text-sm leading-none rounded-lg border border-gray-400 border-solid bg-stone-50 text-slate-500 max-md:pr-5 max-md:mr-0.5"
-                placeholder="Ingresar dato"
-              />
-              <label htmlFor="eventDescription" className="mt-4">descripción</label>
-              <textarea
-                id="eventDescription"
-                className="overflow-hidden self-stretch px-5 pt-3 pb-20 mt-3 w-full text-sm leading-none rounded-lg border border-gray-400 border-solid bg-stone-50 text-slate-500 max-md:pr-5 max-md:mr-0.5"
-                placeholder="Ingresa una descripción"
-              ></textarea>
-            </div>
-          </div>
-          <div className="flex flex-col ml-5 w-6/12 max-md:ml-0 max-md:w-full">
-            <ImageUploader label="Sube imagenes de tu evento" />
-          </div>
-        </div>
-      </div>
-      <h3 className="mt-8 ml-6 text-base font-medium text-black max-md:ml-2.5">
-        Horario del evento
-      </h3>
-      <div className="mt-6 max-md:max-w-full">
-        <div className="flex gap-5 max-md:flex-col">
-          <div className="flex flex-col w-6/12 max-md:ml-0 max-md:w-full">
-            <div className="flex flex-col w-full text-xs font-medium text-black max-md:mt-4">
-              <label htmlFor="startDate">Fecha de INICIO</label>
-              <input
-                id="startDate"
-                type="date"
-                className="flex overflow-hidden gap-10 justify-end px-4 py-3 mt-3 text-sm leading-none whitespace-nowrap rounded-lg border border-gray-400 border-solid bg-stone-50 text-slate-500"
-              />
-              <label htmlFor="startTime" className="mt-4">HORA de INICIO</label>
-              <input
-                id="startTime"
-                type="time"
-                className="flex overflow-hidden gap-10 justify-end px-4 py-3 mt-3 text-sm leading-none rounded-lg border border-gray-400 border-solid bg-stone-50 text-slate-500"
-              />
-            </div>
-          </div>
-          <div className="flex flex-col ml-5 w-6/12 max-md:ml-0 max-md:w-full">
-            <div className="flex flex-col w-full text-xs font-medium text-black max-md:mt-4">
-              <label htmlFor="endDate">Fecha de FIN</label>
-              <input
-                id="endDate"
-                type="date"
-                className="flex overflow-hidden gap-10 justify-end px-4 py-3 mt-3 text-sm leading-none whitespace-nowrap rounded-lg border border-gray-400 border-solid bg-stone-50 text-slate-500"
-              />
-              <label htmlFor="endTime" className="mt-4">HORA de FINALIZACIÓN</label>
-              <input
-                id="endTime"
-                type="time"
-                className="flex overflow-hidden gap-10 justify-end px-4 py-3 mt-3 text-sm leading-none rounded-lg border border-gray-400 border-solid bg-stone-50 text-slate-500"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-      <button
-        type="submit"
-        className="self-center px-12 py-3.5 mt-10 max-w-full text-lg font-semibold text-white rounded-lg bg-slate-700 shadow-[0px_6px_28px_rgba(0,0,0,0.16)] w-[250px] max-md:px-5"
-      >
-        PUBLICAR EVENTO
-      </button>
-    </form>
-  );
-}
+            <p className='mb-4 mt-10 text-center'>Datos de tu Evento</p>
 
-function PromotionForm() {
-  return (
-    <form className="flex flex-col pt-2 pr-1 pb-10 pl-3 mt-10 w-full bg-white border border-gray-100 border-solid shadow-lg max-w-[632px] rounded-[30px] max-md:max-w-full">
-      <h2 className="self-start ml-5 text-base font-medium text-black max-md:ml-2.5">
-        Datos de la promoción
-      </h2>
-      <label htmlFor="promotionName" className="self-start mt-3 text-xs font-medium text-black">
-        Nombre de tu promociÓn
-      </label>
-      <div className="mt-3 max-md:max-w-full">
-        <div className="flex gap-5 max-md:flex-col">
-          <div className="flex flex-col w-6/12 max-md:ml-0 max-md:w-full">
-            <div className="flex flex-col text-sm text-slate-500 max-md:mt-4">
-              <input
-                id="promotionName"
-                type="text"
-                className="overflow-hidden px-5 py-3 leading-none rounded-lg border border-gray-400 border-solid bg-stone-50 max-md:pr-5"
-                placeholder="Ingresar dato"
-              />
-              <label htmlFor="promotionDescription" className="self-start mt-4 text-xs font-medium text-black">
-                descripciÓn
+            <div className='grid md:grid-cols-2 gap-4'>
+              <div>
+                <label
+                  htmlFor='nombre Evento'
+                  className='block text-sm font-medium text-[#546E7A] mb-1'
+                >
+                  Nombre
+                </label>
+                <input
+                  id='nombreEvento'
+                  type='text'
+                  value={dataNombreEvento}
+                  onChange={(event) => {
+                    setDataNombreEvento(event.target.value);
+                  }}
+                  className='w-full px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50'
+                ></input>
+              </div>
+
+              <label
+                htmlFor='imgUsuario'
+                className='cursor-pointer mt-5 row-span-4'
+              >
+                {selectedImage ? (
+                  <Image
+                    src={selectedImage}
+                    alt='Foto de perfil'
+                    width={300}
+                    height={300}
+                    className=''
+                  />
+                ) : (
+                  <Image
+                    src='/iconoframe.png'
+                    alt='Foto de perfil'
+                    width={300}
+                    height={300}
+                    className='rounded-full'
+                  />
+                )}
+                <input
+                  type='file'
+                  id='imgUsuario'
+                  className='hidden'
+                  onChange={handleImageChange}
+                />
               </label>
-              <textarea
-                id="promotionDescription"
-                className="overflow-hidden px-5 pt-3 pb-20 mt-3 leading-none rounded-lg border border-gray-400 border-solid bg-stone-50 max-md:pr-5"
-                placeholder="Ingresa una descripción"
-              ></textarea>
-            </div>
-          </div>
-          <div className="flex flex-col ml-5 w-6/12 max-md:ml-0 max-md:w-full">
-            <ImageUploader label="Sube imagenes de tu promoción" />
-          </div>
-        </div>
-      </div>
-      <div className="mt-6 max-md:max-w-full">
-        <div className="flex gap-5 max-md:flex-col">
-          <div className="flex flex-col w-6/12 max-md:ml-0 max-md:w-full">
-            <div className="flex flex-col w-full text-xs font-medium text-black max-md:mt-4">
-              <label htmlFor="promotionStartDate">Fecha de INICIO</label>
-              <input
-                id="promotionStartDate"
-                type="date"
-                className="flex overflow-hidden gap-10 justify-end px-4 py-3 mt-3 text-sm leading-none whitespace-nowrap rounded-lg border border-gray-400 border-solid bg-stone-50 text-slate-500"
-              />
-              <label htmlFor="promotionStartTime" className="mt-4">HORA de INICIO</label>
-              <input
-                id="promotionStartTime"
-                type="time"
-                className="flex overflow-hidden gap-10 justify-end px-4 py-3 mt-3 text-sm leading-none rounded-lg border border-gray-400 border-solid bg-stone-50 text-slate-500"
-              />
-            </div>
-          </div>
-          <div className="flex flex-col ml-5 w-6/12 max-md:ml-0 max-md:w-full">
-            <div className="flex flex-col w-full text-xs font-medium text-black max-md:mt-4">
-              <label htmlFor="promotionEndDate">Fecha de FINALIZACIÓN</label>
-              <input
-                id="promotionEndDate"
-                type="date"
-                className="flex overflow-hidden gap-10 justify-end px-4 py-3 mt-3 text-sm leading-none whitespace-nowrap rounded-lg border border-gray-400 border-solid bg-stone-50 text-slate-500"
-              />
-              <label htmlFor="promotionEndTime" className="mt-4">HORA de FINALIZACIÓN</label>
-              <input
-                id="promotionEndTime"
-                type="time"
-                className="flex overflow-hidden gap-10 justify-end px-4 py-3 mt-3 text-sm leading-none rounded-lg border border-gray-400 border-solid bg-stone-50 text-slate-500"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-      <button
-        type="submit"
-        className="self-center px-7 py-3.5 mt-10 max-w-full text-lg font-semibold text-white rounded-lg bg-slate-700 shadow-[0px_6px_28px_rgba(0,0,0,0.16)] w-[250px] max-md:px-5"
-      >
-        PUBLICAR PROMOCIÓN
-      </button>
-    </form>
-  );
-}
+              <div>
+                <label
+                  htmlFor='descripcion'
+                  className='block text-sm font-medium text-[#546E7A] mb-1'
+                >
+                  Descripción del Evento
+                </label>
+                <textarea
+                  type='text'
+                  value={datadDescEvento}
+                  onChange={(event) => {
+                    setDataDescEvento(event.target.value);
+                  }}
+                  id='descripcion Evento'
+                  placeholder=''
+                  className='w-full h-[100px] px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#263238] placeholder-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50'
+                />
+              </div>
 
-function MenuForm() {
-  return (
-    <form className="flex flex-col pt-2 pr-1 pb-10 pl-3.5 mt-10 w-full bg-white border border-gray-100 border-solid shadow-lg max-w-[632px] rounded-[30px] max-md:max-w-full">
-      <h2 className="self-start ml-5 text-base font-medium text-black max-md:ml-2.5">
-        Tu Menú
-      </h2>
-      <label htmlFor="menuName" className="self-start mt-3 text-xs font-medium text-black">
-        Nombre de tu menú
-      </label>
-      <div className="mt-3 max-md:max-w-full">
-        <div className="flex gap-5 max-md:flex-col">
-          <div className="flex flex-col w-6/12 max-md:ml-0 max-md:w-full">
-            <div className="flex flex-col text-sm text-slate-500 max-md:mt-4">
-              <input
-                id="menuName"
-                type="text"
-                className="overflow-hidden px-5 py-3 leading-none rounded-lg border border-gray-400 border-solid bg-stone-50 max-md:pr-5"
-                placeholder="Ingresar dato"
-              />
-              <label htmlFor="menuDescription" className="self-start mt-4 text-xs font-medium text-black">
-                descripción
+              <div>
+                <label
+                  htmlFor='fecha evento'
+                  className='block text-sm font-medium text-[#546E7A] mb-1 '
+                >
+                  Fecha
+                </label>
+                <div className='flex items-center space-x-2 mb-5'>
+                  <input
+                    type='text'
+                    value={dataFechaEvento}
+                    onChange={(event) => {
+                      setDataFechaEvento(event.target.value);
+                    }}
+                    className='flex-1 px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50'
+                  />
+                </div>
+                <label
+                  htmlFor='horario evento'
+                  className='block text-sm font-medium text-[#546E7A] mb-1'
+                >
+                  Horario
+                </label>
+                <div className='flex items-center space-x-2'>
+                  <input
+                    type='time'
+                    value={dataHoraInicioEvento}
+                    onChange={(event) => {
+                      setDataHoraInicioEvento(event.target.value);
+                    }}
+                    className='flex-1 px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50'
+                  />
+                  <span className='text-[#546E7A]'>a</span>
+                  <input
+                    type='time'
+                    value={dataHoraFinEvento}
+                    onChange={(event) => {
+                      setDataHoraFinEvento(event.target.value);
+                    }}
+                    className='flex-1 px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50'
+                  />
+                </div>
+              </div>
+              <div>
+                <button
+                  className='px-6 py-2 border border-transparent rounded-md shadow-sm
+                text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none
+                focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]'
+                >
+                  Listo
+                </button>
+              </div>
+            </div>
+
+            <p className='mb-4 mt-10 text-center'>Datos de tu Promocion</p>
+
+            <div className='grid md:grid-cols-2 gap-4'>
+              <div>
+                <label
+                  htmlFor='nombre promocion'
+                  className='block text-sm font-medium text-[#546E7A] mb-1'
+                >
+                  Nombre
+                </label>
+                <input
+                  id='nombrePromocion'
+                  type='text'
+                  value={dataNombrePromocion}
+                  onChange={(event) => {
+                    setDataNombrePromocion(event.target.value);
+                  }}
+                  className='w-full px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50'
+                ></input>
+              </div>
+
+              <label
+                htmlFor='imgUsuario'
+                className='cursor-pointer mt-5 row-span-4'
+              >
+                {selectedImage ? (
+                  <Image
+                    src={selectedImage}
+                    alt='Foto de perfil'
+                    width={300}
+                    height={300}
+                    className=''
+                  />
+                ) : (
+                  <Image
+                    src='/iconoframe.png'
+                    alt='Foto de perfil'
+                    width={300}
+                    height={300}
+                    className='rounded-full'
+                  />
+                )}
+                <input
+                  type='file'
+                  id='imgUsuario'
+                  className='hidden'
+                  onChange={handleImageChange}
+                />
               </label>
-              <textarea
-                id="menuDescription"
-                className="overflow-hidden px-5 pt-3 pb-20 mt-3 leading-none rounded-lg border border-gray-400 border-solid bg-stone-50 max-md:pr-5"
-                placeholder="Ingresa una descripción"
-              ></textarea>
-            </div>
-          </div>
-          <div className="flex flex-col ml-5 w-6/12 max-md:ml-0 max-md:w-full">
-            <ImageUploader label="Sube imagenes de tu menú" />
-          </div>
-        </div>
-      </div>
-      <div className="mt-6 max-md:max-w-full">
-        <div className="flex gap-5 max-md:flex-col">
-          <div className="flex flex-col w-6/12 max-md:ml-0 max-md:w-full">
-            <div className="flex flex-col w-full text-xs font-medium text-black max-md:mt-4">
-              <label htmlFor="menuStartDate">Fecha de INICIO</label>
-              <input
-                id="menuStartDate"
-                type="date"
-                className="flex overflow-hidden gap-10 justify-end px-4 py-3 mt-3 text-sm leading-none whitespace-nowrap rounded-lg border border-gray-400 border-solid bg-stone-50 text-slate-500"
-              />
-              <label htmlFor="menuStartTime" className="mt-4">HORA de INICIO</label>
-              <input
-                id="menuStartTime"
-                type="time"
-                className="flex overflow-hidden gap-10 justify-end px-4 py-3 mt-3 text-sm leading-none rounded-lg border border-gray-400 border-solid bg-stone-50 text-slate-500"
-              />
-            </div>
-          </div>
-          <div className="flex flex-col ml-5 w-6/12 max-md:ml-0 max-md:w-full">
-            <div className="flex flex-col w-full text-xs font-medium text-black max-md:mt-4">
-              <label htmlFor="menuEndDate">Fecha de FINALIZACIÓN</label>
-              <input
-                id="menuEndDate"
-                type="date"
-                className="flex overflow-hidden gap-10 justify-end px-4 py-3 mt-3 text-sm leading-none whitespace-nowrap rounded-lg border border-gray-400 border-solid bg-stone-50 text-slate-500"
-              />
-              <label htmlFor="menuEndTime" className="mt-4">HORA de FINALIZACIÓN</label>
-              <input
-                id="menuEndTime"
-                type="time"
-                className="flex overflow-hidden gap-10 justify-end px-4 py-3 mt-3 text-sm leading-none rounded-lg border border-gray-400 border-solid bg-stone-50 text-slate-500"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-      <button
-        type="submit"
-        className="self-center px-14 py-3.5 mt-10 max-w-full text-lg font-semibold text-white rounded-lg bg-slate-700 shadow-[0px_6px_28px_rgba(0,0,0,0.16)] w-[250px] max-md:px-5"
-      >
-        PUBLICAR MENÚ
-      </button>
-    </form>
-  );
-}
+              <div>
+                <label
+                  htmlFor='descripcion'
+                  className='block text-sm font-medium text-[#546E7A] mb-1'
+                >
+                  Descripción de la Promocion
+                </label>
+                <textarea
+                  type='text'
+                  value={dataDescPromocion}
+                  onChange={(event) => {
+                    setDataDescPromocion(event.target.value);
+                  }}
+                  id='descripcion promocion'
+                  placeholder=''
+                  className='w-full h-[100px] px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#263238] placeholder-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50'
+                />
+              </div>
 
-function View18() {
-  return (
-    <div className="flex overflow-hidden flex-col items-center pb-28 bg-white max-w-[744px] max-md:pb-24">
-      <Header />
-      <div className="mt-10 text-xl font-bold leading-[62px] text-slate-700 max-md:max-w-full">
-        Este espacio es para que des a conocer tus próximos eventos
+              <div>
+                <label
+                  htmlFor='fecha promocion'
+                  className='block text-sm font-medium text-[#546E7A] mb-1 '
+                >
+                  Fecha
+                </label>
+                <div className='flex items-center space-x-2 mb-5'>
+                  <input
+                    type='text'
+                    value={dataFechaPromocion}
+                    onChange={(event) => {
+                      setDataFechaPromocion(event.target.value);
+                    }}
+                    className='flex-1 px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50'
+                  />
+                </div>
+                <label
+                  htmlFor='horario promocion'
+                  className='block text-sm font-medium text-[#546E7A] mb-1'
+                >
+                  Horario
+                </label>
+                <div className='flex items-center space-x-2'>
+                  <input
+                    type='time'
+                    value={dataHoraInicioPromocion}
+                    onChange={(event) => {
+                      setDataHoraInicioPromocion(event.target.value);
+                    }}
+                    className='flex-1 px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50'
+                  />
+                  <span className='text-[#546E7A]'>a</span>
+                  <input
+                    type='time'
+                    value={dataHoraFinPromocion}
+                    onChange={(event) => {
+                      setDataHoraFinPromocion(event.target.value);
+                    }}
+                    className='flex-1 px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50'
+                  />
+                </div>
+              </div>
+              <div>
+                <button
+                  className='px-6 py-2 border border-transparent rounded-md shadow-sm
+                text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none
+                focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]'
+                >
+                  Listo
+                </button>
+              </div>
+            </div>
+
+            <p className='mb-4 mt-10 text-center'>Amenidades</p>
+
+            <div className='grid md:grid-cols-2 gap-4'>
+              <div>
+                <label
+                  htmlFor='nombre amenidades'
+                  className='block text-sm font-medium text-[#546E7A] mb-1'
+                >
+                  Nombre
+                </label>
+                <input
+                  id='nombre amenidades'
+                  type='text'
+                  value={dataNombreAmenidad}
+                  onChange={(event) => {
+                    setDataNombreAmenidad(event.target.value);
+                  }}
+                  className='w-full px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50'
+                ></input>
+              </div>
+
+              <label
+                htmlFor='imgUsuario'
+                className='cursor-pointer mt-5 row-span-4'
+              >
+                {selectedImage ? (
+                  <Image
+                    src={selectedImage}
+                    alt='Foto de perfil'
+                    width={300}
+                    height={300}
+                    className=''
+                  />
+                ) : (
+                  <Image
+                    src='/iconoframe.png'
+                    alt='Foto de perfil'
+                    width={300}
+                    height={300}
+                    className='rounded-full'
+                  />
+                )}
+                <input
+                  type='file'
+                  id='imgUsuario'
+                  className='hidden'
+                  onChange={handleImageChange}
+                />
+              </label>
+              <div>
+                <label
+                  htmlFor='descripcion amenidades'
+                  className='block text-sm font-medium text-[#546E7A] mb-1'
+                >
+                  descripcion Amenidades
+                </label>
+                <textarea
+                  type='text'
+                  value={datadDescAmenidad}
+                  onChange={(event) => {
+                    setDataDescAmenidad(event.target.value);
+                  }}
+                  id='descripcion amenidades'
+                  placeholder=''
+                  className='w-full h-[100px] px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#263238] placeholder-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50'
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor='horario amenidades'
+                  className='block text-sm font-medium text-[#546E7A] mb-1'
+                >
+                  Horario
+                </label>
+                <div className='flex items-center space-x-2'>
+                  <input
+                    type='time'
+                    value={dataHoraInicioAmen}
+                    onChange={(event) => {
+                      setDataHoraInicioAmen(event.target.value);
+                    }}
+                    className='flex-1 px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50'
+                  />
+                  <span className='text-[#546E7A]'>a</span>
+                  <input
+                    type='time'
+                    value={dataHoraFinAmen}
+                    onChange={(event) => {
+                      setDataHoraFinAmen(event.target.value);
+                    }}
+                    className='flex-1 px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50'
+                  />
+                </div>
+              </div>
+              <div>
+                <button
+                  className='px-6 py-2 border border-transparent rounded-md shadow-sm
+                text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none
+                focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]'
+                >
+                  Listo
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className='mt-8 flex justify-center md:justify-end space-x-4'>
+          <button
+            type='submit'
+            onClick={handleSubmit}
+            className=' px-6 py-2 border border-transparent rounded-md shadow-sm
+                text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none
+                focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]'
+          >
+            Continuar
+          </button>
+        </div>
       </div>
-      <SocialMediaSection />
-      <EventForm />
-      <PromotionForm />
-      <MenuForm />
-    </div>
+    </>
   );
-}
+};
 
 export default View18;
