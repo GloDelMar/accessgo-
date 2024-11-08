@@ -4,7 +4,9 @@ import { Form, Input } from "@/components/Molecules/FormStyles";
 import { createAccount } from "../api/api_register";
 import { sendVerificationCode } from "../api/api_verification";
 import { login } from "../api/api_login";
-import { toast, Toaster } from "sonner";
+import { toast } from "sonner";
+import { createCompany } from "../api/api_company";
+import { Toaster } from "sonner";
 
 const View4 = () => {
   const router = useRouter();
@@ -12,17 +14,18 @@ const View4 = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
-  const [type, settype] = useState('');
+  const [type, setType] = useState('');
 
   useEffect(() => {
-    const type = localStorage.getItem('tipoUsuario');
-    if (type) {
-      settype(type);
+    const userType = localStorage.getItem('tipoUsuario');
+    if (userType) {
+      setType(userType);
     }
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
 
     console.log("Datos recibidos en handleSubmit:", {
       email,
@@ -31,6 +34,7 @@ const View4 = () => {
       type
     });
 
+
     if (password !== confirmPassword) {
       setError('Las contraseñas no coinciden');
       return;
@@ -38,9 +42,16 @@ const View4 = () => {
 
     try {
       console.log("tipo de usuario", type);
-      const response = await createAccount(email, password, type);
+      let response;
 
-      if (response.success) {
+      // Usa createAccount o createCompany según el tipo de usuario
+      if (type === "user") {
+        response = await createAccount(email, password, type);
+      } else if (type === "company") {
+        response = await createCompany(email, password, type);
+      }
+
+      if (response && response.success) {
         let userId;
         if (type === "user") {
           userId = response.data.user._id;
@@ -49,12 +60,13 @@ const View4 = () => {
         }
         console.log("respuesta", response);
 
-        // Inicia sesión automáticamente después de crear la cuenta
-        const token = await login(email, password); // Asegúrate de que no se necesite un token aquí.
 
-        if (token) { // Asegúrate de que se recibe un token válido.
+        // Inicia sesión automáticamente después de crear la cuenta
+        const data = await login(email, password); // Asegúrate de que no se necesite un token aquí.
+
+        if (data) { // Asegúrate de que se recibe un token válido.
           // Guarda el token y el ID del usuario en el localStorage
-          localStorage.setItem('token', token);
+          localStorage.setItem('token', data.token);
           localStorage.setItem('userId', userId);
           toast.success('Cuenta creada',{
             style: {
@@ -76,10 +88,8 @@ const View4 = () => {
           setPassword('');
           setConfirmPassword('');
         } else {
-          setError('Error al iniciar sesión. Inténtalo de nuevo.');
+          setError('Error al crear la cuenta. Inténtalo de nuevo.');
         }
-      } else {
-        setError('Error al crear la cuenta. Inténtalo de nuevo.');
       }
     } catch (error) {
       console.error("Error al crear cuenta o enviar código:", error);
