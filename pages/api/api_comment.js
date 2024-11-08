@@ -50,3 +50,18 @@ export function getCommentByUserId(userId) {
         throw error;
     });
 }
+
+// Obtener comentarios por `companyId`
+export async function getCommentsByCompanyId(companyId) {
+    try {
+      const response = await fetch(`${API_URL}/company${companyId}`);
+      if (!response.ok) throw new Error('Error al obtener los comentarios');
+      
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error(error.message);
+      return { success: false, data: [], message: error.message };
+    }
+  }
+  

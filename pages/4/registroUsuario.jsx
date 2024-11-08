@@ -6,6 +6,7 @@ import { sendVerificationCode } from "../api/api_verification";
 import { login } from "../api/api_login";
 import { toast } from "sonner";
 import { createCompany } from "../api/api_company";
+import { Toaster } from "sonner";
 
 const View4 = () => {
   const router = useRouter();
@@ -61,11 +62,11 @@ const View4 = () => {
 
 
         // Inicia sesión automáticamente después de crear la cuenta
-        const token = await login(email, password); // Asegúrate de que no se necesite un token aquí.
+        const data = await login(email, password); // Asegúrate de que no se necesite un token aquí.
 
-        if (token) { // Asegúrate de que se recibe un token válido.
+        if (data) { // Asegúrate de que se recibe un token válido.
           // Guarda el token y el ID del usuario en el localStorage
-          localStorage.setItem('token', token);
+          localStorage.setItem('token', data.token);
           localStorage.setItem('userId', userId);
           toast.success('Cuenta creada',{
             style: {

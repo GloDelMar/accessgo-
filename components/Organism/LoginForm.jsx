@@ -5,15 +5,11 @@ import axios from 'axios';
 import { toast, Toaster } from 'react-hot-toast';
 import { useRouter } from 'next/router';
 
-const userId = "672aa50d63f859a0dde75573"
-
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
   
-localStorage.setItem("userId", userId)
-
   const {
     formState: { errors },
     setError,
@@ -22,24 +18,40 @@ localStorage.setItem("userId", userId)
   async function onSubmit(e) {
     e.preventDefault();
     console.log('Formulario enviado con email y contraseña:', email, password);
-
+  
     try {
       const response = await axios.post('http://localhost:8080/api/auth', {
         email,
         password,
       });
 
+      // Agrega un console.log para ver la respuesta completa
+      console.log('Respuesta del servidor:', response);
+
       if (response.data && response.data.data && response.data.data.token) {
-        window.localStorage.setItem('token', response.data.data.token);
+        const { token, type, cuenta } = response.data.data;
+        window.localStorage.setItem('token', token);
+        window.localStorage.setItem("userId", response.data.data.id)
+        
         toast.success('Sesión iniciada', {
           style: {
             background: 'blue',
             color: 'white'
           }
         });
+  
         setTimeout(() => {
-          router.push('/7/perfilUsuario');
+          if (type === 'user') {
+            router.push('/7/perfilUsuario');
+          } else if (type === 'company') {
+            if (cuenta === 'free') {
+              router.push('/21/view21');
+            } else if (cuenta === 'premium') {
+              router.push('/22/sesionPremium');
+            }
+          }
         }, 2000);
+        
       } else {
         throw new Error('Usuario o contraseña incorrectos');
       }
@@ -51,13 +63,13 @@ localStorage.setItem("userId", userId)
           color: 'white'
         }
       });
+      
       setError('root.credentials', {
         type: 'manual',
         message: 'Credenciales inválidas'
       });
     }
   }
-
 
   return (
     <Form onSubmit={onSubmit} className="grid gap-4">
@@ -108,9 +120,9 @@ localStorage.setItem("userId", userId)
         </button>
       </div>
 
-      {/* {errors.root?.credentials && (
-        <p className="text-red-500 text-center">Credenciales Inválidas</p>
-      )} */}
+      {errors.root?.credentials && (
+        <p className="text-red-500 text-center">{errors.root.credentials.message}</p>
+      )}
       <Toaster />
     </Form>
   );
