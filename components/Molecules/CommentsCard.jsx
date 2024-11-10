@@ -1,105 +1,82 @@
-import { useState, useEffect } from 'react';
-import { createComment, getCommentsByCompanyId } from '@/pages/api/api_comment';
+import React, { useState, useEffect } from 'react';
+import { getCommentsByCompanyId } from '@/pages/api/api_comment';
+import { useRouter } from 'next/router';
 
-export default function CommentSection({ companyId, initialComments }) {
-  const [comment, setComment] = useState('');
-  const [showInput, setShowInput] = useState(false);
-  const [commentList, setCommentList] = useState(initialComments);
+const defaultProfilePic = '/6073873.png';
 
-  
-  // Cargar comentarios cuando el componente se monte
+export default function CommentSection() {
+  const [commentList, setCommentList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const router = useRouter();
+  const { id: companyId } = router.query; // Obtener el id de la compañía desde la URL
+
   useEffect(() => {
-    const fetchComments = async () => {
+    const fetchCompanyData = async () => {
+      if (!companyId) {
+        setError("Company ID not found");
+        setLoading(false);
+        return;
+      }
+
       try {
-        const response = await getCommentsByCompanyId(companyId);
-        if (response.success) {
-          setCommentList(response.data);
-        }
+        const commentsData = await getCommentsByCompanyId(companyId);
+        setCommentList(commentsData.data || []);
       } catch (error) {
-        console.error('Error al cargar los comentarios:', error.message);
+        setError("Failed to fetch company data.");
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchComments();
-  }, [companyId]); // Vuelve a cargar los comentarios si cambia companyId
-
-  const handleCommentSubmit = async () => {
-    if (comment.trim()) {
-      try {
-        const response = await createComment({
-          companyId, // Pasar el ID de la empresa
-          text: comment,
-          userImage: 'ruta_a_la_imagen', // Ajusta según la información disponible
-          username: 'Nombre de usuario',
-          rating: 5, // Ajusta la calificación según necesites
-        });
-
-        if (response.success) {
-          setCommentList([...commentList, response.data]);
-          setComment('');
-          setShowInput(false);
-        }
-      } catch (error) {
-        console.error('Error al enviar el comentario:', error.message);
-      }
+    if (companyId) {
+      fetchCompanyData();
     }
-  };
+  }, [companyId]);
+
+  // Ordenar los comentarios por la fecha de creación (más reciente primero)
+  const sortedComments = commentList.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p className="text-red-500 text-center">{error}</p>;
+  }
 
   return (
-    <section className='w-full h-full mt-6 flex flex-col'>
-      <button
-        onClick={() => setShowInput(!showInput)}
-        className='p-0 w-[196px] h-[28px] md:w-[210px] md:h-[36px] lg:w-[240px] lg:h-[44px] bg-[#2F4F4F] rounded-full text-sm md:text-base lg:text-lg text-center text-white self-center shadow-md shadow-lime-950'
-      >
-        Dejar un comentario
-      </button>
-
-      {showInput && (
-        <div className='w-full mt-4 flex flex-col items-center'>
-          <textarea
-            className='w-full md:w-3/4 lg:w-1/2 border border-[#CFD8DC] rounded-lg p-2'
-            rows='3'
-            placeholder='Escribe tu comentario aquí...'
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-          />
-          <button
-            onClick={handleCommentSubmit}
-            className='mt-2 p-2 w-[150px] bg-[#2F4F4F] rounded-full text-white shadow-md'
-          >
-            Enviar comentario
-          </button>
-        </div>
-      )}
-
-      <div className='w-full border border-[#CFD8DC] rounded-lg mt-6'>
-        {commentList.length ? (
-          commentList.map((comment, index) => (
-            <div key={index} className='flex flex-col border-b border-[#CFD8DC] p-4'>
-              <div className='flex flex-row items-center'>
-                <img
-                  className='w-[39px] h-[45px] md:w-[42px] md:h-[50px] lg:w-[48px] lg:h-[55px] rounded-full p-1'
-                  src={comment.userImage || 'jhonDoe.png'}
-                  alt='Imagen del usuario'
-                />
-                <p className='text-center md:text-base lg:text-lg ml-2'>{comment.username || 'Usuario Anónimo'}</p>
-                <div className='flex flex-row ml-auto'>
-                  {[...Array(comment.rating || 5)].map((_, idx) => (
-                    <img
-                      key={idx}
-                      className='w-[15px] h-[20px] md:w-[18px] md:h-[23px] lg:w-[20px] lg:h-[25px]'
-                      src='/estrellita.svg'
-                      alt='Estrella'
-                    />
-                  ))}
+    <section className="w-full h-full mt-2 flex flex-col p-2">
+      <div className="w-full rounded-lg mt-6">
+        <ul className="mt-4 space-y-5">
+          {sortedComments.length > 0 ? (
+            sortedComments.map((comment) => (
+              <li key={comment._id} className="w-full bg-[#F6F9FF] p-4 rounded-md shadow-md relative">
+                <div className="flex items-start items-center">
+                  <img
+                    src={comment.user?.profilePicture || defaultProfilePic}
+                    alt="Foto de perfil"
+                    className="w-10 h-10 rounded-full mr-3"
+                  />
+                  <div>
+                    <p className="text-gray-600 text-sm font-semibold">
+                      {comment.userId?.firstName || 'Nombre no disponible'}
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <p className='mt-2 text-sm md:text-base lg:text-lg text-[#546E7A]'>{comment.text}</p>
-            </div>
-          ))
-        ) : (
-          <p className='text-center p-4 text-[#546E7A]'>No hay comentarios para esta empresa.</p>
-        )}
+                <p className="mt-2 text-justify">{comment.content}</p>
+                <p className="text-gray-500 text-sm mt-1">
+                  {new Date(comment.createdAt).toLocaleDateString()}
+                </p>
+                <p className="text-center mt-2 text-gray-700 font-semibold">
+                  Calificación otorgada: {comment.rating || 'Sin calificación'}
+                </p>
+              </li>
+            ))
+          ) : (
+            <p className="text-center text-gray-500">No tienes comentarios.</p>
+          )}
+        </ul>
       </div>
     </section>
   );
