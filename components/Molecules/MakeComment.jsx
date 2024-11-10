@@ -1,69 +1,56 @@
 import React, { useEffect, useState } from "react";
 import { createComment } from "@/pages/api/api_comment";
-import Image from "next/image";
-import { getCompanyById } from "@/pages/api/api_company";
+import { useRouter } from 'next/router';
 
 export default function CommentInput() {
-  const [companyData, setCompanyData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [companyId, setCompanyId] = useState(null);
+  const router = useRouter();
+  const [userId, setUserId] = useState(null);
   const [showInput, setShowInput] = useState(false);
   const [comment, setComment] = useState("");
+  const { id } = router.query;  // El id de la compañía desde la URL
 
   useEffect(() => {
-    // Verificamos que esté en un entorno del cliente
     if (typeof window !== "undefined") {
-      const storedUserId = localStorage.getItem("userId");
-      if (storedUserId) {
-        setCompanyId(storedUserId);
-      } else {
-        setError("Company ID not found in localStorage.");
-        setLoading(false);
+      const userId = localStorage.getItem("userId");
+      if (userId) {
+        setUserId(userId);
+        console.log("userId almacenado en localStorage:", userId);
       }
     }
   }, []);
 
   useEffect(() => {
-    const fetchCompanyData = async () => {
-      if (!companyId) return;
-
-      try {
-        const data = await getCompanyById(companyId);
-        console.log("Datos de compañía", data);
-        setCompanyData(data);
-      } catch (error) {
-        console.error("Error al obtener datos de la compañía:", error);
-        setError("Failed to fetch company data.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (companyId) fetchCompanyData();
-  }, [companyId]);
+    if (id) {
+      console.log("ID de la compañía desde la URL:", id);
+    }
+  }, [id]);
+  
+const businessId = id
 
   const handleCommentSubmit = async () => {
     if (!comment.trim()) {
       alert("Por favor, escribe un comentario antes de enviar.");
       return;
     }
+
+    if (!userId) {
+      alert("Debes estar logueado para dejar un comentario.");
+      return;
+    }
+
     try {
-      await createComment(companyId, comment);
+      await createComment(userId, comment, businessId);
+
       alert("Comentario enviado exitosamente");
-      setComment(""); // Limpiar el campo de comentario después de enviar
+      setComment(""); // Limpiar el comentario
+      setShowInput(false); // Ocultar el input después de enviar el comentario
     } catch (error) {
-      console.error("Error al enviar el comentario:", error);
       alert("Error al enviar el comentario. Intenta de nuevo.");
     }
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
-
   return (
-    <div className='flex flex-col justify-center max-w-screen-sm h-full md:p-4 lg:p-8'>
-      {/* Botón para mostrar el input de comentario */}
+    <div className='flex flex-col justify-center max-w-screen-sm h-full md:p-4 lg:p-8 p-2 mt-2'>
       <button
         onClick={() => setShowInput(!showInput)}
         className='p-0 w-[196px] h-[28px] md:w-[210px] md:h-[36px] lg:w-[240px] lg:h-[44px] bg-[#2F4F4F] rounded-full text-sm md:text-base lg:text-lg text-center text-white self-center shadow-md shadow-lime-950'
