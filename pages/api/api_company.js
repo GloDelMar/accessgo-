@@ -69,3 +69,32 @@ export function updateCompany(id, companyData) {
         return response.json(); // Devolver la respuesta actualizada si es necesario
     });
 }
+
+export async function getAllCompanies() {
+  try {
+    const response = await fetch(`${API_URL}/api/company`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
+
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message);
+    }
+
+    const data = await response.json();
+    console.log("Data received from API:", data);
+
+    
+    if (!Array.isArray(data.data.companies)) {
+        throw new Error("La respuesta de la API no es un array de empresas");
+    }
+
+    return data.data.companies;
+} catch (error) {
+    console.error("Error fetching or parsing companies:", error);
+    throw error;
+}
+}

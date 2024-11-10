@@ -1,17 +1,17 @@
 const API_URL = "http://localhost:8080";
 
-export const createComment = async (userId, content, token) => {
+export const createComment = async (userId, content, businessId) => {
     try {
         const body = {
             userId,
             content,
+            businessId
        };
 
         const response = await fetch(`${API_URL}/api/comments`, { // Añadir coma y corregir sintaxis
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify(body)
         });
@@ -54,10 +54,14 @@ export function getCommentByUserId(userId) {
 // Obtener comentarios por `companyId`
 export async function getCommentsByCompanyId(companyId) {
     try {
-      const response = await fetch(`${API_URL}/company${companyId}`);
+      const response = await fetch(`${API_URL}/api/comments/company/${companyId}`);
       if (!response.ok) throw new Error('Error al obtener los comentarios');
       
       const data = await response.json();
+      
+      // Agregar el console.log para ver lo que recibes
+      console.log('Datos recibidos:', data);
+      
       return data;
     } catch (error) {
       console.error(error.message);
