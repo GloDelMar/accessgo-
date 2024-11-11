@@ -1,19 +1,22 @@
-import { Link, StyledButton } from '@/components/atoms/Index';
+import { StyledButton } from '@/components/atoms/Index';
 import { InputWithLabel } from '@/components/atoms/Input';
-import mapboxgl from 'mapbox-gl';
-import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
-import { updateCompany } from "../api/api_company";
+import mapboxgl from 'mapbox-gl';
 import { useRouter } from 'next/router';
+import { useEffect, useRef, useState } from 'react';
+import { updateCompany } from "../api/api_company";
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiYWNjZXNnbyIsImEiOiJjbTI4NGVjNnowc2RqMmxwdnptcXAwbmhuIn0.0jG0XG0mwx_LHjdJ23Qx4A';
 
 const View23 = () => {
   const mapDiv = useRef(null);
   const mapRef = useRef(null);
+  const markerRef = useRef(null);
   const [address, setAddress] = useState('');
   const [selectedDays, setSelectedDays] = useState([]);
   const [marker, setMarker] = useState(null);
+  const [longitude, setLongitude] = useState(null);
+  const [latitude, setLatitude] = useState(null);
   const router = useRouter();
 
   const [formValues, setFormValues] = useState({
@@ -26,7 +29,7 @@ const View23 = () => {
       apertura: '',
       cierre: ''
     },
-    descripcion: '' 
+    descripcion: ''
   });
 
   const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo', 'Todos los días'];
@@ -47,14 +50,60 @@ const View23 = () => {
   };
 
   useEffect(() => {
-    if (mapDiv.current && !mapRef.current) {
+    if (!mapRef.current && mapDiv.current) {
       mapRef.current = new mapboxgl.Map({
         container: mapDiv.current,
         style: 'mapbox://styles/mapbox/streets-v12',
-        center: [-100.3899, 20.5888],
+        center: [longitude || -100.3899, latitude || 20.5888], 
         zoom: 9,
       });
+  
+      markerRef.current = new mapboxgl.Marker()
+        .setLngLat([longitude || -100.3899, latitude || 20.5888])
+        .addTo(mapRef.current);
     }
+  
+    if (latitude && longitude && markerRef.current) {
+      markerRef.current.setLngLat([longitude, latitude]);
+      mapRef.current.flyTo({ center: [longitude, latitude], zoom: 14 });
+    }
+  }, [latitude, longitude]);
+  
+  const fetchCompanyData = async () => {
+    const companyId = localStorage.getItem("userId");
+    if (!companyId) return;
+
+    try {
+      const response = await axios.get(`http://localhost:8080/api/company/${companyId}`);
+      const companyData = response.data.data.company; 
+      console.log(companyData);
+
+      setFormValues({
+        nombreComercial: companyData.companyName || '',
+        rfc: companyData.rfc || '',
+        representanteLegal: companyData.representanteLegal || '',
+        giro: companyData.giro || '',
+        horario: {
+          apertura: companyData.horario.abre || '',
+          cierre: companyData.horario.cierra || ''
+        },
+        descripcion: companyData.description || ''
+      });
+      setAddress(companyData.address || '');
+      setSelectedDays(companyData.diasDeServicio || []);
+
+      setLatitude(companyData.latitude);
+      setLongitude(companyData.longitude);
+
+
+    } catch (error) {
+      console.error("Error fetching company data:", error);
+    }
+  };
+
+
+  useEffect(() => {
+    fetchCompanyData();
   }, []);
 
   const handleAddressChange = (event) => {
@@ -84,6 +133,8 @@ const View23 = () => {
   const handleSubmit = async () => {
     const formData = {
       companyName: formValues.nombreComercial,
+      rfc: formValues.rfc,
+      representanteLegal: formValues.representanteLegal,
       giro: formValues.giro,
       horario: {
         abre: formValues.horario.apertura,
@@ -93,25 +144,26 @@ const View23 = () => {
       description: formValues.descripcion,
       address: address,
       phone: '',
-      coordenadas: marker ? { latitud: marker.getLngLat().lat, longitud: marker.getLngLat().lng } : null,
+      latitude: markerRef.current ? markerRef.current.getLngLat().lat : latitude, 
+      longitude: markerRef.current ? markerRef.current.getLngLat().lng : longitude,
       verified: false
     };
-
+  
     const companyId = localStorage.getItem("userId");
-
+  
     if (!companyId) {
       alert("No se encontró el ID de la empresa en el localStorage");
       return;
     }
-
+  
     try {
       console.log(formData);
-      
+  
       const response = await updateCompany(companyId, formData);
       console.log(response);
-
+  
       const userAccountType = localStorage.getItem("cuenta");
-
+  
       if (userAccountType === "premium") {
         router.push("/22/sesionPremium");
       } else {
@@ -126,6 +178,7 @@ const View23 = () => {
     const { name, value } = event.target;
     setFormValues(prev => ({ ...prev, [name]: value }));
   };
+
   return (
     <>
       <div className="w-full max-w-[900px] mx-auto p-4 md:p-6 bg-white rounded-lg shadow-sm">
@@ -262,10 +315,10 @@ const View23 = () => {
           </div>
         </div>
         <div className="mt-8 flex flex-col md:flex-row justify-center md:justify-end space-y-4 md:space-y-0 md:space-x-4 w-full">
-         <StyledButton variant="blancoCuadrado">CANCELAR</StyledButton>
-         
-         <StyledButton onClick={handleSubmit}>Enviar</StyledButton>
-          
+          <StyledButton variant="blancoCuadrado">CANCELAR</StyledButton>
+
+          <StyledButton onClick={handleSubmit}>Enviar</StyledButton>
+
         </div>
       </div>
     </>
