@@ -23,6 +23,7 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem("userId")
+    localStorage.removeItem("cuenta")
     setIsLoggedIn(false);
     closeMenu();
     router.push('/');
