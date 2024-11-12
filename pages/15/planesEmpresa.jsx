@@ -4,7 +4,8 @@ import Link from 'next/link';
 const PlanCard = ({ title, icon, features, buttonText, link }) => (
   <section className="flex flex-col items-start px-5 pt-7 pb-12 mt-10 w-full text-base bg-white rounded-2xl border border-gray-100 border-solid shadow-lg max-w-[328px] text-slate-700">
     <div className="flex gap-5 ml-5 text-lg font-bold text-gray-800 whitespace-nowrap">
-      <img loading="lazy" src={icon} alt={`${title} plan icon`} className="object-contain shrink-0 aspect-square w-[60px]" />
+      <img 
+      loading="lazy" src={icon} alt={`${title} plan icon`} className="object-contain shrink-0 aspect-square w-[60px]" />
       <h2 className="my-auto">{title}</h2>
     </div>
     <ul className="list-none p-0">

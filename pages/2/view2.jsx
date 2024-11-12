@@ -28,6 +28,7 @@ const View2 = () => {
 
   // Función para manejar la redirección
   const handleCardClick = (id) => {
+    console.log(`Redirigiendo a: /cardFree09?id=${id}`)
     router.push(`/cardFree09?id=${id}`);
   };
   return (
