@@ -1,6 +1,4 @@
-
-
-const API_URL = "http://localhost:8080";
+const API_URL = "https://backend-r159.onrender.com";
 
 export const createAccount = async (email, password, type) => {
   try {
@@ -20,16 +18,11 @@ export const createAccount = async (email, password, type) => {
       body: JSON.stringify(body),
     });
 
-    // Manejar errores de la respuesta
     if (!response.ok) {
-      let errorMessage = "Error en la solicitud";
-      try {
-        const errorData = await response.json();
-        errorMessage = errorData.message || errorMessage;
-      } catch (jsonError) {
-        if (response.status >= 500) {
-          errorMessage = "Error del servidor. Intenta nuevamente más tarde.";
-        }
+      const errorData = await response.json();
+      const errorMessage = errorData.message || "Error en la solicitud";
+      if (response.status >= 500) {
+        throw new Error("Error del servidor. Intenta nuevamente más tarde.");
       }
       throw new Error(errorMessage);
     }

@@ -1,5 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import {getCompanyById} from "@/pages/api/api_company";
+import React, {useEffect, useState} from 'react';
 
 const userData = {
   name: "María García",
@@ -17,24 +19,65 @@ const userData = {
 }
 
 const View21 = () => {
+  const [companyData, setCompanyData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState (null)
+  const [companyId, setCompanyId] = useState (null)
+
+  useEffect (()=> {
+    if (typeof window !== "undefined"){
+      const storedUserId = localStorage.getItem("userId");
+if (storedUserId){
+  setCompanyId(storedUserId);
+  } else {
+    setError("Company ID not found in localStorage")
+    setLoading(false)
+  }
+    }
+  }, []);
+
+useEffect(()=>{
+  const fetchCompanyData = async () => {
+    if (!companyId) return;
+    try {
+      const data = await getCompanyById(companyId)
+      setCompanyData(data);
+    } catch (error){
+      console.error(error);
+      setError("Failed to fetch company data")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (companyId ) {
+    fetchCompanyData()
+  }
+}, [companyId]);
+
+if (loading) return <p className='text-4xl md:text-5xl font-bold text-center text-[#2F4F4F] mt-12'>Loading</p>
+if (error) return <p>{error}</p>
+
   return (
     <>
       <div className='container mx-auto px-4 py-8 max-w-4xl'>
         <h1 className='text-4xl md:text-5xl font-bold text-center text-[#2F4F4F] mb-12'>
-          ¡Bienvenido!
+          ¡Bienvenido! 
+          <p className='text-4xl md:text-5xl font-bold text-center text-[#2F4F4F] mt-2 mb-12'>{companyData?.data?.company?.companyName || 'Información no disponible.'}
+          </p>
         </h1>
 
         <div className='flex flex-col lg:flex-row gap-6 p-6 max-w-4xl mx-auto'>
           <div className='w-full lg:w-1/3 flex justify-center'>
-            <div className='bg-gradient-to-b from-[#ECEFF1] to-white w-full max-w-[231px] h-auto rounded-[25px] shadow-md p-6 text-center'>
+            <div className='bg-[#F5F0E5] w-full max-w-[231px] h-auto rounded-[25px] shadow-md p-6 text-center'>
               <Image
-                src='/perfil1.png'
+                src={companyData?.data?.company?.profilePicture || '/perfil1.png'}
                 alt='Foto de perfil'
                 width={150}
                 height={150}
                 className='rounded-full mx-auto mb-4'
               />
-              <h2 className='text-xl font-semibold mb-2'>{userData.name}</h2>
+             
             </div>
           </div>
 

@@ -1,179 +1,139 @@
+import React, { useEffect, useState } from "react";
+import Image from "next/image";
+import { useRouter } from 'next/router'
+import { getCompanyById } from "./api/api_company";
+import CommentSection from "../components/Molecules/CommentsCard";
+import CommentInput from "@/components/Molecules/MakeComment";
 
 
 export default function CardFree() {
+  const router = useRouter();
+  const [companyData, setCompanyData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const { id } = router.query;
+
+
+  useEffect(() => {
+    if (id) {
+      console.log("ID de la compañía desde la URL:", id); // Mostrar el ID de la compañía
+    }
+  }, [id]);
+
+  const companyId = id
+
+  useEffect(() => {
+    const fetchCompanyData = async () => {
+      if (!companyId) return;
+
+      try {
+        const data = await getCompanyById(companyId);
+        setCompanyData(data);
+      } catch (error) {
+        console.error(error);
+        setError("Failed to fetch company data.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (companyId) {
+      fetchCompanyData();
+    }
+  }, [companyId]);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
+
   return (
-    <div className='flex flex-col justify-center max-w-screen-sm  h-full md:p-4 lg:p-8'>
+    <div className='flex flex-col justify-center md:p-4 lg:p-8'>
       <div className='w-full mt-4 flex flex-col justify-center items-center'>
         <p className='text-[#2F4F4F] text-[20px] md:text-[40px] lg:text-[56px] text-center font-semibold'>
           ¡AccessGo!
         </p>
         <img
           className='w-[236px] h-[300px] md:w-[632px] md:h-[250px] lg:w-[652px] lg:h-[250px] mt-8 object-cover'
-          src='/img-card.png'
-          alt=''
+          src={companyData?.data?.company?.profilePicture || '/img-card.png'}
+          alt='Foto principal de empresa'
+          width={652}      // El ancho máximo para el tamaño lg
+          height={250}     // La altura máxima para el tamaño lg
+          layout="responsive"  // Permite que el contenedor controle el tamaño de la imagen
         />
       </div>
 
-      <section className='flex flex-col md:flex-row lg:flex-row w-full mt-4'>
-        <div className='md:w-2/3 lg:w-2/3'>
+      <section className='flex flex-col justify-between p-2 md:flex-row lg:flex-row w-full mt-4'>
+        <div className='flex flex-col '>
           <p className='w-full h-[40px] text-[#7E952A] text-[20px] md:text-2xl lg:text-3xl font-semibold'>
-            Cielito querido
+            {companyData?.data?.company?.companyName || 'Información no disponible.'}
           </p>
-          <div className='flex flex-rows ml-2 mb-2 '>
-            <img
-              className='w-[15px] h-[20px] md:w-[18px] md:h-[23px] lg:w-[20px] lg:h-[25px]'
-              src='/estrellita.svg'
-              alt=''
-            />
-            <img
-              className='w-[15px] h-[20px] md:w-[18px] md:h-[23px] lg:w-[20px] lg:h-[25px]'
-              src='/estrellita.svg'
-              alt=''
-            />
-            <img
-              className='w-[15px] h-[20px] md:w-[18px] md:h-[23px] lg:w-[20px] lg:h-[25px]'
-              src='/estrellita.svg'
-              alt=''
-            />
-            <img
-              className='w-[15px] h-[20px] md:w-[18px] md:h-[23px] lg:w-[20px] lg:h-[25px]'
-              src='/estrellita.svg'
-              alt=''
-            />
-            <img
-              className='w-[15px] h-[20px] md:w-[18px] md:h-[23px] lg:w-[20px] lg:h-[25px]'
-              src='/estrellita.svg'
-              alt=''
-            />
+          <div className='flex flex-rows ml-2 mb-2'>
+            {[...Array(5)].map((_, index) => (
+              <Image
+                key={index}
+                className='w-[15px] h-[20px] md:w-[18px] md:h-[23px] lg:w-[20px] lg:h-[25px]'
+                src='/estrellita.svg'
+                alt='Estrella'
+                width={20}
+                height={20}
+              />
+            ))}
           </div>
-
+          <p className='w-full md:w-3/4 text-xs text-[#455A64] lg:text-md mt-2'>
+            {companyData?.data?.company?.giro || 'Información no disponible.'}
+          </p>
           <p className='w-full md:w-3/4 text-sm text-[#455A64] lg:text-lg mt-2'>
-            CIELITO ® es un refugio único que inspirado en nuestra historia y
-            calidez latina, reinventa la experiencia de tomar café...
+            {companyData?.data?.company?.description || 'Información no disponible.'}
           </p>
         </div>
 
         <div>
-          <p className='text-[10.5px] md:text-[12px] lg:text-sm text-[#607D8B] ml-2 mt-2'>
+          <p className='text-[10.5px] md:text-[12px] lg:text-sm text-[#607D8B] mt-2'>
             Horarios
           </p>
 
           <div className='flex flex-row mt-2'>
-            <img
-              className='w-[20px] h-[14px]'
-              src='calendarVector.png'
-              alt=''
-            />
-            <p className='text-[12px] md:text-sm lg:text-base text-[#546E7A] ml-2'>
-              D, L, Ma, Mi, J, V, S
+            <Image src='/calendarVector.png' alt='ícono de calendario' width={16} height={14} />
+            <div className='flex flex-row text-[12px] md:text-sm lg:text-base text-[#546E7A] ml-2'>
+              {(companyData?.data?.company?.diasDeServicio || []).join(', ') || 'Información no disponible.'}
+            </div>
+          </div>
+
+          <div className='flex flex-row mt-2'>
+            <Image src='/clockOpeningVector.png' alt='ícono de reloj para hora de iniciar' width={16} height={14} />
+            <p className='text-[12.6px] md:text-sm lg:text-base text-[#546E7A] ml-2'>
+              {companyData?.data?.company?.horario?.abre || 'Información no disponible.'}
             </p>
           </div>
 
           <div className='flex flex-row mt-2'>
-            <img
-              className='w-[20px] h-[14px] md:w-[22px] md:h-[16] lg:w-[22px] lg:h-[18px]'
-              src='clockOpeningVector.png'
-              alt=''
-            />
-            <p className='text-[12.6px] md:text-sm md:text[13.5px] text-[#546E7A] ml-2'>
-              01:00PM
-            </p>
-          </div>
-
-          <div className='flex flex-row mt-2'>
-            <img
-              className='w-[20px] h-[14px md:w-[22px] md:h-[16] lg:w-[22px] lg:h-[18px]]'
-              src='clockClosingVector.png'
-              alt=''
-            />
-            <p className='text-[12.6px] text-[#546E7A] md:text-sm md:text[13.5px] ml-2'>
-              12:00AM
+            <Image src='/clockClosingVector.png' alt='ícono de reloj para hora de salida' width={16} height={14} />
+            <p className='text-[12.6px] text-[#546E7A] md:text-sm lg:text-base ml-2'>
+              {companyData?.data?.company?.horario?.cierra || 'Información no disponible.'}
             </p>
           </div>
         </div>
       </section>
 
       <div className='w-full flex flex-col justify-center items-center mt-8'>
-        <select className='rounded-lg mt-4 bg-[#ECEFF1] w-[290px] h-[37px] text-[#455A64]' name='' id=''>
-          <option value='Place'>Juarez 6600 Ciudad de Mexico</option>
+        <select className='rounded-lg mt-4 bg-[#ECEFF1] w-[290px] h-[37px] text-[#455A64]'>
+          <option value='Place'>{companyData?.data?.company?.address || 'Información no disponible.'}</option>
         </select>
 
-        <div className='w-[200px] h-[40px] md:w-[220px] md:h-[45px] lg:w-[250px] lg:h-[50px] mt-6 flex justify-center items-center self-center shadow-md shadow-gray-300 border border-[#231b1b6b] rounded-2xl '>
-          <img
-            className='mx-4 w-[22px] h-[25px] md:w-[25px] md:h-[28px] lg:w-[28px] lg:h-[30px]'
-            src='iconsBlue/motorDisabilityIcon.png'
-            alt=''
-          />
-          <img
-            className='mx-4 w-[22px] h-[25px] md:w-[25px] md:h-[28px] lg:w-[28px] lg:h-[30px]'
-            src='iconsBlue/blindIcon.png'
-            alt=''
-          />
-          <img
-            className='mx-4 w-[22px] h-[25px] md:w-[25px] md:h-[28px] lg:w-[28px] lg:h-[30px]'
-            src='iconsBlue/signalIcon.png'
-            alt=''
-          />
-          <img
-            className='mx-4 w-[22px] h-[25px] md:w-[25px] md:h-[28px] lg:w-[28px] lg:h-[30px]'
-            src='iconsBlue/neuroDicon.png'
-            alt=''
-          />
+        <div className='w-[200px] h-[40px] md:w-[220px] md:h-[45px] lg:w-[250px] lg:h-[50px] mt-6 flex justify-around items-center self-center shadow-md shadow-gray-300 border border-[#231b1b6b] rounded-2xl '>
+          <Image src='/iconsBlue/discapacidad.png' alt='ícono de persona usuaria de silla de ruedas' width={22} height={22} />
+          <Image src='/iconsBlue/icons8-acceso-para-ciegos-50.png' alt='ícono de persona ciega con bastón' width={22} height={22} />
+          <Image src='/iconsBlue/icons8-cabeza-con-cerebro-50.png' alt='ícono de persona con discapacidad intelectual' width={22} height={22} />
+          <Image src='/iconsBlue/sordera.png' alt='ícono de discapacidad auditiva' width={22} height={22} />
+          <Image src='/iconsBlue/icons8-infinito-64.png' alt='ícono de infinito, que representa a las personas Neurodivergentes' width={22} height={22} />
         </div>
       </div>
-
-      <section className='w-full h-full mt-6 flex flex-col '>
-        <button
-          className='p-0 w-[196px] h-[28px] md:w-[210px] md:h-[36px] lg:w-[240px] lg:h-[44px] bg-[#2F4F4F] rounded-full text-sm md:text-base lg:text-lg text-center text-white self-center shadow-md shadow-lime-950 '
-          href=''
-        >
-          Dejar un comentario
-        </button>
-
-        <div className='w-full border border-[#CFD8DC] rounded-lg mt-6'>
-          <div className='flex flex-row items-center'>
-            <img
-              className='w-[39px] h-[45px] md:w-[42px] md:h-[50px] lg:w-[48px] lg:h-[55px] rounded-full p-1'
-              src='jhonDoe.png'
-              alt=''
-            />
-            <p className='text-center md:text-base lg:text-lg ml-2'>Jhon Doe</p>
-            <div className='flex flex-rows md:self-right ml-8 mb-2 '>
-              <img
-                className='w-[20px] h-[20px] md:w-[24px] md:h-[24px] lg:w-[28px] lg:h-[28px]'
-                src='/estrellita.svg'
-                alt=''
-              />
-              <img
-                className='w-[20px] h-[20px] md:w-[24px] md:h-[24px] lg:w-[28px] lg:h-[28px] ml-1'
-                src='/estrellita.svg'
-                alt=''
-              />
-              <img
-                className='w-[20px] h-[20px] md:w-[24px] md:h-[24px] lg:w-[28px] lg:h-[28px] ml-1'
-                src='/estrellita.svg'
-                alt=''
-              />
-              <img
-                className='w-[20px] h-[20px] md:w-[24px] md:h-[24px] lg:w-[28px] lg:h-[28px] ml-1'
-                src='/estrellita.svg'
-                alt=''
-              />
-              <img
-                className='w-[20px] h-[20px] md:w-[24px] md:h-[24px] lg:w-[28px] lg:h-[28px] ml-1'
-                src='/estrellita.svg'
-                alt=''
-              />
-            </div>
-          </div>
-          <p className='p-4 bg-[#F9F9F9] rounded-lg md:text-base lg:text-lg'>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis
-            assumenda consequuntur sint exercitationem ipsam, inventore
-            obcaecati voluptas nulla cupiditate alias tempora eligendi sequi
-            accusantium, ad sed odio saepe natus consectetur.
-          </p>
-        </div>
-      </section>
+      <div className="flex justify-center">
+        <CommentInput />
+      </div>
+      <div>
+        <CommentSection />
+      </div>
     </div>
   );
 }
