@@ -63,7 +63,7 @@ const View7 = () => {
         <div className="flex flex-col items-center lg:w-1/3 mt-8 lg:mt-0">
           <h3 className="text-2xl text-[#2F4F4F] mb-4">Sobre mí</h3>
           <div className="bg-white p-6 rounded-md mb-4 text-[#2F4F4F] shadow-lg w-full max-w-lg">
-            <p className="text-gray-600">{userData.data.user?.aboutMe || 'Información no disponible.'}</p>
+          <p className="text-gray-600">{userData.data.user?.biography || 'Información no disponible.'}</p>
           </div>
         </div>
       </div>
