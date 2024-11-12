@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import UploadImage from '@/components/Molecules/UploadImage';
+
 
 const View6 = () => {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -135,6 +137,8 @@ const View6 = () => {
             </label>
           </div>
         </div>
+        
+        <UploadImage />
 
         <div className="lg:w-2/3 flex flex-col items-center lg:items-start">
           <form className="w-full max-w-lg" onSubmit={handleSubmit}>
