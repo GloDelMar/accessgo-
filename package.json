@@ -9,14 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@mapbox/mapbox-sdk": "^0.16.1",
     "@stripe/stripe-js": "^4.9.0",
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
-    "chart.js": "^4.4.6",
-    "leaflet": "^1.9.4",
+
     "lucide-react": "^0.456.0",
     "mapbox-gl": "^2.6.1",
+
     "next": "^14.2.15",
     "postcss-flexbugs-fixes": "5.0.2",
     "postcss-preset-env": "10.0.7",

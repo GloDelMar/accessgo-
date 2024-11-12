@@ -1,20 +1,25 @@
-import { Link, StyledButton } from '@/components/atoms/Index';
+import { StyledButton } from '@/components/atoms/Index';
 import { InputWithLabel } from '@/components/atoms/Input';
-import mapboxgl from 'mapbox-gl';
-import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
+import mapboxgl from 'mapbox-gl';
+import { useRouter } from 'next/router';
+import { useEffect, useRef, useState } from 'react';
+import { updateCompany } from "../api/api_company";
 
-// Configuración del token de acceso para Mapbox
 mapboxgl.accessToken = 'pk.eyJ1IjoiYWNjZXNnbyIsImEiOiJjbTI4NGVjNnowc2RqMmxwdnptcXAwbmhuIn0.0jG0XG0mwx_LHjdJ23Qx4A';
 
 const View23 = () => {
-  // Referencias y estados del componente
-  const mapDiv = useRef(null); // Referencia para el contenedor del mapa
-  const mapRef = useRef(null); // Referencia para el mapa de Mapbox
-  const [address, setAddress] = useState(''); // Estado para la dirección ingresada
-  const [selectedDays, setSelectedDays] = useState([]); // Estado para los días seleccionados
-  const [marker, setMarker] = useState(null); // Estado para el marcador en el mapa
-  const [formValues, setFormValues] = useState({ // Estado para los valores del formulario  
+  const mapDiv = useRef(null);
+  const mapRef = useRef(null);
+  const markerRef = useRef(null);
+  const [address, setAddress] = useState('');
+  const [selectedDays, setSelectedDays] = useState([]);
+  const [marker, setMarker] = useState(null);
+  const [longitude, setLongitude] = useState(null);
+  const [latitude, setLatitude] = useState(null);
+  const router = useRouter();
+
+  const [formValues, setFormValues] = useState({
     nombre: '',
     nombreComercial: '',
     rfc: '',
@@ -24,24 +29,13 @@ const View23 = () => {
       apertura: '',
       cierre: ''
     },
-    descripcion: '' 
+    descripcion: ''
   });
 
-  // Días de servicio disponibles
   const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo', 'Todos los días'];
 
-  /**
-   * Función para alternar el estado de los días seleccionados.
-   * Si el día ya está seleccionado, lo elimina, de lo contrario lo agrega.
-   */
   const toggleDay = (day) => setSelectedDays(prev => prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day]);
 
-  /**
-   * Función para obtener las coordenadas (latitud y longitud) de una dirección utilizando la API de geocodificación de Mapbox.
-   * @param {string} address - Dirección a buscar.
-   * @returns {Object} Coordenadas en formato { latitude, longitude }.
-   * @throws Error si no se encuentran coordenadas para la dirección.
-   */
   const getCoordinates = async (address) => {
     const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?access_token=${mapboxgl.accessToken}`;
     const response = await fetch(url);
@@ -55,40 +49,73 @@ const View23 = () => {
     }
   };
 
-  /**
-   * Efecto que inicializa el mapa al montar el componente.
-   */
   useEffect(() => {
-    if (mapDiv.current && !mapRef.current) {
+    if (!mapRef.current && mapDiv.current) {
       mapRef.current = new mapboxgl.Map({
         container: mapDiv.current,
         style: 'mapbox://styles/mapbox/streets-v12',
-        center: [-100.3899, 20.5888],
+        center: [longitude || -100.3899, latitude || 20.5888], 
         zoom: 9,
       });
+  
+      markerRef.current = new mapboxgl.Marker()
+        .setLngLat([longitude || -100.3899, latitude || 20.5888])
+        .addTo(mapRef.current);
     }
+  
+    if (latitude && longitude && markerRef.current) {
+      markerRef.current.setLngLat([longitude, latitude]);
+      mapRef.current.flyTo({ center: [longitude, latitude], zoom: 14 });
+    }
+  }, [latitude, longitude]);
+  
+  const fetchCompanyData = async () => {
+    const companyId = localStorage.getItem("userId");
+    if (!companyId) return;
+
+    try {
+      const response = await axios.get(`https://api-ag.devthings.wiki/api/company/${companyId}`);
+      const companyData = response.data.data.company; 
+      console.log(companyData);
+
+      setFormValues({
+        nombreComercial: companyData.companyName || '',
+        rfc: companyData.rfc || '',
+        representanteLegal: companyData.representanteLegal || '',
+        giro: companyData.giro || '',
+        horario: {
+          apertura: companyData.horario.abre || '',
+          cierre: companyData.horario.cierra || ''
+        },
+        descripcion: companyData.description || ''
+      });
+      setAddress(companyData.address || '');
+      setSelectedDays(companyData.diasDeServicio || []);
+
+      setLatitude(companyData.latitude);
+      setLongitude(companyData.longitude);
+
+
+    } catch (error) {
+      console.error("Error fetching company data:", error);
+    }
+  };
+
+
+  useEffect(() => {
+    fetchCompanyData();
   }, []);
 
-  /**
-   * Manejador para actualizar el estado de la dirección.
-   * @param {Object} event - Evento del input de dirección.
-   */
   const handleAddressChange = (event) => {
     setAddress(event.target.value);
   };
 
-  /**
-   * Manejador para buscar las coordenadas de la dirección y actualizar el mapa y marcador en esa ubicación.
-   * Utiliza la función getCoordinates para obtener las coordenadas y luego centra el mapa y coloca un marcador en la posición.
-   */
   const handleSearch = async () => {
     try {
       const { latitude, longitude } = await getCoordinates(address);
 
-      // Centra el mapa en las coordenadas obtenidas
       mapRef.current.flyTo({ center: [longitude, latitude], zoom: 14 });
 
-      // Añade un marcador en la ubicación obtenida
       if (marker) {
         marker.setLngLat([longitude, latitude]);
       } else {
@@ -103,14 +130,11 @@ const View23 = () => {
     }
   };
 
-  /**
-   * Estructura del objeto que se enviará al servidor al enviar el formulario,
-   * incluyendo los campos de nombre, RFC, representante legal, giro, horario,
-   * descripción, días de servicio, dirección y las coordenadas obtenidas.
-   */
   const handleSubmit = async () => {
     const formData = {
       companyName: formValues.nombreComercial,
+      rfc: formValues.rfc,
+      representanteLegal: formValues.representanteLegal,
       giro: formValues.giro,
       horario: {
         abre: formValues.horario.apertura,
@@ -120,14 +144,31 @@ const View23 = () => {
       description: formValues.descripcion,
       address: address,
       phone: '',
-      coordenadas: marker ? { latitud: marker.getLngLat().lat, longitud: marker.getLngLat().lng } : null,
+      latitude: markerRef.current ? markerRef.current.getLngLat().lat : latitude, 
+      longitude: markerRef.current ? markerRef.current.getLngLat().lng : longitude,
       verified: false
     };
-
+  
+    const companyId = localStorage.getItem("userId");
+  
+    if (!companyId) {
+      alert("No se encontró el ID de la empresa en el localStorage");
+      return;
+    }
+  
     try {
       console.log(formData);
-      const response = await axios.post('/api/companies', formData);
-      console.log(response.data);
+  
+      const response = await updateCompany(companyId, formData);
+      console.log(response);
+  
+      const userAccountType = localStorage.getItem("cuenta");
+  
+      if (userAccountType === "premium") {
+        router.push("/22/sesionPremium");
+      } else {
+        router.push("/21/view21");
+      }
     } catch (error) {
       console.error(error);
     }
@@ -275,9 +316,9 @@ const View23 = () => {
         </div>
         <div className="mt-8 flex flex-col md:flex-row justify-center md:justify-end space-y-4 md:space-y-0 md:space-x-4 w-full">
           <StyledButton variant="blancoCuadrado">CANCELAR</StyledButton>
-          <Link legacyBehavior href="/cardFree09">
-            <StyledButton onClick={handleSubmit} variant="verdeCuadrado">CONTINUAR</StyledButton>
-          </Link>
+
+          <StyledButton onClick={handleSubmit}>Enviar</StyledButton>
+
         </div>
       </div>
     </>
