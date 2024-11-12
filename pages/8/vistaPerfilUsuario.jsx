@@ -4,30 +4,36 @@ import { getUserById } from '../api/api_getById';
 
 const defaultProfilePic = "/6073873.png";
 
-
 const View8 = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [userId, setUserId] = useState(null);
 
- const userId = localStorage.getItem("userId");
+  useEffect(() => {
+    // Verificar que estamos en el entorno del navegador
+    if (typeof window !== "undefined") {
+      const storedUserId = localStorage.getItem("userId");
+      setUserId(storedUserId);
+    }
+  }, []);
 
   useEffect(() => {
     const fetchUserData = async () => {
-      if (!userId) {
+      // Solo intenta obtener los datos del usuario si userId tiene un valor
+      if (userId) {
+        try {
+          const data = await getUserById(userId);
+          console.log(data);
+          setUserData(data);
+        } catch (error) {
+          console.error(error);
+          setError("Failed to fetch user data.");
+        } finally {
+          setLoading(false);
+        }
+      } else {
         setError("User ID not found.");
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const data = await getUserById(userId);
-        console.log(data)
-        setUserData(data);
-         } catch (error) {
-        console.error(error);
-        setError("Failed to fetch user data.");
-      } finally {
         setLoading(false);
       }
     };
@@ -58,9 +64,11 @@ const View8 = () => {
               height={150}
               className='rounded-full mx-auto mb-4'
             />
-           <div> <h3 className='justify-center'>
-              {userData?.data?.user?.firstName || "Ella se llamaba"} {userData?.data?.user?.lastName || "Martha"}
-            </h3></div>
+            <div>
+              <h3 className='justify-center'>
+                {userData?.data?.user?.firstName || "Ella se llamaba"} {userData?.data?.user?.lastName || "Martha"}
+              </h3>
+            </div>
           </div>
         </div>
 

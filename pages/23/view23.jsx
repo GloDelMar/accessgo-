@@ -74,7 +74,7 @@ const View23 = () => {
     if (!companyId) return;
 
     try {
-      const response = await axios.get(`http://localhost:8080/api/company/${companyId}`);
+      const response = await axios.get(`https://api-ag.devthings.wiki/api/company/${companyId}`);
       const companyData = response.data.data.company; 
       console.log(companyData);
 

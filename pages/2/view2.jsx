@@ -6,6 +6,8 @@ import { getAllCompanies } from '../api/api_company';
 import { toast } from "sonner";
 import { useRouter } from 'next/router'; // Importa useRouter
 
+
+
 const View2 = () => {
   const [companies, setCompanies] = useState([]);
   const [filteredCompanies, setFilteredCompanies] = useState([]);
@@ -26,6 +28,7 @@ const View2 = () => {
 
   // Función para manejar la redirección
   const handleCardClick = (id) => {
+    console.log(`Redirigiendo a: /cardFree09?id=${id}`)
     router.push(`/cardFree09?id=${id}`);
   };
   return (

@@ -8,16 +8,18 @@ export default function CommentInput() {
   const [showInput, setShowInput] = useState(false);
   const [comment, setComment] = useState("");
   const { id } = router.query;  // El id de la compañía desde la URL
-
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const userId = localStorage.getItem("userId");
-      if (userId) {
-        setUserId(userId);
-        console.log("userId almacenado en localStorage:", userId);
+      const storedUserId = localStorage.getItem("userId");
+      if (storedUserId) {
+        setUserId(storedUserId);
+        console.log("userId almacenado en localStorage:", storedUserId);
+      } else {
+        console.error("No se encontró userId en localStorage");
       }
     }
   }, []);
+  
 
   useEffect(() => {
     if (id) {
