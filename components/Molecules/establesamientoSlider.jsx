@@ -9,7 +9,7 @@ const EstablecimientoSlider = () => {
   return (
     <Carousel>
       {locales.map((local, index) => (
-        <Link legacyBehavior key={index} href="/2/view2">
+        <Link legacyBehavior key={index} href="/socios">
           <a className="relative border rounded-md w-[90%] max-w-[200px] mx-auto h-[251px] overflow-hidden">
            
             <img 

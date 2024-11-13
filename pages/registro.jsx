@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { Form, Input } from "@/components/Molecules/FormStyles";
-import { createAccount } from "../api/api_register";
-import { sendVerificationCode } from "../api/api_verification";
-import { login } from "../api/api_login";
+import { createAccount } from "./api/api_register";
+import { sendVerificationCode } from "./api/api_verification";
+import { login } from "./api/api_login";
 import { toast } from "sonner";
-import { createCompany } from "../api/api_company";
+import { createCompany } from "./api/api_company";
 import { Toaster } from "sonner";
 
 const View4 = () => {
@@ -80,7 +80,7 @@ const View4 = () => {
 
           // Redirige a la pantalla de autenticación
           setTimeout(() => {
-            router.push('/5/autentificacion');
+            router.push('/autentificacion');
           }, 2000);
 
           // Limpia los campos

@@ -75,7 +75,7 @@ const View6 = () => {
       if (response.ok) {
         const jsonResponse = await response.json();
         console.log('Usuario actualizado:', jsonResponse);
-        router.push('/7/perfilUsuario');
+        router.push('/mi-perfil');
       } else {
         console.error('Error al actualizar el usuario:', response.statusText);
       }

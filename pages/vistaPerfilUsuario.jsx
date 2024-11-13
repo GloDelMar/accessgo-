@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { getUserById } from '../api/api_getById';
+import { getUserById } from './api/api_getById';
 
 const defaultProfilePic = "/6073873.png";
 
