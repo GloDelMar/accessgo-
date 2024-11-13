@@ -35,7 +35,7 @@ const View23 = () => {
     };
     console.log(JSON.stringify(formData));
     // Aquí puedes enviar formData a tu API o realizar otra acción necesaria
-    router.push('/21/view21');
+    router.push('/sesion-base');
   };
 
   const handleImageChange = (event) => {

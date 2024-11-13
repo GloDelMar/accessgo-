@@ -59,7 +59,7 @@ function PricingPage() {
 
         <div className='flex flex-row justify-center mt-5 space-x-4 md:space-x-[200px]'>
           <button className='w-[155px] h-[40px] bg-white border-2 rounded-lg border border-black mt-20'>
-            <Link legacyBehavior href='http://localhost:3000/15/planesEmpresa'>
+            <Link legacyBehavior href='http://localhost:3000/planes'>
               <a>Cancelar</a>
             </Link>
           </button>

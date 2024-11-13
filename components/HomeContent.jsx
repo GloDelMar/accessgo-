@@ -46,7 +46,7 @@ const HomeContent = () => {
         <p className="text-center mt-3 md:text-left">Para ti, que buscas un lugar para pasar un buen rato:</p>
         <div className="hidden md:flex flex-wrap justify-center gap-[17.5px] mt-[51px] mb-4">
           {categories.map((category, index) => (
-            <Link legacyBehavior href="/2/view2" key={index}>
+            <Link legacyBehavior href="/socios" key={index}>
               <a>
                 <div className="relative rounded-lg w-[200px] h-[241px] shadow-md overflow-hidden">
                   <Image
@@ -87,7 +87,7 @@ const HomeContent = () => {
         <h3 className="text-2xl text-center  md:text-left font-bold mb-2">Y también para ti, que buscas ser parte del cambio:</h3>
         <p className="text-center my-[40px] md:text-left">Sé parte del cambio y muestra tu compromiso con la accesibilidad</p>
         <ul className="hidden sm:flex  sm:flex-row items-center justify-center space-x-0 sm:space-x-4 mt-[40px]">
-          <Link legacyBehavior href="/voluntario11" >
+          <Link legacyBehavior href="/voluntariado" >
             <li className="card border rounded w-[223px] rounded-[8px] border-[#E8DECF] h-[178px] mb-4 sm:mb-0 cursor-pointer">
               <div><img className="w-[24px] h-[24px] mt-[16px] ml-[16px] mb-[13px]" src="/ayudar.png" alt="un saludo que establece el acuerdo de ayudar al prógimo" /></div>
               <div><p className="ml-[16px] font-bold">Voluntariado</p>
@@ -95,7 +95,7 @@ const HomeContent = () => {
               </div>
             </li>
           </Link>
-          <Link legacyBehavior href="/donacion12" >
+          <Link legacyBehavior href="/donaciones" >
             <li className="card rounded-[8px] border w-[223px] h-[178px] border-[#E8DECF] mb-4 sm:mb-0 cursor-pointer"><div><img className="w-[24px] h-[24px] mt-[16px] ml-[16px] mb-[13px]" src="/donar.svg" alt="un saludo que establece el acuerdo de ayudar al prógimo" /></div>
               <div><p className="ml-[16px] font-bold">Donaciones</p>
                 <p className="ml-[16px]">Apoya con donaciones para mejorar la accesibilidad en diferentes lugares.</p>

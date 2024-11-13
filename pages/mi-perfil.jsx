@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Image from 'next/image';
-import { getUserById } from "../api/api_getById";
-import { getCommentByUserId } from "../api/api_comment";
+import { getUserById } from "./api/api_getById";
+import { getCommentByUserId } from "./api/api_comment";
 
 const defaultProfilePic = '/6073873.png';
 
@@ -58,13 +58,13 @@ const View7 = () => {
       <h1 className="text-center text-[#2F4F4F] text-2xl p-10 font-bold">¡Bienvenid@ a AccessGo!</h1>
       <div className="flex flex-col items-center lg:flex-row lg:justify-center lg:items-start lg:space-x-8 px-4">
         <div className="w-full lg:w-1/3 flex flex-col items-center">
-          <div className="flex md:gap-4 bg-[#F5F0E5] md:h-[250px] p-4 rounded-[25px] flex-col md:justify-center items-center">
-            <Image
+          <div className="flex md:gap-4 bg-[#F5F0E5] md:h-[270px] p-4 rounded-[25px] flex-col md:justify-center items-center">
+            <Image 
               src={userData.data.user?.profilePicture || defaultProfilePic}
               alt="Foto de perfil"
               width={150}
               height={150}
-              className="rounded-full mx-auto mb-4"
+              className="rounded-full h-[150px] mx-auto mb-4"
             />
             <h2 className="text-xl font-semibold mb-2">{userData.data.user?.firstName} {userData.data.user?.lastName}</h2>
           </div>
