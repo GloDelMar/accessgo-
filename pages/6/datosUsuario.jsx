@@ -28,7 +28,7 @@ const View6 = () => {
 
   const fetchUserData = async () => {
     try {
-      const response = await fetch(`https://backend-r159.onrender.com/api/users/${userId}`, {
+      const response = await fetch(`http://localhost:8080/api/users/${userId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -62,7 +62,7 @@ const View6 = () => {
     };
     
     try {
-      const response = await fetch(`https://backend-r159.onrender.com/api/users/${userId}`, {
+      const response = await fetch(`http://localhost:8080/api/users/${userId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

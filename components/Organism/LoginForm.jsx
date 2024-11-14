@@ -20,7 +20,7 @@ const LoginForm = () => {
     console.log('Formulario enviado con email y contraseña:', email, password);
   
     try {
-      const response = await axios.post(`https://backend-r159.onrender.com/api/auth`, {
+      const response = await axios.post(`http://localhost:8080/api/auth`, {
         email,
         password,
       });
