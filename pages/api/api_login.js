@@ -1,6 +1,6 @@
 export async function login(email, password) {
   try {
-    const response = await fetch(`https://backend-r159.onrender.com/api/auth`, {
+    const response = await fetch(`http://localhost:8080/api/auth`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
