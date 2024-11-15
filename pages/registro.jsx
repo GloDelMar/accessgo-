@@ -26,14 +26,12 @@ const View4 = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-
     console.log("Datos recibidos en handleSubmit:", {
       email,
       password,
       confirmPassword,
       type
     });
-
 
     if (password !== confirmPassword) {
       setError('Las contraseñas no coinciden');
@@ -60,15 +58,23 @@ const View4 = () => {
         }
         console.log("respuesta", response);
 
+        // Guarda el tipo de usuario en localStorage
+        localStorage.setItem('tipoUsuario', type);
 
         // Inicia sesión automáticamente después de crear la cuenta
-        const data = await login(email, password); // Asegúrate de que no se necesite un token aquí.
+        const data = await login(email, password);
 
-        if (data) { // Asegúrate de que se recibe un token válido.
+        if (data && data.token) {
           // Guarda el token y el ID del usuario en el localStorage
           localStorage.setItem('token', data.token);
           localStorage.setItem('userId', userId);
-          toast.success('Cuenta creada',{
+          
+          // Vuelve a establecer el tipo de usuario después de login para asegurar persistencia
+          if (!localStorage.getItem('tipoUsuario')) {
+            localStorage.setItem('tipoUsuario', type);
+          }
+
+          toast.success('Cuenta creada', {
             style: {
               background: 'blue',
               color: 'white'
