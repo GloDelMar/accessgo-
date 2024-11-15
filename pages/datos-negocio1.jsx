@@ -5,6 +5,7 @@ import mapboxgl from 'mapbox-gl';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { updateCompany } from "./api/api_company";
+import Image from 'next/image';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiYWNjZXNnbyIsImEiOiJjbTI4NGVjNnowc2RqMmxwdnptcXAwbmhuIn0.0jG0XG0mwx_LHjdJ23Qx4A';
 
@@ -12,6 +13,7 @@ const View23 = () => {
   const mapDiv = useRef(null);
   const mapRef = useRef(null);
   const markerRef = useRef(null);
+  const [selectedImage, setSelectedImage] = useState(null);
   const [address, setAddress] = useState('');
   const [selectedDays, setSelectedDays] = useState([]);
   const [marker, setMarker] = useState(null);
@@ -57,7 +59,7 @@ const View23 = () => {
         center: [longitude || -100.3899, latitude || 20.5888],
         zoom: 9,
       });
-  
+
       markerRef.current = new mapboxgl.Marker()
         .setLngLat([longitude || -100.3899, latitude || 20.5888])
         .addTo(mapRef.current);
@@ -66,15 +68,15 @@ const View23 = () => {
       mapRef.current.flyTo({ center: [longitude, latitude], zoom: 14 });
     }
   }, [latitude, longitude]);
-  
-  
+
+
   const fetchCompanyData = async () => {
     const companyId = localStorage.getItem("userId");
     if (!companyId) return;
 
     try {
       const response = await axios.get(`https://api-ag.devthings.wiki/api/company/${companyId}`);
-      const companyData = response.data.data.company; 
+      const companyData = response.data.data.company;
       console.log(companyData);
 
       setFormValues({
@@ -129,15 +131,24 @@ const View23 = () => {
     }
   };
 
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => setSelectedImage(reader.result);
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSubmit = async () => {
     const companyId = localStorage.getItem("userId");
     const userAccountType = localStorage.getItem("cuenta");
-  
+
     if (!companyId) {
       alert("No se encontró el ID de la empresa en localStorage");
       return;
     }
-  
+
     const formData = {
       companyName: formValues.nombreComercial,
       rfc: formValues.rfc,
@@ -155,12 +166,12 @@ const View23 = () => {
       longitude: markerRef.current ? markerRef.current.getLngLat().lng : longitude,
       verified: false,
     };
-  
+
     try {
       console.log("Enviando datos de la compañía:", formData);
       const response = await updateCompany(companyId, formData);
       console.log("Respuesta de actualización:", response);
-  
+
       if (userAccountType === "premium") {
         router.push("/sesion-prem");
       } else {
@@ -170,7 +181,7 @@ const View23 = () => {
       console.error("Error al actualizar la compañía:", error);
     }
   };
-  
+
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -186,20 +197,15 @@ const View23 = () => {
         <div className="grid gap-8 lg:grid-cols-[300px,1fr] w-full">
           <div className="flex flex-col justify-items-center items-center space-y-4 w-full">
             <div className="w-32 h-32 sm:w-40 sm:h-40 bg-[#ECEFF1] rounded-full flex items-center justify-center mb-4">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 sm:h-16 sm:w-16 text-[#B0BEC5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
+            <label htmlFor="imgUsuario" className="cursor-pointer">
+              {selectedImage ? (
+                <Image src={selectedImage} alt="Foto de perfil" width={200} height={200} className="rounded-full" />
+              ) : (
+                <Image src="/iconoframe.png" alt="Foto de perfil" width={200} height={200} className="rounded-full" />
+              )}
+              <input type="file" id="imgUsuario" className="hidden" onChange={handleImageChange} />
+            </label>
             </div>
-            <button className="px-4 py-2 border bg-[#F9F9F9] rounded-md text-sm font-medium text-[#546E7A] hover:bg-[#ECEFF1] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#B0BEC5] md:hidden">
-              Actualizar foto de perfil
-            </button>
-            <InputWithLabel
-              name="nombre"
-              placeholder="Nombre"
-              value={formValues.nombre}
-              onChange={handleInputChange}
-            />
           </div>
 
           <div className="grid grid-cols-1 space-y-6 w-full">
