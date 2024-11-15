@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import EstablecimientoSlider from '@/components/Molecules/establesamientoSlider';
 import { Link, StyledButton } from '@/components/atoms/Index';
 import Image from 'next/image';
-import { getAllCompanies } from '../api/api_company';
+import { getAllCompanies } from './api/api_company';
 import { toast } from "sonner";
 import { useRouter } from 'next/router'; // Importa useRouter
 
@@ -28,8 +28,8 @@ const View2 = () => {
 
   // Función para manejar la redirección
   const handleCardClick = (id) => {
-    console.log(`Redirigiendo a: /cardFree09?id=${id}`)
-    router.push(`/cardFree09?id=${id}`);
+    console.log(`Redirigiendo a: /vista-base?id=${id}`)
+    router.push(`/vista-base?id=${id}`);
   };
   return (
     <div className="container mx-auto px-4 py-8">
@@ -68,10 +68,10 @@ const View2 = () => {
       </div>
 
       <div className="flex justify-center space-x-4 my-12">
-        <Link legacyBehavior href="/voluntario11">
+        <Link legacyBehavior href="/voluntariado">
           <StyledButton variant="verdeCurvo">¿Quieres ser voluntario?</StyledButton>
         </Link>
-        <Link legacyBehavior href="/donacion12">
+        <Link legacyBehavior href="/donaciones">
           <StyledButton className="hidden md:block" variant="verdeCurvo">¿Quieres hacer un donativo?</StyledButton>
         </Link>
       </div>
@@ -216,10 +216,10 @@ const View2 = () => {
       </div>
 
       <div className="flex justify-center space-x-4 my-12">
-        <Link legacyBehavior href="/voluntario11">
+        <Link legacyBehavior href="/voluntariado">
           <StyledButton variant="verdeCurvo">¿Quieres ser voluntario?</StyledButton>
         </Link>
-        <Link legacyBehavior href="/donacion12">
+        <Link legacyBehavior href="/donaciones">
           <StyledButton className="hidden md:block" variant="verdeCurvo">¿Quieres hacer un donativo?</StyledButton>
         </Link>
       </div>

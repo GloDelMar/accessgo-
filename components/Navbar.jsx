@@ -132,13 +132,13 @@ const Navbar = () => {
                 <Link href="/" className="block px-4 py-2 hover:bg-gray-100" onClick={closeMenu}>
                   Ir a inicio
                 </Link>
-                <Link href="/2/view2" className="block px-4 py-2 hover:bg-gray-100" onClick={closeMenu}>
+                <Link href="/socios" className="block px-4 py-2 hover:bg-gray-100" onClick={closeMenu}>
                   Realizar una búsqueda
                 </Link>
-                <Link href="/voluntario11" className="block px-4 py-2 hover:bg-gray-100" onClick={closeMenu}>
+                <Link href="/voluntariado" className="block px-4 py-2 hover:bg-gray-100" onClick={closeMenu}>
                   Ser Voluntario
                 </Link>
-                <Link href="/donacion12" className="block px-4 py-2 hover:bg-gray-100" onClick={closeMenu}>
+                <Link href="/donaciones" className="block px-4 py-2 hover:bg-gray-100" onClick={closeMenu}>
                   Donar a la página
                 </Link>
                 {isLoggedIn && (

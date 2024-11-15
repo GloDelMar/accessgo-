@@ -16,7 +16,7 @@ const View6 = () => {
     console.log(dataNombre, dataApellido, dataFecha, dataBio);
 
     // Navegar a la siguiente página
-    router.push('/7/perfilUsuario');
+    router.push('/mi-perfil');
   };
 
   const handleImageChange = (event) => {
