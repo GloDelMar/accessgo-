@@ -72,8 +72,8 @@ const ImageUploaderSection = () => {
 
   const handleImageUpload = (event) => {
     const files = event.target.files;
-    if (files) {
-      const newImages = Array.from(files).map(file => URL.createObjectURL(file));
+    if (files && images.length < 4) {
+      const newImages = Array.from(files).slice(0, 4 - images.length).map(file => URL.createObjectURL(file));
       setImages(prev => [...prev, ...newImages]);
     }
   };
@@ -92,7 +92,7 @@ const ImageUploaderSection = () => {
           className="hidden"
           onChange={handleImageUpload}
         />
-        <div className="w-24 h-24 border-2 border-dashed border-muted-foreground rounded-lg flex items-center justify-center hover:border-primary transition-colors">
+        <div className={`w-24 h-24 border-2 border-dashed border-muted-foreground rounded-lg flex items-center justify-center hover:border-primary transition-colors ${images.length >= 4 ? 'cursor-not-allowed' : ''}`}>
           <Plus className="w-8 h-8 text-muted-foreground" />
         </div>
       </label>
