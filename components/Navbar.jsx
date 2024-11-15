@@ -20,9 +20,9 @@ const Navbar = () => {
     const userType = localStorage.getItem('tipoUsuario');
     console.log("Tipo de usuario detectado en Navbar:", userType);
     if (userType === 'company') {
-      router.push('/23/view23');
+      router.push('/datos-negocio1');
     } else {
-      router.push('/6/datosUsuario');
+      router.push('/datos-de-usuario');
     }
   };
 
@@ -30,9 +30,9 @@ const Navbar = () => {
     const userType = localStorage.getItem('tipoUsuario');
     console.log("Tipo de usuario detectado en Navbar:", userType);
     if (userType === 'company') {
-      router.push('/21/view21');
+      router.push('/sesion-base');
     } else {
-      router.push('/7/perfilUsuario');
+      router.push('/mi-perfil');
     }
   }
 

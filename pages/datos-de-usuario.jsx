@@ -74,7 +74,7 @@ const View6 = () => {
 
       if (response.ok) {
         console.log('Usuario actualizado:', await response.json());
-        router.push('/7/perfilUsuario');
+        router.push('/mi-perfil');
       } else {
         console.error('Error al actualizar el usuario:', response.statusText);
       }
@@ -149,4 +149,4 @@ const View6 = () => {
   );
 };
 
-export default dynamic(() => Promise.resolve(View6), { ssr: false });
+export default View6;
