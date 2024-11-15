@@ -196,7 +196,7 @@ if (error) return <p>{error}</p>
           </div> */}
 
         <div className='flex justify-center items-center py-5'>
-          <Link legacyBehavior href='/16/cobro'>
+          <Link legacyBehavior href='/cobro'>
             <button
               className='px-6 py-2 border border-transparent rounded-md shadow-sm
               text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none

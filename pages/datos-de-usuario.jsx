@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import UploadImage from '@/components/Molecules/UploadImage';
+
 
 const View6 = () => {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -28,7 +30,7 @@ const View6 = () => {
 
   const fetchUserData = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/api/users/${userId}`, {
+      const response = await fetch(`https://backend-r159.onrender.com/api/users/${userId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -62,7 +64,7 @@ const View6 = () => {
     };
     
     try {
-      const response = await fetch(`http://localhost:8080/api/users/${userId}`, {
+      const response = await fetch(`https://backend-r159.onrender.com/api/users/${userId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -73,7 +75,7 @@ const View6 = () => {
       if (response.ok) {
         const jsonResponse = await response.json();
         console.log('Usuario actualizado:', jsonResponse);
-        router.push('/7/perfilUsuario');
+        router.push('/mi-perfil');
       } else {
         console.error('Error al actualizar el usuario:', response.statusText);
       }
@@ -135,6 +137,8 @@ const View6 = () => {
             </label>
           </div>
         </div>
+        
+        <UploadImage />
 
         <div className="lg:w-2/3 flex flex-col items-center lg:items-start">
           <form className="w-full max-w-lg" onSubmit={handleSubmit}>

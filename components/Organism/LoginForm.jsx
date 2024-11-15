@@ -20,7 +20,7 @@ const LoginForm = () => {
     console.log('Formulario enviado con email y contraseña:', email, password);
   
     try {
-      const response = await axios.post(`http://localhost:8080/api/auth`, {
+      const response = await axios.post(`https://backend-r159.onrender.com/api/auth`, {
         email,
         password,
       });
@@ -42,12 +42,12 @@ const LoginForm = () => {
   
         setTimeout(() => {
           if (type === 'user') {
-            router.push('/7/perfilUsuario');
+            router.push('/mi-perfil');
           } else if (type === 'company') {
             if (cuenta === 'free') {
-              router.push('/21/view21');
+              router.push('/sesion-base');
             } else if (cuenta === 'premium') {
-              router.push('/22/sesionPremium');
+              router.push('/sesion-prem');
             }
           }
         }, 2000);

@@ -1,5 +1,4 @@
 import React, { useState } from 'react'; // Importa useState solo una vez
-import Link from 'next/link';
 
 const ProfileCard = ({ name }) => (
   <div className="flex flex-col w-[31%] max-md:ml-0 max-md:w-full">
@@ -188,16 +187,7 @@ const sesionPremium = () => {
         <ImageGallery />
         <EventTable />
       </div>
-
-     <div className="flex flex-row justify-center mt-4 space-x-4 md:space-x-[200px]">
-        <button className="w-[155px] h-[40px] bg-white border-2 rounded-lg">
-          <Link legacyBehavior href="/cardPremium10"><a>Cancelar</a></Link>
-        </button>
-        <button className="w-[155px] h-[40px] bg-[#2F4F4F] text-white rounded-lg flex items-center justify-center">
-          <Link legacyBehavior href="/22/sesionPremium"><a>Guardar Cambios</a></Link>
-        </button>
-      </div>
-      </main>
+    </main>
   );
 };
 

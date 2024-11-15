@@ -40,7 +40,7 @@ const AccessForm = () => {
         <Link legacyBehavior href="/"><a>Cancelar</a></Link>
       </Button>
       <Button className="w-[155px] h-[40px] bg-[#2F4F4F] text-white rounded-lg flex items-center justify-center">
-        <Link legacyBehavior href="/15/planesEmpresa"><a>Continuar</a></Link>
+        <Link legacyBehavior href="/planes"><a>Continuar</a></Link>
       </Button>
     </div>
   </div>

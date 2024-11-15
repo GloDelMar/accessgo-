@@ -49,7 +49,7 @@ const View25 = () => {
           </div>
 
           <div className=' flex justify-center'>
-            <Link legacyBehavior href='/7/perfilUsuario'>
+            <Link legacyBehavior href='/mi-perfil'>
               <button
                 type='submit'
                 className=' mt-10 group relative  py-2 px-10 border border-transparent text-sm font-medium rounded-full text-[#2F4F4F] bg-[#F0EAE0] hover:bg-[#E5DFD5] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#F0EAE0]'

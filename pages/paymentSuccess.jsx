@@ -12,7 +12,7 @@ const LoginPage = () => {
       }
 
       try {
-        const response = await fetch(`http://localhost:8080/api/company/${companyId}`, {
+        const response = await fetch(`https://backend-r159.onrender.com/api/company/${companyId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -41,7 +41,7 @@ const LoginPage = () => {
     <div className='flex flex-col justify-center items-center'>
       <header>Tu pago ha sido exitoso.</header>
 
-      <Link legacyBehavior href='/23/view23'>
+      <Link legacyBehavior href='/datos-negocio1'>
         <a className='mt-20 w-[155px] h-[40px] bg-[#2F4F4F] text-white rounded-lg flex items-center justify-center'>
           Siguiente
         </a>

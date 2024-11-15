@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useRouter } from 'next/router'
 import { getCompanyById } from "./api/api_company";
 import CommentSection from "../components/Molecules/CommentsCard";
-import CommentInput from "@/components/Molecules/MakeComment";
+
 
 
 export default function CardFree() {
@@ -127,9 +127,6 @@ export default function CardFree() {
           <Image src='/iconsBlue/sordera.png' alt='ícono de discapacidad auditiva' width={22} height={22} />
           <Image src='/iconsBlue/icons8-infinito-64.png' alt='ícono de infinito, que representa a las personas Neurodivergentes' width={22} height={22} />
         </div>
-      </div>
-      <div className="flex justify-center">
-        <CommentInput />
       </div>
       <div>
         <CommentSection />
