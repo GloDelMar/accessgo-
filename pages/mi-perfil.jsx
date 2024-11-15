@@ -15,18 +15,20 @@ const View7 = () => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      setUserId(localStorage.getItem("userId"));
+      const id = localStorage.getItem("userId");
+      if (id) {
+        setUserId(id);
+      } else {
+        setError("User ID not found.");
+        setLoading(false);
+      }
     }
   }, []);
+  
 
   useEffect(() => {
     const fetchUserData = async () => {
-      if (!userId) {
-        setError("User ID not found.");
-        setLoading(false);
-        return;
-      }
-
+      setLoading(true);
       try {
         const data = await getUserById(userId);
         setUserData(data);
@@ -39,14 +41,19 @@ const View7 = () => {
         setLoading(false);
       }
     };
-
+  
     if (userId) {
       fetchUserData();
     }
   }, [userId]);
+  
 
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
   }
 
   if (error) {
@@ -58,28 +65,31 @@ const View7 = () => {
       <h1 className="text-center text-[#2F4F4F] text-2xl p-10 font-bold">¡Bienvenid@ a AccessGo!</h1>
       <div className="flex flex-col items-center lg:flex-row lg:justify-center lg:items-start lg:space-x-8 px-4">
         <div className="w-full lg:w-1/3 flex flex-col items-center">
-          <div className="flex md:gap-4 bg-[#F5F0E5] md:h-[270px] p-4 rounded-[25px] flex-col md:justify-center items-center">
-            <Image 
-              src={userData.data.user?.profilePicture || defaultProfilePic}
+          <div className="flex md:gap-4 bg-[#F5F0E5] md:h-[250px] p-4 rounded-[25px] flex-col md:justify-center items-center">
+            <Image
+              src={userData?.data?.user?.profilePicture || defaultProfilePic}
               alt="Foto de perfil"
               width={150}
               height={150}
-              className="rounded-full h-[150px] mx-auto mb-4"
+              className="rounded-full mx-auto mb-4"
             />
-            <h2 className="text-xl font-semibold mb-2">{userData.data.user?.firstName} {userData.data.user?.lastName}</h2>
+            <h2 className="text-xl font-semibold mb-2">{userData?.data?.user?.firstName} {userData?.data?.user?.lastName}</h2>
           </div>
         </div>
         <div className="flex flex-col space-y-4 py-4 lg:items-center lg:space-y-6">
           <h3 className="text-2xl text-[#2F4F4F] mb-4 lg:text-center">Acerca de mi</h3>
           <textarea
-            value={userData.data.user?.biography || 'Información no disponible.'}
-            className="bg-[#F6F9FF] p-6 rounded-md mb-4 text-[#2F4F4F] shadow-lg w-full resize-none"/>
+            value={userData?.data?.user?.biography || 'Información no disponible.'}
+            readOnly
+            className="bg-[#F6F9FF] p-6 rounded-md mb-4 text-[#2F4F4F] shadow-lg w-full resize-none"
+          />
           <button
             onClick={() => setShowComents(!showComents)}
-            className="w-[300px] bg-[#F5F0E5] py-2 px-4 rounded-md text-center">
+            className="w-[300px] bg-[#F5F0E5] py-2 px-4 rounded-md text-center"
+          >
             {showComents ? "Ocultar comentarios" : "Ver tus comentarios"}
           </button>
-
+  
           {showComents && (
             <ul className="mt-4 space-y-2">
               {comments.length > 0 ? (
@@ -105,6 +115,7 @@ const View7 = () => {
       </div>
     </>
   );
+  
 };
 
 export default View7;
