@@ -67,7 +67,7 @@ const View18 = () => {
     };
     console.log(JSON.stringify(formData));
 
-    router.push('/22/sesionPremium');
+    router.push('/sesion-prem');
   };
 
   console.log(

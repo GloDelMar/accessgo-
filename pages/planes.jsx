@@ -45,7 +45,7 @@ const View15 = () => {
         'Números de contacto'
       ],
       buttonText: '¡UNETE AHORA!',
-      link: '/23/view23' 
+      link: 'datos-negocio1' 
     },
     {
       title: 'PREMIUM',
@@ -59,7 +59,7 @@ const View15 = () => {
         'Datos y estadísticas sobre las visitas a tu negocio'
       ],
       buttonText: '¡UNETE AHORA!',
-      link: '/16/cobro' 
+      link: '/cobro' 
     }
   ];
 
@@ -77,7 +77,7 @@ const View15 = () => {
         ))}
       </div>
 
-      <CancelButton cancelLink="/2/view2" /> 
+      <CancelButton cancelLink="/socios" /> 
       <style jsx>{`
         builder-component {
           max-width: none !important;
