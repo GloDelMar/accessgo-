@@ -54,20 +54,19 @@ const View23 = () => {
       mapRef.current = new mapboxgl.Map({
         container: mapDiv.current,
         style: 'mapbox://styles/mapbox/streets-v12',
-        center: [longitude || -100.3899, latitude || 20.5888], 
+        center: [longitude || -100.3899, latitude || 20.5888],
         zoom: 9,
       });
   
       markerRef.current = new mapboxgl.Marker()
         .setLngLat([longitude || -100.3899, latitude || 20.5888])
         .addTo(mapRef.current);
-    }
-  
-    if (latitude && longitude && markerRef.current) {
+    } else if (latitude && longitude && markerRef.current) {
       markerRef.current.setLngLat([longitude, latitude]);
       mapRef.current.flyTo({ center: [longitude, latitude], zoom: 14 });
     }
   }, [latitude, longitude]);
+  
   
   const fetchCompanyData = async () => {
     const companyId = localStorage.getItem("userId");
@@ -131,6 +130,14 @@ const View23 = () => {
   };
 
   const handleSubmit = async () => {
+    const companyId = localStorage.getItem("userId");
+    const userAccountType = localStorage.getItem("cuenta");
+  
+    if (!companyId) {
+      alert("No se encontró el ID de la empresa en localStorage");
+      return;
+    }
+  
     const formData = {
       companyName: formValues.nombreComercial,
       rfc: formValues.rfc,
@@ -138,31 +145,21 @@ const View23 = () => {
       giro: formValues.giro,
       horario: {
         abre: formValues.horario.apertura,
-        cierra: formValues.horario.cierre
+        cierra: formValues.horario.cierre,
       },
       diasDeServicio: selectedDays,
       description: formValues.descripcion,
       address: address,
       phone: '',
-      latitude: markerRef.current ? markerRef.current.getLngLat().lat : latitude, 
+      latitude: markerRef.current ? markerRef.current.getLngLat().lat : latitude,
       longitude: markerRef.current ? markerRef.current.getLngLat().lng : longitude,
-      verified: false
+      verified: false,
     };
   
-    const companyId = localStorage.getItem("userId");
-  
-    if (!companyId) {
-      alert("No se encontró el ID de la empresa en el localStorage");
-      return;
-    }
-  
     try {
-      console.log(formData);
-  
+      console.log("Enviando datos de la compañía:", formData);
       const response = await updateCompany(companyId, formData);
-      console.log(response);
-  
-      const userAccountType = localStorage.getItem("cuenta");
+      console.log("Respuesta de actualización:", response);
   
       if (userAccountType === "premium") {
         router.push("/22/sesionPremium");
@@ -170,9 +167,10 @@ const View23 = () => {
         router.push("/21/view21");
       }
     } catch (error) {
-      console.error(error);
+      console.error("Error al actualizar la compañía:", error);
     }
   };
+  
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;

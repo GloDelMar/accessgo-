@@ -17,13 +17,30 @@ const Navbar = () => {
   };
 
   const handleChangeDatos = () => {
-    router.push('/6/datosUsuario');
+    const userType = localStorage.getItem('tipoUsuario');
+    console.log("Tipo de usuario detectado en Navbar:", userType);
+    if (userType === 'company') {
+      router.push('/23/view23');
+    } else {
+      router.push('/6/datosUsuario');
+    }
+  };
+
+  const handleChangePerfil = () => {
+    const userType = localStorage.getItem('tipoUsuario');
+    console.log("Tipo de usuario detectado en Navbar:", userType);
+    if (userType === 'company') {
+      router.push('/21/view21');
+    } else {
+      router.push('/7/perfilUsuario');
+    }
   }
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    localStorage.removeItem("userId")
-    localStorage.removeItem("cuenta")
+    localStorage.removeItem("userId");
+    localStorage.removeItem("cuenta");
+    localStorage.removeItem("type");
     setIsLoggedIn(false);
     closeMenu();
     router.push('/');
@@ -46,11 +63,9 @@ const Navbar = () => {
   }, [menuVisible]);
 
   useEffect(() => {
-    // Verifica el token al montar el componente
     const token = localStorage.getItem('token');
     setIsLoggedIn(!!token);
 
-    // Usa un intervalo para verificar cambios en el token
     const tokenCheckInterval = setInterval(() => {
       const currentToken = localStorage.getItem('token');
       if (currentToken && !isLoggedIn) {
@@ -58,9 +73,9 @@ const Navbar = () => {
       } else if (!currentToken && isLoggedIn) {
         setIsLoggedIn(false);
       }
-    }, 500); // Verifica cada medio segundo
+    }, 500);
 
-    return () => clearInterval(tokenCheckInterval); // Limpia el intervalo al desmontar
+    return () => clearInterval(tokenCheckInterval);
   }, [isLoggedIn]);
 
   return (
@@ -89,7 +104,7 @@ const Navbar = () => {
             </Link>
           )}
 
-          <div className="relative">
+          <div className="relative z-10">
             <button
               onClick={toggleMenu}
               className="bg-[#ECEFF1] hover:bg-[#B0BEC5] text-white p-2 rounded"
@@ -106,8 +121,13 @@ const Navbar = () => {
                 )}
                 {isLoggedIn && (
                   <Link href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleChangeDatos}>
-                  Editar datos
-                </Link>
+                    Editar datos
+                  </Link>
+                )}
+                {isLoggedIn && (
+                  <Link href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleChangePerfil}>
+                    Ir a mi perfil
+                  </Link>
                 )}
                 <Link href="/" className="block px-4 py-2 hover:bg-gray-100" onClick={closeMenu}>
                   Ir a inicio

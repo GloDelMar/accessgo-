@@ -25,13 +25,14 @@ const LoginForm = () => {
         password,
       });
 
-      // Agrega un console.log para ver la respuesta completa
       console.log('Respuesta del servidor:', response);
 
       if (response.data && response.data.data && response.data.data.token) {
         const { token, type, cuenta } = response.data.data;
         window.localStorage.setItem('token', token);
-        window.localStorage.setItem("userId", response.data.data.id)
+        window.localStorage.setItem("userId", response.data.data.id);
+        window.localStorage.setItem("tipoUsuario", type); 
+        window.localStorage.setItem("cuentaUsuario", cuenta);
         
         toast.success('Sesión iniciada', {
           style: {
