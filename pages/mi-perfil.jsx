@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Image from 'next/image';
-import { getUserById } from "../api/api_getById";
-import { getCommentByUserId } from "../api/api_comment";
+import { getUserById } from "./api/api_getById";
+import { getCommentByUserId } from "./api/api_comment";
 
 const defaultProfilePic = '/6073873.png';
 

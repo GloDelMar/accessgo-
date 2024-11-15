@@ -43,12 +43,12 @@ const LoginForm = () => {
   
         setTimeout(() => {
           if (type === 'user') {
-            router.push('/7/perfilUsuario');
+            router.push('/mi-perfil');
           } else if (type === 'company') {
             if (cuenta === 'free') {
-              router.push('/21/view21');
+              router.push('/sesion-base');
             } else if (cuenta === 'premium') {
-              router.push('/22/sesionPremium');
+              router.push('/sesion-prem');
             }
           }
         }, 2000);
