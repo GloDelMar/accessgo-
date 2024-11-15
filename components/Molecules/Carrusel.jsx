@@ -6,11 +6,14 @@ const Carousel = ({ children }) => {
   const length = React.Children.count(children);
   const carouselRef = useRef();
 
-  const clonedChildren = [
-    React.cloneElement(children[length - 1]),
-    ...children,
-    React.cloneElement(children[0])
-  ];
+  // Solo crear `clonedChildren` si hay hijos en el carrusel
+  const clonedChildren = length > 0
+    ? [
+        React.cloneElement(children[length - 1]),
+        ...children,
+        React.cloneElement(children[0])
+      ]
+    : [];
 
   useEffect(() => {
     const handleTransitionEnd = () => {
@@ -27,15 +30,19 @@ const Carousel = ({ children }) => {
     };
 
     const carouselElement = carouselRef.current;
-    carouselElement.addEventListener('transitionend', handleTransitionEnd);
+    if (carouselElement) {
+      carouselElement.addEventListener('transitionend', handleTransitionEnd);
+    }
 
     return () => {
-      carouselElement.removeEventListener('transitionend', handleTransitionEnd);
+      if (carouselElement) {
+        carouselElement.removeEventListener('transitionend', handleTransitionEnd);
+      }
     };
   }, [currentIndex, length]);
 
   const nextSlide = () => {
-    if (!isTransitioning) {
+    if (!isTransitioning && length > 0) {
       setIsTransitioning(true);
       setCurrentIndex((prevIndex) => prevIndex + 1);
       carouselRef.current.style.transition = 'transform 0.5s ease-in-out';
@@ -44,7 +51,7 @@ const Carousel = ({ children }) => {
   };
 
   const prevSlide = () => {
-    if (!isTransitioning) {
+    if (!isTransitioning && length > 0) {
       setIsTransitioning(true);
       setCurrentIndex((prevIndex) => prevIndex - 1);
       carouselRef.current.style.transition = 'transform 0.5s ease-in-out';
@@ -52,7 +59,6 @@ const Carousel = ({ children }) => {
     }
   };
 
- 
   const handleTouchStart = (e) => {
     e.preventDefault();
   };
@@ -60,6 +66,11 @@ const Carousel = ({ children }) => {
   const handleTouchMove = (e) => {
     e.preventDefault();
   };
+
+  // Si no hay hijos, no mostrar el carrusel
+  if (length === 0) {
+    return <p>No hay elementos para mostrar en el carrusel.</p>;
+  }
 
   return (
     <div

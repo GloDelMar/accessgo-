@@ -5,9 +5,16 @@ const Footer = () => {
   return (
     <footer className="bg-white border-t shadow-md  text-center p-6">
       <div className="flex flex-col md:grid md:grid-cols-3 gap-5 mb-6">
-        <p className="text-center cursor-pointer hover:font-semibold">Términos y condiciones</p>
-        <p className="text-center cursor-pointer hover:font-semibold">Política de privacidad</p>
-        <p className="text-center cursor-pointer hover:font-semibold">Contacto</p>
+        
+      <Link legacyBehavior href='/terminos'>
+        <a  className="text-center cursor-pointer hover:font-semibold">Términos y condiciones</a>
+      </Link>
+      <Link legacyBehavior href='/politica'>
+        <a  className="text-center cursor-pointer hover:font-semibold">Política de privacidad</a>
+      </Link >
+      <Link legacyBehavior href=''>
+        <a  className="text-center cursor-pointer hover:font-semibold">Contacto</a>
+      </Link>
       </div>
       
       <div className='flex items-center justify-center space-x-5 mb-6'>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from 'next/router';
-import { verifyUserCode, sendVerificationCode, updateVerificationStatus } from '../api/api_verification';
+import { verifyUserCode, sendVerificationCode, updateVerificationStatus } from './api/api_verification';
 
 const View5 = () => {
   const router = useRouter();
@@ -72,9 +72,9 @@ const View5 = () => {
 
   const handleRedirect = (userType) => {
     if (userType === 'company') {
-      router.push('/formularioAccesibilidad');
+      router.push('/formulario-de-accesibilidad');
     } else if (userType === 'user') {
-      router.push('/6/datosUsuario');
+      router.push('/datos-de-usuario');
     } else {
       console.log("Tipo de usuario no definido.");
     }
