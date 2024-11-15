@@ -39,7 +39,7 @@ const UploadImage = () => {
     formData.append('userId', userId); 
     try {
      
-      const response = await fetch('http://localhost:8080/api/upload', {
+      const response = await fetch('https://backend-r159.onrender.com/api/upload', {
         method: 'POST',
         body: formData
       });

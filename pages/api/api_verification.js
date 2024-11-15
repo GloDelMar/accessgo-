@@ -73,7 +73,7 @@ export const updateVerificationStatus = async (userId)=> {
 }
 
 export function loginUser(email, password) {
-    return fetch(`http://localhost:8080/auth`, {
+    return fetch(`https://backend-r159.onrender.com/auth`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

@@ -12,7 +12,7 @@ const LoginPage = () => {
       }
 
       try {
-        const response = await fetch(`http://localhost:8080/api/company/${companyId}`, {
+        const response = await fetch(`https://backend-r159.onrender.com/api/company/${companyId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
