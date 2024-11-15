@@ -4,7 +4,7 @@ import axios from 'axios';
 import mapboxgl from 'mapbox-gl';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
-import { updateCompany } from "../api/api_company";
+import { updateCompany } from "./api/api_company";
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiYWNjZXNnbyIsImEiOiJjbTI4NGVjNnowc2RqMmxwdnptcXAwbmhuIn0.0jG0XG0mwx_LHjdJ23Qx4A';
 
@@ -165,9 +165,9 @@ const View23 = () => {
       const userAccountType = localStorage.getItem("cuenta");
   
       if (userAccountType === "premium") {
-        router.push("/22/sesionPremium");
+        router.push("/sesion-prem");
       } else {
-        router.push("/21/view21");
+        router.push("/sesion-base");
       }
     } catch (error) {
       console.error(error);
