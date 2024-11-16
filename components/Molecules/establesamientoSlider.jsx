@@ -13,7 +13,7 @@ const EstablecimientoSlider = () => {
     getAllCompanies()
       .then((companyData) => {
         setCompanies(companyData);
-        setFilteredCompanies(companyData); // Puedes aplicar un filtro aquí si es necesario
+        setFilteredCompanies(companyData); 
       })
       .catch((error) => {
         toast.error("Error al obtener los establecimientos");
