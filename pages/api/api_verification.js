@@ -3,7 +3,7 @@ export const sendVerificationCode = async (email) => {
         const requestBody = JSON.stringify({ email });
        
 
-        const response = await fetch(`http://localhost:8080/api/verification/send-code`, {
+        const response = await fetch(`https://backend-r159.onrender.com/api/verification/send-code`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -26,7 +26,7 @@ export const sendVerificationCode = async (email) => {
 
 export const verifyUserCode = async (userId, code) => {
     try {
-       const response = await fetch(`http://localhost:8080/api/verification/verify-code`, {
+       const response = await fetch(`https://backend-r159.onrender.com/api/verification/verify-code`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -51,16 +51,16 @@ export const verifyUserCode = async (userId, code) => {
 
 export const updateVerificationStatus = async (userId)=> {
     try {
-        const response = await fetch('http://localhost:8080/api/verification/verified-true', {
+        const response = await fetch('https://backend-r159.onrender.com/api/verification/verified-true', {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ userId }) // Envía el userId en el cuerpo de la solicitud
+            body: JSON.stringify({ userId }) 
         });
 
         if (!response.ok) {
-            // Maneja errores de respuesta
+          
             const errorData = await response.json();
             throw new Error(errorData.message || 'Error al actualizar el estado de verificación.');
         }
@@ -73,7 +73,7 @@ export const updateVerificationStatus = async (userId)=> {
 }
 
 export function loginUser(email, password) {
-    return fetch(`http://localhost:8080/auth`, {
+    return fetch(`https://backend-r159.onrender.com/auth`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
