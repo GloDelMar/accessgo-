@@ -1,3 +1,5 @@
+import CommentsComponent from "@/components/Molecules/CommentsCard";
+
 export default function CardFree() {
   return (
     <div className='flex flex-col justify-center max-w-screen-sm  h-full md:p-4 lg:p-8'>
@@ -176,67 +178,10 @@ export default function CardFree() {
         
       </section>
 
+      
+
       <section className='w-full h-full mt-6 flex flex-col '>
-        <button
-          className='p-0 w-[196px] h-[28px] md:w-[210px] md:h-[36px] lg:w-[240px] lg:h-[44px] bg-[#2F4F4F] rounded-full text-sm md:text-base lg:text-lg text-center text-white self-center shadow-md shadow-lime-950 '
-          href=''
-        >
-          Dejar un comentario
-        </button>
-
-        <div className='w-full border border-[#CFD8DC] rounded-lg mt-6 flex flex-col mt-6'>
-          <div className='flex flex-row items-center md:justify-between mx-4'>
-            <div className="flex flex-row items-center">
-              <img
-                className='w-[39px] h-[45px] md:w-[42px] md:h-[50px] lg:w-[48px] lg:h-[55px] rounded-full p-1'
-                src='jhonDoe.png'
-                alt=''
-              />
-              <p className='text-center md:text-base lg:text-lg ml-2'>
-                Jhon Doe
-              </p>
-            </div>
-
-            <div >
-              <div className='flex flex-rows md:self-right ml-8 mb-2 '>
-                <img
-                  className='w-[20px] h-[20px] md:w-[24px] md:h-[24px] lg:w-[28px] lg:h-[28px]'
-                  src='/estrellita.svg'
-                  alt=''
-                />
-                <img
-                  className='w-[20px] h-[20px] md:w-[24px] md:h-[24px] lg:w-[28px] lg:h-[28px] ml-1'
-                  src='/estrellita.svg'
-                  alt=''
-                />
-                <img
-                  className='w-[20px] h-[20px] md:w-[24px] md:h-[24px] lg:w-[28px] lg:h-[28px] ml-1'
-                  src='/estrellita.svg'
-                  alt=''
-                />
-                <img
-                  className='w-[20px] h-[20px] md:w-[24px] md:h-[24px] lg:w-[28px] lg:h-[28px] ml-1'
-                  src='/estrellita.svg'
-                  alt=''
-                />
-                <img
-                  className='w-[20px] h-[20px] md:w-[24px] md:h-[24px] lg:w-[28px] lg:h-[28px] ml-1'
-                  src='/estrellita.svg'
-                  alt=''
-                />
-              </div>
-            </div>
-          </div>
-          <div className="mx-4 mb-6">
-          <p className='p-4 bg-[#F9F9F9] rounded-lg md:text-base lg:text-lg '>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis
-            assumenda consequuntur sint exercitationem ipsam, inventore
-            obcaecati voluptas nulla cupiditate alias tempora eligendi sequi
-            accusantium, ad sed odio saepe natus consectetur.
-          </p>
-
-          </div>
-        </div>
+       <CommentsComponent/>
       </section>
     </div>
   );
