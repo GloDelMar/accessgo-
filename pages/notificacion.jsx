@@ -1,6 +1,13 @@
+import { useState } from 'react';
 import Link from 'next/link';
 
-export default function terminosYcondiciones() {
+export default function Notificacion() {
+  const [isChecked, setIsChecked] = useState(false);
+
+  const handleCheckboxChange = () => {
+    setIsChecked(!isChecked);
+  };
+
   return (
     <div className='w-full h-full lg:w-2/3 flex flex-col text-[#2F4F4F] mt-2 md:px-10 lg:px-0'>
       <div className='flex flex-col text-center '>
@@ -9,8 +16,8 @@ export default function terminosYcondiciones() {
         </p>
 
         <div className='w-full h-full flex flex-col justify-center items-center font-semibold text-sm md:text-base lg:text-xl'>
-          <p className='mt-6'>
-            En AccesoGo. Invitamos a las empresas a unirse a esta causa tan
+          <p className='mt-10'>
+            En AccesoGo, invitamos a las empresas a unirse a esta causa tan
             importante y a marcar una diferencia real en la vida de muchas
             personas. Regístrate y elige entre las opciones de perfil que
             tenemos para ti.
@@ -20,7 +27,7 @@ export default function terminosYcondiciones() {
         <div className='w-full h-full flex flex-col justify-center items-center font-semibold text-sm md:text-base lg:text-xl'>
           <p className='mt-6'>
             Tu puedes generar información sobre tu establecimiento o negocio,
-            indicando las diferentes formas y nivieles de accesibilidad con los
+            indicando las diferentes formas y niveles de accesibilidad con los
             que cuentas.
           </p>
           <p className='mt-6'>
@@ -29,22 +36,22 @@ export default function terminosYcondiciones() {
           </p>
           <p className='mt-6'>
             Para brindar un servicio de calidad a los usuarios y a los
-            comercios. Debemos cumplir con los aspectos mas importantes
-            referentes a la informacion. Para ello requerimos que toda la
-            informacion proporcionada sea fidedigna y real.
+            comercios, debemos cumplir con los aspectos más importantes
+            referentes a la información. Para ello requerimos que toda la
+            información proporcionada sea fidedigna y real.
           </p>
           <p className='mt-6'>
-            Para poder ser parte de la comunidad de AccesGo debes contar con al
+            Para poder ser parte de la comunidad de AccesGo, debes contar con al
             menos un tipo de accesibilidad, servicio o personal capacitado para
             necesidades de personas con discapacidad.
           </p>
           <p className='mt-6'>
-            En caso de detectar alguna irregularidad u omicion de esta
-            informacion en los registros. En cualquier tipo de cuenta. Dicha
-            cuenta podria ser cancelada.
+            En caso de detectar alguna irregularidad u omisión de esta
+            información en los registros, en cualquier tipo de cuenta, dicha
+            cuenta podría ser cancelada.
           </p>
           <p className='mt-6'>
-            Si tu estableciento o negocio no cuenta con las instalaciones o
+            Si tu establecimiento o negocio no cuenta con las instalaciones o
             servicios que registraste al crear tu cuenta, te pediremos que
             rectifiques la información, o hagas los arreglos pertinentes a tus
             instalaciones y servicios.
@@ -54,18 +61,36 @@ export default function terminosYcondiciones() {
             NO podrá calificar para ser parte de nuestra comunidad.
           </p>
           <p className='mt-6'>
-            SI adquiriste una cuenta premium y se detecto que tu negocio o
-            establecimiento no contaba con ningun nivel de accesibilidad tu
-            cuenta Premium sera dada de baja.
+            SI adquiriste una cuenta premium y se detectó que tu negocio o
+            establecimiento no contaba con ningún nivel de accesibilidad, tu
+            cuenta Premium será dada de baja.
           </p>
         </div>
       </div>
-      
-        <div className='flex flex-row justify-center items center mt-10 md:mt-20 md:mb-10'>
-       
+      <div className='flex flex-row justify-center my-10 font-extrabold text-[#2F4F4F]'>
+        <label>
+          <input
+            type='checkbox'
+            checked={isChecked}
+            onChange={handleCheckboxChange}
+          />{' '}
+          He leído y acepto los términos y condiciones mencionados.
+        </label>
+      </div>
+      <div className='flex flex-row justify-between items-center mt-10 md:mt-20 md:mb-10'>
+        <div>
+          <Link legacyBehavior href='/2/view2'>
+            <button className='w-[155px] h-[40px] md:w-[250px] md:h-[50px] border border-[#263238] rounded-lg'>
+              Cancelar
+            </button>
+          </Link>
+        </div>
         <div>
           <Link legacyBehavior href='/registro'>
-            <button className='px-6 py-2 border border-transparent rounded-md shadow-sm text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]'>
+            <button
+              className='w-[155px] h-[40px] md:w-[250px] md:h-[50px] bg-[#2F4F4F] text-white rounded-lg flex items-center justify-center shadow-md shadow-gray-400'
+              disabled={!isChecked}
+            >
               Continuar
             </button>
           </Link>
