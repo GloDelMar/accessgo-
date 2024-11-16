@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
-import Image from 'next/image';
+import Image from "next/image";
+import { useRouter } from "next/router";
 import { getUserById } from "./api/api_getById";
 import { getCommentByUserId } from "./api/api_comment";
+import { getCompanyById } from "./api/api_company";
 
-const defaultProfilePic = '/6073873.png';
+const defaultProfilePic = "/6073873.png";
 
 const View7 = () => {
   const [userData, setUserData] = useState(null);
@@ -12,6 +14,7 @@ const View7 = () => {
   const [userId, setUserId] = useState(null);
   const [comments, setComments] = useState([]);
   const [showComents, setShowComents] = useState(false);
+  const router = useRouter(); 
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -24,7 +27,6 @@ const View7 = () => {
       }
     }
   }, []);
-  
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -41,12 +43,39 @@ const View7 = () => {
         setLoading(false);
       }
     };
-  
+
     if (userId) {
       fetchUserData();
     }
   }, [userId]);
-  
+
+  const handleCompanyClick = async (companyId) => {
+    try {
+      if (!companyId) {
+        throw new Error("ID de la compañía no encontrado.");
+      }
+
+      // Obtener datos de la compañía
+      const companyData = await getCompanyById(companyId);
+      console.log("los datos de la empresa", companyData)
+      const companyType = companyData?.data?.company?.cuenta;
+
+      if (!companyType) {
+        throw new Error("Tipo de compañía no encontrado.");
+      }
+
+      // Redirigir según el tipo de compañía
+      if (companyType === "free") {
+        router.push(`/vista-base?id=${companyId}`);
+      } else if (companyType === "premium") {
+        router.push(`/vista-prem?id=${companyId}`);
+      } else {
+        throw new Error("Tipo de compañía inválido.");
+      }
+    } catch (error) {
+      console.error("Error al manejar el clic de la compañía:", error.message);
+    }
+  };
 
   if (loading) {
     return (
@@ -62,7 +91,9 @@ const View7 = () => {
 
   return (
     <>
-      <h1 className="text-center text-[#2F4F4F] text-2xl p-10 font-bold">¡Bienvenid@ a AccessGo!</h1>
+      <h1 className="text-center text-[#2F4F4F] text-2xl p-10 font-bold">
+        ¡Bienvenid@ a AccessGo!
+      </h1>
       <div className="flex flex-col items-center lg:flex-row lg:justify-center lg:items-start lg:space-x-8 px-4">
         <div className="w-full lg:w-1/3 flex flex-col items-center">
           <div className="flex md:gap-4 bg-[#F5F0E5] md:h-[250px] p-4 rounded-[25px] flex-col md:justify-center items-center">
@@ -73,13 +104,17 @@ const View7 = () => {
               height={150}
               className="rounded-full mx-auto mb-4"
             />
-            <h2 className="text-xl font-semibold mb-2">{userData?.data?.user?.firstName} {userData?.data?.user?.lastName}</h2>
+            <h2 className="text-xl font-semibold mb-2">
+              {userData?.data?.user?.firstName} {userData?.data?.user?.lastName}
+            </h2>
           </div>
         </div>
         <div className="flex flex-col space-y-4 py-4 lg:items-center lg:space-y-6">
-          <h3 className="text-2xl text-[#2F4F4F] mb-4 lg:text-center">Acerca de mi</h3>
+          <h3 className="text-2xl text-[#2F4F4F] mb-4 lg:text-center">
+            Acerca de mí
+          </h3>
           <textarea
-            value={userData?.data?.user?.biography || 'Información no disponible.'}
+            value={userData?.data?.user?.biography || "Información no disponible."}
             readOnly
             className="bg-[#F6F9FF] p-6 rounded-md mb-4 text-[#2F4F4F] shadow-lg w-full resize-none"
           />
@@ -89,16 +124,23 @@ const View7 = () => {
           >
             {showComents ? "Ocultar comentarios" : "Ver tus comentarios"}
           </button>
-  
+
           {showComents && (
             <ul className="mt-4 space-y-2">
               {comments.length > 0 ? (
                 comments.map((comment) => (
-                  <li key={comment._id} className="w-[300px] bg-[#F6F9FF] p-4 rounded-md shadow-md relative">
+                  <li
+                    key={comment._id}
+                    className="w-[300px] bg-[#F6F9FF] p-4 rounded-md shadow-md relative"
+                  >
                     <div className="flex items-start justify-end">
-                      <p className="text-gray-600 text-sm font-semibold">
-                        Comentario para: {comment.businessId?.companyName || "Sin nombre"}
-                      </p>
+                      <button
+                        onClick={() => handleCompanyClick(comment.businessId?._id)}
+                        className="text-gray-600 text-sm font-semibold hover:underline"
+                      >
+                        Comentario para:{" "}
+                        {comment.businessId?.companyName || "Sin nombre"}
+                      </button>
                     </div>
                     <p className="mt-2">{comment.content}</p>
                     <p className="text-gray-500 text-sm">
@@ -115,7 +157,6 @@ const View7 = () => {
       </div>
     </>
   );
-  
 };
 
 export default View7;

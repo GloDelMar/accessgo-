@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { createComment, getCommentsByCompanyId } from "@/pages/api/api_comment";
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 const defaultProfilePic = '/6073873.png';
 
@@ -111,8 +112,8 @@ export default function CommentsComponent() {
             />
             <span className="text-xs ml-5 font-light mb-3 mt-3 text-[#2F4F4F]">
               Haciendo clic aquí, confirmo que mi opinión refleja mi experiencia personal en este establecimiento.
-              Declaro que mi opinión es auténtica, que no tengo relación personal ni comercial con el establecimiento, 
-              y que no recibí incentivos o pagos para escribirla. Entiendo que AccessGo tiene una política estricta 
+              Declaro que mi opinión es auténtica, que no tengo relación personal ni comercial con el establecimiento,
+              y que no recibí incentivos o pagos para escribirla. Entiendo que AccessGo tiene una política estricta
               contra opiniones falsas.
             </span>
           </label>
@@ -141,9 +142,12 @@ export default function CommentsComponent() {
                     className="w-10 h-10 rounded-full mr-3"
                   />
                   <div>
-                    <p className="text-gray-600 text-sm font-semibold">
+                    <Link legacyBehavior
+                      href={`/vistaPerfilUsuario?id=${comment.userId?._id}`}
+                      className="text-gray-600 text-sm font-semibold hover:underline"
+                    >
                       {comment.userId?.firstName || 'Nombre no disponible'}
-                    </p>
+                    </Link>
                   </div>
                 </div>
                 <p className="mt-2 text-justify">{comment.content}</p>

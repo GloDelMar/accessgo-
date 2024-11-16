@@ -17,7 +17,7 @@ export default function CardFree() {
 
   useEffect(() => {
     if (id) {
-      console.log("ID de la compañía desde la URL:", id); // Mostrar el ID de la compañía
+      console.log("ID de la compañía desde la URL:", id); 
     }
   }, [id]);
 
@@ -56,9 +56,9 @@ export default function CardFree() {
           className='w-[236px] h-[300px] md:w-[632px] md:h-[250px] lg:w-[652px] lg:h-[250px] mt-8 object-cover'
           src={companyData?.data?.company?.profilePicture || '/img-card.png'}
           alt='Foto principal de empresa'
-          width={652}      // El ancho máximo para el tamaño lg
-          height={250}     // La altura máxima para el tamaño lg
-          layout="responsive"  // Permite que el contenedor controle el tamaño de la imagen
+          width={652}     
+          height={250}    
+          layout="responsive"  
         />
       </div>
 
