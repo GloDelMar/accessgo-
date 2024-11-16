@@ -3,8 +3,6 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import UploadImage from '@/components/Molecules/UploadImage';
 
-
-// Hacemos el componente dinámico para deshabilitar SSR
 const View6 = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [dataNombre, setDataNombre] = useState('');
@@ -47,6 +45,7 @@ const View6 = () => {
           setDataApellido(userData.lastName || '');
           setDataFecha(userData.birthDate ? new Date(userData.birthDate).toISOString().split('T')[0] : '');
           setDataBio(userData.biography || '');
+          setSelectedImage(userData.profilePicture || null); // Establece la imagen del perfil si está disponible
         } else {
           console.error('Error al obtener datos del usuario:', response.statusText);
         }
@@ -83,16 +82,6 @@ const View6 = () => {
     }
   };
 
-  // Cambia la imagen del perfil
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => setSelectedImage(reader.result);
-      reader.readAsDataURL(file);
-    }
-  };
-
   // No renderiza hasta que `isClient` sea true
   if (!isClient) return null;
 
@@ -115,10 +104,12 @@ const View6 = () => {
               ) : (
                 <Image src="/iconoframe.png" alt="Foto de perfil" width={200} height={200} className="rounded-full" />
               )}
-              <input type="file" id="imgUsuario" className="hidden" onChange={handleImageChange} />
             </label>
           </div>
         </div>
+
+        {/* Se pasa setSelectedImage como prop a UploadImage */}
+        <UploadImage userId={userId} setSelectedImage={setSelectedImage} /> 
 
         <div className="lg:w-2/3 flex flex-col items-center lg:items-start">
           <form className="w-full max-w-lg" onSubmit={handleSubmit}>
