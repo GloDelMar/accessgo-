@@ -5,8 +5,7 @@ import Image from 'next/image';
 import { getAllCompanies } from './api/api_company';
 import { toast } from "sonner";
 import { useRouter } from 'next/router'; // Importa useRouter
-
-
+import { getCompanyById } from './api/api_company';
 
 const View2 = () => {
   const [companies, setCompanies] = useState([]);
@@ -26,11 +25,25 @@ const View2 = () => {
       });
   }, []);
 
-  // Función para manejar la redirección
-  const handleCardClick = (id) => {
-    console.log(`Redirigiendo a: /vista-base?id=${id}`)
-    router.push(`/vista-base?id=${id}`);
+  // Función para manejar la redirección (se hace async)
+  const handleCardClick = async (id) => {
+    try {
+      const companyData = await getCompanyById(id); // Espera la respuesta de la compañía
+      const companyType = companyData?.data?.company?.cuenta;
+
+      if (companyType === "free") {
+        router.push(`/vista-base?id=${id}`);
+      } else if (companyType === "premium") {
+        router.push(`/vista-prem?id=${id}`);
+      } else {
+        throw new Error("Tipo de compañía inválido.");
+      }
+    } catch (error) {
+      console.error("Error al manejar el clic de la tarjeta:", error.message);
+      toast.error("Error al redirigir a la página de la compañía.");
+    }
   };
+
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Elimina los botones de filtro temporalmente */}
@@ -84,7 +97,6 @@ const View2 = () => {
 };
 
 export default View2;
-
 
 
 

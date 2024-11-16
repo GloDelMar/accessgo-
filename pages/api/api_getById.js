@@ -16,16 +16,15 @@ export function getUserById(id) {
       });
   }
   
-  // api/api_getById.js
+
 
 export const updateUser = async (userId, userData) => {
   try {
     const response = await fetch(`${API_URL}/api/users/${userId}`, {
-      method: 'PATCH', // O 'PATCH' si solo actualizas algunos campos
+      method: 'PATCH', 
       headers: {
         'Content-Type': 'application/json',
-        // Añade otros encabezados si es necesario, como autenticación
-      },
+       },
       body: JSON.stringify(userData),
     });
 
@@ -43,7 +42,7 @@ export const updateUser = async (userId, userData) => {
 
 export const UserProfile = async () => {
   try {
-    const token = localStorage.getItem("token"); // Asegúrate de que el token esté guardado en localStorage o en algún lugar seguro
+    const token = localStorage.getItem("token"); 
 
     const response = await fetch(`${API_URL}/api/users`, {
       method: "GET",

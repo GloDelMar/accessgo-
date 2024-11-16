@@ -11,7 +11,6 @@ export async function login(email, password) {
       }),
     });
 
-    // Manejo de la respuesta
     if (!response.ok) {
       if (response.status === 401) { 
         throw new Error("Email or password incorrect. Please try again.");
@@ -21,9 +20,9 @@ export async function login(email, password) {
     }
 
     const json = await response.json();
-    console.log(json); // Verifica la estructura exacta aquí
+    console.log(json);
 
-    const { token, userId } = json.data; // Ajustado para obtener tanto el token como el userId
+    const { token, userId } = json.data; 
     return { token, userId };
 
   } catch (error) {

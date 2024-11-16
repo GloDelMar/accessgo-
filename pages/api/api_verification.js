@@ -56,11 +56,11 @@ export const updateVerificationStatus = async (userId)=> {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ userId }) // Envía el userId en el cuerpo de la solicitud
+            body: JSON.stringify({ userId }) 
         });
 
         if (!response.ok) {
-            // Maneja errores de respuesta
+          
             const errorData = await response.json();
             throw new Error(errorData.message || 'Error al actualizar el estado de verificación.');
         }
