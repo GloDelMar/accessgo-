@@ -2,14 +2,11 @@ const API_URL = "https://backend-r159.onrender.com";
 
 export const createAccount = async (email, password, type) => {
   try {
-    // Construir el objeto con la estructura solicitada
     const body = {
       email,
       password,
       type,
     };
-
-       // Realizar la solicitud de registro
     const response = await fetch(`${API_URL}/api/users`, {
       method: 'POST',
       headers: {
@@ -27,9 +24,9 @@ export const createAccount = async (email, password, type) => {
       throw new Error(errorMessage);
     }
 
-    return await response.json(); // Devolver los datos de la cuenta creada
+    return await response.json();
   } catch (error) {
     console.error("Error en la solicitud de registro:", error.message);
-    throw error; // Propagar el error al frontend
+    throw error;
   }
 };
