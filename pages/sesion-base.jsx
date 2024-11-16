@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import {getCompanyById} from "@/pages/api/api_company";
-import React, {useEffect, useState, useRef} from 'react';
+import { getCompanyById } from "@/pages/api/api_company";
+import React, { useEffect, useState, useRef } from 'react';
 import router from 'next/router';
 
 
@@ -24,8 +24,8 @@ const userData = {
 const View21 = () => {
   const [companyData, setCompanyData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState (null)
-  const [companyId, setCompanyId] = useState (null)
+  const [error, setError] = useState(null)
+  const [companyId, setCompanyId] = useState(null)
   const [showAllComments, setShowAllComments] = useState(false);
   const [selectedImage1, setSelectedImage1] = useState(null);
   const [selectedImage2, setSelectedImage2] = useState(null);
@@ -39,20 +39,25 @@ const View21 = () => {
       imagen2: selectedImage2,
       imagen3: selectedImage3,
       imagen4: selectedImage4
-      
+
     };
     console.log(JSON.stringify(formImage));
-
-    router.push('/vista-base');
+    const jsonForm = JSON.stringify(formImage);
+    if (jsonForm) {
+      router.push('/vista-base');
+      return (jsonForm);
+    }else{
+      console.log('HAY ERROR PORQUE NO HAY IMAGENES CARGADAS')
+    }
   };
   console.log(selectedImage1, selectedImage2, selectedImage3, selectedImage4);
-  
+
   const handleImageChange = (event, imageKey) => {
-    const file = event.target.files[0]; 
+    const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        
+
         const imageUrl = reader.result;
         if (imageKey === 'imagenbase1') {
           setSelectedImage1(imageUrl);
@@ -64,45 +69,45 @@ const View21 = () => {
           setSelectedImage4(imageUrl);
         }
       };
-      reader.readAsDataURL(file); 
+      reader.readAsDataURL(file);
     }
   };
 
 
 
-  useEffect (()=> {
-    if (typeof window !== "undefined"){
+  useEffect(() => {
+    if (typeof window !== "undefined") {
       const storedUserId = localStorage.getItem("userId");
-if (storedUserId){
-  setCompanyId(storedUserId);
-  } else {
-    setError("Company ID not found in localStorage")
-    setLoading(false)
-  }
+      if (storedUserId) {
+        setCompanyId(storedUserId);
+      } else {
+        setError("Company ID not found in localStorage")
+        setLoading(false)
+      }
     }
   }, []);
 
-useEffect(()=>{
-  const fetchCompanyData = async () => {
-    if (!companyId) return;
-    try {
-      const data = await getCompanyById(companyId)
-      setCompanyData(data);
-    } catch (error){
-      console.error(error);
-      setError("Failed to fetch company data")
-    } finally {
-      setLoading(false)
+  useEffect(() => {
+    const fetchCompanyData = async () => {
+      if (!companyId) return;
+      try {
+        const data = await getCompanyById(companyId)
+        setCompanyData(data);
+      } catch (error) {
+        console.error(error);
+        setError("Failed to fetch company data")
+      } finally {
+        setLoading(false)
+      }
     }
-  }
 
-  if (companyId ) {
-    fetchCompanyData()
-  }
-}, [companyId]);
+    if (companyId) {
+      fetchCompanyData()
+    }
+  }, [companyId]);
 
-if (loading) return <p className='text-4xl md:text-5xl font-bold text-center text-[#2F4F4F] mt-12'>Loading</p>
-if (error) return <p>{error}</p>
+  if (loading) return <p className='text-4xl md:text-5xl font-bold text-center text-[#2F4F4F] mt-12'>Loading</p>
+  if (error) return <p>{error}</p>
 
   return (
     <>

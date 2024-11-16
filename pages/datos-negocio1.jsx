@@ -80,21 +80,21 @@ const View23 = () => {
       console.log(companyData);
 
       setFormValues({
-        nombreComercial: companyData.companyName || '',
-        rfc: companyData.rfc || '',
-        representanteLegal: companyData.representanteLegal || '',
-        giro: companyData.giro || '',
+        nombreComercial: companyData?.companyName || '',
+        rfc: companyData?.rfc || '',
+        representanteLegal: companyData?.representanteLegal || '',
+        giro: companyData?.giro || '',
         horario: {
-          apertura: companyData.horario.abre || '',
-          cierre: companyData.horario.cierra || ''
+          apertura: companyData.horario?.abre || '',
+          cierre: companyData.horario?.cierra || ''
         },
-        descripcion: companyData.description || ''
+        descripcion: companyData?.description || ''
       });
-      setAddress(companyData.address || '');
-      setSelectedDays(companyData.diasDeServicio || []);
+      setAddress(companyData?.address || '');
+      setSelectedDays(companyData?.diasDeServicio || []);
 
-      setLatitude(companyData.latitude);
-      setLongitude(companyData.longitude);
+      setLatitude(companyData?.latitude);
+      setLongitude(companyData?.longitude);
 
 
     } catch (error) {

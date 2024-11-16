@@ -12,7 +12,8 @@ export default function CardFree() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const { id } = router.query;
+  // const { id } = router.query;
+  const id = localStorage.getItem('userId');
 
 
   useEffect(() => {
