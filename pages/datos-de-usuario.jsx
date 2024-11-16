@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import UploadImage from '@/components/Molecules/UploadImage';
+import UploadImage from '@/components/Molecules/UploadImageUPP';
 
 const View6 = () => {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -108,7 +108,7 @@ const View6 = () => {
           </div>
         </div>
 
-        {/* Se pasa setSelectedImage como prop a UploadImage */}
+         {/* Esto es para la subida de imagenes a aws */}
         <UploadImage userId={userId} setSelectedImage={setSelectedImage} /> 
 
         <div className="lg:w-2/3 flex flex-col items-center lg:items-start">
