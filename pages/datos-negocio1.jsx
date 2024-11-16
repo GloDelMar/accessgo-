@@ -28,7 +28,7 @@ const View23 = () => {
     representanteLegal: '',
     giro: '',
     horario: {
-      apertura: '',
+      abre: '',
       cierre: ''
     },
     descripcion: ''
@@ -85,8 +85,8 @@ const View23 = () => {
         representanteLegal: companyData.representanteLegal || '',
         giro: companyData.giro || '',
         horario: {
-          apertura: companyData.horario.abre || '',
-          cierre: companyData.horario.cierra || ''
+          abre: companyData.horario?.abre || '',
+          cierre: companyData.horario?.cierra || ''
         },
         descripcion: companyData.description || ''
       });
@@ -155,7 +155,7 @@ const View23 = () => {
       representanteLegal: formValues.representanteLegal,
       giro: formValues.giro,
       horario: {
-        abre: formValues.horario.apertura,
+        abre: formValues.horario.abre,
         cierra: formValues.horario.cierre,
       },
       diasDeServicio: selectedDays,
@@ -258,9 +258,9 @@ const View23 = () => {
                 <div className="flex items-center space-x-2 w-full">
                   <input
                     type="time"
-                    name="horarioApertura"
-                    value={formValues.horario.apertura}
-                    onChange={(e) => setFormValues(prev => ({ ...prev, horario: { ...prev.horario, apertura: e.target.value } }))}
+                    name="horarioAbre"
+                    value={formValues.horario.abre}
+                    onChange={(e) => setFormValues(prev => ({ ...prev, horario: { ...prev.horario,  abre: e.target.value } }))}
                     className="flex-1 px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50"
                   />
                   <span className="text-[#546E7A]">a</span>
