@@ -13,6 +13,7 @@ export default function CardFree() {
   const [error, setError] = useState(null);
 
   const { id } = router.query;
+  
 
 
   useEffect(() => {
