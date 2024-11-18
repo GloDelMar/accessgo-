@@ -4,33 +4,58 @@ import { Link, StyledButton } from '@/components/atoms/Index';
 import Image from 'next/image';
 import { getAllCompanies } from './api/api_company';
 import { toast } from "sonner";
-import { useRouter } from 'next/router'; // Importa useRouter
-
-
+import { useRouter } from 'next/router';
+import { getCompanyById } from './api/api_company';
 
 const View2 = () => {
   const [companies, setCompanies] = useState([]);
   const [filteredCompanies, setFilteredCompanies] = useState([]);
-  const router = useRouter(); // Instancia useRouter
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
+    setLoading(true);
     getAllCompanies()
       .then((companyData) => {
         console.log("Datos recibidos de compañías:", companyData); // Verifica los datos recibidos
         setCompanies(companyData); // Almacena directamente el array de compañías
         setFilteredCompanies(companyData); // Lo asigna también a `filteredCompanies` para mostrar todas las compañías
+        setLoading(false);
       })
       .catch((error) => {
         toast.error("Error al obtener los establecimientos");
         console.error("[getCompanies error]", error);
+        setLoading(false);
       });
   }, []);
 
-  // Función para manejar la redirección
-  const handleCardClick = (id) => {
-    console.log(`Redirigiendo a: /vista-base?id=${id}`)
-    router.push(`/vista-base?id=${id}`);
+  // Función para manejar la redirección (se hace async)
+  const handleCardClick = async (id) => {
+    try {
+      const companyData = await getCompanyById(id); // Espera la respuesta de la compañía
+      const companyType = companyData?.data?.company?.cuenta;
+
+      if (companyType === "free") {
+        router.push(`/vista-base?id=${id}`);
+      } else if (companyType === "premium") {
+        router.push(`/vista-prem?id=${id}`);
+      } else {
+        throw new Error("Tipo de compañía inválido.");
+      }
+    } catch (error) {
+      console.error("Error al manejar el clic de la tarjeta:", error.message);
+      toast.error("Error al redirigir a la página de la compañía.");
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Elimina los botones de filtro temporalmente */}
@@ -84,7 +109,6 @@ const View2 = () => {
 };
 
 export default View2;
-
 
 
 
