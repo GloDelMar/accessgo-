@@ -13,7 +13,7 @@ const UploadImageCPP = ({ companyId, setSelectedImage }) => {
       formData.append('userId', companyId); // Pasar el companyId
 
       try {
-        const response = await axios.post('http://localhost:8080/api/uploadCPP', formData, {
+        const response = await axios.post('https://backend-r159.onrender.com/api/uploadcpp', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
