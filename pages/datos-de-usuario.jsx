@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import UploadImage from '@/components/Molecules/UploadImage';
+import UploadImageUPP from '@/components/Molecules/UploadImageUPP';
 
-
-// Hacemos el componente dinámico para deshabilitar SSR
 const View6 = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [dataNombre, setDataNombre] = useState('');
@@ -36,7 +34,7 @@ const View6 = () => {
       if (!userId || !isClient) return; // Previene que se ejecute en SSR
       
       try {
-        const response = await fetch(`https://backend-r159.onrender.com/api/users/${userId}`, {
+        const response = await fetch(`http://localhost:8080/api/users/${userId}`, {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
         });
@@ -47,6 +45,7 @@ const View6 = () => {
           setDataApellido(userData.lastName || '');
           setDataFecha(userData.birthDate ? new Date(userData.birthDate).toISOString().split('T')[0] : '');
           setDataBio(userData.biography || '');
+          setSelectedImage(userData.profilePicture || null); // Establece la imagen del perfil si está disponible
         } else {
           console.error('Error al obtener datos del usuario:', response.statusText);
         }
@@ -66,7 +65,7 @@ const View6 = () => {
     const userData = { firstName: dataNombre, lastName: dataApellido, birthDate: dataFecha, biography: dataBio };
     
     try {
-      const response = await fetch(`https://backend-r159.onrender.com/api/users/${userId}`, {
+      const response = await fetch(`http://http://localhost:8080/api/users/${userId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(userData),
@@ -80,16 +79,6 @@ const View6 = () => {
       }
     } catch (error) {
       console.error('Error en la solicitud:', error);
-    }
-  };
-
-  // Cambia la imagen del perfil
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => setSelectedImage(reader.result);
-      reader.readAsDataURL(file);
     }
   };
 
@@ -115,10 +104,12 @@ const View6 = () => {
               ) : (
                 <Image src="/iconoframe.png" alt="Foto de perfil" width={200} height={200} className="rounded-full" />
               )}
-              <input type="file" id="imgUsuario" className="hidden" onChange={handleImageChange} />
             </label>
           </div>
         </div>
+
+         {/* Esto es para la subida de imagenes a aws */}
+        <UploadImageUPP userId={userId} setSelectedImage={setSelectedImage} /> 
 
         <div className="lg:w-2/3 flex flex-col items-center lg:items-start">
           <form className="w-full max-w-lg" onSubmit={handleSubmit}>
