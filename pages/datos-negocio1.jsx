@@ -5,6 +5,7 @@ import mapboxgl from 'mapbox-gl';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { updateCompany } from "./api/api_company";
+import UploadImageCPP from '@/components/Molecules/UploadImageCPP';
 import Image from 'next/image';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiYWNjZXNnbyIsImEiOiJjbTI4NGVjNnowc2RqMmxwdnptcXAwbmhuIn0.0jG0XG0mwx_LHjdJ23Qx4A';
@@ -19,6 +20,17 @@ const View23 = () => {
   const [marker, setMarker] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [latitude, setLatitude] = useState(null);
+  const [companyId, setCompanyId] = useState(null);
+
+  useEffect(() => {
+    const companyIdFromLocalStorage = localStorage.getItem("userId");
+    if (companyIdFromLocalStorage) {
+      setCompanyId(companyIdFromLocalStorage);
+    } else {
+      console.error("No se encontró el ID de la empresa en localStorage");
+    }
+  }, []);
+
   const router = useRouter();
 
   const [formValues, setFormValues] = useState({
@@ -75,26 +87,26 @@ const View23 = () => {
     if (!companyId) return;
 
     try {
-      const response = await axios.get(`https://api-ag.devthings.wiki/api/company/${companyId}`);
+      const response = await axios.get(`https://backend-r159.onrender.com/api/company/${companyId}`);
       const companyData = response.data.data.company;
       console.log(companyData);
 
       setFormValues({
-        nombreComercial: companyData.companyName || '',
-        rfc: companyData.rfc || '',
-        representanteLegal: companyData.representanteLegal || '',
-        giro: companyData.giro || '',
+        nombreComercial: companyData?.companyName || '',
+        rfc: companyData?.rfc || '',
+        representanteLegal: companyData?.representanteLegal || '',
+        giro: companyData?.giro || '',
         horario: {
           abre: companyData.horario?.abre || '',
           cierre: companyData.horario?.cierra || ''
         },
-        descripcion: companyData.description || ''
+        descripcion: companyData?.description || ''
       });
-      setAddress(companyData.address || '');
-      setSelectedDays(companyData.diasDeServicio || []);
+      setAddress(companyData?.address || '');
+      setSelectedDays(companyData?.diasDeServicio || []);
 
-      setLatitude(companyData.latitude);
-      setLongitude(companyData.longitude);
+      setLatitude(companyData?.latitude);
+      setLongitude(companyData?.longitude);
 
 
     } catch (error) {
@@ -203,8 +215,13 @@ const View23 = () => {
               ) : (
                 <Image src="/iconoframe.png" alt="Foto de perfil" width={200} height={200} className="rounded-full" />
               )}
-              <input type="file" id="imgUsuario" className="hidden" onChange={handleImageChange} />
             </label>
+          
+        
+
+         {/* Esto es para la subida de imagenes a aws */}
+        <UploadImageCPP companyId={companyId} setSelectedImage={setSelectedImage} /> 
+          
             </div>
           </div>
 

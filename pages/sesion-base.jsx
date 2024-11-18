@@ -1,8 +1,10 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import {getCompanyById} from "@/pages/api/api_company";
-import React, {useEffect, useState, useRef} from 'react';
+import { getCompanyById } from "@/pages/api/api_company";
+import React, { useEffect, useState, useRef } from 'react';
 import router from 'next/router';
+import { getBusinessAverageRanking } from './api/api_ranking';
+import { getCommentsByCompanyId } from './api/api_comment';
 
 
 
@@ -24,9 +26,11 @@ const userData = {
 const View21 = () => {
   const [companyData, setCompanyData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState (null)
-  const [companyId, setCompanyId] = useState (null)
+  const [error, setError] = useState(null)
+  const [companyId, setCompanyId] = useState(null)
   const [showAllComments, setShowAllComments] = useState(false);
+  const [averageRating, setAverageRating] = useState(0);
+  const [comments, setComments] = useState([]);
   const [selectedImage1, setSelectedImage1] = useState(null);
   const [selectedImage2, setSelectedImage2] = useState(null);
   const [selectedImage3, setSelectedImage3] = useState(null);
@@ -39,20 +43,25 @@ const View21 = () => {
       imagen2: selectedImage2,
       imagen3: selectedImage3,
       imagen4: selectedImage4
-      
+
     };
     console.log(JSON.stringify(formImage));
-
-    router.push('/vista-base');
+    const jsonForm = JSON.stringify(formImage);
+    if (jsonForm) {
+      router.push('/vista-base');
+      return (jsonForm);
+    } else {
+      console.log('HAY ERROR PORQUE NO HAY IMAGENES CARGADAS')
+    }
   };
-  console.log(selectedImage1, selectedImage2, selectedImage3, selectedImage4);
-  
+  // console.log(selectedImage1, selectedImage2, selectedImage3, selectedImage4);
+
   const handleImageChange = (event, imageKey) => {
-    const file = event.target.files[0]; 
+    const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        
+
         const imageUrl = reader.result;
         if (imageKey === 'imagenbase1') {
           setSelectedImage1(imageUrl);
@@ -64,45 +73,49 @@ const View21 = () => {
           setSelectedImage4(imageUrl);
         }
       };
-      reader.readAsDataURL(file); 
+      reader.readAsDataURL(file);
     }
   };
 
-
-
-  useEffect (()=> {
-    if (typeof window !== "undefined"){
+  useEffect(() => {
+    if (typeof window !== "undefined") {
       const storedUserId = localStorage.getItem("userId");
-if (storedUserId){
-  setCompanyId(storedUserId);
-  } else {
-    setError("Company ID not found in localStorage")
-    setLoading(false)
-  }
+      if (storedUserId) {
+        setCompanyId(storedUserId);
+      } else {
+        setError("Company ID not found in localStorage")
+        setLoading(false)
+      }
     }
   }, []);
 
-useEffect(()=>{
-  const fetchCompanyData = async () => {
-    if (!companyId) return;
-    try {
-      const data = await getCompanyById(companyId)
-      setCompanyData(data);
-    } catch (error){
-      console.error(error);
-      setError("Failed to fetch company data")
-    } finally {
-      setLoading(false)
+  useEffect(() => {
+    const fetchCompanyData = async () => {
+      if (!companyId) return;
+      try {
+        const data = await getCompanyById(companyId);
+        setCompanyData(data);
+
+        const avgData = await getBusinessAverageRanking(companyId);
+        setAverageRating(avgData.averageRating || 0);
+
+        const commentsData = await getCommentsByCompanyId(companyId);
+        setComments(commentsData.data || []);
+      } catch (error) {
+        console.error(error);
+        setError("Failed to fetch company data")
+      } finally {
+        setLoading(false)
+      }
     }
-  }
 
-  if (companyId ) {
-    fetchCompanyData()
-  }
-}, [companyId]);
+    if (companyId) {
+      fetchCompanyData()
+    }
+  }, [companyId]);
 
-if (loading) return <p className='text-4xl md:text-5xl font-bold text-center text-[#2F4F4F] mt-12'>Loading</p>
-if (error) return <p>{error}</p>
+  if (loading) return <p className='text-4xl md:text-5xl font-bold text-center text-[#2F4F4F] mt-12'>Loading</p>
+  if (error) return <p>{error}</p>
 
   return (
     <>
@@ -137,13 +150,14 @@ if (error) return <p>{error}</p>
                   Tu calificación es de:
                 </h3>
                 <div className='flex'>
-                  {[...Array(5)].map((_, i) => (
+                  {[1, 2, 3, 4, 5].map((star) => (
                     <svg
-                      key={i}
-                      className='w-5 h-5 text-yellow-400 fill-current'
-                      viewBox='0 0 24 24'
+                      key={star}
+                      className={`w-5 h-5 ${star <= Math.round(averageRating) ? "text-yellow-400" : "text-gray-300"
+                        } fill-current`}
+                      viewBox="0 0 24 24"
                     >
-                      <path d='M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z' />
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z" />
                     </svg>
                   ))}
                 </div>
@@ -154,14 +168,18 @@ if (error) return <p>{error}</p>
                 </h3>
               </div>
               <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 mt-4'>
-                {userData.comments.map((comment) => (
-                  <p
-                    key={comment.id}
-                    className='bg-[#F5F0E5] p-2 rounded text-center text-sm'
-                  >
-                    {comment.text}
-                  </p>
-                ))}
+                {comments.length > 0 ? (
+                  comments.map((comment) => (
+                    <p
+                      key={comment._id}
+                      className="bg-[#F5F0E5] p-2 rounded text-center text-sm"
+                    >
+                      {comment.content}
+                    </p>
+                  ))
+                ) : (
+                  <p className="text-center text-sm">No hay comentarios disponibles.</p>
+                )}
               </div>
 
               <button
