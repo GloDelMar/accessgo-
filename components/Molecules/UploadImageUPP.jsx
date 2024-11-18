@@ -28,7 +28,7 @@ const UploadImageUPP = ({ userId, setSelectedImage }) => {
     formData.append('userId', userId); 
 
     try {
-      const response = await fetch('http://localhost:8080/api/uploadupp', {
+      const response = await fetch('https://backend-r159.onrender.com/api/uploadupp', {
         method: 'POST',
         body: formData
       });
