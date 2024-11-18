@@ -1,53 +1,41 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
+import axios from 'axios';
 
-const UploadImageCPP = ({ setSelectedImage }) => {
-  const [file, setFile] = useState(null);
-  const [uploading, setUploading] = useState(false);
+const UploadImageCPP = ({ companyId, setSelectedImage }) => {
+  const [image, setImage] = useState(null);
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  };
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImage(URL.createObjectURL(file)); // Mostrar imagen previa
+      const formData = new FormData();
+      formData.append('image', file);
+      formData.append('userId', companyId); // Pasar el companyId
 
-  const handleUpload = async () => {
-    if (!file) {
-      alert('Por favor, selecciona un archivo primero.');
-      return;
-    }
+      try {
+        const response = await axios.post('http://localhost:8080/api/uploadCPP', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
 
-    const formData = new FormData();
-    formData.append('image', file);
-
-    try {
-      setUploading(true);
-
-      const response = await fetch('http://localhost:8080/api/uploadCPP', {
-        method: 'POST',
-        body: formData,
-      });
-
-      const result = await response.json();
-      if (response.ok) {
-        // Si la carga fue exitosa, actualizamos el estado con la URL de la imagen
-        setSelectedImage(result.imageUrl); // Aquí se pasa la URL de la imagen al componente padre
-        alert('Imagen subida exitosamente');
-      } else {
-        alert(result.error || 'Error al subir la imagen');
+        const { imageUrl } = response.data;
+        setSelectedImage(imageUrl); // Guardar la URL de la imagen
+      } catch (error) {
+        console.error("Error al subir la imagen:", error);
+        alert("Hubo un problema al subir la imagen.");
       }
-    } catch (error) {
-      console.error('Error al subir la imagen:', error);
-      alert('Hubo un problema con la carga de la imagen');
-    } finally {
-      setUploading(false);
     }
   };
 
   return (
     <div>
-      <h3>Sube tu imagen</h3>
-      <input type='file' onChange={handleFileChange} />
-      <button onClick={handleUpload} disabled={uploading}>
-        {uploading ? 'Subiendo...' : 'Subir Imagen'}
-      </button>
+      <input
+        type="file"
+        onChange={handleImageChange}
+        accept="image/*"
+      />
+      {image && <img src={image} alt="Vista previa" className="w-32 h-32 rounded-full" />}
     </div>
   );
 };

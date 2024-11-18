@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import UploadImage from '@/components/Molecules/UploadImageUPP';
+import UploadImageUPP from '@/components/Molecules/UploadImageUPP';
 
 const View6 = () => {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -34,7 +34,7 @@ const View6 = () => {
       if (!userId || !isClient) return; // Previene que se ejecute en SSR
       
       try {
-        const response = await fetch(`https://backend-r159.onrender.com/api/users/${userId}`, {
+        const response = await fetch(`http://localhost:8080/api/users/${userId}`, {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
         });
@@ -65,7 +65,7 @@ const View6 = () => {
     const userData = { firstName: dataNombre, lastName: dataApellido, birthDate: dataFecha, biography: dataBio };
     
     try {
-      const response = await fetch(`https://backend-r159.onrender.com/api/users/${userId}`, {
+      const response = await fetch(`http://http://localhost:8080/api/users/${userId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(userData),
@@ -109,7 +109,7 @@ const View6 = () => {
         </div>
 
          {/* Esto es para la subida de imagenes a aws */}
-        <UploadImage userId={userId} setSelectedImage={setSelectedImage} /> 
+        <UploadImageUPP userId={userId} setSelectedImage={setSelectedImage} /> 
 
         <div className="lg:w-2/3 flex flex-col items-center lg:items-start">
           <form className="w-full max-w-lg" onSubmit={handleSubmit}>
