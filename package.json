@@ -9,7 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
     "@mapbox/mapbox-sdk": "^0.16.1",
+    "@mui/material": "^6.1.7",
     "@stripe/stripe-js": "^4.9.0",
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.7",
