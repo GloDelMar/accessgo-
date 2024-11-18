@@ -6,7 +6,6 @@ const Carousel = ({ children }) => {
   const length = React.Children.count(children);
   const carouselRef = useRef();
 
-  // Solo crear `clonedChildren` si hay hijos en el carrusel
   const clonedChildren = length > 0
     ? [
         React.cloneElement(children[length - 1]),
@@ -66,8 +65,6 @@ const Carousel = ({ children }) => {
   const handleTouchMove = (e) => {
     e.preventDefault();
   };
-
-  // Si no hay hijos, no mostrar el carrusel
   if (length === 0) {
     return <p>No hay elementos para mostrar en el carrusel.</p>;
   }
