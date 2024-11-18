@@ -34,7 +34,7 @@ const View6 = () => {
       if (!userId || !isClient) return; // Previene que se ejecute en SSR
       
       try {
-        const response = await fetch(`http://localhost:8080/api/users/${userId}`, {
+        const response = await fetch(`https://backend-r159.onrender.com/api/users/${userId}`, {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
         });
@@ -65,7 +65,7 @@ const View6 = () => {
     const userData = { firstName: dataNombre, lastName: dataApellido, birthDate: dataFecha, biography: dataBio };
     
     try {
-      const response = await fetch(`http://http://localhost:8080/api/users/${userId}`, {
+      const response = await fetch(`https://backend-r159.onrender.com/api/users/${userId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(userData),
