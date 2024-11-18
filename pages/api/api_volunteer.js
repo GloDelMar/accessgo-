@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:8080/api/volunteers';
+const BASE_URL = 'backend-r159.onrender.com/api/volunteers';
 
 /**
  * Crea un registro de voluntariado
