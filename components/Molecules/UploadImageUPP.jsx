@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const UploadImage = ({ userId, setSelectedImage }) => {
+const UploadImageUPP = ({ userId, setSelectedImage }) => {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
 
@@ -28,7 +28,7 @@ const UploadImage = ({ userId, setSelectedImage }) => {
     formData.append('userId', userId); 
 
     try {
-      const response = await fetch('https://backend-r159.onrender.com/api/upload', {
+      const response = await fetch('http://localhost:8080/api/uploadupp', {
         method: 'POST',
         body: formData
       });
@@ -60,4 +60,4 @@ const UploadImage = ({ userId, setSelectedImage }) => {
   );
 };
 
-export default UploadImage;
+export default UploadImageUPP;
