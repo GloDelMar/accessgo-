@@ -58,18 +58,20 @@ console.log("datos que recibimos", companyData)
 
       {/* Mostrar o esconder el recuadro con las preguntas */}
       {showCondition && conditionData && (
-        <div className="max-w-[500px] border rounded p-4 shadow-xl bg-white mt-4 flex flex-col items-center">
-        {conditionData.sections.map((section, sectionIndex) => (
-          <div key={sectionIndex} className="mt-4">
-            <h3 className="text-lg font-semibold mb-2">{section.name}:</h3>
-            {section.questions.map((question, questionIndex) => (
-              <p key={questionIndex} className="ml-4 text-sm">
-                {question.question}
-              </p>
-            ))}
-          </div>
-        ))}
-      </div>
+       <div className="max-w-[500px] border rounded p-4 shadow-xl bg-white mt-4 flex flex-col items-center">
+       {conditionData.sections.map((section, sectionIndex) => (
+         <div key={sectionIndex} className="mt-4">
+           <h3 className="text-lg font-semibold mb-2">{section.name}:</h3>
+           <ul className="ml-4 list-disc"> {/* Usamos una lista desordenada */}
+             {section.questions.map((question, questionIndex) => (
+               <li key={questionIndex} className="text-sm"> {/* Cada pregunta en un <li> */}
+                 {question.question}
+               </li>
+             ))}
+           </ul>
+         </div>
+       ))}
+     </div>
       
       )}
     </div>
