@@ -4,6 +4,8 @@ import { useRouter } from "next/router";
 import { getCompanyById } from "./api/api_company";
 import { getBusinessAverageRanking } from "./api/api_ranking";
 import CommentSection from "../components/Molecules/CommentsCard";
+import AccessVisibility from "@/components/Molecules/muestraAccess";
+
 
 export default function CardFree() {
   const router = useRouter();
@@ -124,12 +126,8 @@ export default function CardFree() {
           <option value="Place">{companyData?.data?.company?.address || "Información no disponible."}</option>
         </select>
 
-        <div className="w-[200px] h-[40px] md:w-[220px] md:h-[45px] lg:w-[250px] lg:h-[50px] mt-6 flex justify-around items-center self-center shadow-md shadow-gray-300 border border-[#231b1b6b] rounded-2xl ">
-          <Image src="/iconsBlue/discapacidad.png" alt="ícono de persona usuaria de silla de ruedas" width={22} height={22} />
-          <Image src="/iconsBlue/icons8-acceso-para-ciegos-50.png" alt="ícono de persona ciega con bastón" width={22} height={22} />
-          <Image src="/iconsBlue/icons8-cabeza-con-cerebro-50.png" alt="ícono de persona con discapacidad intelectual" width={22} height={22} />
-          <Image src="/iconsBlue/sordera.png" alt="ícono de discapacidad auditiva" width={22} height={22} />
-          <Image src="/iconsBlue/icons8-infinito-64.png" alt="ícono de infinito, que representa a las personas Neurodivergentes" width={22} height={22} />
+        <div >
+        <AccessVisibility companyId={id} />
         </div>
       </div>
       <div>
