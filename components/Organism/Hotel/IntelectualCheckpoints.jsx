@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { createHotelAccessibility } from "@/pages/api/api_questionnaire";
+import { createHotelAccessibility, checkIfAccessibilityExists, updateHotelAccessibility } from "@/pages/api/api_questionnaire";
 
 const IntelectualCheckpoints = () => {
   const [intelectualData, setIntelectualData] = useState({
@@ -65,7 +65,6 @@ const IntelectualCheckpoints = () => {
 
   const [hotelId, setHotelId] = useState(null);
 
-  // Obtener hotelId desde localStorage al montar el componente
   useEffect(() => {
     const id = localStorage.getItem('userId');
     setHotelId(id);
@@ -86,13 +85,14 @@ const IntelectualCheckpoints = () => {
       return section;
     });
 
-    setIntelectualData({ ...intelectualData, sections: updatedSections });
+    const updatedData = { ...intelectualData, sections: updatedSections };
+    setIntelectualData(updatedData);
   };
 
   const handleSubmit = async () => {
     if (hotelId) {
       try {
-        // Preparar los datos en el formato requerido y filtrar solo las respuestas marcadas como true
+        // Prepara el payload para el cuestionario
         const payload = {
           hotelId,
           disabilities: [
@@ -101,31 +101,35 @@ const IntelectualCheckpoints = () => {
               sections: intelectualData.sections
                 .map((section) => ({
                   name: section.name,
-                  questions: section.questions.filter((question) => question.response), // Filtrar solo respuestas true
+                  questions: section.questions.filter((question) => question.response),
                 }))
-                .filter((section) => section.questions.length > 0), // Eliminar secciones vacías
+                .filter((section) => section.questions.length > 0),
             },
           ],
         };
-
-        // Crear o actualizar datos en el servidor
-        const response = await createHotelAccessibility(payload);
-
-        if (response?.status === 200 || response?.status === 201) {
-          alert("Datos guardados exitosamente en el servidor.");
+  
+        // Verifica si el cuestionario ya existe
+        const existingData = await checkIfAccessibilityExists(hotelId, intelectualData.type);
+  
+        let response;
+        if (existingData) {
+          // Si existe, actualiza
+          response = await updateHotelAccessibility(existingData._id, payload);
         } else {
-          throw new Error("Error al guardar los datos en el servidor.");
+          // Si no existe, crea
+          response = await createHotelAccessibility(payload);
         }
+  
+        console.log("Respuesta del servidor:", response);
+        alert('Información de accesibilidad para personas con discapacidad Auditiva enviada correctamente');
       } catch (error) {
-        console.error("Error al guardar los datos:", error);
-        alert("Error al guardar los datos.");
+        console.error('Error al enviar el cuestionario:', error);
+        alert('Error al enviar el cuestionario');
       }
-    } else {
-      alert("No se encontró un ID de hotel válido.");
     }
   };
-
- 
+  
+  
   return (
     <div>
       <div className="text-center">

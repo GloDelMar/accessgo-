@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { createHotelAccessibility } from '@/pages/api/api_questionnaire';
+import { checkIfAccessibilityExists, createHotelAccessibility, updateHotelAccessibility } from '@/pages/api/api_questionnaire';
+
 
 const AuditivaCheckpoints = () => {
   const [auditivaData, setAuditivaData] = useState({
     type: "Auditiva",
-    sections: [ 
+    sections: [
       {
         name: "Accesos y Entradas",
         questions: [
-          {question: "El hotel tiene señalización visual clara en las entradas y salidas, utilizando símbolos y texto.", response: false, },
+          { question: "El hotel tiene señalización visual clara en las entradas y salidas, utilizando símbolos y texto.", response: false, },
           { question: "Hay alarmas visuales (luces intermitentes) en caso de emergencia en todas las áreas de entrada.", response: false, },
         ],
       },
@@ -67,7 +68,6 @@ const AuditivaCheckpoints = () => {
 
   const [hotelId, setHotelId] = useState(null);
 
-  // Obtener hotelId desde localStorage al montar el componente
   useEffect(() => {
     const id = localStorage.getItem('userId');
     setHotelId(id);
@@ -88,14 +88,13 @@ const AuditivaCheckpoints = () => {
       return section;
     });
 
-    const updatedData = { ...auditivaData, sections: updatedSections };
-    setAuditivaData(updatedData);
+    setAuditivaData({ ...auditivaData, sections: updatedSections });
   };
 
   const handleSubmit = async () => {
     if (hotelId) {
       try {
-        // Preparar los datos en el formato requerido y filtrar solo las respuestas marcadas como true
+        // Prepara el payload para el cuestionario
         const payload = {
           hotelId,
           disabilities: [
@@ -104,31 +103,33 @@ const AuditivaCheckpoints = () => {
               sections: auditivaData.sections
                 .map((section) => ({
                   name: section.name,
-                  questions: section.questions.filter((question) => question.response), // Filtrar solo respuestas true
+                  questions: section.questions.filter((question) => question.response),
                 }))
-                .filter((section) => section.questions.length > 0), // Eliminar secciones vacías
+                .filter((section) => section.questions.length > 0),
             },
           ],
         };
   
-        // Crear o actualizar datos en el servidor
-        const response = await createHotelAccessibility(payload);
+        // Verifica si el cuestionario ya existe
+        const existingData = await checkIfAccessibilityExists(hotelId, auditivaData.type);
   
-        if (response?.status === 200 || response?.status === 201) {
-          alert('Datos guardados exitosamente en el servidor.');
+        let response;
+        if (existingData) {
+          // Si existe, actualiza
+          response = await updateHotelAccessibility(existingData._id, payload);
         } else {
-          throw new Error('Error al guardar los datos en el servidor.');
+          // Si no existe, crea
+          response = await createHotelAccessibility(payload);
         }
+  
+        console.log("Respuesta del servidor:", response);
+        alert('Información de accesibilidad para personas con discapacidad Auditiva enviada correctamente');
       } catch (error) {
-        console.error('Error al guardar los datos:', error);
-        alert('Error al guardar los datos.');
+        console.error('Error al enviar el cuestionario:', error);
+        alert('Error al enviar el cuestionario');
       }
-    } else {
-      alert('No se encontró un ID de hotel válido.');
     }
   };
-  
-
   return (
     <div>
       <div className="text-center">
@@ -154,13 +155,14 @@ const AuditivaCheckpoints = () => {
           </ul>
         </div>
       ))}
-     <div className='flex justify-center w-full'>
-      <button
-        onClick={handleSubmit}
-        className="bg-[#2F4F4F] text-white flex px-4 py-2 rounded mt-4"
-      >
-        Guardar
-      </button></div>
+      <div className='flex justify-center w-full'>
+        <button
+          onClick={handleSubmit}
+          className="bg-[#2F4F4F] text-white flex px-4 py-2 rounded mt-4"
+        >
+          Guardar
+        </button>
+      </div>
     </div>
   );
 };

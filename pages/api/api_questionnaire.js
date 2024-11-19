@@ -89,3 +89,63 @@ export const getRestaurantAccessibility = async (restaurantId) => {
       throw error;
     }
   };
+
+  export const updateHotelAccessibility = async (hotelId, accessibilityData) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/accesibilidad/hotels/${hotelId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(accessibilityData)
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        console.log('Cuestionario actualizado:', data);
+      } else {
+        console.log('Error al actualizar cuestionario:', data.message);
+      }
+    } catch (error) {
+      console.error('Error al actualizar cuestionario:', error);
+    }
+  };
+  
+  export const updateRestaurantAccessibility = async (restaurantId, accessibilityData) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/accesibilidad/restaurants/${restaurantId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(accessibilityData)
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        console.log('Cuestionario actualizado:', data);
+      } else {
+        console.log('Error al actualizar cuestionario:', data.message);
+      }
+    } catch (error) {
+      console.error('Error al actualizar cuestionario:', error);
+    }
+  };
+  
+  export const checkIfAccessibilityExists = async (hotelId, type) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/accesibilidad/hotels/${hotelId}`);
+      const data = await response.json();
+  
+      // Verifica si ya existe un cuestionario para la discapacidad Auditiva
+      const disability = data.disabilities.find(disability => disability.type === type);
+  
+      return disability || null; // Si no se encuentra, retorna null
+    } catch (error) {
+      console.error('Error al verificar la accesibilidad:', error);
+      return null; // Si hay error en la petición, retorna null
+    }
+  };
+  

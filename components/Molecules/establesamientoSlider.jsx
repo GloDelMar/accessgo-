@@ -1,56 +1,46 @@
 import React, { useState, useEffect } from 'react';
 import Carousel from './Carrusel';
-import { useRouter } from 'next/router';
-import { toast } from "sonner";
-import { getAllCompanies } from "@/pages/api/api_company";
 
-const EstablecimientoSlider = () => {
-  const [companies, setCompanies] = useState([]);
-  const [filteredCompanies, setFilteredCompanies] = useState([]);
-  const router = useRouter();
+import Image from 'next/image';
 
-  useEffect(() => {
-    getAllCompanies()
-      .then((companyData) => {
-        setCompanies(companyData);
-        setFilteredCompanies(companyData); 
-      })
-      .catch((error) => {
-        toast.error("Error al obtener los establecimientos");
-        console.error("[getCompanies]", error);
-      });
-  }, []);
 
-  const handleCardClick = (id) => {
-    router.push(`/vista-base?id=${id}`);
-  };
+const EstablecimientoSlider = ({ companies, onCardClick }) => {
+  if (!companies.length) {
+    return <p>No hay establecimientos disponibles</p>;
+  }
 
   return (
     <Carousel>
-      {filteredCompanies.map((company, index) => (
+      {companies.map((company) => (
         <div
-          key={index}
-          onClick={() => handleCardClick(company.id)}
-          className="relative border rounded-md w-[90%] max-w-[200px] mx-auto h-[251px] overflow-hidden cursor-pointer"
+          key={company._id}
+          onClick={() => onCardClick(company._id)}
+          className="relative rounded-md w-[90%] max-w-[200px] mx-auto h-[251px] overflow-hidden cursor-pointer"
         >
-          <img 
-            src={company.profilePicture || '/4574c6_19f52cfb1ef44a3d844774c6078ffafc~mv2.png'} 
-            alt={`Imagen de ${company.giro}`} 
-            className="w-full h-[251px] object-cover"
-          />
-          <div className="absolute bottom-0 left-0 p-2 bg-gradient-to-t from-black to-transparent w-full text-white">
-            <h4 className="text-[15px] font-bold">{company.companyName}</h4>
-            <div className="flex items-center mb-1">
-              {Array(company.rating).fill().map((_, i) => (
-                <img 
-                  key={i} 
-                  src="/estrellita.svg" 
-                  alt="star" 
-                  className="w-4 h-4 mr-[3px]" 
-                />
-              ))}
-            </div>
-            <p className="text-[10px] mt-2">{company.access}</p>
+         <Image
+        src={company.profilePicture || '/4574c6_19f52cfb1ef44a3d844774c6078ffafc~mv2.png'}
+        alt={company.companyName}
+        layout="fill"
+        objectFit="cover"
+        className="absolute inset-0 w-full h-full"
+      />
+         <div className="relative p-4 bg-black bg-opacity-50 flex flex-col justify-end h-full">
+        {/* Nombre de la empresa */}
+        <h3 className="text-lg font-semibold text-white truncate">
+          {company.companyName}
+        </h3>
+        <div className="flex items-center mt-2">
+          {Array.from({ length: company.averageRating || 0 }).map((_, i) => (
+            <svg
+              key={i}
+              className="w-5 h-5 text-yellow-400 fill-current"
+              viewBox="0 0 24 24"
+            >
+              <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z" />
+            </svg>
+          ))}
+        </div>
+            <p className="text-sm text-white mt-2 truncate">{company.giro}</p>
           </div>
         </div>
       ))}
