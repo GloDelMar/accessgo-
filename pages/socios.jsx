@@ -44,6 +44,25 @@ const View2 = () => {
     const filtered = companies.filter(company => company.giro === value);
     setFilteredCompanies(filtered);
   };
+  const handleCardClick = async (id) => {
+    try {
+      const companyData = await getCompanyById(id); // Espera la respuesta de la compañía
+      const companyType = companyData?.data?.company?.cuenta;
+  
+      if (companyType === "free") {
+        router.push(`/vista-base?id=${id}`);
+      } else if (companyType === "premium") {
+        router.push(`/vista-prem?id=${id}`);
+      } else {
+        throw new Error("Tipo de compañía inválido.");
+      }
+    } catch (error) {
+      console.error("Error al manejar el clic de la tarjeta:", error.message);
+      toast.error("Error al redirigir a la página de la compañía.");
+    }
+  };
+  
+
 
   const handleFilter = (filterType) => {
     let filteredData = [...companies];
