@@ -8,20 +8,6 @@ import { getCommentsByCompanyId } from './api/api_comment';
 
 
 
-const userData = {
-  name: "María García",
-  rating: 4,
-  comments: [
-    { id: 1, text: "Lorem ipsum es el texto que se usa habitualmente en diseño gráfico en demostraciones" },
-    { id: 2, text: "Lorem ipsum es el texto que se usa habitualmente en diseño gráfico en demostraciones" }
-  ],
-  images: [
-    { id: 1, src: "/placeholder.svg?height=100&width=100", alt: "Imagen 1" },
-    { id: 2, src: "/placeholder.svg?height=100&width=100", alt: "Imagen 2" },
-    { id: 3, src: "/placeholder.svg?height=100&width=100", alt: "Imagen 3" },
-    { id: 4, src: "/placeholder.svg?height=100&width=100", alt: "Imagen 4" }
-  ]
-}
 
 const View21 = () => {
   const [companyData, setCompanyData] = useState(null);

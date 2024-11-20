@@ -44,6 +44,8 @@ const View2 = () => {
     const filtered = companies.filter(company => company.giro === value);
     setFilteredCompanies(filtered);
   };
+
+ 
   const handleCardClick = async (id) => {
     try {
       const companyData = await getCompanyById(id); // Espera la respuesta de la compañía
@@ -116,7 +118,7 @@ const View2 = () => {
           <div
             key={company._id}
             onClick={() => handleCardClick(company._id)}
-            className="relative rounded-lg w-[215px] h-[256px] shadow-md overflow-hidden"
+            className="relative rounded-lg w-[215px] h-[256px] shadow-md overflow-hidden cursor-pointer transition-transform transform hover:shadow-[0_0_15px_5px_#2F4F4F] hover:scale-105"
           >
             {/* Imagen de fondo */}
             <Image
