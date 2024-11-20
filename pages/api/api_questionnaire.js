@@ -1,6 +1,6 @@
 
 
-const API_URL = "http://localhost:8080/api/accesibilidad";
+const API_URL = "https://backend-r159.onrender.com/api/accesibilidad";
 
 
 export const getHotelAccessibility = async (hotelId) => {
@@ -92,7 +92,7 @@ export const getRestaurantAccessibility = async (restaurantId) => {
 
   export const updateHotelAccessibility = async (hotelId, accessibilityData) => {
     try {
-      const response = await fetch(`http://localhost:8080/api/accesibilidad/hotels/${hotelId}`, {
+      const response = await fetch(`https://backend-r159.onrender.com/api/accesibilidad/hotels/${hotelId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -114,7 +114,7 @@ export const getRestaurantAccessibility = async (restaurantId) => {
   
   export const updateRestaurantAccessibility = async (restaurantId, accessibilityData) => {
     try {
-      const response = await fetch(`http://localhost:8080/api/accesibilidad/restaurants/${restaurantId}`, {
+      const response = await fetch(`https://backend-r159.onrender.com/api/accesibilidad/restaurants/${restaurantId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -136,7 +136,7 @@ export const getRestaurantAccessibility = async (restaurantId) => {
   
   export const checkIfAccessibilityExists = async (hotelId, type) => {
     try {
-      const response = await fetch(`http://localhost:8080/api/accesibilidad/hotels/${hotelId}`);
+      const response = await fetch(`https://backend-r159.onrender.com/api/accesibilidad/hotels/${hotelId}`);
       const data = await response.json();
   
       // Verifica si ya existe un cuestionario para la discapacidad Auditiva
