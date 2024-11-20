@@ -100,7 +100,7 @@ const AccesForm = () => {
       setSelectedDisability("");
       setEstablishmentType("");
       alert("Datos guardados exitosamente.");
-      router.push("/datos-negocio1");
+      router.push("/planes");
     } catch (error) {
       console.error("Error al guardar los datos:", error);
       alert(`Ocurrió un error al guardar los datos. Detalles: ${error.message || error}`);
