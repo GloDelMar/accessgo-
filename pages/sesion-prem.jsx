@@ -107,7 +107,7 @@ const ProfileVisitsChart = () => {
   );
 };
 
-const sesionPremium = () => {
+const SesionPremium = () => {
   const [companyData, setCompanyData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -343,4 +343,4 @@ const sesionPremium = () => {
   
 };
 
-export default sesionPremium;
+export default SesionPremium;
