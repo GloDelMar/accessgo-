@@ -1,165 +1,90 @@
-import React, { useState } from 'react';
-import Link from 'next/link';
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { Plus, Trash2 } from "lucide-react";
 import Image from "next/image";
-import { Line } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, LineElement, PointElement, Title, Tooltip, Legend } from 'chart.js';
+import { Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  LineElement,
+  PointElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { getCompanyById } from "@/pages/api/api_company";
+import router from "next/router";
+import { getBusinessAverageRanking } from "./api/api_ranking";
+import { getCommentsByCompanyId } from "./api/api_comment";
 
-ChartJS.register(CategoryScale, LinearScale, LineElement, PointElement, Title, Tooltip, Legend);
-
-const ProfileCard = ({ name }) => (
-  <div className="flex flex-col w-full md:w-[48%] lg:w-[31%] max-sm:ml-0">
-    <div className="flex flex-col grow px-5 py-10 w-full text-2xl font-medium leading-none text-center text-black whitespace-nowrap bg-white rounded-3xl border border-gray-100 border-solid shadow-lg mt-10 md:mt-0">
-      <Image
-        loading="lazy"
-        src="https://cdn.builder.io/api/v1/image/assets/TEMP/6e3daf47cc4d48f90b028d56cf11af6dab8ced9625bcc7732ba4f52e4ab6ed6e?placeholderIfAbsent=true&apiKey=94b7d1b7a1ff491ea399fe140abd93c0"
-        alt="Profile picture"
-        width={188}
-        height={188}
-        className="object-contain aspect-[0.9] rounded-[100px]"
-      />
-      <div className="self-center mt-12 md:mt-10">{name}</div>
-    </div>
-  </div>
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  LineElement,
+  PointElement,
+  Title,
+  Tooltip,
+  Legend
 );
 
-const RatingSection = () => {
-  const [showAllComments, setShowAllComments] = useState(false);
-  const comments = [
-    "Lorem ipsum es el texto que se usa habitualmente en diseño gráfico en demostraciones",
-    "Lorem ipsum es el texto que se usa habitualmente en diseño gráfico en demostraciones",
-    "Additional comment 1",
-    "Additional comment 2",
-  ];
-
-  const displayedComments = showAllComments ? comments : comments.slice(0, 2);
-
-  return (
-    <div className="flex flex-col w-full md:w-[48%] max-sm:ml-0">
-      <section className="flex flex-col items-start px-8 pt-6 pb-11 mx-auto w-full text-xl font-medium text-center text-cyan-900 bg-white rounded-[30px] shadow-[0px_4px_4px_rgba(0,0,0,0.25)] mt-10 md:mt-0">
-        <div className="flex gap-4 leading-tight">
-          <div className="grow">Tu calificación es de :</div>
-          <Image
-            loading="lazy"
-            src="https://cdn.builder.io/api/v1/image/assets/TEMP/3ad3e0d4f70d2d1a1e52ea1e08da5b3651e93af814fe7e929b73d7b9efaa942c?placeholderIfAbsent=true&apiKey=94b7d1b7a1ff491ea399fe140abd93c0"
-            alt="Rating stars"
-            width={112}
-            height={32}
-            className="object-contain shrink-0 my-auto w-28 max-w-full aspect-[5.59]"
-          />
-        </div>
-        <h3 className="mt-10 leading-tight">Ultimos comentarios:</h3>
-        <div className="flex flex-col gap-5 self-stretch mt-10 text-xs leading-6 text-slate-700">
-          {displayedComments.map((comment, index) => (
-            <div key={index} className="px-2 pt-1.5 pb-4 bg-lime-50">
-              {comment}
-            </div>
+const Table = ({ title, comments, headers }) => (
+  <div className="w-full mt-10">
+    <h3 className="text-2xl font-bold mb-4">{title}</h3>
+    <table className="min-w-full bg-white border border-gray-200">
+      <thead>
+        <tr>
+          {headers.map((header, index) => (
+            <th key={index} className="py-2 px-4 border-b">
+              {header}
+            </th>
           ))}
-        </div>
-        <button
-          className="px-2.5 py-0.5 mt-11 text-base bg-lime-50 rounded-[30px] md:mt-10"
-          onClick={() => setShowAllComments(!showAllComments)}
-        >
-          {showAllComments ? "Mostrar menos" : "Todos los comentarios"}
-        </button>
-      </section>
-    </div>
-  );
-};
-
-const ImageUploaderSection = () => {
-  const [images, setImages] = useState([]);
-
-  const handleImageUpload = (event) => {
-    const files = event.target.files;
-    if (files) {
-      const newImages = Array.from(files).map(file => URL.createObjectURL(file));
-      setImages(prev => [...prev, ...newImages]);
-    }
-  };
-
-  const removeAllImages = () => {
-    setImages([]);
-  };
-
-  return (
-    <div className="flex items-center gap-4 mt-10">
-      <label className="cursor-pointer">
-        <input
-          type="file"
-          accept="image/*"
-          multiple
-          className="hidden"
-          onChange={handleImageUpload}
-        />
-        <div className="w-24 h-24 border-2 border-dashed border-muted-foreground rounded-lg flex items-center justify-center hover:border-primary transition-colors">
-          <Plus className="w-8 h-8 text-muted-foreground" />
-        </div>
-      </label>
-
-      <div className="flex-1 flex gap-4 overflow-x-auto py-2">
-        {images.length > 0 ? (
-          images.map((image, index) => (
-            <div key={index} className="relative min-w-24 w-24 h-24 border rounded-lg overflow-hidden">
-              <Image
-                src={image}
-                alt={`Uploaded image ${index + 1}`}
-                fill
-                className="object-cover"
-              />
-            </div>
-          ))
-        ) : (
-          Array.from({ length: 4 }).map((_, index) => (
-            <div
-              key={index}
-              className="min-w-24 w-24 h-24 border rounded-lg flex items-center justify-center bg-muted"
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td className="py-2 px-4 border-b">Dato 1</td>
+          <td className="py-2 px-4 border-b">Dato 2</td>
+          <td className="py-2 px-4 border-b">Dato 3</td>
+        </tr>
+        {comments.map((comment, index) => (
+          <tr key={index}>
+            <td
+              colSpan={headers.length}
+              className="py-2 px-4 border-b bg-lime-50"
             >
-              <svg
-                className="w-12 h-12 text-muted-foreground"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14"
-                />
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M14 8a2 2 0 11-4 0 2 2 0 014 0z"
-                />
-              </svg>
-            </div>
-          ))
-        )}
-      </div>
-
-      <button
-        className="w-24 h-24 border-2 border-dashed border-muted-foreground rounded-lg flex items-center justify-center hover:border-primary transition-colors"
-        onClick={removeAllImages}
-      >
-        <Trash2 className="w-8 h-8 text-muted-foreground" />
-      </button>
-    </div>
-  );
-};
+              {comment}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+);
 
 const ProfileVisitsChart = () => {
   const currentYear = new Date().getFullYear();
   const data = {
-    labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+    labels: [
+      "Enero",
+      "Febrero",
+      "Marzo",
+      "Abril",
+      "Mayo",
+      "Junio",
+      "Julio",
+      "Agosto",
+      "Septiembre",
+      "Octubre",
+      "Noviembre",
+      "Diciembre",
+    ],
     datasets: [
       {
         label: `Visitas en ${currentYear}`,
         data: [12, 19, 3, 5, 2, 3, 10, 15, 8, 6, 7, 9], // Datos de ejemplo
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        borderColor: 'rgba(75, 192, 192, 1)',
+        backgroundColor: "rgba(75, 192, 192, 0.2)",
+        borderColor: "rgba(75, 192, 192, 1)",
         borderWidth: 1,
         fill: true,
       },
@@ -182,36 +107,95 @@ const ProfileVisitsChart = () => {
   );
 };
 
-const Table = ({ title, comments, headers }) => (
-  <div className="w-full mt-10">
-    <h3 className="text-2xl font-bold mb-4">{title}</h3>
-    <table className="min-w-full bg-white border border-gray-200">
-      <thead>
-        <tr>
-          {headers.map((header, index) => (
-            <th key={index} className="py-2 px-4 border-b">{header}</th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td className="py-2 px-4 border-b">Dato 1</td>
-          <td className="py-2 px-4 border-b">Dato 2</td>
-          <td className="py-2 px-4 border-b">Dato 3</td>
-        </tr>
-        {comments.map((comment, index) => (
-          <tr key={index}>
-            <td colSpan={headers.length} className="py-2 px-4 border-b bg-lime-50">
-              {comment}
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
-);
+const SesionPremium = () => {
+  const [companyData, setCompanyData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [companyId, setCompanyId] = useState(null);
+  const [showAllComments, setShowAllComments] = useState(false);
+  const [averageRating, setAverageRating] = useState(0);
+  const [comments, setComments] = useState([]);
+  const [selectedImages, setSelectedImages] = useState([null, null, null, null]);
 
-const sesionPremium = () => {
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const formImage = selectedImages.map((image, index) => ({
+      [`imagen${index + 1}`]: image,
+    }));
+    const jsonForm = JSON.stringify(formImage);
+    console.log(jsonForm);
+
+    if (selectedImages.some((img) => img)) {
+      router.push("/vista-base");
+    } else {
+      alert("No se han cargado imágenes.");
+    }
+  };
+
+  const handleImageChange = (event, index) => {
+    const file = event.target.files[0];
+    if (file) {
+      if (!["image/jpeg", "image/png", "image/gif"].includes(file.type)) {
+        alert("Formato no válido. Usa JPEG, PNG o GIF.");
+        return;
+      }
+
+      if (file.size > 5 * 1024 * 1024) {
+        alert("El tamaño de la imagen no debe superar los 5MB.");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const updatedImages = [...selectedImages];
+        updatedImages[index] = reader.result;
+        setSelectedImages(updatedImages);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedUserId = localStorage.getItem("userId");
+      if (storedUserId) {
+        setCompanyId(storedUserId);
+      } else {
+        setError("Company ID not found in localStorage");
+        setLoading(false);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    const fetchCompanyData = async () => {
+      if (!companyId) return;
+      try {
+        const data = await getCompanyById(companyId);
+        setCompanyData(data);
+
+        const avgData = await getBusinessAverageRanking(companyId);
+        setAverageRating(avgData.averageRating || 0);
+
+        const commentsData = await getCommentsByCompanyId(companyId);
+        setComments(commentsData.data || []);
+      } catch (error) {
+        console.error(error);
+        setError("Failed to fetch company data");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (companyId) {
+      fetchCompanyData();
+    }
+  }, [companyId]);
+
+  if (loading) return <p>Cargando...</p>;
+  if (error) return <p>Error: {error}</p>;
+
+
   const eventComments = [
     "Lorem ipsum es el texto que se usa habitualmente en diseño gráfico en demostraciones",
     "Otro comentario sobre el evento",
@@ -227,40 +211,136 @@ const sesionPremium = () => {
     "Otro comentario sobre el menú",
   ];
 
+
   return (
     <main className="flex overflow-hidden flex-col items-center px-4 sm:px-10 md:px-20 pt-28 bg-white pb-[1572px] max-sm:px-5 max-sm:py-24">
-      <div className="flex flex-col ml-7 max-w-full w-full lg:w-[806px]">
-        <h1 className="self-center text-4xl sm:text-5xl lg:text-6xl font-bold leading-none text-slate-700">
+      <div className="container mx-auto px-4 py-8 max-w-4xl">
+        <h1 className="text-4xl md:text-5xl font-bold text-center text-[#2F4F4F] mb-12">
           ¡Bienvenido!
+          <p className="text-4xl md:text-5xl font-bold text-center text-[#2F4F4F] mt-2 mb-12">
+            {companyData?.data?.company?.companyName || 'Información no disponible.'}
+          </p>
         </h1>
-        <div className="flex flex-col pl-3.5 mt-14 w-full max-sm:mt-10 max-sm:max-w-full">
-          <div className="max-sm:max-w-full">
-            <div className="flex flex-col md:flex-row gap-5">
-              <ProfileCard name="nombre" />
-              <RatingSection />
+  
+        <div className="flex flex-col lg:flex-row gap-6 p-6 max-w-4xl mx-auto">
+          <div className="w-full lg:w-1/3 flex justify-center">
+            <div className="bg-[#F5F0E5] w-full max-w-[231px] h-auto rounded-[25px] shadow-md p-6 text-center">
+              <Image
+                src={companyData?.data?.company?.profilePicture || '/perfil1.png'}
+                alt="Foto de perfil"
+                width={300}
+                height={150}
+                className="rounded-full mx-auto mb-4"
+              />
             </div>
           </div>
-          <h2 className="self-start mt-20 ml-4 text-xl font-medium leading-tight text-center text-cyan-900 max-sm:mt-10 max-sm:ml-2.5">
-            Cambia tus imagenes
-          </h2>
-          <ImageUploaderSection /> {/* Use the new ImageUploaderSection component here */}
+  
+          <div className="w-full lg:w-2/3 flex flex-col justify-center">
+            <div className="bg-white rounded-[30px] shadow-md p-6 w-full">
+              <div className="flex flex-col md:flex-row md:justify-start gap-4 md:items-center mb-4">
+                <h3 className="text-lg font-semibold text-[#2F4F4F] mb-2 md:mb-0">
+                  Tu calificación es de:
+                </h3>
+                <div className="flex">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <svg
+                      key={star}
+                      className={`w-5 h-5 ${
+                        star <= Math.round(averageRating) ? 'text-yellow-400' : 'text-gray-300'
+                      } fill-current`}
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z" />
+                    </svg>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold mb-2">Últimos comentarios:</h3>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 mt-4">
+                {comments.length > 0 ? (
+                  comments.map((comment) => (
+                    <p key={comment._id} className="bg-[#F5F0E5] p-2 rounded text-center text-sm">
+                      {comment.content}
+                    </p>
+                  ))
+                ) : (
+                  <p className="text-center text-sm">No hay comentarios disponibles.</p>
+                )}
+              </div>
+  
+              <button
+                className="px-2.5 py-0.5 mt-11 text-base bg-[#F5F0E5] rounded-[30px] md:mt-10"
+                onClick={() => setShowAllComments(!showAllComments)}
+              >
+                {showAllComments ? 'Mostrar menos' : 'Todos los comentarios'}
+              </button>
+            </div>
+          </div>
         </div>
+  
+        <div className="mt-12">
+          <h3 className="text-xl text-center font-semibold mb-10 text-[#2F4F4F]">
+            Cambia tus imágenes
+          </h3>
+          <div className="flex flex-row justify-center gap-5">
+            {selectedImages && selectedImages.length > 0 ? (
+              selectedImages.map((image, index) => (
+                <label key={index} className="flex flex-col items-center">
+                  <Image
+                    src={image || '/foto.jpg'}
+                    alt={`Imagen ${index + 1}`}
+                    width={150}
+                    height={150}
+                    className="rounded-full"
+                  />
+                  <input
+                    type="file"
+                    className="hidden"
+                    onChange={(event) => handleImageChange(event, index)}
+                  />
+                </label>
+              ))
+            ) : (
+              <p className="text-center text-sm">No hay imágenes seleccionadas.</p>
+            )}
+          </div>
+          <div>
+            <div className="mt-10 flex justify-center">
+              <button
+                className="px-12 py-2 border border-transparent rounded-md shadow-sm
+                  text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none
+                  focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]"
+                onClick={handleSubmit}
+              >
+                Listo
+              </button>
+            </div>
+          </div>
+        </div>
+        
         <Table title="Todos tus Eventos" comments={eventComments} headers={['EVENTO', 'FECHA', 'HORARIO']} />
         <Table title="Todas tus Promociones" comments={promotionComments} headers={['PROMOCIÓN', 'FECHA', 'HORARIO']} />
         <Table title="Tu Menú" comments={menuComments} headers={['PLATILLO', 'FECHA', 'HORARIO']} />
-        <ProfileVisitsChart /> {/* Add the new ProfileVisitsChart component here */}
-      </div>
-
-      <div className="flex flex-row justify-center mt-4 space-x-4 md:space-x-[200px]">
-        <button className="w-[155px] h-[40px] bg-white border-2 rounded-lg">
-          <Link legacyBehavior href="/vista-prem"><a>Cancelar</a></Link>
-        </button>
-        <button className="w-[155px] h-[40px] bg-[#2F4F4F] text-white rounded-lg flex items-center justify-center">
-          <Link legacyBehavior href="/sesion-prem"><a>Guardar Cambios</a></Link>
-        </button>
+        <ProfileVisitsChart />
+  
+        <div className="flex flex-row justify-center mt-4 space-x-4 md:space-x-[200px]">
+          <button className="w-[155px] h-[40px] bg-white border-2 rounded-lg">
+            <Link legacyBehavior href="/vista-prem">
+              <a>Cancelar</a>
+            </Link>
+          </button>
+          <button className="w-[155px] h-[40px] bg-[#2F4F4F] text-white rounded-lg flex items-center justify-center">
+            <Link legacyBehavior href="/sesion-prem">
+              <a>Guardar Cambios</a>
+            </Link>
+          </button>
+        </div>
       </div>
     </main>
   );
+  
 };
 
-export default sesionPremium;
+export default SesionPremium;
