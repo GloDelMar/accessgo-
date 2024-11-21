@@ -11,6 +11,7 @@
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
+    "@mapbox/mapbox-gl-directions": "^4.3.1",
     "@mapbox/mapbox-sdk": "^0.16.1",
     "@mui/material": "^6.1.7",
     "@stripe/stripe-js": "^4.9.0",
@@ -38,7 +39,8 @@
     "sonner": "^1.5.0",
     "stripe": "^17.2.1",
     "swiper": "^11.1.14",
-    "toastr": "^2.1.4"
+    "toastr": "^2.1.4",
+    "ui": "^0.2.4"
   },
   "devDependencies": {
     "axe-core": "^4.10.0",
