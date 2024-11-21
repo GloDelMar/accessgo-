@@ -122,9 +122,9 @@ export default function CardFree() {
       </section>
 
       <div className="w-full flex flex-col justify-center items-center mt-8">
-        <select className="rounded-lg mt-4 bg-[#ECEFF1] w-[290px] h-[37px] text-[#455A64]">
-          <option value="Place">{companyData?.data?.company?.address || "Información no disponible."}</option>
-        </select>
+      <div className="border p-3 rounded mt-4 bg-[#ECEFF1] w-[290px]  md:w-full  justify-center flex items-center text-[#455A64]">
+          <h4 value="Place">{companyData?.data?.company?.address || "Información no disponible."}</h4>
+        </div>
 
         <div >
         <AccessVisibility companyId={id} />
