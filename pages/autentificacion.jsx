@@ -49,7 +49,7 @@ const View5 = () => {
         throw new Error('userId no está disponible en localStorage');
       }
 
-      console.log('Verificando código con los siguientes datos:', { userId, code });
+   
 
       const isVerified = await verifyUserCode(userId, code);
 
