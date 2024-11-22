@@ -33,7 +33,7 @@ const UploadImageACC = () => {
     formData.append('userId', userId); // Usamos el userId del estado
 
     try {
-      const response = await fetch('http://localhost:8080/api/uploadacc', {
+      const response = await fetch('https://backend-r159.onrender.com/api/uploadacc', {
         method: 'POST',
         body: formData,
       });
