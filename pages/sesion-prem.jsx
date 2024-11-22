@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Plus, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { Line } from "react-chartjs-2";
+import axios from "axios";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -17,6 +18,7 @@ import { getCompanyById } from "@/pages/api/api_company";
 import router from "next/router";
 import { getBusinessAverageRanking } from "./api/api_ranking";
 import { getCommentsByCompanyId } from "./api/api_comment";
+import  EstadisticasVisitas from "../components/Molecules/Estadisticas"
 
 ChartJS.register(
   CategoryScale,
@@ -62,50 +64,7 @@ const Table = ({ title, comments, headers }) => (
   </div>
 );
 
-const ProfileVisitsChart = () => {
-  const currentYear = new Date().getFullYear();
-  const data = {
-    labels: [
-      "Enero",
-      "Febrero",
-      "Marzo",
-      "Abril",
-      "Mayo",
-      "Junio",
-      "Julio",
-      "Agosto",
-      "Septiembre",
-      "Octubre",
-      "Noviembre",
-      "Diciembre",
-    ],
-    datasets: [
-      {
-        label: `Visitas en ${currentYear}`,
-        data: [12, 19, 3, 5, 2, 3, 10, 15, 8, 6, 7, 9], // Datos de ejemplo
-        backgroundColor: "rgba(75, 192, 192, 0.2)",
-        borderColor: "rgba(75, 192, 192, 1)",
-        borderWidth: 1,
-        fill: true,
-      },
-    ],
-  };
 
-  const options = {
-    scales: {
-      y: {
-        beginAtZero: true,
-      },
-    },
-  };
-
-  return (
-    <div className="w-full mt-10">
-      <h3 className="text-2xl font-bold mb-4">Visitas a tu perfil</h3>
-      <Line data={data} options={options} />
-    </div>
-  );
-};
 
 const SesionPremium = () => {
   const [companyData, setCompanyData] = useState(null);
@@ -116,6 +75,11 @@ const SesionPremium = () => {
   const [averageRating, setAverageRating] = useState(0);
   const [comments, setComments] = useState([]);
   const [selectedImages, setSelectedImages] = useState([null, null, null, null]);
+  const [rango, setRango] = useState('semana');  ;
+  
+  const handleRangoChange = (event) => {
+    setRango(event.target.value);
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -166,7 +130,8 @@ const SesionPremium = () => {
       }
     }
   }, []);
-
+  
+  
   useEffect(() => {
     const fetchCompanyData = async () => {
       if (!companyId) return;
@@ -323,7 +288,21 @@ const SesionPremium = () => {
         <Table title="Todos tus Eventos" comments={eventComments} headers={['EVENTO', 'FECHA', 'HORARIO']} />
         <Table title="Todas tus Promociones" comments={promotionComments} headers={['PROMOCIÓN', 'FECHA', 'HORARIO']} />
         <Table title="Tu Menú" comments={menuComments} headers={['PLATILLO', 'FECHA', 'HORARIO']} />
-        <ProfileVisitsChart />
+        
+        <div>
+      <h3>Estas son las estadísticas de visitas a tu perfil de AccessGo Premium</h3>
+      
+      {/* Componente de estadísticas pasando 'rango' como prop */}
+      <EstadisticasVisitas rango={rango} />
+      
+      {/* Selector de rango */}
+      <select value={rango} onChange={handleRangoChange}>
+        <option value="semana">Semana</option>
+        <option value="mes">Mes</option>
+        <option value="año">Año</option>
+      </select>
+    </div>
+
   
         <div className="flex flex-row justify-center mt-4 space-x-4 md:space-x-[200px]">
           <button className="w-[155px] h-[40px] bg-white border-2 rounded-lg">
