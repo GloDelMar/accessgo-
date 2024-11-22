@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 function ButtonCheckout({ priceId }) {
-  console.log('Price ID:', priceId); 
+ 
 
   const handleCheckout = async () => {
     const response = await fetch('/api/checkout_sessions', {

@@ -1,5 +1,5 @@
 
-const API_URL = "http://localhost:8080"
+const API_URL = "https://backend-r159.onrender.com"
 
 export const contarVisita = async (page, id)=> {
     fetch(`${API_URL}/api/visitas`, {  

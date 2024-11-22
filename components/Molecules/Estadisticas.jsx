@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Line } from 'react-chartjs-2'; // Importamos el componente Line para gráficas lineales
+import { Line } from 'react-chartjs-2'; 
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import { conteoVisita } from '@/pages/api/api_visits';
 
-// Registramos los componentes de Chart.js que vamos a usar
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 const EstadisticasVisitas = ({ rango }) => {
@@ -18,7 +17,6 @@ const EstadisticasVisitas = ({ rango }) => {
       const storedUserId = localStorage.getItem("userId");
       if (storedUserId) {
         setCompanyId(storedUserId);
-        
       } else {
         setError("Company ID not found in localStorage");
         setLoading(false);
@@ -33,36 +31,31 @@ const EstadisticasVisitas = ({ rango }) => {
           if (!companyId) {
             throw new Error('Company ID no está definido.');
           }
-      
-          const url = `http://localhost:8080/api/visitas/${companyId}?rango=${rango}`;
-          console.log("URL Fetch: ", url);
-      
+
+          const url = `https://backend-r159.onrender.com/api/visitas/${companyId}?rango=${rango}`;
+          
           const response = await fetch(url);
-      
+
           if (!response.ok) {
             throw new Error(`Error HTTP: ${response.status}`);
           }
-      
+
           const data = await response.json();
-          console.log("Datos recibidos: ", data);
-      
-          // Validar que success sea true
+    
           if (!data.success) {
             throw new Error('La respuesta del servidor no indica éxito.');
           }
-      
+
           setEstadisticas(data.data || []);
-          const total = (data.data || []).reduce((sum, visita) => sum + (visita.visits || 0), 0);
+          const total = (data.data || []).reduce((sum, visita) => sum + (visita.totalVisits || 0), 0);
           setTotalVisitas(total);
-        } catch (error) {
+          } catch (error) {
           console.error("Error en fetchEstadisticas: ", error);
           setError(error.message);
         } finally {
           setLoading(false);
         }
       };
-      
-      
 
       fetchEstadisticas();
     }
@@ -76,34 +69,37 @@ const EstadisticasVisitas = ({ rango }) => {
     return <div>Error: {error}</div>;
   }
 
-  if (estadisticas.length === 0) {
+  // Mostrar mensaje si totalVisitas es 0
+  if (totalVisitas === 0) {
     return (
       <div>
-        <h4>Total de visitas del {rango}: 0</h4>
-        <div>No hay visitas para este rango.</div>
+        <h4 className='text-xl text-center font-semibold mb-10 text-[#2F4F4F]'>
+          Aún no has recibido visita en este {rango}.
+        </h4>
       </div>
     );
   }
 
-  // Configuración de la gráfica
   const chartData = {
-    labels: estadisticas.map(visita => visita.date), // Fechas
+    labels: estadisticas.map(visita => visita.date),
     datasets: [
       {
-        label: `Visitas de ${rango}`,  // Etiqueta de la gráfica
-        data: estadisticas.map(visita => visita.visits), // Datos de visitas
-        borderColor: 'rgba(75, 192, 192, 1)', // Color de la línea
-        backgroundColor: 'rgba(75, 192, 192, 0.2)', // Color de fondo de la línea
-        fill: true,  // Para que la gráfica sea área lineal
-        tension: 0.1, // Para suavizar la curva
+        label: `Visitas de ${rango}`,
+        data: estadisticas.map(visita => visita.totalVisits),
+        borderColor: 'rgba(75, 192, 192, 1)',
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        fill: true,
+        tension: 0.1,
       },
     ],
   };
 
   return (
     <div>
-      <h4>Total de visitas del {rango}: {totalVisitas}</h4>
-      <Line data={chartData} /> {/* Renderizamos la gráfica */}
+      <h4 className='text-xl text-center font-semibold mb-10 text-[#2F4F4F]'>
+        Total de visitas del {rango}: {totalVisitas}
+      </h4>
+      <Line data={chartData} />
     </div>
   );
 };

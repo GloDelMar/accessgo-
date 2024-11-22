@@ -19,7 +19,7 @@ const HomeContent = () => {
     getAllCompanies()
       .then((companyData) => {
         setCompanies(companyData);
-        setFilteredCompanies(companyData.slice(-4)); // Aquí estamos obteniendo solo las últimas 4 compañías
+        setFilteredCompanies(companyData.slice(-4)); 
         setLoading(false);
       })
       .catch((error) => {

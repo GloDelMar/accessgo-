@@ -89,7 +89,7 @@ const View23 = () => {
     try {
       const response = await axios.get(`https://backend-r159.onrender.com/api/company/${companyId}`);
       const companyData = response.data.data.company;
-      console.log(companyData);
+    
 
       setFormValues({
         nombreComercial: companyData?.companyName || '',
@@ -180,7 +180,7 @@ const View23 = () => {
     };
 
     try {
-      console.log("Enviando datos de la compañía:", formData);
+    
       const response = await updateCompany(companyId, formData);
       console.log("Respuesta de actualización:", response);
 
