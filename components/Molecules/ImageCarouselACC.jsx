@@ -8,7 +8,7 @@ const ImageCarouselACC = ({ userId }) => {
 
   useEffect(() => {
     const fetchImages = async () => {
-      const response = await fetch(`http://localhost:8080/api/images/${userId}`);
+      const response = await fetch(`https://backend-r159.onrender.com/api/images/${userId}`);
       const data = await response.json();
       if (Array.isArray(data)) {
         setImages(data);
