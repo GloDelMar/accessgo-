@@ -7,6 +7,8 @@ import { getBusinessAverageRanking } from "./api/api_ranking";
 import CommentSection from "../components/Molecules/CommentsCard";
 import AccessVisibility from "@/components/Molecules/muestraAccess";
 
+import ImageCarouselACC from '@/components/Molecules/ImageCarouselACC';
+
 export default function CardFree() {
   const router = useRouter();
   const [companyData, setCompanyData] = useState(null);
@@ -132,6 +134,10 @@ export default function CardFree() {
         <div >
         <AccessVisibility companyId={id} />
         </div>
+      </div>
+
+      <div className='flex flex-col justify-center items-center h[200px] w[200px]'>
+        <ImageCarouselACC userId={id} />
       </div>
 
       <section className='w-full flex flex-col mt-6'>

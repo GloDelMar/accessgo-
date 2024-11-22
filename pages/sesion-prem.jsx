@@ -18,6 +18,9 @@ import router from "next/router";
 import { getBusinessAverageRanking } from "./api/api_ranking";
 import { getCommentsByCompanyId } from "./api/api_comment";
 
+import UploadImageACC from '@/components/Molecules/UploadImageACC';
+import ImageCarouselACC from '@/components/Molecules/ImageCarouselACC';
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -115,45 +118,45 @@ const SesionPremium = () => {
   const [showAllComments, setShowAllComments] = useState(false);
   const [averageRating, setAverageRating] = useState(0);
   const [comments, setComments] = useState([]);
-  const [selectedImages, setSelectedImages] = useState([null, null, null, null]);
+  // const [selectedImages, setSelectedImages] = useState([null, null, null, null]);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const formImage = selectedImages.map((image, index) => ({
-      [`imagen${index + 1}`]: image,
-    }));
-    const jsonForm = JSON.stringify(formImage);
-    console.log(jsonForm);
+  // const handleSubmit = (event) => {
+  //   event.preventDefault();
+  //   const formImage = selectedImages.map((image, index) => ({
+  //     [`imagen${index + 1}`]: image,
+  //   }));
+  //   const jsonForm = JSON.stringify(formImage);
+  //   console.log(jsonForm);
 
-    if (selectedImages.some((img) => img)) {
-      router.push("/vista-base");
-    } else {
-      alert("No se han cargado imágenes.");
-    }
-  };
+  //   if (selectedImages.some((img) => img)) {
+  //     router.push("/vista-base");
+  //   } else {
+  //     alert("No se han cargado imágenes.");
+  //   }
+  // };
 
-  const handleImageChange = (event, index) => {
-    const file = event.target.files[0];
-    if (file) {
-      if (!["image/jpeg", "image/png", "image/gif"].includes(file.type)) {
-        alert("Formato no válido. Usa JPEG, PNG o GIF.");
-        return;
-      }
+  // const handleImageChange = (event, index) => {
+  //   const file = event.target.files[0];
+  //   if (file) {
+  //     if (!["image/jpeg", "image/png", "image/gif"].includes(file.type)) {
+  //       alert("Formato no válido. Usa JPEG, PNG o GIF.");
+  //       return;
+  //     }
 
-      if (file.size > 5 * 1024 * 1024) {
-        alert("El tamaño de la imagen no debe superar los 5MB.");
-        return;
-      }
+  //     if (file.size > 5 * 1024 * 1024) {
+  //       alert("El tamaño de la imagen no debe superar los 5MB.");
+  //       return;
+  //     }
 
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const updatedImages = [...selectedImages];
-        updatedImages[index] = reader.result;
-        setSelectedImages(updatedImages);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  //     const reader = new FileReader();
+  //     reader.onloadend = () => {
+  //       const updatedImages = [...selectedImages];
+  //       updatedImages[index] = reader.result;
+  //       setSelectedImages(updatedImages);
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -280,45 +283,11 @@ const SesionPremium = () => {
           </div>
         </div>
   
-        <div className="mt-12">
-          <h3 className="text-xl text-center font-semibold mb-10 text-[#2F4F4F]">
-            Cambia tus imágenes
-          </h3>
-          <div className="flex flex-row justify-center gap-5">
-            {selectedImages && selectedImages.length > 0 ? (
-              selectedImages.map((image, index) => (
-                <label key={index} className="flex flex-col items-center">
-                  <Image
-                    src={image || '/foto.jpg'}
-                    alt={`Imagen ${index + 1}`}
-                    width={150}
-                    height={150}
-                    className="rounded-full"
-                  />
-                  <input
-                    type="file"
-                    className="hidden"
-                    onChange={(event) => handleImageChange(event, index)}
-                  />
-                </label>
-              ))
-            ) : (
-              <p className="text-center text-sm">No hay imágenes seleccionadas.</p>
-            )}
+        <div className='flex flex-col justify-center items-center h[200px] w[200px]'>
+          <h1 className="mt-10 mb-10 text-bold">Muestra tus accesibilidades</h1>
+            <ImageCarouselACC  userId={companyId} />
+          <UploadImageACC />
           </div>
-          <div>
-            <div className="mt-10 flex justify-center">
-              <button
-                className="px-12 py-2 border border-transparent rounded-md shadow-sm
-                  text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none
-                  focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]"
-                onClick={handleSubmit}
-              >
-                Listo
-              </button>
-            </div>
-          </div>
-        </div>
         
         <Table title="Todos tus Eventos" comments={eventComments} headers={['EVENTO', 'FECHA', 'HORARIO']} />
         <Table title="Todas tus Promociones" comments={promotionComments} headers={['PROMOCIÓN', 'FECHA', 'HORARIO']} />
