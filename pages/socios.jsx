@@ -104,6 +104,9 @@ const View2 = () => {
         <button onClick={() => handleFilter('rating')} className="w-full sm:w-auto px-4 py-2 border border-[#EDE6D7] font-semibold text-[#2F4F4F] rounded-full">
           Mejor calificados
         </button>
+        <Link legacyBehavior href="/MapWithPlaces">
+          <StyledButton className="hidden md:block" variant="verdeCurvo">Buscar en el mapa</StyledButton>
+        </Link>
       </div>
 
       <div className="fixed bottom-4 right-4">
