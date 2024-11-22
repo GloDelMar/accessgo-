@@ -1,11 +1,13 @@
 
 import React, { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
+import axios from "axios";
 import { useRouter } from "next/router";
 import { getCompanyById } from "./api/api_company";
 import { getBusinessAverageRanking } from "./api/api_ranking";
 import CommentSection from "../components/Molecules/CommentsCard";
 import AccessVisibility from "@/components/Molecules/muestraAccess";
+import {contarVisita} from "./api/api_visits"
 
 export default function CardFree() {
   const router = useRouter();
@@ -15,8 +17,14 @@ export default function CardFree() {
   const [error, setError] = useState(null);
 
   const { id } = router.query;
+ 
+  useEffect(() => {
+    if (id) {
+      contarVisita(id, `vista-prem/${id}`); 
+     
+        }
+  }, [id]); // El hook se ejecutará solo cuando 'id' cambie
 
-  
   const fetchAverageRating = useCallback(async () => {
     if (!id) return;
     try {
