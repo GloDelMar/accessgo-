@@ -81,7 +81,6 @@ const View23 = () => {
     }
   }, [latitude, longitude]);
 
-
   const fetchCompanyData = async () => {
     const companyId = localStorage.getItem("userId");
     if (!companyId) return;
@@ -127,15 +126,18 @@ const View23 = () => {
     try {
       const { latitude, longitude } = await getCoordinates(address);
 
+      setLatitude(latitude);
+      setLongitude(longitude);
+
       mapRef.current.flyTo({ center: [longitude, latitude], zoom: 14 });
 
-      if (marker) {
-        marker.setLngLat([longitude, latitude]);
+      if (markerRef.current) {
+        markerRef.current.setLngLat([longitude, latitude]);
       } else {
         const newMarker = new mapboxgl.Marker()
           .setLngLat([longitude, latitude])
           .addTo(mapRef.current);
-        setMarker(newMarker);
+        markerRef.current = newMarker;
       }
     } catch (error) {
       console.error(error.message);
