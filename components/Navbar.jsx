@@ -18,7 +18,7 @@ const Navbar = () => {
 
   const handleChangeDatos = () => {
     const userType = localStorage.getItem('tipoUsuario');
-    console.log("Tipo de usuario detectado en Navbar:", userType);
+
     if (userType === 'company') {
       router.push('/datos-negocio1');
     } else {
@@ -28,23 +28,31 @@ const Navbar = () => {
 
   const handleChangePerfil = () => {
     const userType = localStorage.getItem('tipoUsuario');
-    console.log("Tipo de usuario detectado en Navbar:", userType);
+    const cuentaUsuario = localStorage.getItem('cuentaUsuario'); // Obtener el tipo de cuenta de localStorage
+  
+
     if (userType === 'company') {
-      router.push('/sesion-base');
+      if (cuentaUsuario === 'free') {
+        router.push('/sesion-base');
+      } else if (cuentaUsuario === 'premium') {
+        router.push('/sesion-prem');
+      } else {
+        console.error("Tipo de cuenta no reconocido. Redirigiendo a página de error.");
+        toast.error("No se pudo determinar el tipo de cuenta.");
+      }
     } else {
       router.push('/mi-perfil');
     }
-  }
+  };
+  
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem("userId");
-    localStorage.removeItem("cuenta");
-    localStorage.removeItem("type");
-    setIsLoggedIn(false);
-    closeMenu();
-    router.push('/');
+    localStorage.clear(); 
+    setIsLoggedIn(false); 
+    closeMenu(); 
+    router.push('/'); 
   };
+  
 
   useEffect(() => {
     const handleClickOutside = (event) => {

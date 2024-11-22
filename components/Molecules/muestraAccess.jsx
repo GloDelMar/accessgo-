@@ -8,14 +8,13 @@ const AccessVisibility = ({ companyId }) => {
   const [showCondition, setShowCondition] = useState(null); 
   const [company, setCompany] = useState(null); 
 
-  console.log("El ID de la empresa:", companyId);
 
   useEffect(() => {
     const fetchCompany = async () => {
       try {
         const companyData = await getCompanyById(companyId);
         setCompany(companyData);
-        console.log("Datos recibidos de la empresa:", companyData);
+    
 
         if (companyData.data.company.giro === "HOTEL") {
           const accessibilityData = await getHotelAccessibility(companyId);

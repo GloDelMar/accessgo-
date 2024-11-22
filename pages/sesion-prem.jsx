@@ -81,6 +81,8 @@ const SesionPremium = () => {
     setRango(event.target.value);
   };
 
+
+  
   const handleSubmit = (event) => {
     event.preventDefault();
     const formImage = selectedImages.map((image, index) => ({
@@ -290,7 +292,7 @@ const SesionPremium = () => {
         <Table title="Tu Menú" comments={menuComments} headers={['PLATILLO', 'FECHA', 'HORARIO']} />
         
         <div>
-      <h3>Estas son las estadísticas de visitas a tu perfil de AccessGo Premium</h3>
+      <h3 className="text-2xl text-center font-semibold my-8 text-[#2F4F4F]">Estas son las estadísticas de visitas a tu perfil de AccessGo Premium</h3>
       
       {/* Componente de estadísticas pasando 'rango' como prop */}
       <EstadisticasVisitas rango={rango} />
