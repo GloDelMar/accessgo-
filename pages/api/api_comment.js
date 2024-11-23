@@ -1,11 +1,12 @@
-const API_URL = "https://backend-r159.onrender.com";
+const API_URL = "http://localhost:8080";
 
-export const createComment = async (userId, content, businessId) => {
+export const createComment = async (userId, content, businessId, rankingId) => {
     try {
         const body = {
             userId,
             content,
-            businessId
+            businessId,
+            rankingId
        };
 
        console.log("Datos enviados:", body);

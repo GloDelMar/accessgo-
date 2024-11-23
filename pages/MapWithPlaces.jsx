@@ -197,15 +197,16 @@ export default function MapWithPlaces() {
   };
 
   return (
+
     <div className="relative w-full h-screen">
-  {/* Contenedor del mapa */}
+  {/* Contenedor del mapa */} 
   <div
     ref={mapContainer}
     className="w-full h-full rounded-lg shadow-md overflow-hidden"
   />
 
   {/* Controles superpuestos */}
-  <div className="absolute top-2 left-2 sm:top-4 sm:left-4 sm:w-80 w-[90%] bg-white/90 backdrop-blur-md p-3 sm:p-4 rounded-lg shadow-lg z-10 space-y-3 sm:space-y-4 transition duration-300 ease-in-out">
+  <div className="absolute top-2 left-2 right-2 sm:top-4 sm:left-4 sm:w-80 w-[95%] bg-white/90 backdrop-blur-md p-3 sm:p-4 rounded-lg shadow-lg z-10 space-y-3 sm:space-y-4 transition duration-300 ease-in-out">
     {/* Botón para cancelar la ruta */}
     {isRouting && (
       <button
