@@ -1,48 +1,35 @@
-import MotrizCheckpoints from './Hotel/MotrizCheckpoints';
-import VisualCheckpoints from './Hotel/VisualCheckpoints';
-import AuditivaCheckpoints from './Hotel/AuditivaCheckpoints';
-import IntelectualCheckpoints from './Hotel/IntelectualCheckpoints';
-import NeurodivergenteCheckpoints from './Hotel/NeurodivergenteCheckpoints';
-import RestMotrizCheckpoints from './Restaurante/MotrizCheckpoints';
-import RestVisualCheckpoints from './Restaurante/VisualCheckpoints';
-import RestAuditivaCheckpoints from './Restaurante/AuditivaCheckpoints';
-import RestIntelectualCheckpoints from './Restaurante/IntelectualChecpoints';
-import RestNeurodivergenteCheckpoints from './Restaurante/NeurodivergenteCheckpoints';
+import React from "react";
 
-const Checkpoints = ({ condition, establishment }) => {
-  if (establishment === 'hotel') {
-    switch (condition) {
-      case 'Motriz':
-        return <MotrizCheckpoints />;
-      case 'Visual':
-        return <VisualCheckpoints />;
-      case 'Auditiva':
-        return <AuditivaCheckpoints />;
-      case 'Intelectual':
-        return <IntelectualCheckpoints />;
-      case 'Neurodivergente':
-        return <NeurodivergenteCheckpoints />;
-      default:
-        return <p>Selecciona un tipo de discapacidad para ver los checkpoints.</p>;
-    }
-  } else if (establishment === 'restaurante') {
-    switch (condition) {
-      case 'Motriz':
-        return <RestMotrizCheckpoints />;
-      case 'Visual':
-        return <RestVisualCheckpoints />;
-      case 'Auditiva':
-        return <RestAuditivaCheckpoints />;
-      case 'Intelectual':
-        return <RestIntelectualCheckpoints />;
-      case 'Neurodivergente':
-        return <RestNeurodivergenteCheckpoints />;
-      default:
-        return <p>Selecciona un tipo de discapacidad para ver los checkpoints.</p>;
-    }
-  }
+const CheckpointsSection = ({ sections, onUpdate }) => {
+  const handleChange = (sectionIndex, questionIndex) => {
+    const updatedSections = [...sections];
+    updatedSections[sectionIndex].questions[questionIndex].response =
+      !updatedSections[sectionIndex].questions[questionIndex].response;
+    onUpdate(updatedSections);
+  };
 
-  return <p>Selecciona un tipo de establecimiento.</p>;
+  return (
+    <div>
+      {sections.map((section, sectionIndex) => (
+        <div key={sectionIndex} className="mb-4">
+          <h2 className="font-bold">{section.name}</h2>
+          <ul>
+            {section.questions.map((question, questionIndex) => (
+              <li key={questionIndex} className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={question.response}
+                  onChange={() => handleChange(sectionIndex, questionIndex)}
+                  className="mr-2"
+                />
+                {question.question}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  );
 };
 
-export default Checkpoints;
+export default CheckpointsSection;

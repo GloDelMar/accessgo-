@@ -17,7 +17,7 @@ const LoginForm = () => {
 
   async function onSubmit(e) {
     e.preventDefault();
-    console.log('Formulario enviado con email y contraseña:', email, password);
+
   
     try {
       const response = await axios.post(`https://backend-r159.onrender.com/api/auth`, {
@@ -25,7 +25,7 @@ const LoginForm = () => {
         password,
       });
 
-      console.log('Respuesta del servidor:', response);
+  
 
       if (response.data && response.data.data && response.data.data.token) {
         const { token, type, cuenta } = response.data.data;

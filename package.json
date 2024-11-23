@@ -9,8 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@emailjs/browser": "^4.4.1",
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@mapbox/mapbox-gl-directions": "^4.3.1",
     "@mapbox/mapbox-sdk": "^0.16.1",
+    "@mui/material": "^6.1.7",
     "@stripe/stripe-js": "^4.9.0",
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.7",
@@ -40,9 +43,9 @@
     "slick-carousel": "^1.8.1",
     "sonner": "^1.5.0",
     "stripe": "^17.2.1",
-    "styled-components": "^6.1.13",
-    "swiper": "^11.1.14",
-    "toastr": "^2.1.4"
+    "swiper": "^11.1.15",
+    "toastr": "^2.1.4",
+    "ui": "^0.2.4"
   },
   "devDependencies": {
     "axe-core": "^4.10.0",
