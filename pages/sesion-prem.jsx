@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import Link from "next/link";
-import { Plus, Trash2 } from "lucide-react";
-import Image from "next/image";
-import { Line } from "react-chartjs-2";
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { Plus, Trash2 } from 'lucide-react';
+import Image from 'next/image';
+import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -11,12 +11,12 @@ import {
   PointElement,
   Title,
   Tooltip,
-  Legend,
-} from "chart.js";
-import { getCompanyById } from "@/pages/api/api_company";
-import router from "next/router";
-import { getBusinessAverageRanking } from "./api/api_ranking";
-import { getCommentsByCompanyId } from "./api/api_comment";
+  Legend
+} from 'chart.js';
+import { getCompanyById } from '@/pages/api/api_company';
+import router from 'next/router';
+import { getBusinessAverageRanking } from './api/api_ranking';
+import { getCommentsByCompanyId } from './api/api_comment';
 
 import UploadImageACC from '@/components/Molecules/UploadImageACC';
 import ImageCarouselACC from '@/components/Molecules/ImageCarouselACC';
@@ -32,13 +32,13 @@ ChartJS.register(
 );
 
 const Table = ({ title, comments, headers }) => (
-  <div className="w-full mt-10">
-    <h3 className="text-2xl font-bold mb-4">{title}</h3>
-    <table className="min-w-full bg-white border border-gray-200">
+  <div className='w-full mt-10'>
+    <h3 className='text-2xl font-bold mb-4'>{title}</h3>
+    <table className='min-w-full bg-white border border-gray-200'>
       <thead>
         <tr>
           {headers.map((header, index) => (
-            <th key={index} className="py-2 px-4 border-b">
+            <th key={index} className='py-2 px-4 border-b'>
               {header}
             </th>
           ))}
@@ -46,15 +46,15 @@ const Table = ({ title, comments, headers }) => (
       </thead>
       <tbody>
         <tr>
-          <td className="py-2 px-4 border-b">Dato 1</td>
-          <td className="py-2 px-4 border-b">Dato 2</td>
-          <td className="py-2 px-4 border-b">Dato 3</td>
+          <td className='py-2 px-4 border-b'>Dato 1</td>
+          <td className='py-2 px-4 border-b'>Dato 2</td>
+          <td className='py-2 px-4 border-b'>Dato 3</td>
         </tr>
         {comments.map((comment, index) => (
           <tr key={index}>
             <td
               colSpan={headers.length}
-              className="py-2 px-4 border-b bg-lime-50"
+              className='py-2 px-4 border-b bg-lime-50'
             >
               {comment}
             </td>
@@ -69,42 +69,42 @@ const ProfileVisitsChart = () => {
   const currentYear = new Date().getFullYear();
   const data = {
     labels: [
-      "Enero",
-      "Febrero",
-      "Marzo",
-      "Abril",
-      "Mayo",
-      "Junio",
-      "Julio",
-      "Agosto",
-      "Septiembre",
-      "Octubre",
-      "Noviembre",
-      "Diciembre",
+      'Enero',
+      'Febrero',
+      'Marzo',
+      'Abril',
+      'Mayo',
+      'Junio',
+      'Julio',
+      'Agosto',
+      'Septiembre',
+      'Octubre',
+      'Noviembre',
+      'Diciembre'
     ],
     datasets: [
       {
         label: `Visitas en ${currentYear}`,
         data: [12, 19, 3, 5, 2, 3, 10, 15, 8, 6, 7, 9], // Datos de ejemplo
-        backgroundColor: "rgba(75, 192, 192, 0.2)",
-        borderColor: "rgba(75, 192, 192, 1)",
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        borderColor: 'rgba(75, 192, 192, 1)',
         borderWidth: 1,
-        fill: true,
-      },
-    ],
+        fill: true
+      }
+    ]
   };
 
   const options = {
     scales: {
       y: {
-        beginAtZero: true,
-      },
-    },
+        beginAtZero: true
+      }
+    }
   };
 
   return (
-    <div className="w-full mt-10">
-      <h3 className="text-2xl font-bold mb-4">Visitas a tu perfil</h3>
+    <div className='w-full mt-10'>
+      <h3 className='text-2xl font-bold mb-4'>Visitas a tu perfil</h3>
       <Line data={data} options={options} />
     </div>
   );
@@ -120,20 +120,20 @@ const SesionPremium = () => {
   const [comments, setComments] = useState([]);
   // const [selectedImages, setSelectedImages] = useState([null, null, null, null]);
 
-  // const handleSubmit = (event) => {
-  //   event.preventDefault();
-  //   const formImage = selectedImages.map((image, index) => ({
-  //     [`imagen${index + 1}`]: image,
-  //   }));
-  //   const jsonForm = JSON.stringify(formImage);
-  //   console.log(jsonForm);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const formImage = selectedImages.map((image, index) => ({
+      [`imagen${index + 1}`]: image
+    }));
+    const jsonForm = JSON.stringify(formImage);
+    console.log(jsonForm);
 
-  //   if (selectedImages.some((img) => img)) {
-  //     router.push("/vista-base");
-  //   } else {
-  //     alert("No se han cargado imágenes.");
-  //   }
-  // };
+    if (selectedImages.some((img) => img)) {
+      router.push('/vista-base');
+    } else {
+      alert('No se han cargado imágenes.');
+    }
+  };
 
   // const handleImageChange = (event, index) => {
   //   const file = event.target.files[0];
@@ -159,12 +159,12 @@ const SesionPremium = () => {
   // };
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storedUserId = localStorage.getItem("userId");
+    if (typeof window !== 'undefined') {
+      const storedUserId = localStorage.getItem('userId');
       if (storedUserId) {
         setCompanyId(storedUserId);
       } else {
-        setError("Company ID not found in localStorage");
+        setError('Company ID not found in localStorage');
         setLoading(false);
       }
     }
@@ -184,7 +184,7 @@ const SesionPremium = () => {
         setComments(commentsData.data || []);
       } catch (error) {
         console.error(error);
-        setError("Failed to fetch company data");
+        setError('Failed to fetch company data');
       } finally {
         setLoading(false);
       }
@@ -198,83 +198,94 @@ const SesionPremium = () => {
   if (loading) return <p>Cargando...</p>;
   if (error) return <p>Error: {error}</p>;
 
-
   const eventComments = [
-    "Lorem ipsum es el texto que se usa habitualmente en diseño gráfico en demostraciones",
-    "Otro comentario sobre el evento",
+    'Lorem ipsum es el texto que se usa habitualmente en diseño gráfico en demostraciones',
+    'Otro comentario sobre el evento'
   ];
 
   const promotionComments = [
-    "Comentario sobre una promoción",
-    "Otro comentario sobre una promoción",
+    'Comentario sobre una promoción',
+    'Otro comentario sobre una promoción'
   ];
 
   const menuComments = [
-    "Comentario sobre el menú",
-    "Otro comentario sobre el menú",
+    'Comentario sobre el menú',
+    'Otro comentario sobre el menú'
   ];
 
-
   return (
-    <main className="flex overflow-hidden flex-col items-center px-4 sm:px-10 md:px-20 pt-28 bg-white pb-[1572px] max-sm:px-5 max-sm:py-24">
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
-        <h1 className="text-4xl md:text-5xl font-bold text-center text-[#2F4F4F] mb-12">
+    <main className='flex overflow-hidden flex-col items-center px-4 sm:px-10 md:px-20 pt-28 bg-white pb-[1572px] max-sm:px-5 max-sm:py-24'>
+      <div className='container mx-auto px-4 py-8 max-w-4xl'>
+        <h1 className='text-4xl md:text-5xl font-bold text-center text-[#2F4F4F] mb-12'>
           ¡Bienvenido!
-          <p className="text-4xl md:text-5xl font-bold text-center text-[#2F4F4F] mt-2 mb-12">
-            {companyData?.data?.company?.companyName || 'Información no disponible.'}
+          <p className='text-4xl md:text-5xl font-bold text-center text-[#2F4F4F] mt-2 mb-12'>
+            {companyData?.data?.company?.companyName ||
+              'Información no disponible.'}
           </p>
         </h1>
-  
-        <div className="flex flex-col lg:flex-row gap-6 p-6 max-w-4xl mx-auto">
-          <div className="w-full lg:w-1/3 flex justify-center">
-            <div className="bg-[#F5F0E5] w-full max-w-[231px] h-auto rounded-[25px] shadow-md p-6 text-center">
+
+        <div className='flex flex-col lg:flex-row gap-6 p-6 max-w-4xl mx-auto'>
+          <div className='w-full lg:w-1/3 flex justify-center'>
+            <div className='bg-[#F5F0E5] w-full max-w-[231px] h-auto rounded-[25px] shadow-md p-6 text-center'>
               <Image
-                src={companyData?.data?.company?.profilePicture || '/perfil1.png'}
-                alt="Foto de perfil"
+                src={
+                  companyData?.data?.company?.profilePicture || '/perfil1.png'
+                }
+                alt='Foto de perfil'
                 width={300}
                 height={150}
-                className="rounded-full mx-auto mb-4"
+                className='rounded-full mx-auto mb-4'
               />
             </div>
+           
           </div>
-  
-          <div className="w-full lg:w-2/3 flex flex-col justify-center">
-            <div className="bg-white rounded-[30px] shadow-md p-6 w-full">
-              <div className="flex flex-col md:flex-row md:justify-start gap-4 md:items-center mb-4">
-                <h3 className="text-lg font-semibold text-[#2F4F4F] mb-2 md:mb-0">
+
+          <div className='w-full lg:w-2/3 flex flex-col justify-center'>
+            <div className='bg-white rounded-[30px] shadow-md p-6 w-full'>
+              <div className='flex flex-col md:flex-row md:justify-start gap-4 md:items-center mb-4'>
+                <h3 className='text-lg font-semibold text-[#2F4F4F] mb-2 md:mb-0'>
                   Tu calificación es de:
                 </h3>
-                <div className="flex">
+                <div className='flex'>
                   {[1, 2, 3, 4, 5].map((star) => (
                     <svg
                       key={star}
                       className={`w-5 h-5 ${
-                        star <= Math.round(averageRating) ? 'text-yellow-400' : 'text-gray-300'
+                        star <= Math.round(averageRating)
+                          ? 'text-yellow-400'
+                          : 'text-gray-300'
                       } fill-current`}
-                      viewBox="0 0 24 24"
+                      viewBox='0 0 24 24'
                     >
-                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z" />
+                      <path d='M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z' />
                     </svg>
                   ))}
                 </div>
               </div>
               <div>
-                <h3 className="text-lg font-semibold mb-2">Últimos comentarios:</h3>
+                <h3 className='text-lg font-semibold mb-2'>
+                  Últimos comentarios:
+                </h3>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 mt-4">
+              <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 mt-4'>
                 {comments.length > 0 ? (
                   comments.map((comment) => (
-                    <p key={comment._id} className="bg-[#F5F0E5] p-2 rounded text-center text-sm">
+                    <p
+                      key={comment._id}
+                      className='bg-[#F5F0E5] p-2 rounded text-center text-sm'
+                    >
                       {comment.content}
                     </p>
                   ))
                 ) : (
-                  <p className="text-center text-sm">No hay comentarios disponibles.</p>
+                  <p className='text-center text-sm'>
+                    No hay comentarios disponibles.
+                  </p>
                 )}
               </div>
-  
+
               <button
-                className="px-2.5 py-0.5 mt-11 text-base bg-[#F5F0E5] rounded-[30px] md:mt-10"
+                className='px-2.5 py-0.5 mt-11 text-base bg-[#F5F0E5] rounded-[30px] md:mt-10'
                 onClick={() => setShowAllComments(!showAllComments)}
               >
                 {showAllComments ? 'Mostrar menos' : 'Todos los comentarios'}
@@ -282,26 +293,50 @@ const SesionPremium = () => {
             </div>
           </div>
         </div>
-  
+
         <div className='flex flex-col justify-center items-center h[200px] w[200px]'>
-          <h1 className="mt-10 mb-10 text-bold">Muestra tus accesibilidades</h1>
-            <ImageCarouselACC  userId={companyId} />
+          <h1 className='mt-10 mb-10 text-bold'>Muestra tus accesibilidades</h1>
+          <ImageCarouselACC userId={companyId} />
           <UploadImageACC />
-          </div>
-        
-        <Table title="Todos tus Eventos" comments={eventComments} headers={['EVENTO', 'FECHA', 'HORARIO']} />
-        <Table title="Todas tus Promociones" comments={promotionComments} headers={['PROMOCIÓN', 'FECHA', 'HORARIO']} />
-        <Table title="Tu Menú" comments={menuComments} headers={['PLATILLO', 'FECHA', 'HORARIO']} />
+
+          <div className='flex justify-center items-center p-4 ml-1'>
+              <Link legacyBehavior href='/vista-prem'>
+                <button
+                  className=' mt-20 px-6 py-2 border border-transparent rounded-md shadow-sm
+              text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none
+              focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]'
+                >
+                  Listo
+                </button>
+              </Link>
+            </div>
+        </div>
+
+        <Table
+          title='Todos tus Eventos'
+          comments={eventComments}
+          headers={['EVENTO', 'FECHA', 'HORARIO']}
+        />
+        <Table
+          title='Todas tus Promociones'
+          comments={promotionComments}
+          headers={['PROMOCIÓN', 'FECHA', 'HORARIO']}
+        />
+        <Table
+          title='Tu Menú'
+          comments={menuComments}
+          headers={['PLATILLO', 'FECHA', 'HORARIO']}
+        />
         <ProfileVisitsChart />
-  
-        <div className="flex flex-row justify-center mt-4 space-x-4 md:space-x-[200px]">
-          <button className="w-[155px] h-[40px] bg-white border-2 rounded-lg">
-            <Link legacyBehavior href="/vista-prem">
+
+        <div className='flex flex-row justify-center mt-4 space-x-4 md:space-x-[200px]'>
+          <button className='w-[155px] h-[40px] bg-white border-2 rounded-lg'>
+            <Link legacyBehavior href='/vista-prem'>
               <a>Cancelar</a>
             </Link>
           </button>
-          <button className="w-[155px] h-[40px] bg-[#2F4F4F] text-white rounded-lg flex items-center justify-center">
-            <Link legacyBehavior href="/sesion-prem">
+          <button className='w-[155px] h-[40px] bg-[#2F4F4F] text-white rounded-lg flex items-center justify-center'>
+            <Link legacyBehavior href='/sesion-prem'>
               <a>Guardar Cambios</a>
             </Link>
           </button>
@@ -309,7 +344,6 @@ const SesionPremium = () => {
       </div>
     </main>
   );
-  
 };
 
 export default SesionPremium;

@@ -4,11 +4,12 @@ import axios from 'axios';
 import mapboxgl from 'mapbox-gl';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
-import { updateCompany } from "./api/api_company";
+import { updateCompany } from './api/api_company';
 import UploadImageCPP from '@/components/Molecules/UploadImageCPP';
 import Image from 'next/image';
 
-mapboxgl.accessToken = 'pk.eyJ1IjoiYWNjZXNnbyIsImEiOiJjbTI4NGVjNnowc2RqMmxwdnptcXAwbmhuIn0.0jG0XG0mwx_LHjdJ23Qx4A';
+mapboxgl.accessToken =
+  'pk.eyJ1IjoiYWNjZXNnbyIsImEiOiJjbTI4NGVjNnowc2RqMmxwdnptcXAwbmhuIn0.0jG0XG0mwx_LHjdJ23Qx4A';
 
 const View23 = () => {
   const mapDiv = useRef(null);
@@ -23,11 +24,11 @@ const View23 = () => {
   const [companyId, setCompanyId] = useState(null);
 
   useEffect(() => {
-    const companyIdFromLocalStorage = localStorage.getItem("userId");
+    const companyIdFromLocalStorage = localStorage.getItem('userId');
     if (companyIdFromLocalStorage) {
       setCompanyId(companyIdFromLocalStorage);
     } else {
-      console.error("No se encontró el ID de la empresa en localStorage");
+      console.error('No se encontró el ID de la empresa en localStorage');
     }
   }, []);
 
@@ -46,12 +47,26 @@ const View23 = () => {
     descripcion: ''
   });
 
-  const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo', 'Todos los días'];
+  const days = [
+    'Lunes',
+    'Martes',
+    'Miércoles',
+    'Jueves',
+    'Viernes',
+    'Sábado',
+    'Domingo',
+    'Todos los días'
+  ];
 
-  const toggleDay = (day) => setSelectedDays(prev => prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day]);
+  const toggleDay = (day) =>
+    setSelectedDays((prev) =>
+      prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]
+    );
 
   const getCoordinates = async (address) => {
-    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?access_token=${mapboxgl.accessToken}`;
+    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+      address
+    )}.json?access_token=${mapboxgl.accessToken}`;
     const response = await fetch(url);
     const data = await response.json();
 
@@ -69,7 +84,7 @@ const View23 = () => {
         container: mapDiv.current,
         style: 'mapbox://styles/mapbox/streets-v12',
         center: [longitude || -100.3899, latitude || 20.5888],
-        zoom: 9,
+        zoom: 9
       });
 
       markerRef.current = new mapboxgl.Marker()
@@ -82,11 +97,13 @@ const View23 = () => {
   }, [latitude, longitude]);
 
   const fetchCompanyData = async () => {
-    const companyId = localStorage.getItem("userId");
+    const companyId = localStorage.getItem('userId');
     if (!companyId) return;
 
     try {
-      const response = await axios.get(`https://backend-r159.onrender.com/api/company/${companyId}`);
+      const response = await axios.get(
+        `https://backend-r159.onrender.com/api/company/${companyId}`
+      );
       const companyData = response.data.data.company;
       console.log(companyData);
 
@@ -106,13 +123,10 @@ const View23 = () => {
 
       setLatitude(companyData?.latitude);
       setLongitude(companyData?.longitude);
-
-
     } catch (error) {
-      console.error("Error fetching company data:", error);
+      console.error('Error fetching company data:', error);
     }
   };
-
 
   useEffect(() => {
     fetchCompanyData();
@@ -155,11 +169,11 @@ const View23 = () => {
   };
 
   const handleSubmit = async () => {
-    const companyId = localStorage.getItem("userId");
-    const userAccountType = localStorage.getItem("cuenta");
+    const companyId = localStorage.getItem('userId');
+    const userAccountType = localStorage.getItem('cuenta');
 
     if (!companyId) {
-      alert("No se encontró el ID de la empresa en localStorage");
+      alert('No se encontró el ID de la empresa en localStorage');
       return;
     }
 
@@ -170,178 +184,245 @@ const View23 = () => {
       giro: formValues.giro,
       horario: {
         abre: formValues.horario.abre,
-        cierra: formValues.horario.cierre,
+        cierra: formValues.horario.cierre
       },
       diasDeServicio: selectedDays,
       description: formValues.descripcion,
       address: address,
       phone: '',
-      latitude: markerRef.current ? markerRef.current.getLngLat().lat : latitude,
-      longitude: markerRef.current ? markerRef.current.getLngLat().lng : longitude,
-      verified: false,
+      latitude: markerRef.current
+        ? markerRef.current.getLngLat().lat
+        : latitude,
+      longitude: markerRef.current
+        ? markerRef.current.getLngLat().lng
+        : longitude,
+      verified: false
     };
 
     try {
-      console.log("Enviando datos de la compañía:", formData);
+      console.log('Enviando datos de la compañía:', formData);
       const response = await updateCompany(companyId, formData);
-      console.log("Respuesta de actualización:", response);
+      console.log('Respuesta de actualización:', response);
 
-      if (userAccountType === "premium") {
-        router.push("/sesion-prem");
+      if (userAccountType === 'premium') {
+        router.push('/sesion-prem');
       } else {
-        router.push("/sesion-base");
+        router.push('/sesion-base');
       }
     } catch (error) {
-      console.error("Error al actualizar la compañía:", error);
+      console.error('Error al actualizar la compañía:', error);
     }
   };
 
-
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setFormValues(prev => ({ ...prev, [name]: value }));
+    setFormValues((prev) => ({ ...prev, [name]: value }));
   };
 
   return (
     <>
-      <div className="w-full max-w-[900px] mx-auto p-4 md:p-6 bg-white rounded-lg shadow-sm">
-        <h1 className="text-2xl font-bold text-center mb-6 text-[#263238]">¡Cuéntanos sobre ustedes!</h1>
-        <p className="text-center mb-8 text-[#546E7A]">Para personalizar el perfil te pedimos que respondas los siguientes campos</p>
+      <div className='w-full max-w-[900px] mx-auto p-4 md:p-6 bg-white rounded-lg shadow-sm'>
+        <h1 className='text-2xl font-bold text-center mb-6 text-[#263238]'>
+          ¡Cuéntanos sobre ustedes!
+        </h1>
+        <p className='text-center mb-8 text-[#546E7A]'>
+          Para personalizar el perfil te pedimos que respondas los siguientes
+          campos
+        </p>
 
-        <div className="grid gap-8 lg:grid-cols-[300px,1fr] w-full">
-          <div className="flex flex-col justify-items-center items-center space-y-4 w-full">
-            <div className="w-32 h-32 sm:w-40 sm:h-40 bg-[#ECEFF1] rounded-full flex items-center justify-center mb-4">
-            <label htmlFor="imgUsuario" className="cursor-pointer">
-              {selectedImage ? (
-                <Image src={selectedImage} alt="Foto de perfil" width={200} height={200} className="rounded-full" />
-              ) : (
-                <Image src="/iconoframe.png" alt="Foto de perfil" width={200} height={200} className="rounded-full" />
-              )}
-            </label>
-          
-        
+        <div className='grid gap-8 lg:grid-cols-[300px,1fr] w-full'>
+          <div className='flex flex-col justify-items-center items-center space-y-4 w-full'>
+            <div className='w-32 h-32 sm:w-40 sm:h-40 bg-[#ECEFF1] rounded-full flex items-center justify-center mb-4'>
+              <label htmlFor='imgUsuario' className='cursor-pointer'>
+                {/* {selectedImage ? (
+                  <Image
+                    src={selectedImage}
+                    alt='Foto de perfil'
+                    width={200}
+                    height={200}
+                    className=' justify-center rounded-full'
+                  />
+                ) : (
+                  <Image
+                    src='/iconoframe.png'
+                    alt='Foto de perfil'
+                    width={200}
+                    height={200}
+                    className='rounded-full'
+                  /> */}
+                {/* )} */}
+              </label>
 
-         {/* Esto es para la subida de imagenes a aws */}
-        <UploadImageCPP companyId={companyId} setSelectedImage={setSelectedImage} /> 
-          
+              {/* Esto es para la subida de imagenes a aws */}
+              <UploadImageCPP
+                companyId={companyId}
+                setSelectedImage={setSelectedImage}
+              />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 space-y-6 w-full">
-            <h2 className="text-xl font-semibold text-[#263238]">Datos del negocio</h2>
-            <div className="grid gap-4 md:grid-cols-2 w-full">
+          <div className='grid grid-cols-1 space-y-6 w-full'>
+            <h2 className='text-xl font-semibold text-[#263238]'>
+              Datos del negocio
+            </h2>
+            <div className='grid gap-4 md:grid-cols-2 w-full'>
               <InputWithLabel
-                name="nombreComercial"
-                placeholder="Ingresar dato"
+                name='nombreComercial'
+                placeholder='Ingresar dato'
                 value={formValues.nombreComercial}
                 onChange={handleInputChange}
-                label="Nombre comercial de tu negocio"
+                label='Nombre comercial de tu negocio'
               />
               <InputWithLabel
-                name="rfc"
-                label="RFC"
-                placeholder="Ingresar dato"
+                name='rfc'
+                label='RFC'
+                placeholder='Ingresar dato'
                 value={formValues.rfc}
                 onChange={handleInputChange}
               />
             </div>
-            <div className="w-full">
-              <label htmlFor="persona-moral" className="block text-sm font-medium text-[#546E7A] mb-1">Persona moral</label>
+            <div className='w-full'>
+              <label
+                htmlFor='persona-moral'
+                className='block text-sm font-medium text-[#546E7A] mb-1'
+              >
+                Persona moral
+              </label>
               <InputWithLabel
-                name="representanteLegal"
-                label="Nombre y apellido representante legal del negocio"
-                id="persona-moral"
-                placeholder="Ingresar dato"
+                name='representanteLegal'
+                label='Nombre y apellido representante legal del negocio'
+                id='persona-moral'
+                placeholder='Ingresar dato'
                 value={formValues.representanteLegal}
                 onChange={handleInputChange}
               />
             </div>
-            <div className="grid gap-4 md:grid-cols-2 w-full">
-              <div className="w-full">
-                <label htmlFor="giro" className="block text-sm font-medium text-[#546E7A] mb-1">Giro de tu negocio</label>
+            <div className='grid gap-4 md:grid-cols-2 w-full'>
+              <div className='w-full'>
+                <label
+                  htmlFor='giro'
+                  className='block text-sm font-medium text-[#546E7A] mb-1'
+                >
+                  Giro de tu negocio
+                </label>
                 <select
-                  id="giro"
-                  name="giro"
+                  id='giro'
+                  name='giro'
                   value={formValues.giro}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50"
+                  className='w-full px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50'
                 >
                   <option>Giro de tu negocio</option>
-                  <option value="HOTEL">HOTEL</option>
-                  <option value="RESTAURANTE">RESTAURANTE</option>
-                  <option value="BAR">BAR</option>
+                  <option value='HOTEL'>HOTEL</option>
+                  <option value='RESTAURANTE'>RESTAURANTE</option>
+                  <option value='BAR'>BAR</option>
                 </select>
               </div>
-              <div className="w-full">
-                <label htmlFor="horario" className="block text-sm font-medium text-[#546E7A] mb-1">Horario de servicio</label>
-                <div className="flex items-center space-x-2 w-full">
+              <div className='w-full'>
+                <label
+                  htmlFor='horario'
+                  className='block text-sm font-medium text-[#546E7A] mb-1'
+                >
+                  Horario de servicio
+                </label>
+                <div className='flex items-center space-x-2 w-full'>
                   <input
-                    type="time"
-                    name="horarioAbre"
+                    type='time'
+                    name='horarioAbre'
                     value={formValues.horario.abre}
-                    onChange={(e) => setFormValues(prev => ({ ...prev, horario: { ...prev.horario,  abre: e.target.value } }))}
-                    className="flex-1 px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50"
+                    onChange={(e) =>
+                      setFormValues((prev) => ({
+                        ...prev,
+                        horario: { ...prev.horario, abre: e.target.value }
+                      }))
+                    }
+                    className='flex-1 px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50'
                   />
-                  <span className="text-[#546E7A]">a</span>
+                  <span className='text-[#546E7A]'>a</span>
                   <input
-                    type="time"
-                    name="horarioCierre"
+                    type='time'
+                    name='horarioCierre'
                     value={formValues.horario.cierre}
-                    onChange={(e) => setFormValues(prev => ({ ...prev, horario: { ...prev.horario, cierre: e.target.value } }))}
-                    className="flex-1 px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50"
+                    onChange={(e) =>
+                      setFormValues((prev) => ({
+                        ...prev,
+                        horario: { ...prev.horario, cierre: e.target.value }
+                      }))
+                    }
+                    className='flex-1 px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50'
                   />
                 </div>
               </div>
             </div>
-            <div className="grid gap-4 md:grid-cols-2 w-full">
-              <div className="w-full">
-                <label htmlFor="descripcion" className="block text-sm font-medium text-[#546E7A] mb-1">Descripción de tu negocio</label>
+            <div className='grid gap-4 md:grid-cols-2 w-full'>
+              <div className='w-full'>
+                <label
+                  htmlFor='descripcion'
+                  className='block text-sm font-medium text-[#546E7A] mb-1'
+                >
+                  Descripción de tu negocio
+                </label>
                 <textarea
-                  id="descripcion"
-                  name="descripcion"
-                  placeholder="Ingresar dato"
+                  id='descripcion'
+                  name='descripcion'
+                  placeholder='Ingresar dato'
                   value={formValues.descripcion}
                   onChange={handleInputChange}
-                  className="w-full h-[100px] px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#263238] placeholder-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50"
+                  className='w-full h-[100px] px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#263238] placeholder-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50'
                 />
               </div>
-              <div className="w-full">
-                <span className="block text-sm font-medium text-[#546E7A] mb-2">Días de servicio</span>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 w-full">
+              <div className='w-full'>
+                <span className='block text-sm font-medium text-[#546E7A] mb-2'>
+                  Días de servicio
+                </span>
+                <div className='grid grid-cols-2 sm:grid-cols-3 gap-2 w-full'>
                   {days.map((day) => (
-                    <div key={day} className="flex items-center w-full">
+                    <div key={day} className='flex items-center w-full'>
                       <input
                         id={day}
-                        type="checkbox"
+                        type='checkbox'
                         checked={selectedDays.includes(day)}
                         onChange={() => toggleDay(day)}
-                        className="h-4 w-4 text-[#4CAF50] focus:ring-[#4CAF50] bg-[#F9F9F9] rounded"
+                        className='h-4 w-4 text-[#4CAF50] focus:ring-[#4CAF50] bg-[#F9F9F9] rounded'
                       />
-                      <label htmlFor={day} className="ml-2 block text-sm text-[#546E7A]">{day}</label>
+                      <label
+                        htmlFor={day}
+                        className='ml-2 block text-sm text-[#546E7A]'
+                      >
+                        {day}
+                      </label>
                     </div>
                   ))}
                 </div>
               </div>
             </div>
-            <div className="w-full">
+            <div className='w-full'>
               <InputWithLabel
-                name="direccion"
-                label="Dirección de tu negocio"
-                id="direccion"
-                placeholder="Ingresar dato"
+                name='direccion'
+                label='Dirección de tu negocio'
+                id='direccion'
+                placeholder='Ingresar dato'
                 value={address}
                 onChange={handleAddressChange}
               />
-              <button onClick={handleSearch} className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md">Buscar</button>
+              <button
+                onClick={handleSearch}
+                className='mt-2 px-4 py-2 bg-blue-500 text-white rounded-md'
+              >
+                Buscar
+              </button>
             </div>
-            <div className="aspect-video relative rounded-md overflow-hidden w-full" ref={mapDiv} style={{ height: '400px' }}></div>
+            <div
+              className='aspect-video relative rounded-md overflow-hidden w-full'
+              ref={mapDiv}
+              style={{ height: '400px' }}
+            ></div>
           </div>
         </div>
-        <div className="mt-8 flex flex-col md:flex-row justify-center md:justify-end space-y-4 md:space-y-0 md:space-x-4 w-full">
-          <StyledButton variant="blancoCuadrado">CANCELAR</StyledButton>
+        <div className='mt-8 flex flex-col md:flex-row justify-center md:justify-end space-y-4 md:space-y-0 md:space-x-4 w-full'>
+          <StyledButton variant='blancoCuadrado'>CANCELAR</StyledButton>
 
           <StyledButton onClick={handleSubmit}>Enviar</StyledButton>
-
         </div>
       </div>
     </>

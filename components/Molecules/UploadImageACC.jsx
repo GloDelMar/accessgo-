@@ -54,7 +54,7 @@ const UploadImageACC = () => {
 
   return (
     <div className="flex flex-col items-center space-y-4">
-      {/* Botón de archivo estilizado */}
+     
       <label
         htmlFor="file-upload"
         className="px-4 py-2 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600"
@@ -72,7 +72,7 @@ const UploadImageACC = () => {
       <button
         onClick={handleUpload}
         disabled={uploading || !image}
-        className={`px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none disabled:bg-gray-400`}
+        className={`mr-2flex justify-center py-5 px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none disabled:bg-gray-400`}
       >
         {uploading ? 'Subiendo...' : 'Subir'}
       </button>
