@@ -11,11 +11,6 @@ export const getHotelAccessibility = async (hotelId) => {
         'Content-Type': 'application/json',
       },
     });
-
-    if (!response.ok) {
-      throw new Error('Error al obtener el cuestionario de accesibilidad para el hotel');
-    }
-
     return await response.json();
   } catch (error) {
     console.error('Error:', error);
@@ -56,12 +51,6 @@ export const getRestaurantAccessibility = async (restaurantId) => {
         },
       });
 
-      
-  
-      if (!response.ok) {
-        throw new Error('Error al obtener el cuestionario de accesibilidad para el restaurante');
-      }
-  
       return await response.json();
     } catch (error) {
       console.error('Error:', error);

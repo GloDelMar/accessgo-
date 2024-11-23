@@ -105,7 +105,7 @@ const View23 = () => {
         `https://backend-r159.onrender.com/api/company/${companyId}`
       );
       const companyData = response.data.data.company;
-      console.log(companyData);
+    
 
       setFormValues({
         nombreComercial: companyData?.companyName || '',

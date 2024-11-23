@@ -3,6 +3,12 @@ import Link from 'next/link';
 import { Plus, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import { Line } from 'react-chartjs-2';
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import { Plus, Trash2 } from "lucide-react";
+import Image from "next/image";
+import { Line } from "react-chartjs-2";
+import axios from "axios";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -20,6 +26,13 @@ import { getCommentsByCompanyId } from './api/api_comment';
 
 import UploadImageACC from '@/components/Molecules/UploadImageACC';
 import ImageCarouselACC from '@/components/Molecules/ImageCarouselACC';
+  Legend,
+} from "chart.js";
+import { getCompanyById } from "@/pages/api/api_company";
+import router from "next/router";
+import { getBusinessAverageRanking } from "./api/api_ranking";
+import { getCommentsByCompanyId } from "./api/api_comment";
+import  EstadisticasVisitas from "../components/Molecules/Estadisticas"
 
 ChartJS.register(
   CategoryScale,
@@ -110,6 +123,7 @@ const ProfileVisitsChart = () => {
   );
 };
 
+
 const SesionPremium = () => {
   const [companyData, setCompanyData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -120,6 +134,15 @@ const SesionPremium = () => {
   const [comments, setComments] = useState([]);
   // const [selectedImages, setSelectedImages] = useState([null, null, null, null]);
 
+  const [selectedImages, setSelectedImages] = useState([null, null, null, null]);
+  const [rango, setRango] = useState('semana');  ;
+  
+  const handleRangoChange = (event) => {
+    setRango(event.target.value);
+  };
+
+
+  
   const handleSubmit = (event) => {
     event.preventDefault();
     const formImage = selectedImages.map((image, index) => ({
@@ -169,7 +192,8 @@ const SesionPremium = () => {
       }
     }
   }, []);
-
+  
+  
   useEffect(() => {
     const fetchCompanyData = async () => {
       if (!companyId) return;
@@ -332,6 +356,29 @@ const SesionPremium = () => {
         <div className='flex flex-row justify-center mt-4 space-x-4 md:space-x-[200px]'>
           <button className='w-[155px] h-[40px] bg-white border-2 rounded-lg'>
             <Link legacyBehavior href='/vista-prem'>
+        
+        <Table title="Todos tus Eventos" comments={eventComments} headers={['EVENTO', 'FECHA', 'HORARIO']} />
+        <Table title="Todas tus Promociones" comments={promotionComments} headers={['PROMOCIÓN', 'FECHA', 'HORARIO']} />
+        <Table title="Tu Menú" comments={menuComments} headers={['PLATILLO', 'FECHA', 'HORARIO']} />
+        
+        <div>
+      <h3 className="text-2xl text-center font-semibold my-8 text-[#2F4F4F]">Estas son las estadísticas de visitas a tu perfil de AccessGo Premium</h3>
+      
+      {/* Componente de estadísticas pasando 'rango' como prop */}
+      <EstadisticasVisitas rango={rango} />
+      
+      {/* Selector de rango */}
+      <select value={rango} onChange={handleRangoChange}>
+        <option value="semana">Semana</option>
+        <option value="mes">Mes</option>
+        <option value="año">Año</option>
+      </select>
+    </div>
+
+  
+        <div className="flex flex-row justify-center mt-4 space-x-4 md:space-x-[200px]">
+          <button className="w-[155px] h-[40px] bg-white border-2 rounded-lg">
+            <Link legacyBehavior href="/vista-prem">
               <a>Cancelar</a>
             </Link>
           </button>

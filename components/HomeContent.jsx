@@ -19,7 +19,7 @@ const HomeContent = () => {
     getAllCompanies()
       .then((companyData) => {
         setCompanies(companyData);
-        setFilteredCompanies(companyData.slice(-6));
+        setFilteredCompanies(companyData.slice(-4)); 
         setLoading(false);
       })
       .catch((error) => {
@@ -27,6 +27,7 @@ const HomeContent = () => {
         setLoading(false);
       });
   }, []);
+
 
   const handleCardClick = () => {
     router.push(`/socios`);
@@ -95,7 +96,7 @@ const HomeContent = () => {
             <div
               key={company._id}
               onClick={handleCardClick}
-              className="relative rounded-lg w-[200px] h-[241px] shadow-md overflow-hidden cursor-pointer"
+              className="relative rounded-lg w-[200px] h-[241px] shadow-md overflow-hidden cursor-pointer transition-transform transform hover:shadow-[0_0_15px_5px_#2F4F4F] hover:scale-105"
             >
               <Image
                 src={company.profilePicture || '/4574c6_19f52cfb1ef44a3d844774c6078ffafc~mv2.png'}
@@ -151,6 +152,7 @@ const HomeContent = () => {
             </div>
           ))}
         </Carousel>
+
       </div>
       <div className="mt-[40px] mx-2 ">
         <h3 className="text-2xl text-center md:text-left font-bold mb-2">Y también para ti, que buscas ser parte del cambio:</h3>
