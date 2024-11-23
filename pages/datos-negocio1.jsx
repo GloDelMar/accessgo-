@@ -5,6 +5,7 @@ import mapboxgl from 'mapbox-gl';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { updateCompany } from "./api/api_company";
+import UploadImageCPP from '@/components/Molecules/UploadImageCPP';
 import Image from 'next/image';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiYWNjZXNnbyIsImEiOiJjbTI4NGVjNnowc2RqMmxwdnptcXAwbmhuIn0.0jG0XG0mwx_LHjdJ23Qx4A';
@@ -19,6 +20,17 @@ const View23 = () => {
   const [marker, setMarker] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [latitude, setLatitude] = useState(null);
+  const [companyId, setCompanyId] = useState(null);
+
+  useEffect(() => {
+    const companyIdFromLocalStorage = localStorage.getItem("userId");
+    if (companyIdFromLocalStorage) {
+      setCompanyId(companyIdFromLocalStorage);
+    } else {
+      console.error("No se encontró el ID de la empresa en localStorage");
+    }
+  }, []);
+
   const router = useRouter();
 
   const [formValues, setFormValues] = useState({
@@ -28,7 +40,7 @@ const View23 = () => {
     representanteLegal: '',
     giro: '',
     horario: {
-      apertura: '',
+      abre: '',
       cierre: ''
     },
     descripcion: ''
@@ -69,32 +81,31 @@ const View23 = () => {
     }
   }, [latitude, longitude]);
 
-
   const fetchCompanyData = async () => {
     const companyId = localStorage.getItem("userId");
     if (!companyId) return;
 
     try {
-      const response = await axios.get(`https://api-ag.devthings.wiki/api/company/${companyId}`);
+      const response = await axios.get(`https://backend-r159.onrender.com/api/company/${companyId}`);
       const companyData = response.data.data.company;
-      console.log(companyData);
+    
 
       setFormValues({
-        nombreComercial: companyData.companyName || '',
-        rfc: companyData.rfc || '',
-        representanteLegal: companyData.representanteLegal || '',
-        giro: companyData.giro || '',
+        nombreComercial: companyData?.companyName || '',
+        rfc: companyData?.rfc || '',
+        representanteLegal: companyData?.representanteLegal || '',
+        giro: companyData?.giro || '',
         horario: {
-          apertura: companyData.horario.abre || '',
-          cierre: companyData.horario.cierra || ''
+          abre: companyData.horario?.abre || '',
+          cierre: companyData.horario?.cierra || ''
         },
-        descripcion: companyData.description || ''
+        descripcion: companyData?.description || ''
       });
-      setAddress(companyData.address || '');
-      setSelectedDays(companyData.diasDeServicio || []);
+      setAddress(companyData?.address || '');
+      setSelectedDays(companyData?.diasDeServicio || []);
 
-      setLatitude(companyData.latitude);
-      setLongitude(companyData.longitude);
+      setLatitude(companyData?.latitude);
+      setLongitude(companyData?.longitude);
 
 
     } catch (error) {
@@ -115,15 +126,18 @@ const View23 = () => {
     try {
       const { latitude, longitude } = await getCoordinates(address);
 
+      setLatitude(latitude);
+      setLongitude(longitude);
+
       mapRef.current.flyTo({ center: [longitude, latitude], zoom: 14 });
 
-      if (marker) {
-        marker.setLngLat([longitude, latitude]);
+      if (markerRef.current) {
+        markerRef.current.setLngLat([longitude, latitude]);
       } else {
         const newMarker = new mapboxgl.Marker()
           .setLngLat([longitude, latitude])
           .addTo(mapRef.current);
-        setMarker(newMarker);
+        markerRef.current = newMarker;
       }
     } catch (error) {
       console.error(error.message);
@@ -155,7 +169,7 @@ const View23 = () => {
       representanteLegal: formValues.representanteLegal,
       giro: formValues.giro,
       horario: {
-        abre: formValues.horario.apertura,
+        abre: formValues.horario.abre,
         cierra: formValues.horario.cierre,
       },
       diasDeServicio: selectedDays,
@@ -168,7 +182,7 @@ const View23 = () => {
     };
 
     try {
-      console.log("Enviando datos de la compañía:", formData);
+    
       const response = await updateCompany(companyId, formData);
       console.log("Respuesta de actualización:", response);
 
@@ -203,8 +217,13 @@ const View23 = () => {
               ) : (
                 <Image src="/iconoframe.png" alt="Foto de perfil" width={200} height={200} className="rounded-full" />
               )}
-              <input type="file" id="imgUsuario" className="hidden" onChange={handleImageChange} />
             </label>
+          
+        
+
+         {/* Esto es para la subida de imagenes a aws */}
+        <UploadImageCPP companyId={companyId} setSelectedImage={setSelectedImage} /> 
+          
             </div>
           </div>
 
@@ -258,9 +277,9 @@ const View23 = () => {
                 <div className="flex items-center space-x-2 w-full">
                   <input
                     type="time"
-                    name="horarioApertura"
-                    value={formValues.horario.apertura}
-                    onChange={(e) => setFormValues(prev => ({ ...prev, horario: { ...prev.horario, apertura: e.target.value } }))}
+                    name="horarioAbre"
+                    value={formValues.horario.abre}
+                    onChange={(e) => setFormValues(prev => ({ ...prev, horario: { ...prev.horario,  abre: e.target.value } }))}
                     className="flex-1 px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50"
                   />
                   <span className="text-[#546E7A]">a</span>

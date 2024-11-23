@@ -11,26 +11,39 @@ import { getAllCompanies } from "@/pages/api/api_company";
 const HomeContent = () => {
   const [companies, setCompanies] = useState([])
   const [filteredCompanies, setFilteredCompanies] = useState([]);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
+    setLoading(true);
     getAllCompanies()
       .then((companyData) => {
         setCompanies(companyData);
-        setFilteredCompanies(companyData.slice(-6)); 
+        setFilteredCompanies(companyData.slice(-4)); 
+        setLoading(false);
       })
       .catch((error) => {
         console.error("[getCompanies error]", error);
+        setLoading(false);
       });
   }, []);
+
 
   const handleCardClick = () => {
     router.push(`/socios`);
   };
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col text-[#2F4F4F] w-full p-4 justify-center font-sans">
-<div className="flex flex-col md:items-center md:flex-row gap-4 mx-[40px] p-2 text-[#2F4F4F]">
+      <div className="flex flex-col md:items-center md:flex-row gap-4 mx-[40px] p-2 text-[#2F4F4F]">
         <div className="flex-1 text-center md:text-left mt-[10px]">
           <p className="text-center mt-[8px] md:text-left">Encuentra tu lugar favorito</p>
           <h1 className="text-4xl font-bold mb-2">¡Bienvenido a AccessGo!</h1>
@@ -47,10 +60,10 @@ const HomeContent = () => {
           />
         </div>
       </div>
-<div className="mx-2 mt-[40] md:mx-[25px]">
+      <div className="mx-2 mt-[40] md:mx-[25px]">
         <h3 className="text-2xl text-center md:text-left font-bold mb-2">Visita a nuestros socios</h3>
         <p className="text-center mt-3 md:text-left">Para ti, que buscas un lugar para pasar un buen rato:</p>
-         <div className="hidden lg:hidden md:grid md:grid-cols-3 md:grid-rows-2 gap-4 justify-center mt-[51px] mb-4">
+        <div className="hidden lg:hidden md:grid md:grid-cols-3 md:grid-rows-2 gap-4 justify-center mt-[51px] mb-4">
           {filteredCompanies.slice(-6).map((company) => (
             <div
               key={company._id}
@@ -83,7 +96,7 @@ const HomeContent = () => {
             <div
               key={company._id}
               onClick={handleCardClick}
-              className="relative rounded-lg w-[200px] h-[241px] shadow-md overflow-hidden cursor-pointer"
+              className="relative rounded-lg w-[200px] h-[241px] shadow-md overflow-hidden cursor-pointer transition-transform transform hover:shadow-[0_0_15px_5px_#2F4F4F] hover:scale-105"
             >
               <Image
                 src={company.profilePicture || '/4574c6_19f52cfb1ef44a3d844774c6078ffafc~mv2.png'}
@@ -108,37 +121,38 @@ const HomeContent = () => {
         </div>
       </div>
       <div className="md:hidden mt-[40px] flex justify-center">
-      <Carousel>
-        {filteredCompanies.map((company, index) => (
-          <div
-            key={index}
-            onClick={handleCardClick}
-            className="relative border rounded-md w-[90%] max-w-[200px] mx-auto h-[251px] overflow-hidden cursor-pointer"
-          >
-            <Image 
-              src={company.profilePicture || '/4574c6_19f52cfb1ef44a3d844774c6078ffafc~mv2.png'}
-              alt={`Imagen de ${company.companyName}`}
-              layout="fill"
-              objectFit="cover"
-              className="w-full h-[251px]"
-            />
-            <div className="absolute bottom-0 left-0 p-2 bg-gradient-to-t from-black to-transparent w-full text-white">
-              <h4 className="text-[15px] font-bold">{company.companyName}</h4>
-              <div className="flex items-center mb-1">
-                {[...Array(company.rating || 0)].map((_, i) => (
-                  <img 
-                    key={i} 
-                    src="/estrellita.svg" 
-                    alt="star" 
-                    className="w-4 h-4 mr-[3px]" 
-                  />
-                ))}
+        <Carousel>
+          {filteredCompanies.map((company, index) => (
+            <div
+              key={index}
+              onClick={handleCardClick}
+              className="relative border rounded-md w-[90%] max-w-[200px] mx-auto h-[251px] overflow-hidden cursor-pointer"
+            >
+              <Image
+                src={company.profilePicture || '/4574c6_19f52cfb1ef44a3d844774c6078ffafc~mv2.png'}
+                alt={`Imagen de ${company.companyName}`}
+                layout="fill"
+                objectFit="cover"
+                className="w-full h-[251px]"
+              />
+              <div className="absolute bottom-0 left-0 p-2 bg-gradient-to-t from-black to-transparent w-full text-white">
+                <h4 className="text-[15px] font-bold">{company.companyName}</h4>
+                <div className="flex items-center mb-1">
+                  {[...Array(company.rating || 0)].map((_, i) => (
+                    <img
+                      key={i}
+                      src="/estrellita.svg"
+                      alt="star"
+                      className="w-4 h-4 mr-[3px]"
+                    />
+                  ))}
+                </div>
+                <p className="text-[10px] mt-2">{company.giro || 'Información de accesibilidad no disponible'}</p>
               </div>
-              <p className="text-[10px] mt-2">{company.giro || 'Información de accesibilidad no disponible'}</p>
             </div>
-          </div>
-        ))}
-      </Carousel>
+          ))}
+        </Carousel>
+
       </div>
       <div className="mt-[40px] mx-2 ">
         <h3 className="text-2xl text-center md:text-left font-bold mb-2">Y también para ti, que buscas ser parte del cambio:</h3>

@@ -1,4 +1,4 @@
-const API_URL = 'https://desafio-react-back.onrender.com';
+const API_URL = 'https://backend-r159.onrender.com/';
 
 export async function login(email, password) {
   const response = await fetch(`${API_URL}/auth/login`, {
