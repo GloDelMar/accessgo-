@@ -73,26 +73,11 @@ export default function MapWithPlaces() {
 
     map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
-    // Add directions control with customization
     directions.current = new MapboxDirections({
       accessToken: mapboxgl.accessToken,
       unit: 'metric',
       profile: 'mapbox/driving',
     });
-
-    // Add the directions control to the map
-    map.current.addControl(directions.current, 'top-left');
-
-    // Apply custom styles to the directions container after it's added to the map
-    const directionsElement = document.querySelector('.mapbox-directions');
-    if (directionsElement) {
-      directionsElement.style.backgroundColor = '#ffffff'; // Set background color
-      directionsElement.style.borderRadius = '10px'; // Add rounded corners
-      directionsElement.style.padding = '10px'; // Add padding around the container
-      directionsElement.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)'; // Add shadow
-      directionsElement.style.maxWidth = '300px'; // Set a max width
-    }
-
 
     map.current.addControl(directions.current, 'top-right');
 
@@ -265,7 +250,7 @@ export default function MapWithPlaces() {
                   className="p-2 hover:bg-gray-100 cursor-pointer flex items-center"
                   onClick={() => {
                     centerMapOnPlace(company);
-                    setSearchQuery('');
+                    setSearchQuery(''); 
                   }}
                 >
                   <svg
