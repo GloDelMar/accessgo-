@@ -169,7 +169,7 @@ export default function CommentSection() {
         ) : error ? (
           <p className="text-red-500 text-center">{error}</p>
         ) : commentsWithStars.length > 0 ? (
-          <ul className="space-y-4"> {/* Añadimos separación entre tarjetas */}
+          <ul className="space-y-6"> {/* Añadimos separación entre tarjetas */}
             {commentsWithStars.map((comment) => (
               <li
                 key={comment._id}
