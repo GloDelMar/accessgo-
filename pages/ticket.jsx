@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import emailjs from "@emailjs/browser";
 import styled from "styled-components";
 
@@ -6,6 +6,7 @@ import styled from "styled-components";
 
 const Contact = () => {
   const form = useRef();
+  const [message, setMessage] = useState("");
 
   const sendEmail = (e) => {
     e.preventDefault();
@@ -21,9 +22,11 @@ const Contact = () => {
         (result) => {
           console.log(result.text);
           console.log("message sent");
+          setMessage("Ticket enviado con éxito.");
         },
         (error) => {
           console.log(error.text);
+          setMessage("Error al enviar el Ticket.");
         }
       );
   };
@@ -31,15 +34,18 @@ const Contact = () => {
   return (
     <StyledContactForm>
       <h1>Formulario Para Levantamiento de Ticket de Soporte Técnico</h1>
-      <form ref={form} onSubmit={sendEmail}>
+      <form ref={form} onSubmit={sendEmail} encType="multipart/form-data">
         <label>Name</label>
         <input type="text" name="to_name" required />
         <label>Email</label>
         <input type="email" name="from_name" required />
         <label>Message</label>
         <textarea name="message" required />
+        <label>Attach file:</label>
+        <input type="file" name="my_file" />
         <input type="submit" value="Send" />
       </form>
+      {message && <p>{message}</p>}
     </StyledContactForm>
   );
 };
@@ -67,6 +73,10 @@ const StyledContactForm = styled.div`
       }
     }
 
+    input[type="file"] {
+      margin-top: 1rem;
+    }
+
     input[type="submit"] {
       margin-top: 2rem;
       cursor: pointer;
@@ -82,6 +92,12 @@ const StyledContactForm = styled.div`
     font-weight: bold;
     text-align: center;
     margin-bottom: 2rem;
+  }
+
+  p {
+    text-align: center;
+    margin-top: 1rem;
+    color: green;
   }
 `;
 
