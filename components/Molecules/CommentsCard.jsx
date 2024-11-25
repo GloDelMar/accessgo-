@@ -169,10 +169,13 @@ export default function CommentsComponent() {
         ) : error ? (
           <p className="text-red-500 text-center">{error}</p>
         ) : commentsWithStars.length > 0 ? (
-          <ul>
+          <ul className="space-y-4"> {/* Añadimos separación entre tarjetas */}
             {commentsWithStars.map((comment) => (
-              <li key={comment._id} className="p-4 bg-white rounded shadow-md">
-                <div className="flex items-center">
+              <li
+                key={comment._id}
+                className="p-4 bg-white rounded shadow-md flex flex-col items-start"
+              >
+                <div className="flex items-center mb-2">
                   <img
                     src={comment.user?.profilePicture || defaultProfilePic}
                     alt="Foto de perfil"
@@ -182,20 +185,20 @@ export default function CommentsComponent() {
                     {comment.userId?.firstName || 'Nombre no disponible'}
                   </Link>
                 </div>
-                <p>{comment.content}</p>
-                <p className="text-gray-500 text-sm mt-1">
+                <p className="text-sm text-gray-700 mb-2">{comment.content}</p>
+                <p className="text-gray-500 text-xs mb-2">
                   {new Date(comment.createdAt).toLocaleDateString()}
                 </p>
-                <p className="text-center mt-2 text-gray-700 font-semibold">
-                  Calificación otorgada:
-                  <div className="flex justify-center mt-2">
+                <div className="flex justify-start items-center">
                   {[1, 2, 3, 4, 5].map((star) => (
-                    <span key={star} className={star <= comment.stars ? 'text-yellow-400' : 'text-gray-300'}>
+                    <span
+                      key={star}
+                      className={star <= comment.stars ? 'text-yellow-400' : 'text-gray-300'}
+                    >
                       ★
                     </span>
                   ))}
                 </div>
-</p>
               </li>
             ))}
           </ul>
