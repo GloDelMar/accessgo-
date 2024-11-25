@@ -21,6 +21,7 @@ const View23 = () => {
   const [longitude, setLongitude] = useState(null);
   const [latitude, setLatitude] = useState(null);
   const [companyId, setCompanyId] = useState(null);
+  const [phone, setPhone] = useState('')
 
   useEffect(() => {
     const companyIdFromLocalStorage = localStorage.getItem("userId");
@@ -43,7 +44,8 @@ const View23 = () => {
       abre: '',
       cierre: ''
     },
-    descripcion: ''
+    descripcion: '',
+    phone: ''
   });
 
   const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo', 'Todos los días'];
@@ -99,10 +101,12 @@ const View23 = () => {
           abre: companyData.horario?.abre || '',
           cierre: companyData.horario?.cierra || ''
         },
-        descripcion: companyData?.description || ''
+        descripcion: companyData?.description || '',
+        phone: companyData?.phone || ''
       });
       setAddress(companyData?.address || '');
       setSelectedDays(companyData?.diasDeServicio || []);
+   
 
       setLatitude(companyData?.latitude);
       setLongitude(companyData?.longitude);
@@ -175,10 +179,10 @@ const View23 = () => {
       diasDeServicio: selectedDays,
       description: formValues.descripcion,
       address: address,
-      phone: '',
+     phone: formValues.phone,
       latitude: markerRef.current ? markerRef.current.getLngLat().lat : latitude,
       longitude: markerRef.current ? markerRef.current.getLngLat().lng : longitude,
-      verified: false,
+      
     };
 
     try {
@@ -269,8 +273,7 @@ const View23 = () => {
                   <option>Giro de tu negocio</option>
                   <option value="HOTEL">HOTEL</option>
                   <option value="RESTAURANTE">RESTAURANTE</option>
-                  <option value="BAR">BAR</option>
-                </select>
+                  </select>
               </div>
               <div className="w-full">
                 <label htmlFor="horario" className="block text-sm font-medium text-[#546E7A] mb-1">Horario de servicio</label>
@@ -324,6 +327,16 @@ const View23 = () => {
               </div>
             </div>
             <div className="w-full">
+              <label htmlFor="persona-moral" className="block text-sm font-medium text-[#546E7A] mb-1">Teléfono</label>
+              <InputWithLabel
+                name="telefono del establecimiento"
+                id="phone"
+                placeholder="Ingresar dato"
+                value={formValues.phone}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className="w-full">
               <InputWithLabel
                 name="direccion"
                 label="Dirección de tu negocio"
@@ -340,7 +353,7 @@ const View23 = () => {
         <div className="mt-8 flex flex-col md:flex-row justify-center md:justify-end space-y-4 md:space-y-0 md:space-x-4 w-full">
           <StyledButton variant="blancoCuadrado">CANCELAR</StyledButton>
 
-          <StyledButton onClick={handleSubmit}>Enviar</StyledButton>
+          <StyledButton variant="blancoCuadrado" onClick={handleSubmit}>GUARDAR</StyledButton>
 
         </div>
       </div>

@@ -1,12 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import { toast } from "sonner";
 import EstablecimientoSlider from '@/components/Molecules/establesamientoSlider';
 import { getAllCompanies, getCompanyById } from './api/api_company';
-import EstablishmentSelect from '@/components/Molecules/establecimientoFiltrado'
+import EstablishmentSelect from '@/components/Molecules/establecimientoFiltrado';
 import Link from 'next/link';
 import { StyledButton } from '@/components/atoms/Index';
 import Image from 'next/image';
+import { getBusinessAverageRanking } from "./api/api_ranking";
 
 const View2 = () => {
   const [selectedEstablishment, setSelectedEstablishment] = useState('');
@@ -15,6 +16,7 @@ const View2 = () => {
   const [giroOptions, setGiroOptions] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const [averageRating, setAverageRating] = useState(0);
 
   useEffect(() => {
     const fetchCompanies = async () => {
@@ -38,13 +40,23 @@ const View2 = () => {
     fetchCompanies();
   }, []);
 
+  // Se ha añadido el id de empresa de forma condicional
+  const fetchAverageRating = useCallback(async (id) => {
+    if (!id) return;
+    try {
+      const avgData = await getBusinessAverageRanking(id);
+      setAverageRating(avgData.data.averageRating || 0);
+    } catch (error) {
+      console.error("Error al obtener el promedio:", error);
+    }
+  }, []);
+
   const handleEstablishmentChange = (e) => {
     const value = e.target.value;
     setSelectedEstablishment(value);
     const filtered = companies.filter(company => company.giro === value);
     setFilteredCompanies(filtered);
   };
-
 
   const handleCardClick = async (id) => {
     try {
@@ -64,8 +76,6 @@ const View2 = () => {
     }
   };
 
-
-
   const handleFilter = (filterType) => {
     let filteredData = [...companies];
 
@@ -80,7 +90,6 @@ const View2 = () => {
         break;
     }
 
-   
     setFilteredCompanies(filteredData);
   };
 
@@ -94,7 +103,7 @@ const View2 = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
- <h1 className="text-4xl font-bold mb-2 text-[#2F4F4F]">Visita a nuestros socios</h1>
+      <h1 className="text-4xl font-bold mb-2 text-[#2F4F4F]">Visita a nuestros socios</h1>
       <p className="text-center mt-3 mb-3 md:text-left">Para ti, que buscas un lugar para pasar un buen rato:</p>
       <div className="flex flex-wrap space-y-4 sm:space-y-0 sm:space-x-4 mb-8 justify-center sm:justify-start">
         <EstablishmentSelect options={giroOptions} onChange={handleEstablishmentChange} />
@@ -104,13 +113,16 @@ const View2 = () => {
         <button onClick={() => handleFilter('rating')} className="w-full sm:w-auto px-4 py-2 border border-[#EDE6D7] font-semibold text-[#2F4F4F] rounded-full">
           Mejor calificados
         </button>
+        <Link legacyBehavior href="/busca-en-el-mapa">
+          <StyledButton className="hidden md:block" variant="verdeCurvo">Buscar en el mapa</StyledButton>
+        </Link>
       </div>
 
       <div className="fixed bottom-4 right-4">
         <button
           className="rounded-full bg-white shadow-lg w-16 h-16 flex items-center justify-center hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
           aria-label="Ver establecimientos cercanos"
-          onClick={() => router.push('/MapWithPlaces')} 
+          onClick={() => router.push('/MapWithPlaces')}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -128,11 +140,10 @@ const View2 = () => {
 
       {/* Elimina los botones de filtro temporalmente */}
       <div className="md:hidden mt-4">
-      <EstablecimientoSlider
-  companies={filteredCompanies}
-  onCardClick={handleCardClick}
-/>
-
+        <EstablecimientoSlider
+          companies={filteredCompanies}
+          onCardClick={handleCardClick}
+        />
       </div>
 
       <div className="hidden md:grid grid-cols-1 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-12 justify-items-center sm:justify-items-start">
@@ -140,7 +151,7 @@ const View2 = () => {
           <div
             key={company._id}
             onClick={() => handleCardClick(company._id)} // Llama a la función con el id de la empresa
-             className="relative rounded-lg w-[200px] h-[241px] shadow-md overflow-hidden cursor-pointer transition-transform transform hover:shadow-[0_0_15px_5px_#2F4F4F] hover:scale-105"
+            className="relative rounded-lg w-[200px] h-[241px] shadow-md overflow-hidden cursor-pointer transition-transform transform hover:shadow-[0_0_15px_5px_#2F4F4F] hover:scale-105"
           >
             <Image
               src={company.profilePicture || '/4574c6_19f52cfb1ef44a3d844774c6078ffafc~mv2.png'}
@@ -152,12 +163,17 @@ const View2 = () => {
             <div className="relative p-4 w-[215px] h-[256px] bg-black bg-opacity-50 flex flex-col justify-end">
               <h3 className="text-lg font-semibold text-white">{company.companyName}</h3>
               <div className="flex items-center mt-2">
-                {[...Array(company.rating || 0)].map((_, i) => (
-                  <svg key={i} className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 24 24">
-                    <path d="M12</svg> 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z" />
+                {Array.from({ length: company.averageRating || 0 }).map((_, i) => (
+                  <svg
+                    key={i}
+                    className="w-5 h-5 text-yellow-400 fill-current"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z" />
                   </svg>
                 ))}
               </div>
+
               <p className="text-sm text-white mt-2">{company.giro || 'Información de accesibilidad no disponible'}</p>
             </div>
           </div>
@@ -169,17 +185,11 @@ const View2 = () => {
           <StyledButton variant="verdeCurvo">¿Quieres ser voluntario?</StyledButton>
         </Link>
         <Link legacyBehavior href="/donaciones">
-          <StyledButton className="hidden md:block" variant="verdeCurvo">¿Quieres hacer un donativo?</StyledButton>
+          <StyledButton className="hidden md:block" variant="verdeCurvo">¿Quieres donar?</StyledButton>
         </Link>
       </div>
-
-      <h2 className="text-2xl font-bold text-center text-gray-800 mt-16 mb-12">
-        ¡Juntos podemos hacer del mundo un lugar<br />más accesible para todos!
-      </h2>
     </div>
   );
 };
 
 export default View2;
-
-

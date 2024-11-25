@@ -1,11 +1,12 @@
-const API_URL = "https://backend-r159.onrender.com";
+const API_URL = "http://localhost:8080";
 
-export const createComment = async (userId, content, businessId) => {
+export const createComment = async (userId, content, businessId, rankingId) => {
     try {
         const body = {
             userId,
             content,
-            businessId
+            businessId,
+            rankingId
        };
 
        console.log("Datos enviados:", body);
@@ -53,25 +54,25 @@ export function getCommentByUserId(userId) {
     });
 }
 
-// Obtener comentarios por `companyId`
-export function getCommentsByCompanyId(companyId) {
+
+export async function getCommentsByCompanyId(companyId) {
     
-    return fetch(`${API_URL}/api/comments/company/${companyId}`, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-        }
-    })
-    .then(response => {
+    try {
+        const response = await fetch(`${API_URL}/api/comments/company/${companyId}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
+        console.log("respuesta de getbycompany :", response)
         if (!response.ok) {
             throw new Error(`Error fetching comment with user ID ${companyId}`);
         }
-        return response.json();
-    })
-    .catch(error => {
+        return await response.json();
+    } catch (error) {
         console.error("Error al obtener el comentario:", error.message);
         throw error;
-    });
+    }
     
     
     

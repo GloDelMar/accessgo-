@@ -66,7 +66,7 @@ const Voluntario = () => {
       <p className="text-lg text-center">
         <strong>En AccesoGo,</strong> creemos que ser voluntario es una manera más de apoyar a las Personas con Discapacidad y contribuir a una Comunidad Inclusiva.
       </p>
-
+<div>
       <section>
         <h2 className="text-2xl font-semibold mb-4">Detalles de la Asociación</h2>
         <div className="grid grid-cols-1 gap-4">
@@ -100,7 +100,7 @@ const Voluntario = () => {
           />
         </div>
       </section>
-
+</div>
       <section>
         <button
           onClick={handleSubmit}

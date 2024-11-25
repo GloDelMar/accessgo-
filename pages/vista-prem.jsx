@@ -1,13 +1,16 @@
 
 import React, { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
-import axios from "axios";
 import { useRouter } from "next/router";
 import { getCompanyById } from "./api/api_company";
 import { getBusinessAverageRanking } from "./api/api_ranking";
 import CommentSection from "../components/Molecules/CommentsCard";
 import AccessVisibility from "@/components/Molecules/muestraAccess";
-import {contarVisita} from "./api/api_visits"
+import { contarVisita } from "./api/api_visits"
+import { getPromoByCompanyId } from "./api/api_promos";
+
+
+const defaultProfilePic = "public/6073873.png"
 
 export default function CardFree() {
   const router = useRouter();
@@ -15,15 +18,16 @@ export default function CardFree() {
   const [averageRating, setAverageRating] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [promociones, setPromociones] = useState(null);
 
   const { id } = router.query;
- 
+
   useEffect(() => {
     if (id) {
-      contarVisita(id, `vista-prem/${id}`); 
-     
-        }
-  }, [id]); // El hook se ejecutará solo cuando 'id' cambie
+      contarVisita(`vista-prem/${id}`, id);
+
+    }
+  }, [id]);
 
   const fetchAverageRating = useCallback(async () => {
     if (!id) return;
@@ -44,6 +48,8 @@ export default function CardFree() {
         setCompanyData(data);
 
         await fetchAverageRating();
+        const promocionesData = await getPromoByCompanyId(id);
+        setPromociones(promocionesData.data || []);
       } catch (error) {
         console.error(error);
         setError("Error al cargar los datos.");
@@ -77,19 +83,26 @@ export default function CardFree() {
         />
       </div>
 
-     
+
       <section className="flex flex-col justify-between p-2 md:flex-row lg:flex-row w-full mt-4">
         <div className="flex flex-col">
-          <p className="w-full h-[40px] text-[#7E952A] text-[20px] md:text-2xl lg:text-3xl font-semibold">
-            {companyData?.data?.company?.companyName || "Información no disponible."}
-          </p>
-          <div className="flex flex-rows ml-2 mb-2">
+          <div className="flex max-w-[500] items-center mb-2">
+            <img
+              src={companyData?.data?.company?.profilePicture || "public/6073873.png"}
+              alt="Foto de perfil"
+              className="w-10 h-10 rounded-full p-2"
+            />
+            <p className="w-full text-[#7E952A] text-[20px] md:text-2xl lg:text-3xl font-semibold break-words">
+              {companyData?.data?.company?.companyName || "Información no disponible."}
+            </p>
+          </div>
+          {/* Las estrellas siempre estarán debajo del nombre */}
+          <div className="flex items-center gap-1 ml-2 mb-2">
             {[1, 2, 3, 4, 5].map((star) => (
               <Image
                 key={star}
-                className={`w-[15px] h-[20px] md:w-[18px] md:h-[23px] lg:w-[20px] lg:h-[25px] ${
-                  star <= Math.round(averageRating) ? "opacity-100" : "opacity-30"
-                }`}
+                className={`w-[15px] h-[20px] md:w-[18px] md:h-[23px] lg:w-[20px] lg:h-[25px] ${star <= Math.round(averageRating) ? "opacity-100" : "opacity-30"
+                  }`}
                 src="/estrellita.svg"
                 alt="Estrella"
                 width={20}
@@ -97,6 +110,7 @@ export default function CardFree() {
               />
             ))}
           </div>
+          {/* Textos adicionales */}
           <p className="w-full md:w-3/4 text-xs text-[#455A64] lg:text-md mt-2">
             {companyData?.data?.company?.giro || "Información no disponible."}
           </p>
@@ -105,99 +119,119 @@ export default function CardFree() {
           </p>
         </div>
 
-        <div>
+        <div className="">
           <p className="text-[10.5px] md:text-[12px] lg:text-sm text-[#607D8B] mt-2">
             Horarios
           </p>
-          <div className="flex flex-row mt-2">
-            <Image src="/calendarVector.png" alt="ícono de calendario" width={16} height={14} />
-            <div className="flex flex-row text-[12px] md:text-sm lg:text-base text-[#546E7A] ml-2">
+
+          {/* Días de servicio */}
+          <div className="flex items-start items-center gap-2 mt-2">
+            <Image
+              src="/calendarVector.png"
+              alt="ícono de calendario"
+              width={14}
+              height={16}
+              className="flex-shrink-0" // Evita que cambie su tamaño
+            />
+            <div className="text-[12px] md:text-sm lg:text-base text-[#546E7A]">
               {(companyData?.data?.company?.diasDeServicio || []).join(", ") || "Información no disponible."}
             </div>
           </div>
 
-          <div className="flex flex-row mt-2">
-            <Image src="/clockOpeningVector.png" alt="ícono de reloj para hora de iniciar" width={16} height={14} />
-            <p className="text-[12.6px] md:text-sm lg:text-base text-[#546E7A] ml-2">
+          {/* Hora de apertura */}
+          <div className="flex items-start items-center gap-2 mt-2">
+            <Image
+              src="/clockOpeningVector.png"
+              alt="ícono de reloj para hora de iniciar"
+              width={14}
+              height={16}
+              className="flex-shrink-0"
+            />
+            <p className="text-[12.6px] md:text-sm lg:text-base text-[#546E7A]">
               {companyData?.data?.company?.horario?.abre || "Información no disponible."}
             </p>
           </div>
 
-          <div className="flex flex-row mt-2">
-            <Image src="/clockClosingVector.png" alt="ícono de reloj para hora de salida" width={16} height={14} />
-            <p className="text-[12.6px] text-[#546E7A] md:text-sm lg:text-base ml-2">
+          {/* Hora de cierre */}
+          <div className="flex items-start items-center gap-2 mt-2">
+            <Image
+              src="/clockClosingVector.png"
+              alt="ícono de reloj para hora de salida"
+              width={14}
+              height={16}
+              className="flex-shrink-0"
+            />
+            <p className="text-[12.6px] text-[#546E7A] md:text-sm lg:text-base">
               {companyData?.data?.company?.horario?.cierra || "Información no disponible."}
             </p>
           </div>
         </div>
+
       </section>
 
       <div className="w-full flex flex-col justify-center items-center mt-8">
-        <div className="border p-3 rounded mt-4 bg-[#ECEFF1] w-[290px] md:w-full  justify-center flex items-center text-[#455A64]">
-          <h4 value="Place">{companyData?.data?.company?.address || "Información no disponible."}</h4>
+        <div className="border p-3 rounded mt-4 bg-[#ECEFF1] w-[290px]  md:w-full  justify-center flex flex-col items-center text-[#455A64]">
+          <h4 value="Place" className="text-[#546E7A] font-semibold">Dirección:</h4>
+          <p className="text-center"> {companyData?.data?.company?.address || "Información no disponible."}</p>
+          <h4 value="Place" className="text-[#546E7A] font-semibold mt-3">Teléfono:</h4>
+          <p className="text-center"> {companyData?.data?.company?.phone || "Información no disponible."}</p>
         </div>
-
         <div >
-        <AccessVisibility companyId={id} />
+          <AccessVisibility companyId={id} />
         </div>
       </div>
 
-      <section className='w-full flex flex-col mt-6'>
-        <p className='text-2xl lg:text-3xl text-[#7E952A] text-center'>
-          ¡Este mes para ti!
-        </p>
+      <div className='w-full flex flex-col mt-6'>
+          <div className="max-w-xxl mx-auto bg-white shadow-md rounded-lg overflow-hidden border border-gray-200 mt-4">
+            <div className="bg-[#2F4F4F] text-white p-4">
+              <h2 className="text-2xl lg:text-3xl text-center">
+              ¡Checa estas promociones!
+              </h2>
+            </div>
+            <div className="p-4">
+                {/* Indicador de carga */}
+                {loading && <div className="text-center">Cargando promociones...</div>}
 
-        <div className='border border-[#CFD8DC] rounded-md mt-6 md:flex md:flex-row lg:flex lg:flex-row'>
-          <div className='grid grid-cols-4 md:mb-4 md:flex md:flex-col md:justify-center md:items-center md:w-1/3 justify-center items-center mt-8 md:mt-12 lg:mt-16'>
-            <img
-              className='col-start-2 col-end-3 place-self-end md:place-self-center w-[79px] h-[72px] rounded-lg'
-              src='raultemporaryImages/offerImg.png'
-              alt=''
-            />
-            <p className='md:tex-base lg:text-xl col-start-3 col-end-4 text-sm ml-4 md:ml-0'>Promocion</p>
+                {/* Error */}
+                {error && <div className="text-red-500">{error}</div>}
+
+                {/* Lista de promociones */}
+                {!loading && promociones && promociones.length === 0 && (
+                  <div className="text-gray-500">No hay promociones disponibles.</div>
+                )}
+
+                {!loading && promociones && promociones.length > 0 && (
+                  <ul className="space-y-6">
+                    {promociones.map((promocion) => (
+                      <li
+                        key={promocion._id}
+                        className="p-6 border rounded-lg shadow-sm bg-[#F5F0E5] flex flex-col md:flex-row justify-between items-start md:items-center"
+                      >
+                        {/* Información de la promoción */}
+                        <div className="flex-1">
+                          <h4 className="text-xl font-bold  mb-2">
+                            {promocion.name || "Sin título"}
+                          </h4>
+                          <p className="mb-2 text-gray-700">
+                            {promocion.description || "Sin descripción"}
+                          </p>
+                          <span className="text-sm text-gray-500">
+                            Fecha de vencimiento:{" "}
+                            {promocion.endDate
+                              ? new Date(promocion.endDate).toLocaleDateString()
+                              : "Sin fecha"}
+                          </span>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+            </div>
           </div>
-          <p className='md:w-2/3 md:text-left md:pl-2 md:place-self-center text-xs lg:text-base text-center mt-6 h-[67px] bg-[#F9F9F9] mx-1 mb-3 rounded-md pt-2'>
-            solo este mes las mejores promociones para ti
-          </p>
         </div>
-
-        <div className='border border-[#CFD8DC] rounded-md mt-6 md:flex md:flex-row lg:flex lg:flex-row'>
-          <div className='grid grid-cols-4 md:mb-4 md:flex md:flex-col md:justify-center md:items-center md:w-1/3 lg:mb-4 lg:flex lg:flex-col lg:justify-center lg:items-center lg:w-1/3 justify-center items-center mt-8 md:mt-12 lg:mt-16'>
-            <img
-              className='col-start-2 col-end-3 place-self-end md:place-self-center lg:place-self-center w-[79px] h-[72px] rounded-lg'
-              src='raultemporaryImages/promoImg.png'
-              alt=''
-            />
-            <p className='col-start-3 col-end-4 text-sm md:tex-base lg:text-xl ml-4 md:ml-0'>Oferta</p>
-          </div>
-          <p className='md:w-2/3 md:text-left md:pl-2 md:place-self-center lg:w-2/3 lg:text-left lg:pl-2 lg:place-self-center text-xs lg:text-base text-center mt-6 h-[67px] bg-[#F9F9F9] mx-1 mb-3 rounded-md pt-2'>
-            solo este mes las mejores promociones para ti
-          </p>
-        </div>
-
-        <div className='border border-[#CFD8DC] rounded-md mt-6 md:flex md:flex-row'>
-          <div className='grid grid-cols-4 md:mb-4 md:flex md:flex-col md:justify-center md:items-center md:w-1/3 justify-center items-center mt-8 md:mt-12 lg:mt-16'>
-            <img
-              className='col-start-2 col-end-3 place-self-end md:place-self-center w-[79px] h-[72px] rounded-lg'
-              src='raultemporaryImages/menuImg.png'
-              alt=''
-            />
-            <p className='md:tex-base lg:text-xl col-start-3 col-end-4 text-sm ml-4 md:ml-0'>Menu</p>
-          </div>
-          <p className='md:w-2/3 md:text-left md:pl-2 md:place-self-center text-xs lg:text-base text-center mt-6 h-[67px] bg-[#F9F9F9] mx-1 mb-3 rounded-md pt-2'>
-            solo este mes las mejores promociones para ti
-          </p>
-        </div>
-
-        
-
-        
-      </section>
-
-      
 
       <section className='w-full h-full mt-6 flex flex-col '>
-      <CommentSection onNewRating={fetchAverageRating} />
+        <CommentSection onNewRating={fetchAverageRating} />
       </section>
     </div>
   );

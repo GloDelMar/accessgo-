@@ -1,17 +1,14 @@
 
 
-const API_URL = "https://backend-r159.onrender.com";
+const API_URL = "http://localhost:8080";
 
 export const createCompany = async (email, password, type) => {
     try {
-        // Construir el objeto con la estructura solicitada
         const body = {
           email,
           password,
           type,
         };
-    
-           // Realizar la solicitud de registro
         const response = await fetch(`${API_URL}/api/company`, {
           method: 'POST',
           headers: {
@@ -29,28 +26,25 @@ export const createCompany = async (email, password, type) => {
           throw new Error(errorMessage);
         }
     
-        return await response.json(); // Devolver los datos de la cuenta creada
       } catch (error) {
         console.error("Error en la solicitud de registro:", error.message);
-        throw error; // Propagar el error al frontend
+        throw error;
       }
     };
     
 
 
-export function getCompanyById(id){
-    return fetch (`${API_URL}/api/company/${id}`, {
+export async function getCompanyById(id){
+    const response = await fetch(`${API_URL}/api/company/${id}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
         },
-    })
-    .then(response =>{
-        if(!response.ok){
-            throw new Error (`Error fetching company with id ${id}`);
-        }
-        return response.json();
-    })
+    });
+    if (!response.ok) {
+        throw new Error(`Error fetching company with id ${id}`);
+    }
+    return await response.json();
 }
 
 
