@@ -8,7 +8,7 @@ import Link from 'next/link';
 
 const defaultProfilePic = '/6073873.png';
 
-export default function CommentsComponent() {
+export default function CommentSection() {
   const router = useRouter();
   const { id: companyId } = router.query;
 
@@ -38,7 +38,6 @@ export default function CommentsComponent() {
   useEffect(() => {
     const fetchCommentsAndRankings = async () => {
       if (!companyId) return;
-
       setLoading(true);
       try {
         const commentsData = await getCommentsByCompanyId(companyId);
@@ -85,7 +84,7 @@ export default function CommentsComponent() {
 
       const ratingResponse = await createRanking(rankingData);
       const rankingId = ratingResponse.data._id;
-
+     
       await createComment(userId, comment, companyId, rankingId);
 
       setComment('');
@@ -111,11 +110,12 @@ export default function CommentsComponent() {
   const handleCheckboxChange = (e) => {
     setIsChecked(e.target.checked);
   };
+ 
+  const commentsWithStars = commentList.map((comment) => ({
+    ...comment,
+    stars: comment.rankingId?.stars || 0,
+  }));
 
-  const commentsWithStars = commentList.map((comment) => {
-    const ranking = rankingList.find((ranking) => ranking._id === comment.rankingId);
-    return { ...comment, stars: ranking?.stars || 0 };
-  });
 
   return (
     <div className="w-full text-[#2F4F4F] h-full mt-2 flex flex-col p-2 max-w-screen-sm md:p-4 lg:p-8">
@@ -185,20 +185,20 @@ export default function CommentsComponent() {
                     {comment.userId?.firstName || 'Nombre no disponible'}
                   </Link>
                 </div>
-                <p className="text-sm text-gray-700 mb-2">{comment.content}</p>
-                <p className="text-gray-500 text-xs mb-2">
+                <p>{comment.content}</p>
+                <p className="text-gray-500 text-sm mt-1">
                   {new Date(comment.createdAt).toLocaleDateString()}
                 </p>
-                <div className="flex justify-start items-center">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <span
-                      key={star}
-                      className={star <= comment.stars ? 'text-yellow-400' : 'text-gray-300'}
-                    >
-                      ★
-                    </span>
-                  ))}
-                </div>
+                <p className="text-center mt-2 text-gray-700 font-semibold">
+                  Calificación otorgada:
+                  <div className="flex justify-center mt-2">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <span key={star} className={star <= comment.stars ? 'text-yellow-400' : 'text-gray-300'}>
+                        ★
+                      </span>
+                    ))}
+                  </div>
+                </p>
               </li>
             ))}
           </ul>

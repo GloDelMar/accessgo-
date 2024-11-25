@@ -64,9 +64,9 @@ const View2 = () => {
       const companyType = companyData?.data?.company?.cuenta;
 
       if (companyType === "free") {
-        router.push(`/vista-base?id=${id}`);
+        router.push(`vista-base?id=${id}`);
       } else if (companyType === "premium") {
-        router.push(`/vista-prem?id=${id}`);
+        router.push(`vista-prem?id=${id}`);
       } else {
         throw new Error("Tipo de compañía inválido.");
       }
@@ -162,17 +162,15 @@ const View2 = () => {
             />
             <div className="relative p-4 w-[215px] h-[256px] bg-black bg-opacity-50 flex flex-col justify-end">
               <h3 className="text-lg font-semibold text-white">{company.companyName}</h3>
-              <div className="flex flex-rows ml-2 mb-2">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <Image
-                    key={star}
-                    className={`w-[15px] h-[20px] md:w-[18px] md:h-[23px] lg:w-[20px] lg:h-[25px] ${star <= Math.round(averageRating) ? "opacity-100 text-yellow-500" : "opacity-30 text-gray-300"
-                      }`}
-                    src="/estrellita.svg"
-                    alt="Estrella"
-                    width={20}
-                    height={20}
-                  />
+              <div className="flex items-center mt-2">
+                {Array.from({ length: company.averageRating || 0 }).map((_, i) => (
+                  <svg
+                    key={i}
+                    className="w-5 h-5 text-yellow-400 fill-current"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z" />
+                  </svg>
                 ))}
               </div>
 
@@ -194,4 +192,4 @@ const View2 = () => {
   );
 };
 
-export default View2;
+export default View2
