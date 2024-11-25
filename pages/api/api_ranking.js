@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8080/api/rankings';
+const API_BASE_URL = 'https://backend-r159.onrender.com/api/rankings';
 
 // Crear una nueva calificación
 export const createRanking = async (rankingData) => {
@@ -35,7 +35,7 @@ export const getBusinessAverageRanking = async (businessId) => {
 
 export const getRankingById = async (rankingId) => {
   try {
-    const response = await fetch(`http://localhost:8080/api/rankings/${rankingId}`, {
+    const response = await fetch(`https://backend-r159.onrender.com/api/rankings/${rankingId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
