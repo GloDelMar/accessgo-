@@ -35,7 +35,7 @@ export const getBusinessAverageRanking = async (businessId) => {
 
 export const getRankingById = async (rankingId) => {
   try {
-    const response = await fetch(`http://localhost:8080/api/rankings/${rankingId}`, {
+    const response = await fetch(`https://backend-r159.onrender.com/api/rankings/${rankingId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

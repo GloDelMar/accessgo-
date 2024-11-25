@@ -1,4 +1,3 @@
-
 import ParticipaSlider from "./Molecules/participaSlider";
 import Carousel from "./Molecules/Carrusel";
 import Image from 'next/image';
@@ -19,7 +18,7 @@ const HomeContent = () => {
     getAllCompanies()
       .then((companyData) => {
         setCompanies(companyData);
-        setFilteredCompanies(companyData.slice(-4)); 
+        setFilteredCompanies(companyData.slice(-4));
         setLoading(false);
       })
       .catch((error) => {
@@ -30,7 +29,7 @@ const HomeContent = () => {
 
 
   const handleCardClick = () => {
-    router.push(`/socios`);
+    router.push('/socios');
   };
 
   if (loading) {
@@ -80,8 +79,12 @@ const HomeContent = () => {
               <div className="relative p-4 w-[200px] h-[241px] bg-black bg-opacity-50 flex flex-col justify-end">
                 <h3 className="text-lg font-semibold text-white">{company.companyName}</h3>
                 <div className="flex items-center mt-2">
-                  {[...Array(company.rating || 0)].map((_, i) => (
-                    <svg key={i} className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                  {Array.from({ length: company.averageRating || 0 }).map((_, i) => (
+                    <svg
+                      key={i}
+                      className="w-5 h-5 text-yellow-400 fill-current"
+                      viewBox="0 0 24 24"
+                    >
                       <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z" />
                     </svg>
                   ))}
@@ -113,6 +116,16 @@ const HomeContent = () => {
                       <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z" />
                     </svg>
                   ))}
+                </div> <div className="flex items-center mt-2">
+                  {Array.from({ length: company.averageRating || 0 }).map((_, i) => (
+                    <svg
+                      key={i}
+                      className="w-5 h-5 text-yellow-400 fill-current"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z" />
+                    </svg>
+                  ))}
                 </div>
                 <p className="text-sm text-white mt-2">{company.giro || 'Información de accesibilidad no disponible'}</p>
               </div>
@@ -137,14 +150,15 @@ const HomeContent = () => {
               />
               <div className="absolute bottom-0 left-0 p-2 bg-gradient-to-t from-black to-transparent w-full text-white">
                 <h4 className="text-[15px] font-bold">{company.companyName}</h4>
-                <div className="flex items-center mb-1">
-                  {[...Array(company.rating || 0)].map((_, i) => (
-                    <img
+                <div className="flex items-center mt-2">
+                  {Array.from({ length: company.averageRating || 0 }).map((_, i) => (
+                    <svg
                       key={i}
-                      src="/estrellita.svg"
-                      alt="star"
-                      className="w-4 h-4 mr-[3px]"
-                    />
+                      className="w-5 h-5 text-yellow-400 fill-current"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z" />
+                    </svg>
                   ))}
                 </div>
                 <p className="text-[10px] mt-2">{company.giro || 'Información de accesibilidad no disponible'}</p>

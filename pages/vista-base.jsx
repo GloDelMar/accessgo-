@@ -6,6 +6,7 @@ import { getBusinessAverageRanking } from "./api/api_ranking";
 import CommentSection from "../components/Molecules/CommentsCard";
 import AccessVisibility from "@/components/Molecules/muestraAccess";
 
+const defaultProfilePic = "public/6073873.png"
 
 export default function CardFree() {
   const router = useRouter();
@@ -140,7 +141,7 @@ export default function CardFree() {
         </div>
       </div>
       <div className="flex justify-center">
-        <CommentSection onNewRating={fetchAverageRating} />
+      <CommentSection onNewRating={fetchAverageRating} />
       </div>
     </div>
   );
