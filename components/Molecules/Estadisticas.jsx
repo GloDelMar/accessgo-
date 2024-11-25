@@ -32,7 +32,7 @@ const EstadisticasVisitas = ({ rango }) => {
             throw new Error("Company ID no está definido.");
           }
   
-          const url = `http://localhost:8080/api/visitas/${companyId}?rango=${rango}`;
+          const url = `https://backend-r159.onrender.com/api/visitas/${companyId}?rango=${rango}`;
           console.log("URL generada: ", url);
   
           const response = await fetch(url);
