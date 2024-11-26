@@ -49,8 +49,6 @@ export default function CommentSection() {
 
         const avgData = await getBusinessAverageRanking(companyId);
         setAverageRating(avgData.averageRating || 0);
-      } catch (err) {
-        setError('Error al cargar los comentarios y calificaciones.');
       } finally {
         setLoading(false);
       }
