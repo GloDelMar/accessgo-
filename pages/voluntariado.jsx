@@ -35,7 +35,7 @@ const Voluntario = () => {
       </p>
 
       <section>
-        <h2 className="text-2xl font-semibold mb-4">Voluntarios</h2>
+        <h2 className="text-2xl font-semibold mb-4">Instituciones</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {volunteers.map((volunteer) => (
             <div
@@ -80,10 +80,10 @@ const Voluntario = () => {
       </section>
 
       <section className="bg-[url('/raultemporaryImages/imagenCardPremium.png')] bg-cover bg-center p-8 rounded-md shadow-lg">
-        <h2 className="text-3xl font-bold text-center mb-4 text-white">
+        <h2 className="text-3xl font-bold text-center mb-4 text-black">
           ¡Tu Participación Puede Hacer Una Gran Diferencia!
         </h2>
-        <p className="text-lg text-center text-white">
+        <p className="text-lg text-center text-black">
           Gracias por considerar unirte a estas organizaciones y ayudar a construir una comunidad más inclusiva y solidaria.
         </p>
       </section>
