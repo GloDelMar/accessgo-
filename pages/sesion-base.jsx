@@ -41,28 +41,39 @@ const View21 = () => {
       try {
         const data = await getCompanyById(companyId);
         setCompanyData(data);
-
+  
         const avgData = await getBusinessAverageRanking(companyId);
         setAverageRating(avgData.averageRating || 0);
-
+  
         const commentsData = await getCommentsByCompanyId(companyId);
-        setComments(commentsData.data || []);
+  
+        // Verificar si hay comentarios y ajustarlos
+        if (commentsData.data && commentsData.data.length > 0) {
+          setComments(commentsData.data);
+        } else {
+          setComments([]); // Si no hay comentarios, establecer un array vacío
+        }
       } catch (error) {
         console.error(error);
-        setError("Failed to fetch company data")
+        setError("Failed to fetch company data");
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
-
+    };
+  
     if (companyId) {
-      fetchCompanyData()
+      fetchCompanyData();
     }
   }, [companyId]);
-
-  if (loading) return <p className='text-4xl md:text-5xl font-bold text-center text-[#2F4F4F] mt-12'>Loading</p>
-  if (error) return <p>{error}</p>
-
+  
+  if (loading) return <p className='text-4xl md:text-5xl font-bold text-center text-[#2F4F4F] mt-12'>Loading...</p>;
+  if (error) return <p>{error}</p>;
+ 
+  
+  if (comments.length === 0) return <p className="text-xl text-center">No existen datos.</p>;
+  
+  
+  
   return (
     <>
       <div className='container mx-auto px-4 py-8 max-w-4xl'>
