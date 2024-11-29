@@ -12,18 +12,18 @@ const Footer = () => {
       <Link legacyBehavior href='/politica'>
         <a  className="text-center cursor-pointer hover:font-semibold">Política de privacidad</a>
       </Link >
-      <Link legacyBehavior href=''>
+      <Link legacyBehavior href='/ticket'>
         <a  className="text-center cursor-pointer hover:font-semibold">Contacto</a>
       </Link>
       </div>
       
       <div className='flex items-center justify-center space-x-5 mb-6'>
-        <Link legacyBehavior href="#" passHref>
+        <Link legacyBehavior href="https://www.facebook.com/profile.php?id=100088546064193" passHref>
           <a target="_blank"><img src="/Vector - 0 (1).svg" alt="Logo de Meta" 
               className='w-6 h-6 transition-transform duration-300 hover:scale-110' /></a>
         </Link>
         
-        <Link legacyBehavior href="#" passHref>
+        <Link legacyBehavior href="https://www.instagram.com/accessgo4/" passHref>
           <a target="_blank"><img src="/insta.svg" alt="Logo de Instagram" 
               className='w-6 h-6 transition-transform duration-300 hover:scale-110' /></a>
         </Link>
