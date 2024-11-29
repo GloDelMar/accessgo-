@@ -48,7 +48,7 @@ export default function CommentSection() {
 
         const avgData = await getBusinessAverageRanking(companyId);
         setAverageRating(avgData.averageRating || 0);
-      }  finally {
+      } finally {
         setLoading(false);
       }
     };

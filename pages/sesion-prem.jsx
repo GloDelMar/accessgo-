@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Plus, Trash2 } from "lucide-react";
 import Image from "next/image";
-import { Line } from "react-chartjs-2";
-import axios from "axios";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -315,14 +312,9 @@ const SesionPremium = () => {
 
 
         <div className="flex flex-row justify-center mt-4 space-x-4 md:space-x-[200px]">
-          <button className="w-[155px] h-[40px] bg-white border-2 rounded-lg">
-            <Link legacyBehavior href={`/promociones?id=${companyId}`}>
-              <a>Cancelar</a>
-            </Link>
-          </button>
           <button className="w-[155px] h-[40px] bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C] text-white rounded-lg flex items-center justify-center">
-            <Link legacyBehavior href="/sesion-prem">
-              <a>Guardar Cambios</a>
+            <Link legacyBehavior href="/ticket">
+              <a>Levantar ticket</a>
             </Link>
           </button>
         </div>

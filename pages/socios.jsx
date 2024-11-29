@@ -60,7 +60,7 @@ const View2 = () => {
 
   const handleCardClick = async (id) => {
     try {
-      const companyData = await getCompanyById(id); // Espera la respuesta de la compañía
+      const companyData = await getCompanyById(id);
       const companyType = companyData?.data?.company?.cuenta;
 
       if (companyType === "free") {
@@ -113,28 +113,8 @@ const View2 = () => {
         <button onClick={() => handleFilter('rating')} className="w-full sm:w-auto px-4 py-2 border border-[#EDE6D7] font-semibold text-[#2F4F4F] rounded-full">
           Mejor calificados
         </button>
-        <Link legacyBehavior href="/MapWithPlaces">
-          <StyledButton className="hidden md:block" variant="verdeCurvo">Buscar en el mapa</StyledButton>
-        </Link>
-      </div>
-
-      <div className="fixed bottom-4 right-4">
-        <button
-          className="rounded-full bg-white shadow-lg w-16 h-16 flex items-center justify-center hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          aria-label="Ver establecimientos cercanos"
-          onClick={() => router.push('/MapWithPlaces')}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-            stroke="none"
-            className="w-8 h-8 text-blue-500"
-          >
-            <path
-              d="M12 2C8.134 2 5 5.134 5 9c0 3.413 2.759 7.779 6.159 11.361.419.451 1.103.451 1.522 0C16.241 16.779 19 12.413 19 9c0-3.866-3.134-7-7-7zm0 10.25a2.25 2.25 0 110-4.5 2.25 2.25 0 010 4.5z"
-            />
-          </svg>
+        <button onClick={() => router.push('/MapWithPlaces')} className="w-full sm:w-auto px-4 py-2 border border-[#EDE6D7] font-semibold !text-white bg-[#2F4F4F] rounded-full">
+        Buscar en el mapa
         </button>
       </div>
 
