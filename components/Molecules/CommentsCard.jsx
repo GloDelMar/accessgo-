@@ -17,17 +17,16 @@ export default function CommentSection() {
   const [rating, setRating] = useState(0);
   const [showInput, setShowInput] = useState(false);
   const [commentList, setCommentList] = useState([]);
-  const [rankingList, setRankingList] = useState([]);
   const [averageRating, setAverageRating] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [isChecked, setIsChecked] = useState(false);
 
   useEffect(() => {
+    console.log('Ejecutando useEffect para obtener userId y token');
     if (typeof window !== 'undefined') {
       const storedUserId = localStorage.getItem('userId');
       const token = localStorage.getItem('token');
       if (storedUserId && token) {
+        console.log('Usuario encontrado:', storedUserId);
         setUserId(storedUserId);
       } else {
         console.error('No se encontró userId o token en localStorage');
@@ -37,17 +36,22 @@ export default function CommentSection() {
 
   useEffect(() => {
     const fetchCommentsAndRankings = async () => {
-      if (!companyId) return;
+      if (!companyId) {
+        console.log('No hay companyId disponible');
+        return;
+      }
+      console.log('Obteniendo comentarios y calificaciones para la empresa:', companyId);
       setLoading(true);
       try {
         const commentsData = await getCommentsByCompanyId(companyId);
+        console.log('Comentarios obtenidos:', commentsData);
         setCommentList(commentsData.data || []);
 
-        const rankingsData = await getBusinessRankings(companyId);
-        setRankingList(rankingsData.data || []);
-
         const avgData = await getBusinessAverageRanking(companyId);
+        console.log('Calificación promedio obtenida:', avgData);
         setAverageRating(avgData.averageRating || 0);
+      } catch (error) {
+        console.error('Error al obtener comentarios o calificaciones:', error);
       } finally {
         setLoading(false);
       }
@@ -56,6 +60,7 @@ export default function CommentSection() {
   }, [companyId]);
 
   const handleCommentSubmit = async () => {
+    console.log('Intentando enviar comentario y calificación');
     if (!comment.trim()) {
       alert('Por favor, escribe un comentario antes de enviar.');
       return;
@@ -68,10 +73,6 @@ export default function CommentSection() {
       alert('Debes estar logueado para dejar un comentario.');
       return;
     }
-    if (!isChecked) {
-      alert('Por favor, confirma que tu opinión es genuina marcando la casilla.');
-      return;
-    }
 
     try {
       const rankingData = {
@@ -80,45 +81,50 @@ export default function CommentSection() {
         stars: rating,
       };
 
+      console.log('Datos de calificación a enviar:', rankingData);
       const ratingResponse = await createRanking(rankingData);
+      console.log('Respuesta de la API de calificación:', ratingResponse);
       const rankingId = ratingResponse.data._id;
-     
+
+      console.log('Enviando comentario con rankingId:', rankingId);
       await createComment(userId, comment, companyId, rankingId);
 
       setComment('');
       setRating(0);
       setShowInput(false);
-      setIsChecked(false);
 
+      console.log('Actualizando lista de comentarios después de enviar');
       const updatedComments = await getCommentsByCompanyId(companyId);
       setCommentList(updatedComments.data || []);
 
-      const updatedRankings = await getBusinessRankings(companyId);
-      setRankingList(updatedRankings.data || []);
-
+      console.log('Actualizando calificación promedio después de enviar');
       const avgData = await getBusinessAverageRanking(companyId);
       setAverageRating(avgData.averageRating || 0);
 
       alert('Comentario y calificación enviados exitosamente');
     } catch (err) {
+      console.error('Error al enviar comentario o calificación:', err);
       alert('Error en la solicitud. Intenta de nuevo.');
     }
   };
 
-  const handleCheckboxChange = (e) => {
-    setIsChecked(e.target.checked);
-  };
- 
-  const commentsWithStars = commentList.map((comment) => ({
-    ...comment,
-    stars: comment.rankingId?.stars || 0,
-  }));
+  if (loading) {
+    console.log('Cargando datos...');
+    return <p>Cargando...</p>;
+  }
 
+  if (commentList.length === 0 && averageRating === 0) {
+    console.log('No hay comentarios ni calificaciones para mostrar');
+    return null;
+  }
 
   return (
     <div className="w-full text-[#2F4F4F] h-full mt-2 flex flex-col p-2 max-w-screen-sm md:p-4 lg:p-8">
       <button
-        onClick={() => setShowInput(!showInput)}
+        onClick={() => {
+          console.log('Cambiando estado de mostrar entrada de comentario');
+          setShowInput(!showInput);
+        }}
         className="p-0 w-[196px] h-[28px] bg-[#2F4F4F] rounded-full text-sm text-center text-white self-center shadow-md"
       >
         Dejar un comentario
@@ -131,28 +137,25 @@ export default function CommentSection() {
             rows="3"
             placeholder="Puedes escribirla aquí..."
             value={comment}
-            onChange={(e) => setComment(e.target.value)}
+            onChange={(e) => {
+              console.log('Actualizando comentario:', e.target.value);
+              setComment(e.target.value);
+            }}
           />
           <div className="flex space-x-2 mt-2">
             {[1, 2, 3, 4, 5].map((star) => (
               <button
                 key={star}
-                onClick={() => setRating(star)}
+                onClick={() => {
+                  console.log('Seleccionando calificación:', star);
+                  setRating(star);
+                }}
                 className={`w-8 h-8 rounded-full border ${star <= rating ? 'bg-yellow-400' : 'bg-gray-200'}`}
               >
                 ★
               </button>
             ))}
           </div>
-          <label className="flex items-center mt-4">
-            <input
-              type="checkbox"
-              checked={isChecked}
-              onChange={handleCheckboxChange}
-              className="mr-2"
-            />
-            Confirmo que mi opinión refleja mi experiencia personal.
-          </label>
           <button
             onClick={handleCommentSubmit}
             className="mt-2 p-2 bg-[#2F4F4F] rounded-full text-white shadow-md"
@@ -162,47 +165,29 @@ export default function CommentSection() {
         </div>
       )}
       <section className="mt-6">
-        {loading ? (
-          <p>Cargando...</p>
-        ) : error ? (
-          <p className="text-red-500 text-center">{error}</p>
-        ) : commentsWithStars.length > 0 ? (
-          <ul className="space-y-6"> {/* Añadimos separación entre tarjetas */}
-            {commentsWithStars.map((comment) => (
-              <li
-                key={comment._id}
-                className="p-4 bg-white rounded shadow-md flex flex-col items-start"
-              >
-                <div className="flex items-center mb-2">
-                  <img
-                    src={comment.user?.profilePicture || defaultProfilePic}
-                    alt="Foto de perfil"
-                    className="w-10 h-10 rounded-full mr-3"
-                  />
-                  <Link href={`/vistaPerfilUsuario?id=${comment.userId?._id}`}>
-                    {comment.userId?.firstName || 'Nombre no disponible'}
-                  </Link>
-                </div>
-                <p>{comment.content}</p>
-                <p className="text-gray-500 text-sm mt-1">
-                  {new Date(comment.createdAt).toLocaleDateString()}
-                </p>
-                <p className="text-center mt-2 text-gray-700 font-semibold">
-                  Calificación otorgada:
-                  <div className="flex justify-center mt-2">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <span key={star} className={star <= comment.stars ? 'text-yellow-400' : 'text-gray-300'}>
-                        ★
-                      </span>
-                    ))}
-                  </div>
-                </p>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No hay comentarios aún.</p>
-        )}
+        <ul className="space-y-6">
+          {commentList.map((comment) => (
+            <li
+              key={comment._id}
+              className="p-4 bg-white rounded shadow-md flex flex-col items-start"
+            >
+              <div className="flex items-center mb-2">
+                <img
+                  src={comment.user?.profilePicture || defaultProfilePic}
+                  alt="Foto de perfil"
+                  className="w-10 h-10 rounded-full mr-3"
+                />
+                <Link href={`/vistaPerfilUsuario?id=${comment.userId?._id}`}>
+                  {comment.userId?.firstName || 'Nombre no disponible'}
+                </Link>
+              </div>
+              <p>{comment.content}</p>
+              <p className="text-gray-500 text-sm mt-1">
+                {new Date(comment.createdAt).toLocaleDateString()}
+              </p>
+            </li>
+          ))}
+        </ul>
       </section>
     </div>
   );
