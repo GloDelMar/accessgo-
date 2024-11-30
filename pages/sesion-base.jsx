@@ -49,7 +49,7 @@ const View21 = () => {
   
         // Verificar si hay comentarios y ajustarlos
         if (commentsData.data && commentsData.data.length > 0) {
-          setComments(commentsData.data);
+          setComments(commentsData?.data);
         } else {
           setComments([]); // Si no hay comentarios, establecer un array vacío
         }
@@ -70,7 +70,7 @@ const View21 = () => {
   if (error) return <p>{error}</p>;
  
   
-  if (comments.length === 0) return <p className="text-xl text-center">No existen datos.</p>;
+  // if (comments.length === 0) return <p className="text-xl text-center">No existen datos.</p>;
   
   
   
@@ -131,7 +131,7 @@ const View21 = () => {
                 {comments.length > 0 ? (
                   comments.map((comment) => (
                     <p
-                      key={comment._id}
+                      key={comment?._id}
                       className="bg-[#F5F0E5] p-2 rounded text-center text-sm"
                     >
                       {comment.content}
