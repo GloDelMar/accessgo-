@@ -6,6 +6,7 @@ import { getBusinessAverageRanking } from "./api/api_ranking";
 import CommentSection from "../components/Molecules/CommentsCard";
 import AccessVisibility from "@/components/Molecules/muestraAccess";
 
+const defaultProfilePic = "public/6073873.png"
 
 export default function CardFree() {
   const router = useRouter();
@@ -33,7 +34,7 @@ export default function CardFree() {
       try {
         const data = await getCompanyById(id);
         setCompanyData(data);
-
+        console.log("aqui data", data)
         await fetchAverageRating();
       } catch (error) {
         console.error(error);
@@ -68,17 +69,23 @@ export default function CardFree() {
       </div>
 
       <section className="flex flex-col justify-between p-2 md:flex-row lg:flex-row w-full mt-4">
-        <div className="flex flex-col">
-          <p className="w-full h-[40px] text-[#7E952A] text-[20px] md:text-2xl lg:text-3xl font-semibold">
-            {companyData?.data?.company?.companyName || "Información no disponible."}
-          </p>
+        <div className="flex flex-col max-w-[500px]">
+          <div className="flex items-center ">
+            <img
+              src={companyData?.data?.company?.profilePicture || defaultProfilePic}
+              alt="Foto de perfil"
+              className="w-10 h-10 rounded-full p-2"
+            />
+            <p className="w-full h-[40px] text-[#7E952A] text-[20px] md:text-2xl lg:text-3xl font-semibold">
+              {companyData?.data?.company?.companyName || "Información no disponible."}
+            </p>
+          </div>
           <div className="flex flex-rows ml-2 mb-2">
             {[1, 2, 3, 4, 5].map((star) => (
               <Image
                 key={star}
-                className={`w-[15px] h-[20px] md:w-[18px] md:h-[23px] lg:w-[20px] lg:h-[25px] ${
-                  star <= Math.round(averageRating) ? "opacity-100" : "opacity-30"
-                }`}
+                className={`w-[15px] h-[20px] md:w-[18px] md:h-[23px] lg:w-[20px] lg:h-[25px] ${star <= Math.round(averageRating) ? "opacity-100" : "opacity-30"
+                  }`}
                 src="/estrellita.svg"
                 alt="Estrella"
                 width={20}
@@ -122,16 +129,19 @@ export default function CardFree() {
       </section>
 
       <div className="w-full flex flex-col justify-center items-center mt-8">
-      <div className="border p-3 rounded mt-4 bg-[#ECEFF1] w-[290px]  md:w-full  justify-center flex items-center text-[#455A64]">
-          <h4 value="Place">{companyData?.data?.company?.address || "Información no disponible."}</h4>
+        <div className="border p-3 rounded mt-4 bg-[#ECEFF1] w-[290px]  md:w-full  justify-center flex flex-col items-center text-[#455A64]">
+          <h4 value="Place" className="text-[#546E7A] font-semibold">Dirección:</h4>
+          <p className="text-center"> {companyData?.data?.company?.address || "Información no disponible."}</p>
+          <h4 value="Place" className="text-[#546E7A] font-semibold mt-3">Teléfono:</h4>
+          <p className="text-center"> {companyData?.data?.company?.phone || "Información no disponible."}</p>
         </div>
 
         <div >
-        <AccessVisibility companyId={id} />
+          <AccessVisibility companyId={id} />
         </div>
       </div>
-      <div>
-        <CommentSection onNewRating={fetchAverageRating} />
+      <div className="flex justify-center">
+      <CommentSection onNewRating={fetchAverageRating} />
       </div>
     </div>
   );

@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Plus, Trash2 } from "lucide-react";
 import Image from "next/image";
-import { Line } from "react-chartjs-2";
-import axios from "axios";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -18,7 +15,9 @@ import { getCompanyById } from "@/pages/api/api_company";
 import router from "next/router";
 import { getBusinessAverageRanking } from "./api/api_ranking";
 import { getCommentsByCompanyId } from "./api/api_comment";
-import  EstadisticasVisitas from "../components/Molecules/Estadisticas"
+import EstadisticasVisitas from "../components/Molecules/Estadisticas"
+import { getPromoByCompanyId } from "./api/api_promos";
+
 
 ChartJS.register(
   CategoryScale,
@@ -30,41 +29,6 @@ ChartJS.register(
   Legend
 );
 
-const Table = ({ title, comments, headers }) => (
-  <div className="w-full mt-10">
-    <h3 className="text-2xl font-bold mb-4">{title}</h3>
-    <table className="min-w-full bg-white border border-gray-200">
-      <thead>
-        <tr>
-          {headers.map((header, index) => (
-            <th key={index} className="py-2 px-4 border-b">
-              {header}
-            </th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td className="py-2 px-4 border-b">Dato 1</td>
-          <td className="py-2 px-4 border-b">Dato 2</td>
-          <td className="py-2 px-4 border-b">Dato 3</td>
-        </tr>
-        {comments.map((comment, index) => (
-          <tr key={index}>
-            <td
-              colSpan={headers.length}
-              className="py-2 px-4 border-b bg-lime-50"
-            >
-              {comment}
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
-);
-
-
 
 const SesionPremium = () => {
   const [companyData, setCompanyData] = useState(null);
@@ -75,14 +39,13 @@ const SesionPremium = () => {
   const [averageRating, setAverageRating] = useState(0);
   const [comments, setComments] = useState([]);
   const [selectedImages, setSelectedImages] = useState([null, null, null, null]);
-  const [rango, setRango] = useState('semana');  ;
-  
+  const [rango, setRango] = useState('semana');
+  const [promociones, setPromociones] = useState(null);
+
   const handleRangoChange = (event) => {
     setRango(event.target.value);
   };
 
-
-  
   const handleSubmit = (event) => {
     event.preventDefault();
     const formImage = selectedImages.map((image, index) => ({
@@ -122,61 +85,53 @@ const SesionPremium = () => {
   };
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storedUserId = localStorage.getItem("userId");
+    if (typeof window !== 'undefined') {
+      const storedUserId = localStorage.getItem('userId');
       if (storedUserId) {
         setCompanyId(storedUserId);
       } else {
-        setError("Company ID not found in localStorage");
+        setError('Company ID not found in localStorage');
         setLoading(false);
       }
     }
   }, []);
-  
-  
+
   useEffect(() => {
+    if (!companyId) return;
+
     const fetchCompanyData = async () => {
-      if (!companyId) return;
       try {
+        setLoading(true);
+
         const data = await getCompanyById(companyId);
         setCompanyData(data);
 
         const avgData = await getBusinessAverageRanking(companyId);
-        setAverageRating(avgData.averageRating || 0);
+        setAverageRating(avgData.data.averageRating || 0);
 
         const commentsData = await getCommentsByCompanyId(companyId);
         setComments(commentsData.data || []);
-      } catch (error) {
+
+        const promocionesData = await getPromoByCompanyId(companyId);
+        setPromociones(promocionesData.data || []);
+
+       } catch (error) {
         console.error(error);
-        setError("Failed to fetch company data");
+        setError('Failed to fetch company data');
       } finally {
         setLoading(false);
       }
     };
 
-    if (companyId) {
-      fetchCompanyData();
-    }
+    fetchCompanyData();
   }, [companyId]);
 
   if (loading) return <p>Cargando...</p>;
   if (error) return <p>Error: {error}</p>;
 
-
-  const eventComments = [
-    "Lorem ipsum es el texto que se usa habitualmente en diseño gráfico en demostraciones",
-    "Otro comentario sobre el evento",
-  ];
-
-  const promotionComments = [
-    "Comentario sobre una promoción",
-    "Otro comentario sobre una promoción",
-  ];
-
-  const menuComments = [
-    "Comentario sobre el menú",
-    "Otro comentario sobre el menú",
-  ];
+  const handleEditPromotion = (promotionId) => {
+    router.push(`/promociones?id=${promotionId}`);
+  };
 
 
   return (
@@ -188,7 +143,7 @@ const SesionPremium = () => {
             {companyData?.data?.company?.companyName || 'Información no disponible.'}
           </p>
         </h1>
-  
+
         <div className="flex flex-col lg:flex-row gap-6 p-6 max-w-4xl mx-auto">
           <div className="w-full lg:w-1/3 flex justify-center">
             <div className="bg-[#F5F0E5] w-full max-w-[231px] h-auto rounded-[25px] shadow-md p-6 text-center">
@@ -201,7 +156,7 @@ const SesionPremium = () => {
               />
             </div>
           </div>
-  
+
           <div className="w-full lg:w-2/3 flex flex-col justify-center">
             <div className="bg-white rounded-[30px] shadow-md p-6 w-full">
               <div className="flex flex-col md:flex-row md:justify-start gap-4 md:items-center mb-4">
@@ -212,9 +167,8 @@ const SesionPremium = () => {
                   {[1, 2, 3, 4, 5].map((star) => (
                     <svg
                       key={star}
-                      className={`w-5 h-5 ${
-                        star <= Math.round(averageRating) ? 'text-yellow-400' : 'text-gray-300'
-                      } fill-current`}
+                      className={`w-5 h-5 ${star <= Math.round(averageRating) ? 'text-yellow-400' : 'text-gray-300'
+                        } fill-current`}
                       viewBox="0 0 24 24"
                     >
                       <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z" />
@@ -236,7 +190,7 @@ const SesionPremium = () => {
                   <p className="text-center text-sm">No hay comentarios disponibles.</p>
                 )}
               </div>
-  
+
               <button
                 className="px-2.5 py-0.5 mt-11 text-base bg-[#F5F0E5] rounded-[30px] md:mt-10"
                 onClick={() => setShowAllComments(!showAllComments)}
@@ -246,7 +200,7 @@ const SesionPremium = () => {
             </div>
           </div>
         </div>
-  
+
         <div className="mt-12">
           <h3 className="text-xl text-center font-semibold mb-10 text-[#2F4F4F]">
             Cambia tus imágenes
@@ -286,42 +240,88 @@ const SesionPremium = () => {
             </div>
           </div>
         </div>
-        
-        <Table title="Todos tus Eventos" comments={eventComments} headers={['EVENTO', 'FECHA', 'HORARIO']} />
-        <Table title="Todas tus Promociones" comments={promotionComments} headers={['PROMOCIÓN', 'FECHA', 'HORARIO']} />
-        <Table title="Tu Menú" comments={menuComments} headers={['PLATILLO', 'FECHA', 'HORARIO']} />
-        
-        <div>
-      <h3 className="text-2xl text-center font-semibold my-8 text-[#2F4F4F]">Estas son las estadísticas de visitas a tu perfil de AccessGo Premium</h3>
-      
-      {/* Componente de estadísticas pasando 'rango' como prop */}
-      <EstadisticasVisitas rango={rango} />
-      
-      {/* Selector de rango */}
-      <select value={rango} onChange={handleRangoChange}>
-        <option value="semana">Semana</option>
-        <option value="mes">Mes</option>
-        <option value="año">Año</option>
-      </select>
-    </div>
 
-  
+        <div className='w-full flex flex-col mt-6'>
+          <div className="max-w-xxl mx-auto bg-white shadow-md rounded-lg overflow-hidden border border-gray-200 mt-4">
+            <div className="bg-[#2F4F4F] text-white p-4">
+              <h2 className="text-2xl lg:text-3xl text-center">
+              Tus promociones este mes:
+              </h2>
+            </div>
+            <div className="p-4">
+                {/* Indicador de carga */}
+                {loading && <div className="text-center">Cargando promociones...</div>}
+
+                {/* Error */}
+                {error && <div className="text-red-500">{error}</div>}
+
+                {/* Lista de promociones */}
+                {!loading && promociones && promociones.length === 0 && (
+                  <div className="text-gray-500">No hay promociones disponibles.</div>
+                )}
+
+                {!loading && promociones && promociones.length > 0 && (
+                  <ul className="space-y-6">
+                    {promociones.map((promocion) => (
+                      <li
+                        key={promocion._id}
+                        className="p-6 border rounded-lg shadow-sm bg-[#F5F0E5] flex flex-col md:flex-row justify-between items-start md:items-center"
+                      >
+                        {/* Información de la promoción */}
+                        <div className="flex-1">
+                          <h4 className="text-xl font-bold  mb-2">
+                            {promocion.name || "Sin título"}
+                          </h4>
+                          <p className="mb-2 text-gray-700">
+                            {promocion.description || "Sin descripción"}
+                          </p>
+                          <span className="text-sm text-gray-500">
+                            Fecha de vencimiento:{" "}
+                            {promocion.endDate
+                              ? new Date(promocion.endDate).toLocaleDateString()
+                              : "Sin fecha"}
+                          </span>
+                        </div>
+
+                        {/* Botón de edición */}
+                        <button
+                          onClick={() => handleEditPromotion(promocion._id)}
+                          className="mt-4 md:mt-0 md:ml-6 px-4 py-2 border border-transparent rounded-md shadow-sm
+              text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]"
+                        >
+                          Editar
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+            </div>
+          </div>
+        </div>
+        <div>
+          <h3 className="text-2xl text-center font-semibold my-8 text-[#2F4F4F]">Estas son las estadísticas de visitas a tu perfil de AccessGo Premium</h3>
+
+          <EstadisticasVisitas rango={rango} />
+
+          <select value={rango} onChange={handleRangoChange}>
+            <option value="semana">Semana</option>
+            <option value="mes">Mes</option>
+            <option value="año">Año</option>
+          </select>
+        </div>
+
+
         <div className="flex flex-row justify-center mt-4 space-x-4 md:space-x-[200px]">
-          <button className="w-[155px] h-[40px] bg-white border-2 rounded-lg">
-            <Link legacyBehavior href="/vista-prem">
-              <a>Cancelar</a>
-            </Link>
-          </button>
-          <button className="w-[155px] h-[40px] bg-[#2F4F4F] text-white rounded-lg flex items-center justify-center">
-            <Link legacyBehavior href="/sesion-prem">
-              <a>Guardar Cambios</a>
+          <button className="w-[155px] h-[40px] bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C] text-white rounded-lg flex items-center justify-center">
+            <Link legacyBehavior href="/ticket">
+              <a>Levantar ticket</a>
             </Link>
           </button>
         </div>
       </div>
     </main>
   );
-  
+
 };
 
 export default SesionPremium;
