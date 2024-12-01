@@ -27,43 +27,39 @@ const EstadisticasVisitas = ({ rango }) => {
     if (companyId) {
       const fetchEstadisticas = async () => {
         try {
-          console.log("Inicio de fetchEstadisticas");
           if (!companyId) {
             throw new Error("Company ID no está definido.");
           }
   
           const url = `https://backend-r159.onrender.com/api/visitas/${companyId}?rango=${rango}`;
-          console.log("URL generada: ", url);
+         
   
           const response = await fetch(url);
-          console.log("Respuesta de la API: ", response);
+        
   
           if (!response.ok) {
             throw new Error(`Error HTTP: ${response.status}`);
           }
   
-          const data = await response.json();
-          console.log("Datos recibidos: ", data);
-  
+          const data = await response.json();  
           if (!data.success) {
             throw new Error("La respuesta del servidor no indica éxito.");
           }
   
           setEstadisticas(data.data || []);
-          console.log("Estadísticas establecidas: ", data, "o" ,data.data);
-  
+       
           const total = (data.data || []).reduce(
             (sum, visita) => sum + (visita.totalVisits || 0),
             0
           );
           setTotalVisitas(total);
-          console.log("Total de visitas calculadas: ", total);
+         
         } catch (error) {
           console.error("Error en fetchEstadisticas: ", error);
           setError(error.message);
         } finally {
           setLoading(false);
-          console.log("Estado de carga finalizado");
+        
         }
       };
   
@@ -72,7 +68,7 @@ const EstadisticasVisitas = ({ rango }) => {
   }, [rango, companyId]);
   
   if (loading) {
-    console.log("Cargando estadísticas...");
+   
     return <div>Cargando estadísticas...</div>;
   }
   
@@ -83,7 +79,7 @@ const EstadisticasVisitas = ({ rango }) => {
   
   // Mostrar mensaje si totalVisitas es 0
   if (totalVisitas === 0) {
-    console.log("Total de visitas es 0. Mostrando mensaje.");
+  
     return (
       <div>
         <h4 className="text-xl text-center font-semibold mb-10 text-[#2F4F4F]">
@@ -92,8 +88,6 @@ const EstadisticasVisitas = ({ rango }) => {
       </div>
     );
   }
-  
-  console.log("Datos para el gráfico: ", estadisticas);
   
   const chartData = {
     labels: estadisticas.map((visita) => visita.date),

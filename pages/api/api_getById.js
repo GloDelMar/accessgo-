@@ -57,7 +57,7 @@ export const UserProfile = async () => {
     }
 
     const userData = await response.json();
-    console.log("Datos del usuario:", userData);
+   
   } catch (error) {
     console.error("Error:", error);
   }
