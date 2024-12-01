@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { createComment, getCommentsByCompanyId } from '@/pages/api/api_comment';
-import { createRanking, getBusinessAverageRanking, getBusinessRankings } from '@/pages/api/api_ranking';
+import { useComments } from '../Molecules/useComments';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
@@ -11,110 +10,33 @@ const defaultProfilePic = '/6073873.png';
 export default function CommentSection() {
   const router = useRouter();
   const { id: companyId } = router.query;
+  const { comments, averageRating, loading, addComment } = useComments(companyId);
 
   const [userId, setUserId] = useState(null);
   const [comment, setComment] = useState('');
   const [rating, setRating] = useState(0);
   const [showInput, setShowInput] = useState(false);
-  const [commentList, setCommentList] = useState([]);
-  const [rankingList, setRankingList] = useState([]);
-  const [averageRating, setAverageRating] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [isChecked, setIsChecked] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const storedUserId = localStorage.getItem('userId');
-      const token = localStorage.getItem('token');
-      if (storedUserId && token) {
-        setUserId(storedUserId);
-      } else {
-        console.error('No se encontró userId o token en localStorage');
-      }
+      setUserId(storedUserId);
     }
   }, []);
 
-  useEffect(() => {
-    const fetchCommentsAndRankings = async () => {
-      if (!companyId) return;
-
-      setLoading(true);
-      try {
-        const commentsData = await getCommentsByCompanyId(companyId);
-        setCommentList(commentsData.data || []);
-
-        const rankingsData = await getBusinessRankings(companyId);
-        setRankingList(rankingsData.data || []);
-
-        const avgData = await getBusinessAverageRanking(companyId);
-        setAverageRating(avgData.averageRating || 0);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchCommentsAndRankings();
-  }, [companyId]);
-
   const handleCommentSubmit = async () => {
-    if (!comment.trim()) {
-      alert('Por favor, escribe un comentario antes de enviar.');
-      return;
-    }
-    if (!rating) {
-      alert('Por favor, selecciona una calificación.');
-      return;
-    }
-    if (!userId) {
-      alert('Debes estar logueado para dejar un comentario.');
-      return;
-    }
-    if (!isChecked) {
-      alert('Por favor, confirma que tu opinión es genuina marcando la casilla.');
-      return;
-    }
-
     try {
-      const rankingData = {
-        userId,
-        businessId: companyId,
-        stars: rating,
-      };
-
-      const ratingResponse = await createRanking(rankingData);
-      const rankingId = ratingResponse.data._id;
-     
-      await createComment(userId, comment, companyId, rankingId);
-
+      await addComment(userId, comment, rating);
       setComment('');
       setRating(0);
       setShowInput(false);
-      setIsChecked(false);
-
-      const updatedComments = await getCommentsByCompanyId(companyId);
-      setCommentList(updatedComments.data || []);
-
-      const updatedRankings = await getBusinessRankings(companyId);
-      setRankingList(updatedRankings.data || []);
-
-      const avgData = await getBusinessAverageRanking(companyId);
-      setAverageRating(avgData.averageRating || 0);
-
-      alert('Comentario y calificación enviados exitosamente');
-    } catch (err) {
-      alert('Error en la solicitud. Intenta de nuevo.');
+      alert('Comentario enviado exitosamente');
+    } catch (error) {
+      alert('Error al enviar comentario. Intenta de nuevo.');
     }
   };
 
-  const handleCheckboxChange = (e) => {
-    setIsChecked(e.target.checked);
-  };
- 
-  const commentsWithStars = commentList.map((comment) => ({
-    ...comment,
-    stars: comment.rankingId?.stars || 0,
-  }));
-
+  if (loading) return <p>Cargando...</p>;
 
   return (
     <div className="w-full text-[#2F4F4F] h-full mt-2 flex flex-col p-2 max-w-screen-sm md:p-4 lg:p-8">
@@ -130,7 +52,7 @@ export default function CommentSection() {
           <textarea
             className="w-full border rounded-lg p-2"
             rows="3"
-            placeholder="Puedes escribirla aquí..."
+            placeholder="Escribe tu comentario aquí..."
             value={comment}
             onChange={(e) => setComment(e.target.value)}
           />
@@ -145,15 +67,6 @@ export default function CommentSection() {
               </button>
             ))}
           </div>
-          <label className="flex items-center mt-4">
-            <input
-              type="checkbox"
-              checked={isChecked}
-              onChange={handleCheckboxChange}
-              className="mr-2"
-            />
-            Confirmo que mi opinión refleja mi experiencia personal.
-          </label>
           <button
             onClick={handleCommentSubmit}
             className="mt-2 p-2 bg-[#2F4F4F] rounded-full text-white shadow-md"
@@ -162,44 +75,52 @@ export default function CommentSection() {
           </button>
         </div>
       )}
-      <section className="mt-6">
-        {loading ? (
-          <p>Cargando...</p>
-        ) : error ? (
-          <p className="text-red-500 text-center">{error}</p>
-        ) : commentsWithStars.length > 0 ? (
-          <ul>
-            {commentsWithStars.map((comment) => (
-              <li key={comment._id} className="p-4 bg-white rounded shadow-md">
-                <div className="flex items-center">
+      <section className="w-full max-w-2xl mx-auto mt-4 bg-gray-100 p-6 rounded-lg shadow-md">
+        <h2 className="text-xl font-bold text-gray-800 mb-4">Comentarios</h2>
+        {comments.length > 0 ? (
+          <ul className="space-y-6">
+            {comments.map((comment) => {
+             
+              return (
+                <li key={comment._id} className="bg-white rounded-lg shadow-sm p-4 flex space-x-4">
                   <img
-                    src={comment.user?.profilePicture || defaultProfilePic}
+                    src={comment.userId?.profilePicture || defaultProfilePic}
                     alt="Foto de perfil"
-                    className="w-10 h-10 rounded-full mr-3"
+                    className="w-12 h-12 rounded-full border border-gray-300"
                   />
-                  <Link href={`/vistaPerfilUsuario?id=${comment.userId?._id}`}>
-                    {comment.userId?.firstName || 'Nombre no disponible'}
-                  </Link>
-                </div>
-                <p>{comment.content}</p>
-                <p className="text-gray-500 text-sm mt-1">
-                  {new Date(comment.createdAt).toLocaleDateString()}
-                </p>
-                <p className="text-center mt-2 text-gray-700 font-semibold">
-                  Calificación otorgada:
-                  <div className="flex justify-center mt-2">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <span key={star} className={star <= comment.stars ? 'text-yellow-400' : 'text-gray-300'}>
-                        ★
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between mb-2">
+                      <Link
+                        href={`/vistaPerfilUsuario?id=${comment.userId?._id}`}
+                        className="text-lg font-semibold text-gray-700 hover:underline"
+                      >
+                        {comment.userId?.firstName || "Nombre no disponible"}
+                      </Link>
+                      <span className="text-sm text-gray-500">
+                        {new Date(comment.createdAt).toLocaleDateString()}
                       </span>
-                    ))}
+                    </div>
+                    <p className="text-gray-600 text-sm">{comment.content}</p>
+                    {comment.rankingId?.stars && (
+                      <div className="mt-2 flex items-center">
+                        {[...Array(5)].map((_, index) => (
+                          <span
+                            key={index}
+                            className={index < comment.rankingId?.stars ? "text-yellow-400" : "text-gray-300"}
+                          >
+                            ★
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
                   </div>
-                </p>
-              </li>
-            ))}
+                </li>
+              );
+            })}
           </ul>
         ) : (
-          <p>No hay comentarios aún.</p>
+          <p className="text-gray-500 text-center mt-6">Aún no hay comentarios</p>
         )}
       </section>
     </div>
