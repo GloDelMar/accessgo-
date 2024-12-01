@@ -85,7 +85,7 @@ export async function getAllCompanies() {
     }
 
     const data = await response.json();
-    console.log("Data received from API:", data);
+ 
 
     
     if (!Array.isArray(data.data.companies)) {

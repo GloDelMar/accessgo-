@@ -85,22 +85,22 @@ export default function CardFree() {
 
       <section className="flex flex-col justify-between p-2 md:flex-row lg:flex-row w-full mt-4">
         <div className="flex flex-col">
-          <div className="flex items-center ">
+          <div className="flex items-center mb-2">
             <img
               src={companyData?.data?.company?.profilePicture || defaultProfilePic}
               alt="Foto de perfil"
               className="w-10 h-10 rounded-full p-2"
             />
-            <p className="w-full h-[40px] text-[#7E952A] text-[20px] md:text-2xl lg:text-3xl font-semibold">
+            <p className="w-full h-[40px] text-[#7E952A] text-[20px] md:text-2xl font-semibold">
               {companyData?.data?.company?.companyName || "Información no disponible."}
             </p>
           </div>
-          <div className="flex flex-rows ml-2 mb-2">
+          {/* Contenedor de estrellas debajo del nombre */}
+          <div className="flex flex-row mt-2">
             {[1, 2, 3, 4, 5].map((star) => (
               <Image
                 key={star}
-                className={`w-[15px] h-[20px] md:w-[18px] md:h-[23px] lg:w-[20px] lg:h-[25px] ${star <= Math.round(averageRating) ? "opacity-100" : "opacity-30"
-                  }`}
+                className={`w-[15px] h-[20px] md:w-[18px] md:h-[23px] lg:w-[20px] lg:h-[25px] ${star <= Math.round(averageRating) ? "opacity-100" : "opacity-30"}`}
                 src="/estrellita.svg"
                 alt="Estrella"
                 width={20}
@@ -117,11 +117,11 @@ export default function CardFree() {
           </p>
         </div>
 
-        <div className="">
+        {/* Contenedor de horarios y detalles adicionales */}
+        <div>
           <p className="text-[10.5px] md:text-[12px] lg:text-sm text-[#607D8B] mt-2">
             Horarios
           </p>
-
           {/* Días de servicio */}
           <div className="flex items-start items-center gap-2 mt-2">
             <Image
@@ -129,13 +129,12 @@ export default function CardFree() {
               alt="ícono de calendario"
               width={14}
               height={16}
-              className="flex-shrink-0" // Evita que cambie su tamaño
+              className="flex-shrink-0"
             />
             <div className="text-[12px] md:text-sm lg:text-base text-[#546E7A]">
               {(companyData?.data?.company?.diasDeServicio || []).join(", ") || "Información no disponible."}
             </div>
           </div>
-
           {/* Hora de apertura */}
           <div className="flex items-start items-center gap-2 mt-2">
             <Image
@@ -149,7 +148,6 @@ export default function CardFree() {
               {companyData?.data?.company?.horario?.abre || "Información no disponible."}
             </p>
           </div>
-
           {/* Hora de cierre */}
           <div className="flex items-start items-center gap-2 mt-2">
             <Image
@@ -164,9 +162,7 @@ export default function CardFree() {
             </p>
           </div>
         </div>
-
       </section>
-
       <div className="w-full flex flex-col justify-center items-center mt-8">
         <div className="border p-3 rounded mt-4 bg-[#ECEFF1] w-[290px]  md:w-full  justify-center flex flex-col items-center text-[#455A64]">
           <h4 value="Place" className="text-[#546E7A] font-semibold">Dirección:</h4>
@@ -180,55 +176,55 @@ export default function CardFree() {
       </div>
 
       <div className='w-full flex flex-col mt-6'>
-          <div className="max-w-xxl mx-auto bg-white shadow-md rounded-lg overflow-hidden border border-gray-200 mt-4">
-            <div className="bg-[#2F4F4F] text-white p-4">
-              <h2 className="text-2xl lg:text-3xl text-center">
+        <div className="max-w-xxl mx-auto bg-white shadow-md rounded-lg overflow-hidden border border-gray-200 mt-4">
+          <div className="bg-[#2F4F4F] text-white p-4">
+            <h2 className="text-2xl lg:text-3xl text-center">
               ¡Checa estas promociones!
-              </h2>
-            </div>
-            <div className="p-4">
-                {/* Indicador de carga */}
-                {loading && <div className="text-center">Cargando promociones...</div>}
+            </h2>
+          </div>
+          <div className="p-4">
+            {/* Indicador de carga */}
+            {loading && <div className="text-center">Cargando promociones...</div>}
 
-                {/* Error */}
-                {error && <div className="text-red-500">{error}</div>}
+            {/* Error */}
+            {error && <div className="text-red-500">{error}</div>}
 
-                {/* Lista de promociones */}
-                {!loading && promociones && promociones.length === 0 && (
-                  <div className="text-gray-500">No hay promociones disponibles.</div>
-                )}
+            {/* Lista de promociones */}
+            {!loading && promociones && promociones.length === 0 && (
+              <div className="text-gray-500">No hay promociones disponibles.</div>
+            )}
 
-                {!loading && promociones && promociones.length > 0 && (
-                  <ul className="space-y-6">
-                    {promociones.map((promocion) => (
-                      <li
-                        key={promocion._id}
-                        className="p-6 border rounded-lg shadow-sm bg-[#F5F0E5] flex flex-col md:flex-row justify-between items-start md:items-center"
-                      >
-                        {/* Información de la promoción */}
-                        <div className="flex-1">
-                          <h4 className="text-xl font-bold  mb-2">
-                            {promocion.name || "Sin título"}
-                          </h4>
-                          <p className="mb-2 text-gray-700">
-                            {promocion.description || "Sin descripción"}
-                          </p>
-                          <span className="text-sm text-gray-500">
-                            Fecha de vencimiento:{" "}
-                            {promocion.endDate
-                              ? new Date(promocion.endDate).toLocaleDateString()
-                              : "Sin fecha"}
-                          </span>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-            </div>
+            {!loading && promociones && promociones.length > 0 && (
+              <ul className="space-y-6">
+                {promociones.map((promocion) => (
+                  <li
+                    key={promocion._id}
+                    className="p-6 border rounded-lg shadow-sm bg-[#F5F0E5] flex flex-col md:flex-row justify-between items-start md:items-center"
+                  >
+                    {/* Información de la promoción */}
+                    <div className="flex-1">
+                      <h4 className="text-xl font-bold  mb-2">
+                        {promocion.name || "Sin título"}
+                      </h4>
+                      <p className="mb-2 text-gray-700">
+                        {promocion.description || "Sin descripción"}
+                      </p>
+                      <span className="text-sm text-gray-500">
+                        Fecha de vencimiento:{" "}
+                        {promocion.endDate
+                          ? new Date(promocion.endDate).toLocaleDateString()
+                          : "Sin fecha"}
+                      </span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
+      </div>
 
-      <section className='w-full h-full mt-6 flex flex-col '>
+      <section className='w-full h-full mt-6 flex flex-col items-center '>
         <CommentSection onNewRating={fetchAverageRating} />
       </section>
     </div>
