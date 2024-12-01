@@ -57,7 +57,7 @@ const View7 = () => {
 
       // Obtener datos de la compañía
       const companyData = await getCompanyById(companyId);
-      console.log("los datos de la empresa", companyData)
+      
       const companyType = companyData?.data?.company?.cuenta;
 
       if (!companyType) {
