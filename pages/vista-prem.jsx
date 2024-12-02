@@ -7,6 +7,7 @@ import CommentSection from "../components/Molecules/CommentsCard";
 import AccessVisibility from "@/components/Molecules/muestraAccess";
 import { contarVisita } from "./api/api_visits"
 import { getPromoByCompanyId } from "./api/api_promos";
+import DOMPurify from 'dompurify'
 
 
 const defaultProfilePic = "public/6073873.png"
@@ -183,41 +184,51 @@ export default function CardFree() {
             </h2>
           </div>
           <div className="p-4">
-            {/* Indicador de carga */}
             {loading && <div className="text-center">Cargando promociones...</div>}
 
-            {/* Error */}
             {error && <div className="text-red-500">{error}</div>}
 
-            {/* Lista de promociones */}
             {!loading && promociones && promociones.length === 0 && (
               <div className="text-gray-500">No hay promociones disponibles.</div>
             )}
 
             {!loading && promociones && promociones.length > 0 && (
-              <ul className="space-y-6">
-                {promociones.map((promocion) => (
-                  <li
-                    key={promocion._id}
-                    className="p-6 border rounded-lg shadow-sm bg-[#F5F0E5] flex flex-col md:flex-row justify-between items-start md:items-center"
-                  >
-                    {/* Información de la promoción */}
-                    <div className="flex-1">
-                      <h4 className="text-xl font-bold  mb-2">
-                        {promocion.name || "Sin título"}
-                      </h4>
-                      <p className="mb-2 text-gray-700">
-                        {promocion.description || "Sin descripción"}
-                      </p>
-                      <span className="text-sm text-gray-500">
-                        Fecha de vencimiento:{" "}
-                        {promocion.endDate
-                          ? new Date(promocion.endDate).toLocaleDateString()
-                          : "Sin fecha"}
-                      </span>
-                    </div>
-                  </li>
-                ))}
+              <ul className="space-y-4 md:space-y-6">
+                {promociones
+                  .sort((a, b) => new Date(b.endDate) - new Date(a.endDate))
+                  .map((promocion) => (
+                    <li
+                      key={promocion._id}
+                      className="p-4 md:p-6 border rounded-lg shadow-sm bg-[#F5F0E5] relative flex flex-col sm:flex-row sm:justify-between sm:items-start"
+                    >
+                      <div className="mt-6 sm:mt-0 sm:ml-6">
+                        <h4 className="text-base md:text-lg font-bold mb-2">
+                          {promocion.name || "Sin título"}
+                        </h4>
+                        {promocion.image && (
+                          <div className="mb-4">
+                            <img
+                              src={promocion.image}
+                              alt={`Imagen de la promoción: ${promocion.name}`}
+                              className="w-full h-auto object-cover rounded-md"
+                            />
+                          </div>
+                        )}
+                        <div
+                          className="mb-2 text-sm md:text-base text-gray-700"
+                          dangerouslySetInnerHTML={{
+                            __html: DOMPurify.sanitize(promocion.description || "Sin descripción")
+                          }}
+                        />
+                        <span className="text-xs md:text-sm text-gray-500">
+                          Fecha de vencimiento:{" "}
+                          {promocion.endDate
+                            ? new Date(promocion.endDate).toLocaleDateString()
+                            : "Sin fecha"}
+                        </span>
+                      </div>
+                    </li>
+                  ))}
               </ul>
             )}
           </div>
