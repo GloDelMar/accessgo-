@@ -70,7 +70,7 @@ const View21 = () => {
   if (error) return <p>{error}</p>;
  
   
-  // if (comments.length === 0) return <p className="text-xl text-center">No existen datos.</p>;
+  //if (comments.length === 0) return <p className="text-xl text-center">No existen datos.</p>;
   
   
   
