@@ -49,8 +49,6 @@ export const getPromoByCompanyId = async (businessId) => {
 
 
 export const deletePromo = async (promoId) => {
-
-
   fetch(`${API_URL}/api/promos/${promoId}`, {
     method: 'DELETE'
   })
