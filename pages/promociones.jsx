@@ -1,18 +1,30 @@
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
-import { createpromo, getPromoByCompanyId } from './api/api_promos'; // Asegúrate de tener estas funciones definidas
+import { Editor } from '@tinymce/tinymce-react';
+import { createpromo, getPromoByCompanyId } from './api/api_promos';
 import { InputWithLabel } from '@/components/atoms/Input';
 
 const View18 = () => {
   const router = useRouter();
-  const { id } = router.query; // Tomamos el businessId del query de la URL
-
+  const [companyId, setCompanyId] = useState(null);
+  const [description, setDescription] = useState('');
   const [formValues, setFormValues] = useState({
     name: '',
-    description: '',
     startDate: '',
     endDate: '',
-     });
+  });
+  const [images, setImages] = useState([]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedUserId = localStorage.getItem('userId');
+      if (storedUserId) {
+        setCompanyId(storedUserId);
+      } else {
+        alert('Company ID not found in localStorage');
+      }
+    }
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -22,7 +34,18 @@ const View18 = () => {
     }));
   };
 
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length + images.length > 2) {
+      alert('Solo se pueden subir un máximo de 2 imágenes.');
+      return;
+    }
+    const newImages = files.map((file) => URL.createObjectURL(file));
+    setImages((prevImages) => [...prevImages, ...newImages]);
+  };
+
   const convertDateToISO = (date) => {
+    if (!date || !/^\d{2}\/\d{2}\/\d{4}$/.test(date)) return '';
     const [day, month, year] = date.split('/');
     return `${year}-${month}-${day}`;
   };
@@ -30,37 +53,39 @@ const View18 = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!id) {
+    if (!companyId) {
       alert('No se encontró el ID del negocio en la URL.');
       return;
     }
 
-    // Validación de fechas y horarios
     if (new Date(formValues.startDate) >= new Date(formValues.endDate)) {
       alert('La fecha de inicio debe ser anterior a la fecha de fin.');
       return;
     }
 
- 
+    if (!formValues.name || !formValues.startDate || !formValues.endDate || !description) {
+      alert('Todos los campos son obligatorios.');
+      return;
+    }
+
     try {
-      // Obtener el número de promociones existentes para el negocio
-      const promoCount = await getPromoByCompanyId(id);
+      const promoCount = await getPromoByCompanyId(companyId);
       if (promoCount >= 3) {
         alert('Este negocio ya alcanzó el límite máximo de 3 promociones.');
         return;
       }
-const businessId = id
-      // Preparar los datos para enviar
+
       const promoData = {
-        businessId,
+        businessId: companyId,
         ...formValues,
+        description,
         startDate: convertDateToISO(formValues.startDate),
         endDate: convertDateToISO(formValues.endDate),
+        images, // Agrega las imágenes al objeto de datos de la promoción
       };
 
-     console.log("así se envía:", promoData)
       const response = await createpromo(promoData);
-      console.log("la respuesta", response)
+
       if (response.success) {
         alert('Promoción guardada exitosamente');
         router.push('/sesion-prem');
@@ -72,6 +97,11 @@ const businessId = id
       alert('Ocurrió un error al intentar guardar la promoción.');
     }
   };
+
+  const handleRemoveImage = (index) => {
+    setImages((prevImages) => prevImages.filter((_, i) => i !== index));
+  };
+  
 
   return (
     <div className="m-10">
@@ -87,32 +117,85 @@ const businessId = id
             value={formValues.name}
             onChange={handleInputChange}
           />
-          <textarea
-            name="description"
-            placeholder="Descripción"
-            value={formValues.description}
-            onChange={handleInputChange}
-            className="w-full h-[100px] px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#263238] placeholder-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50"
-          />
+
+          {/* Input para las imágenes */}
+          <div className="mb-6">
+            <label className="block text-lg font-medium text-gray-800 mb-2">Imágenes (máximo 2)</label>
+            <div className="flex flex-col items-center">
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleImageChange}
+                className="block w-full py-2 px-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#2F4F4F] mb-3"
+              />
+              <button
+                type="button"
+                className="bg-[#2F4F4F] text-white font-semibold py-2 px-6 rounded-full hover:bg-[#004D40] transition duration-200"
+                onClick={() => {/* Aquí podrías agregar lógica si necesitas que el botón haga algo específico */ }}
+              >
+                Cargar Imágenes
+              </button>
+            </div>
+            {images.length > 0 && (
+              <div className="mt-4 flex justify-center gap-4">
+                {images.map((img, index) => (
+                  <div key={index} className="relative">
+                    <img
+                      src={img}
+                      alt={`Preview ${index}`}
+                      className="w-32 h-32 object-cover border border-gray-300 rounded-lg shadow-md"
+                    />
+                    <button
+                      onClick={() => handleRemoveImage(index)}
+                      className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                    >
+                      <span className="text-xs font-bold">X</span>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="border p-2 rounded-md">
+            <Editor
+              apiKey="vo5gkjv18q8n9rezc61ot22zc0rmuhbczz4blk7a8up23pso"
+              value={description}
+              init={{
+                height: 200,
+                menubar: false,
+                plugins: [
+                  'advlist autolink lists link image charmap print preview anchor',
+                  'searchreplace visualblocks code fullscreen',
+                  'insertdatetime media table paste code help wordcount',
+                ],
+                toolbar:
+                  'undo redo | formatselect | bold italic backcolor | \
+                  alignleft aligncenter alignright alignjustify | \
+                  bullist numlist outdent indent | removeformat | help',
+              }}
+              onEditorChange={(content) => setDescription(content)}
+            />
+          </div>
           <div className="grid gap-4 md:grid-cols-2">
-        <InputWithLabel
-          name="startDate"
-          type="text" // Usamos 'text' para permitir el formato personalizado
-          label="Fecha de inicio"
-          value={formValues.startDate}
-          onChange={handleInputChange}
-          placeholder="DD/MM/YYYY"
-        />
-        <InputWithLabel
-          name="endDate"
-          type="text" // Usamos 'text' para permitir el formato personalizado
-          label="Fecha de fin"
-          value={formValues.endDate}
-          onChange={handleInputChange}
-          placeholder="DD/MM/YYYY"
-        />
-      </div>
-        
+            <InputWithLabel
+              name="startDate"
+              type="text"
+              label="Fecha de inicio"
+              value={formValues.startDate}
+              onChange={handleInputChange}
+              placeholder="DD/MM/YYYY"
+            />
+            <InputWithLabel
+              name="endDate"
+              type="text"
+              label="Fecha de fin"
+              value={formValues.endDate}
+              onChange={handleInputChange}
+              placeholder="DD/MM/YYYY"
+            />
+          </div>
           <div className="mt-10 flex justify-center">
             <button
               type="submit"

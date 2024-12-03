@@ -33,37 +33,37 @@ const EstadisticasVisitas = ({ rango }) => {
           }
   
           const url = `https://backend-r159.onrender.com/api/visitas/${companyId}?rango=${rango}`;
-          console.log("URL generada: ", url);
+        
   
           const response = await fetch(url);
-          console.log("Respuesta de la API: ", response);
+        
   
           if (!response.ok) {
             throw new Error(`Error HTTP: ${response.status}`);
           }
   
           const data = await response.json();
-          console.log("Datos recibidos: ", data);
+         
   
           if (!data.success) {
             throw new Error("La respuesta del servidor no indica éxito.");
           }
   
           setEstadisticas(data.data || []);
-          console.log("Estadísticas establecidas: ", data, "o" ,data.data);
+       
   
           const total = (data.data || []).reduce(
             (sum, visita) => sum + (visita.totalVisits || 0),
             0
           );
           setTotalVisitas(total);
-          console.log("Total de visitas calculadas: ", total);
+        
         } catch (error) {
           console.error("Error en fetchEstadisticas: ", error);
           setError(error.message);
         } finally {
           setLoading(false);
-          console.log("Estado de carga finalizado");
+         
         }
       };
   
