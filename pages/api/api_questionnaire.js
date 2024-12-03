@@ -29,8 +29,6 @@ export const createHotelAccessibility = async (hotelAccessibilityData) => {
       body: JSON.stringify(hotelAccessibilityData),
     });
 
-    console.log('Datos enviados:', hotelAccessibilityData);
-console.log('Respuesta del servidor:', response);
     if (!response.ok) {
       throw new Error('Error al crear el cuestionario de accesibilidad para el hotel');
     }
