@@ -27,12 +27,13 @@ const EstadisticasVisitas = ({ rango }) => {
     if (companyId) {
       const fetchEstadisticas = async () => {
         try {
+          console.log("Inicio de fetchEstadisticas");
           if (!companyId) {
             throw new Error("Company ID no está definido.");
           }
   
           const url = `https://backend-r159.onrender.com/api/visitas/${companyId}?rango=${rango}`;
-         
+        
   
           const response = await fetch(url);
         
@@ -41,25 +42,28 @@ const EstadisticasVisitas = ({ rango }) => {
             throw new Error(`Error HTTP: ${response.status}`);
           }
   
-          const data = await response.json();  
+          const data = await response.json();
+         
+  
           if (!data.success) {
             throw new Error("La respuesta del servidor no indica éxito.");
           }
   
           setEstadisticas(data.data || []);
        
+  
           const total = (data.data || []).reduce(
             (sum, visita) => sum + (visita.totalVisits || 0),
             0
           );
           setTotalVisitas(total);
-         
+        
         } catch (error) {
           console.error("Error en fetchEstadisticas: ", error);
           setError(error.message);
         } finally {
           setLoading(false);
-        
+         
         }
       };
   
@@ -68,7 +72,7 @@ const EstadisticasVisitas = ({ rango }) => {
   }, [rango, companyId]);
   
   if (loading) {
-   
+    console.log("Cargando estadísticas...");
     return <div>Cargando estadísticas...</div>;
   }
   
@@ -79,7 +83,7 @@ const EstadisticasVisitas = ({ rango }) => {
   
   // Mostrar mensaje si totalVisitas es 0
   if (totalVisitas === 0) {
-  
+    console.log("Total de visitas es 0. Mostrando mensaje.");
     return (
       <div>
         <h4 className="text-xl text-center font-semibold mb-10 text-[#2F4F4F]">
@@ -88,6 +92,8 @@ const EstadisticasVisitas = ({ rango }) => {
       </div>
     );
   }
+  
+  console.log("Datos para el gráfico: ", estadisticas);
   
   const chartData = {
     labels: estadisticas.map((visita) => visita.date),

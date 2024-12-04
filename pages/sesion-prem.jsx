@@ -16,7 +16,9 @@ import router from "next/router";
 import { getBusinessAverageRanking } from "./api/api_ranking";
 import { getCommentsByCompanyId } from "./api/api_comment";
 import EstadisticasVisitas from "../components/Molecules/Estadisticas"
-import { getPromoByCompanyId } from "./api/api_promos";
+import { getPromoByCompanyId, deletePromo } from "./api/api_promos";
+import DOMPurify from 'dompurify'
+
 
 
 ChartJS.register(
@@ -115,7 +117,7 @@ const SesionPremium = () => {
         const promocionesData = await getPromoByCompanyId(companyId);
         setPromociones(promocionesData.data || []);
 
-       } catch (error) {
+      } catch (error) {
         console.error(error);
         setError('Failed to fetch company data');
       } finally {
@@ -129,8 +131,25 @@ const SesionPremium = () => {
   if (loading) return <p>Cargando...</p>;
   if (error) return <p>Error: {error}</p>;
 
-  const handleEditPromotion = (promotionId) => {
-    router.push(`/promociones?id=${promotionId}`);
+  const handleCreatePromotion = () => {
+    router.push(`/promociones`);
+  };
+
+  const handleRemovePromotion = async (promoId) => {
+    try {
+      // Llama a la API para eliminar la promoción
+      await deletePromo(promoId);
+
+      // Actualiza el estado local eliminando la promoción eliminada
+      setPromociones((prevPromociones) =>
+        prevPromociones.filter((promo) => promo._id !== promoId)
+      );
+
+      alert("Promoción eliminada con éxito.");
+    } catch (error) {
+      console.error(error);
+      alert("Hubo un problema al eliminar la promoción.");
+    }
   };
 
 
@@ -245,59 +264,75 @@ const SesionPremium = () => {
           <div className="max-w-xxl mx-auto bg-white shadow-md rounded-lg overflow-hidden border border-gray-200 mt-4">
             <div className="bg-[#2F4F4F] text-white p-4">
               <h2 className="text-2xl lg:text-3xl text-center">
-              Tus promociones este mes:
+                Tus promociones este mes:
               </h2>
             </div>
             <div className="p-4">
-                {/* Indicador de carga */}
-                {loading && <div className="text-center">Cargando promociones...</div>}
+              {loading && <div className="text-center text-sm md:text-base">Cargando promociones...</div>}
+              {error && <div className="text-red-500 text-sm md:text-base">{error}</div>}
+              {!loading && promociones && promociones.length === 0 && (
+                <div className="text-gray-500 text-center text-sm md:text-base">
+                  No hay promociones disponibles.
+                </div>
+              )}
 
-                {/* Error */}
-                {error && <div className="text-red-500">{error}</div>}
-
-                {/* Lista de promociones */}
-                {!loading && promociones && promociones.length === 0 && (
-                  <div className="text-gray-500">No hay promociones disponibles.</div>
-                )}
-
-                {!loading && promociones && promociones.length > 0 && (
-                  <ul className="space-y-6">
-                    {promociones.map((promocion) => (
+              {!loading && promociones && promociones.length > 0 && (
+                <ul className="space-y-4 md:space-y-6">
+                  {promociones
+                    .sort((a, b) => new Date(b.endDate) - new Date(a.endDate)) 
+                    .map((promocion) => (
                       <li
                         key={promocion._id}
-                        className="p-6 border rounded-lg shadow-sm bg-[#F5F0E5] flex flex-col md:flex-row justify-between items-start md:items-center"
+                        className="p-4 md:p-6 border rounded-lg shadow-sm bg-[#F5F0E5] relative flex flex-col sm:flex-row sm:justify-between sm:items-start"
                       >
-                        {/* Información de la promoción */}
-                        <div className="flex-1">
-                          <h4 className="text-xl font-bold  mb-2">
+                        <button
+                          className="absolute top-2 right-2 px-2 py-1 md:px-3 md:py-1.5 border border-transparent rounded-md shadow-sm text-xs md:text-sm text-white 
+                  bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]"
+                          onClick={() => handleRemovePromotion(promocion._id)}
+                        >
+                          X
+                        </button>
+                        <div className="mt-6 sm:mt-0 sm:ml-6">
+                          <h4 className="text-base md:text-lg font-bold mb-2">
                             {promocion.name || "Sin título"}
                           </h4>
-                          <p className="mb-2 text-gray-700">
-                            {promocion.description || "Sin descripción"}
-                          </p>
-                          <span className="text-sm text-gray-500">
+                          {promocion.image && (
+                            <div className="mb-4">
+                              <img
+                                src={promocion.image}
+                                alt={`Imagen de la promoción: ${promocion.name}`}
+                                className="w-full h-auto object-cover rounded-md"
+                              />
+                            </div>
+                          )}
+                          <div
+                            className="mb-2 text-sm md:text-base text-gray-700"
+                            dangerouslySetInnerHTML={{
+                              __html: DOMPurify.sanitize(promocion.description || "Sin descripción")
+                            }}
+                          />
+                          <span className="text-xs md:text-sm text-gray-500">
                             Fecha de vencimiento:{" "}
                             {promocion.endDate
                               ? new Date(promocion.endDate).toLocaleDateString()
                               : "Sin fecha"}
                           </span>
                         </div>
-
-                        {/* Botón de edición */}
-                        <button
-                          onClick={() => handleEditPromotion(promocion._id)}
-                          className="mt-4 md:mt-0 md:ml-6 px-4 py-2 border border-transparent rounded-md shadow-sm
-              text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]"
-                        >
-                          Editar
-                        </button>
                       </li>
                     ))}
-                  </ul>
-                )}
+                </ul>
+              )}
             </div>
+            <button
+              onClick={() => handleCreatePromotion()}
+              className="block mx-auto my-4 px-4 py-2 border border-transparent rounded-md shadow-sm
+        text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]"
+            >
+              Publicar una Promoción
+            </button>
           </div>
         </div>
+
         <div>
           <h3 className="text-2xl text-center font-semibold my-8 text-[#2F4F4F]">Estas son las estadísticas de visitas a tu perfil de AccessGo Premium</h3>
 
@@ -310,7 +345,6 @@ const SesionPremium = () => {
           </select>
         </div>
 
-
         <div className="flex flex-row justify-center mt-4 space-x-4 md:space-x-[200px]">
           <button className="w-[155px] h-[40px] bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C] text-white rounded-lg flex items-center justify-center">
             <Link legacyBehavior href="/ticket">
@@ -318,6 +352,7 @@ const SesionPremium = () => {
             </Link>
           </button>
         </div>
+
       </div>
     </main>
   );
