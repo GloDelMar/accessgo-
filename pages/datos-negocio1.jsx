@@ -22,7 +22,7 @@ const View23 = () => {
   const [latitude, setLatitude] = useState(null);
   const [companyId, setCompanyId] = useState(null);
   const [phone, setPhone] = useState('')
-
+ 
   useEffect(() => {
     const companyIdFromLocalStorage = localStorage.getItem("userId");
     if (companyIdFromLocalStorage) {
@@ -88,9 +88,11 @@ const View23 = () => {
     if (!companyId) return;
 
     try {
-      const response = await axios.get(`https://backend-r159.onrender.com/api/company/${companyId}`);
-      const companyData = response.data.data.company;
-    
+      const { NEXT_PUBLIC_LH, NEXT_PUBLIC_RH } = process.env;
+    const urls = (NEXT_PUBLIC_LH || NEXT_PUBLIC_RH) + `/api/users/${companyId}`;
+    console.log(urls); // Asegúrate de que esto imprima la URL correcta
+    const response = await axios.get(urls);
+    const companyData = response.data.data.company;
 
       setFormValues({
         nombreComercial: companyData?.companyName || '',

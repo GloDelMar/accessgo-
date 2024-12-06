@@ -13,10 +13,6 @@ const View6 = () => {
   const [isClient, setIsClient] = useState(false); // Indica si el componente está montado en cliente
   const router = useRouter();
 
-  const { LH, RH} = process.env
-
-  const url = (LH || RH) + `/api/users/${userId}`
-
   // Verifica si estamos en el cliente y establece el `userId`
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -34,12 +30,11 @@ const View6 = () => {
 
   // Carga los datos del usuario solo cuando `userId` esté definido y en el cliente
   useEffect(() => {
-    
     const fetchUserData = async () => {
       if (!userId || !isClient) return; // Previene que se ejecute en SSR
       
       try {
-        const response = await fetch(`${LH}/api/users/${userId}` || `${RH}/api/users/${userId}`, {
+        const response = await fetch(`https://backend-r159.onrender.com/api/users/${userId}`, {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
         });
@@ -70,7 +65,7 @@ const View6 = () => {
     const userData = { firstName: dataNombre, lastName: dataApellido, birthDate: dataFecha, biography: dataBio };
     
     try {
-      const response = await fetch(`${LH}/api/users/${userId}`, `${RH}/api/users/${userId}`,{
+      const response = await fetch(`https://backend-r159.onrender.com/api/users/${userId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(userData),
