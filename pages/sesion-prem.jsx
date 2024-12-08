@@ -205,17 +205,6 @@ const SesionPremium = () => {
             <ImageCarouselACC userId={companyId} />
             <UploadImageACC />
           </div>
-          <div className='flex justify-center items-center py-5'>
-            <Link legacyBehavior href='/vista-prem'>
-              <button
-                className=' mt-20 px-6 py-2 border border-transparent rounded-md shadow-sm
-              text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none
-              focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]'
-              >
-                Listo
-              </button>
-            </Link>
-          </div>
         </div>
 
         <div className='w-full flex flex-col mt-6'>
