@@ -5,41 +5,10 @@ import { getBusinessAverageRanking } from './api/api_ranking';
 import { getCompanyById } from './api/api_company';
 import CommentSection from '../components/Molecules/CommentsCard';
 import AccessVisibility from '@/components/Molecules/muestraAccess';
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+import ImageCarouselACC from '@/components/Molecules/ImageCarouselACC';
 
 const defaultProfilePic = '/6073873.png';
 
-const settings = {
-  dots: true, // Muestra los puntos de navegación
-  infinite: true, // Carrusel infinito
-  speed: 1000, // Velocidad de transición
-  slidesToShow: 1, // Número de imágenes mostradas por diapositiva
-  slidesToScroll: 1, // Número de imágenes desplazadas al hacer clic
-  autoplay: true, // Activa el avance automático
-  autoplaySpeed: 3000, // Tiempo en milisegundos entre cada diapositiva (3 segundos)
-  responsive: [
-    {
-      // En pantallas pequeñas (por ejemplo, menos de 768px de ancho)
-      breakpoint: 768,
-      settings: {
-        slidesToShow: 1, // Muestra una sola imagen
-        slidesToScroll: 1,
-        autoplay: true // Habilitar autoplay en pantallas pequeñas
-      }
-    },
-    {
-      // En pantallas medianas (por ejemplo, entre 768px y 1024px de ancho)
-      breakpoint: 1024,
-      settings: {
-        slidesToShow: 2, // Muestra dos imágenes
-        slidesToScroll: 1,
-        autoplay: true // Habilitar autoplay
-      }
-    }
-  ]
-};
 
 const getValueOrDefault = (
   value,
@@ -179,6 +148,12 @@ export default function CardFree() {
             {companyData?.data?.company?.phone || 'Información no disponible.'}
           </p>
         </div>
+        <div className='flex flex-col justify-center gap-5'>
+          <h1 className='text-center text-[#2F4F4F] mt-8'>
+            Imagenes de accesibilidad proporcionadas por la empresa:
+          </h1>
+          <ImageCarouselACC userId={id} />
+        </div>
         <div>
           <AccessVisibility companyId={id} />
         </div>
@@ -189,3 +164,4 @@ export default function CardFree() {
     </div>
   );
 }
+
