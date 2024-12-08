@@ -8,6 +8,7 @@ import AccessVisibility from "@/components/Molecules/muestraAccess";
 import { contarVisita } from "./api/api_visits"
 import { getPromoByCompanyId } from "./api/api_promos";
 import DOMPurify from 'dompurify'
+import ImageCarouselACC from "@/components/Molecules/ImageCarouselACC";
 
 
 const defaultProfilePic = "public/6073873.png"
@@ -171,6 +172,9 @@ export default function CardFree() {
           <h4 value="Place" className="text-[#546E7A] font-semibold mt-3">Teléfono:</h4>
           <p className="text-center"> {companyData?.data?.company?.phone || "Información no disponible."}</p>
         </div>
+        <div className='flex flex-col justify-center gap-5'>
+            <ImageCarouselACC userId={id} />
+          </div>
         <div >
           <AccessVisibility companyId={id} />
         </div>
