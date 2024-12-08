@@ -111,6 +111,8 @@ const View23 = () => {
       setLatitude(companyData?.latitude);
       setLongitude(companyData?.longitude);
 
+      setSelectedImage(companyData.profilePicture || null)
+
 
     } catch (error) {
       console.error("Error fetching company data:", error);
@@ -146,15 +148,6 @@ const View23 = () => {
     } catch (error) {
       console.error(error.message);
       alert(error.message);
-    }
-  };
-
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => setSelectedImage(reader.result);
-      reader.readAsDataURL(file);
     }
   };
 
@@ -214,21 +207,17 @@ const View23 = () => {
 
         <div className="grid gap-8 lg:grid-cols-[300px,1fr] w-full">
           <div className="flex flex-col justify-items-center items-center space-y-4 w-full">
-            <div className="w-32 h-32 sm:w-40 sm:h-40 bg-[#ECEFF1] rounded-full flex items-center justify-center mb-4">
+          <div className="flex justify-center lg:justify-start">
             <label htmlFor="imgUsuario" className="cursor-pointer">
               {selectedImage ? (
                 <Image src={selectedImage} alt="Foto de perfil" width={200} height={200} className="rounded-full" />
               ) : (
                 <Image src="/iconoframe.png" alt="Foto de perfil" width={200} height={200} className="rounded-full" />
               )}
-            </label>
-          
-        
-
          {/* Esto es para la subida de imagenes a aws */}
-        <UploadImageCPP companyId={companyId} setSelectedImage={setSelectedImage} /> 
-          
-            </div>
+        <UploadImageCPP userId={companyId} setSelectedImage={setSelectedImage} /> 
+            </label>
+          </div>
           </div>
 
           <div className="grid grid-cols-1 space-y-6 w-full">

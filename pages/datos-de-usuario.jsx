@@ -104,12 +104,12 @@ const View6 = () => {
               ) : (
                 <Image src="/iconoframe.png" alt="Foto de perfil" width={200} height={200} className="rounded-full" />
               )}
+         {/* Esto es para la subida de imagenes a aws */}
+        <UploadImageUPP userId={userId} setSelectedImage={setSelectedImage} /> 
             </label>
           </div>
         </div>
 
-         {/* Esto es para la subida de imagenes a aws */}
-        <UploadImageUPP userId={userId} setSelectedImage={setSelectedImage} /> 
 
         <div className="lg:w-2/3 flex flex-col items-center lg:items-start">
           <form className="w-full max-w-lg" onSubmit={handleSubmit}>
