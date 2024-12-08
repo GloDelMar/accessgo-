@@ -4,9 +4,9 @@ const UploadImageACC = () => {
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
-  const [userId, setUserId] = useState(null); // Estado para almacenar userId
+  const [userId, setUserId] = useState(null); 
 
-  // Obtener el userId desde el localStorage cuando el componente se monta
+  
   useEffect(() => {
     const storedUserId = localStorage.getItem('userId');
     if (storedUserId) {
@@ -14,7 +14,7 @@ const UploadImageACC = () => {
     } else {
       console.error('No userId found in localStorage');
     }
-  }, []); // Solo se ejecuta una vez cuando el componente se monta
+  }, []); 
 
   const handleFileChange = (e) => {
     setImage(e.target.files[0]);
@@ -30,7 +30,7 @@ const UploadImageACC = () => {
 
     const formData = new FormData();
     formData.append('image', image);
-    formData.append('userId', userId); // Usamos el userId del estado
+    formData.append('userId', userId); 
 
     try {
       const response = await fetch('https://backend-r159.onrender.com/api/uploadacc', {
@@ -54,7 +54,7 @@ const UploadImageACC = () => {
 
   return (
     <div className="flex flex-col items-center space-y-4">
-      {/* Botón de archivo estilizado */}
+      
       <label
         htmlFor="file-upload"
         className="px-4 py-2 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600"
@@ -64,11 +64,11 @@ const UploadImageACC = () => {
       <input
         type="file"
         id="file-upload"
-        className="hidden"  // Ocultar el input original
+        className="hidden" 
         onChange={handleFileChange}
       />
 
-      {/* Botón de upload */}
+     
       <button
         onClick={handleUpload}
         disabled={uploading || !image}
