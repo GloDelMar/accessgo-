@@ -59,6 +59,52 @@ const HomeContent = () => {
           />
         </div>
       </div>
+
+      <div className="relative mb-8 group cursor-pointer flex justify-center">
+        <button
+          onClick={() => router.push('/MapWithPlaces')}
+          className="flex items-center gap-2 px-6 py-3 bg-white dark:bg-[#F7D547] border border-[#8CC63F] 
+               hover:bg-[#F7D547]/10 dark:hover:bg-[#F7D547]/20 rounded-full shadow-md 
+               transition-all hover:shadow-lg group-hover:border-[#F7D547]"
+        >
+          <div
+            className="flex items-center justify-center w-8 h-8 bg-[#F7D547]/20 dark:bg-[#F7D547]/30 
+                 rounded-full group-hover:bg-[#F7D547]/30"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="w-5 h-5 text-[#2F4858]"
+            >
+              <path d="M10.59 15.41L5 12l12-7-3.4 12.15a.5.5 0 01-.82.26l-2.67-2.67a.5.5 0 00-.71 0z" />
+            </svg>
+          </div>
+
+          <span className="text-sm font-medium text-[#2F4858]">Explorar Mapa</span>
+
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="w-5 h-5 text-[#2F4858]"
+          >
+            <path d="M12 2a10 10 0 100 20 10 10 0 000-20z" />
+            <path d="M9.09 9L15 12l-3 7" />
+            <path d="M9 21l3-6 3 6" />
+          </svg>
+        </button>
+      </div>
+
+
       <div className="mx-2 mt-[40] md:mx-[25px]">
         <h3 className="text-2xl text-center md:text-left font-bold mb-2">Visita a nuestros socios</h3>
         <p className="text-center mt-3 md:text-left">Para ti, que buscas un lugar para pasar un buen rato:</p>
