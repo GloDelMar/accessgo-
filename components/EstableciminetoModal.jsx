@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 
-const EstablecimientoModal = ({ isOpen, onClose, establishment, onGetDirections }) => {
+const EstablecimientoModal = ({ isOpen, onClose, establishment, onGetDirections, onImageClick }) => {
   const [activeImage, setActiveImage] = useState(0);
 
   if (!isOpen) return null;
@@ -30,7 +30,10 @@ const EstablecimientoModal = ({ isOpen, onClose, establishment, onGetDirections 
             <div className="space-y-4">
               {establishment.images && establishment.images.length > 0 ? (
                 <>
-                  <div className="relative aspect-video rounded-lg overflow-hidden">
+                  <div
+                    className="relative aspect-video rounded-lg overflow-hidden cursor-pointer"
+                    onClick={() => onImageClick && onImageClick(establishment.id)}
+                  >
                     <Image
                       src={establishment.images[activeImage]}
                       alt={`Imagen ${activeImage + 1}`}
@@ -54,7 +57,7 @@ const EstablecimientoModal = ({ isOpen, onClose, establishment, onGetDirections 
                     src="/estrellita.svg"
                     alt="Estrella"
                     className={
-                      star <= Math.round(establishment.rating) ? 'opacity-100' : 'opacity-30'
+                      star <= Math.round(establishment.rating) ? "opacity-100" : "opacity-30"
                     }
                     width={20}
                     height={20}
