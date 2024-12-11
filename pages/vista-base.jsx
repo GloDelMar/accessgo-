@@ -63,15 +63,18 @@ export default function CardFree() {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className='flex flex-col justify-center md:p-4 lg:p-8'>
+    <div className='flex flex-col justify-center max-w-screen-sm  h-full md:p-4 lg:p-8'>
       <div className='w-full mt-4 flex flex-col justify-center items-center'>
         <p className='text-[#2F4F4F] text-[20px] md:text-[40px] lg:text-[56px] text-center font-semibold'>
           ¡AccessGo!
         </p>
         <img
-          className='w-[236px] h-[300px] md:w-[632px] md:h-[250px] lg:w-[652px] lg:h-[250px] mt-8 object-cover'
+          className='w-[472px] h-[600px] md:w-[1264px] md:h-[500px] lg:w-[1304px] lg:h-[500px] mt-8 object-contain'
           src={companyData?.data?.company?.profilePicture || '/img-card.png'}
           alt='Foto principal de empresa'
+          width={1300}
+          height={500}
+          layout='responsive'
         />
       </div>
       <section className='flex flex-col md:flex-row lg:flex-row justify-between p-2 mt-4 w-full'>
