@@ -72,11 +72,11 @@ export default function CardFree() {
           ¡AccessGo!
         </p>
         <img
-          className='w-[236px] h-[300px] md:w-[632px] md:h-[250px] lg:w-[652px] lg:h-[250px] mt-8 object-cover'
+          className='w-[472px] h-[600px] md:w-[1264px] md:h-[500px] lg:w-[1304px] lg:h-[500px] mt-8 object-contain'
           src={companyData?.data?.company?.profilePicture || '/img-card.png'}
           alt='Foto principal de empresa'
-          width={652}
-          height={250}
+          width={1300}
+          height={500}
           layout='responsive'
         />
       </div>
