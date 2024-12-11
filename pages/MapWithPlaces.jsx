@@ -8,12 +8,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
-import { getAllCompanies } from './api/api_company';
+import { getAllCompanies, getCompanyById } from './api/api_company';
 import { getBusinessAverageRanking } from './api/api_ranking';
+import { useRouter } from 'next/router';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiYWNjZXNnbyIsImEiOiJjbTI4NGVjNnowc2RqMmxwdnptcXAwbmhuIn0.0jG0XG0mwx_LHjdJ23Qx4A';
 
 export default function MapWithPlaces() {
+  const router = useRouter();
   const mapContainer = useRef(null);
   const map = useRef(null);
   const directions = useRef(null);
@@ -104,60 +106,80 @@ export default function MapWithPlaces() {
       .addTo(map.current);
   }, [userLocation]);
 
-  // Agregar marcadores dinámicamente
+  // Calcular la distancia entre dos puntos en el mapa
+  const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371;
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * (Math.PI / 180)) *
+      Math.cos(lat2 * (Math.PI / 180)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  };
+
+  // Agregar marcadores dinámicamente y establecimientos mas cercanos
   useEffect(() => {
-    if (!map.current) return;
+    if (!map.current || !userLocation) return;
 
     document.querySelectorAll('.mapboxgl-marker').forEach((marker) => marker.remove());
 
-    if (userLocation) {
-      new mapboxgl.Marker({ color: 'red' })
-        .setLngLat([userLocation.longitude, userLocation.latitude])
-        .setPopup(
-          new mapboxgl.Popup({ offset: 25 }).setHTML(
-            DOMPurify.sanitize(
-              `<div>
-                <h3 class="font-semibold">Tu ubicación</h3>
-                <p>Esta es tu ubicación actual</p>
-              </div>`
-            )
+    new mapboxgl.Marker({ color: 'red' })
+      .setLngLat([userLocation.longitude, userLocation.latitude])
+      .setPopup(
+        new mapboxgl.Popup({ offset: 25 }).setHTML(
+          DOMPurify.sanitize(
+            `<div>
+                        <h3 class="font-semibold">Tu ubicación</h3>
+                        <p>Esta es tu ubicación actual</p>
+                    </div>`
           )
         )
-        .addTo(map.current);
-    }
+      )
+      .addTo(map.current);
 
-    // Agregar marcadores para las compañías filtradas
-    filteredCompanies.forEach((company) => {
-      const { latitude, longitude, companyName, giro, address, profile } = company;
+    const companiesWithDistance = filteredCompanies.map((company) => {
+      const distance = calculateDistance(
+        userLocation.latitude,
+        userLocation.longitude,
+        company.latitude,
+        company.longitude
+      );
+      return { ...company, distance };
+    }).sort((a, b) => a.distance - b.distance);
+
+    companiesWithDistance.forEach((company, index) => {
+      const { latitude, longitude, companyName, distance } = company;
+      const color = index === 0 ? '#00FF00' : index <= 3 ? '#FFA500' : '#0000FF';
 
       if (latitude && longitude) {
-        const currentMarker = new mapboxgl.Marker({ color: 'blue' })
+        const currentMarker = new mapboxgl.Marker({ color })
           .setLngLat([longitude, latitude])
           .setPopup(
             new mapboxgl.Popup({ offset: 25 }).setHTML(
               DOMPurify.sanitize(
                 `<div>
-                  <h3 class="font-semibold">${companyName}</h3>
-                  <p>${giro}</p>
-                  <p>${address}</p>
-                </div>`
+                                <h3 class="font-semibold">${companyName}</h3>
+                                <p>Distancia: ${distance.toFixed(2)} km</p>
+                            </div>`
               )
             )
           )
           .addTo(map.current);
 
-        // Añadir evento para iniciar la ruta al hacer clic en el marcador
         currentMarker.getElement().addEventListener('click', () => {
           startRoute(
             [userLocation.longitude, userLocation.latitude],
             [longitude, latitude]
           );
         });
-      } else {
-        console.warn("Marcador no agregado debido a coordenadas inválidas:", company);
       }
     });
   }, [filteredCompanies, userLocation]);
+
 
   // Manejar el filtro de búsqueda en tiempo real
   useEffect(() => {
@@ -179,7 +201,7 @@ export default function MapWithPlaces() {
 
     map.current.flyTo({
       center: [place.longitude, place.latitude],
-      zoom: 15,
+      zoom: 350,
       essential: true,
     });
   };
@@ -252,6 +274,25 @@ export default function MapWithPlaces() {
     } catch (error) {
       toast.error('Error al calcular la ruta.');
       console.error('Error en handleGetDirections:', error);
+    }
+  };
+
+  // Función para manejar el clic en una tarjeta
+  const handleCardClick = async (id) => {
+    try {
+      const companyData = await getCompanyById(id);
+      const companyType = companyData?.data?.company?.cuenta;
+
+      if (companyType === "free") {
+        router.push(`vista-base?id=${id}`);
+      } else if (companyType === "premium") {
+        router.push(`vista-prem?id=${id}`);
+      } else {
+        throw new Error("Tipo de compañía inválido.");
+      }
+    } catch (error) {
+      console.error("Error al manejar el clic de la tarjeta:", error.message);
+      toast.error("Error al redirigir a la página de la compañía.");
     }
   };
 
@@ -352,53 +393,83 @@ export default function MapWithPlaces() {
           </div>
 
           <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide">
-            {filteredCompanies.map((company) => (
-              <div
-                key={company._id}
-                className="bg-white shadow rounded-lg min-w-[200px] snap-start flex-shrink-0"
-                onClick={() => handleOpenModal(company)}
-              >
-                <div className="p-4 flex flex-col items-center gap-2">
-                  <div className="w-16 h-16 bg-muted rounded overflow-hidden">
-                    <Image
-                      src={company.profilePicture || "/placeholder.svg?height=64&width=64"}
-                      alt={company.companyName}
-                      width={400}
-                      height={100}
-                      className="rounded"
-                    />
-                  </div>
-                  <div className="text-center">
-                    <h3 className="font-semibold text-gray-800">{company.companyName}</h3>
-                    <div className="flex justify-center items-center gap-1">
-                      {[...Array(3)].map((_, i) => (
-                        <svg
-                          key={i}
-                          className="w-5 h-5 text-yellow-400 fill-current"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z" />
-                        </svg>
-                      ))}
+            {filteredCompanies
+              .filter((company) => {
+                const distance = calculateDistance(
+                  userLocation?.latitude,
+                  userLocation?.longitude,
+                  company?.latitude,
+                  company?.longitude
+                );
+                return distance < 10;
+              })
+              .map((company) => {
+                const distance = calculateDistance(
+                  userLocation?.latitude,
+                  userLocation?.longitude,
+                  company?.latitude,
+                  company?.longitude
+                );
+
+                const bgColorClass = distance < 1 ? 'bg-green-100' : 'bg-orange-100';
+
+                return (
+                  <div
+                    key={company._id}
+                    className={`shadow rounded-lg min-w-[200px] snap-start flex-shrink-0 ${bgColorClass}`}
+                    onClick={() => handleOpenModal(company)}
+                  >
+                    <div className="p-4 flex flex-col items-center gap-2">
+                      <div className="w-16 h-16 bg-muted rounded overflow-hidden">
+                        <Image
+                          src={company.profilePicture || "/placeholder.svg?height=64&width=64"}
+                          alt={company.companyName}
+                          width={400}
+                          height={100}
+                          className="rounded"
+                        />
+                      </div>
+                      <div className="text-center">
+                        <h3 className="font-semibold text-gray-800">{company.companyName}</h3>
+                        <div className="flex justify-center items-center gap-1">
+                          {[...Array(3)].map((_, i) => (
+                            <svg
+                              key={i}
+                              className="w-5 h-5 text-yellow-400 fill-current"
+                              viewBox="0 0 24 24"
+                            >
+                              <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z" />
+                            </svg>
+                          ))}
+                        </div>
+                        <p className="text-sm text-muted-foreground">
+                          {company.giro || "Sin giro definido"}
+                        </p>
+                        <p className="text-xs text-gray-500">Distancia: {distance.toFixed(2)} km</p>
+                      </div>
                     </div>
-                    <p className="text-sm text-muted-foreground">
-                      {company.giro || "Sin giro definido"}
-                    </p>
                   </div>
-                </div>
-              </div>
-            ))}
+                );
+              })}
           </div>
+
         </div>
       )}
       {/* Modal */}
       {isModalOpen && selectedEstablishment && (
         <EstablecimientoModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          establishment={selectedEstablishment}
-          onGetDirections={handleGetDirections}
-        />
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        establishment={selectedEstablishment}
+        onGetDirections={handleGetDirections}
+        onImageClick={async (id) => {
+          const companyType = await handleCardClick(id);
+          if (companyType !== "free" && companyType !== "premium") {
+            console.error("Tipo de compañía inválido para redirección.");
+          }
+        }}
+      />
+      
       )}
     </div>
   );
