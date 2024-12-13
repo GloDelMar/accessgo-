@@ -22,7 +22,7 @@ export default function SearchWithGeocoding({ map }) {
 
         map.flyTo({
           center: [longitude, latitude],
-          zoom: 14,
+          zoom: 300,
         });
         toast.success(`Ubicación encontrada: ${data.features[0].place_name}`);
       } else {
