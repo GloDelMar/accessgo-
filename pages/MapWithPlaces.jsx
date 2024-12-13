@@ -3,6 +3,7 @@ import MapboxDirections from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-direct
 import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css';
 import DOMPurify from 'dompurify';
 import { ArrowLeft, MapPin, Menu, X } from 'lucide-react';
+import mapboxgl from 'mapbox-gl';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
@@ -10,33 +11,47 @@ import { toast } from 'sonner';
 import { getAllCompanies, getCompanyById } from './api/api_company';
 import { getBusinessAverageRanking } from './api/api_ranking';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState, useRef } from "react";
-import mapboxgl from "mapbox-gl";
-import { getRestaurantAccessibility, getHotelAccessibility } from "./api/api_questionnaire";
+import { getHotelAccessibility, getRestaurantAccessibility } from './api/api_questionnaire';
+import IconButton from '@/components/atoms/IconButton';
 
-mapboxgl.accessToken = "pk.eyJ1IjoiYWNjZXNnbyIsImEiOiJjbTI4NGVjNnowc2RqMmxwdnptcXAwbmhuIn0.0jG0XG0mwx_LHjdJ23Qx4A";
+mapboxgl.accessToken = 'pk.eyJ1IjoiYWNjZXNnbyIsImEiOiJjbTI4NGVjNnowc2RqMmxwdnptcXAwbmhuIn0.0jG0XG0mwx_LHjdJ23Qx4A';
 
-export default function MapWithPlaces({ onSelectPlace, searchQuery, selectedType, selectedRating, selectedDisability, setMapInstance }) {
+export default function MapWithPlaces() {
   const router = useRouter();
   const mapContainer = useRef(null);
   const map = useRef(null);
   const directions = useRef(null);
-  const [companies, setCompanies] = useState([]);
   const [filteredCompanies, setFilteredCompanies] = useState([]);
   const [isVisible, setIsVisible] = useState(true);
   const [loading, setLoading] = useState(true);
+  const [companies, setCompanies] = useState([]);
   const [userLocation, setUserLocation] = useState(null);
   const [selectedType, setSelectedType] = useState('all');
   const [isRouting, setIsRouting] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedEstablishment, setSelectedEstablishment] = useState(null);
+  const [selectedRating, setSelectedRating] = useState('all');
+  const [selectedDisability, setSelectedDisability] = useState('all');
+
 
   // Obtener compañías desde la API
   useEffect(() => {
+    setLoading(true);
     getAllCompanies()
-      .then((data) => setCompanies(data))
-      .catch(() => toast.error("Error al obtener establecimientos"));
+      .then((companyData) => {
+        setCompanies(companyData);
+        setFilteredCompanies(companyData);
+        setLoading(false);
+      })
+      .catch((error) => {
+        toast.error("Error al obtener los establecimientos");
+        console.error("[getCompanies error]", error);
+        setLoading(false);
+      });
   }, []);
 
+  // Obtener la ubicación actual del usuario
   useEffect(() => {
     if (!navigator.geolocation) {
       toast.error("La geolocalización no está soportada en tu navegador");
@@ -112,49 +127,6 @@ export default function MapWithPlaces({ onSelectPlace, searchQuery, selectedType
   };
 
   // Agregar marcadores dinámicamente y establecimientos mas cercanos
-    console.log(
-      `Filtrando compañías con búsqueda: '${searchQuery}', tipo de giro: '${selectedType}', calificación: '${selectedRating}',  y discapacidad: '${selectedDisability}'`
-    );
-
-    let filtered = companies.filter((company) => {
-      const companyName = company?.companyName ?? ""; // Si es undefined, usar string vacío
-      const companyType = company?.giro ?? ""; // Si es undefined, usar string vacío
-      const companyRating = company?.averageRating ?? 0; // Si es undefined, usar 0
-
-      const matchesSearch =
-        companyName &&
-        companyName.toLowerCase().includes(searchQuery.toLowerCase());
-
-      const matchesType =
-        (selectedType === "all" &&
-          ["RESTAURANTE", "HOTEL"].includes(companyType)) ||
-        (selectedType === "RESTAURANTE" && companyType === "RESTAURANTE") ||
-        (selectedType === "HOTEL" && companyType === "HOTEL");
-
-      const matchesRating =
-        selectedRating === "all" ||
-        (selectedRating === "high" && companyRating >= 4) ||
-        (selectedRating === "mid" && companyRating >= 3 && companyRating < 4) ||
-        (selectedRating === "low" && companyRating < 3);
-
-
-        const matchesDisability =
-        selectedDisability === "all" ||
-        (company.disabilities &&
-          company.disabilities.some(
-            (disability) => disability.type === selectedDisability
-          ));
-  
-      return matchesSearch && matchesType && matchesRating && matchesDisability;
-    });
-    
-    // Ordenar las compañías filtradas por calificación
-    filtered = filtered.sort((a, b) => b.averageRating - a.averageRating);
-
-    console.log("Compañías filtradas y ordenadas:", filtered);
-    setFilteredCompanies(filtered);
-  }, [searchQuery, selectedType, selectedRating, companies]);
-
   useEffect(() => {
     if (!map.current || !userLocation) return;
 
@@ -190,21 +162,7 @@ export default function MapWithPlaces({ onSelectPlace, searchQuery, selectedType
 
       if (latitude && longitude) {
         const currentMarker = new mapboxgl.Marker({ color })
-    markers.current.forEach((marker) => marker.remove());
-    markers.current = filteredCompanies.map((company) => {
-      const { longitude, latitude } = company;
-      if (longitude && latitude) {
-        const marker = new mapboxgl.Marker()
           .setLngLat([longitude, latitude])
-          .addTo(mapInstance.current);
-        marker.getElement().addEventListener("click", () => onSelectPlace(company));
-        return marker;
-      }
-      return null;
-    });
-  }, [filteredCompanies, onSelectPlace]);
-
-  return <div ref={mapContainerRef} className="h-[500px] sm:h-full w-full"></div>;
           .setPopup(
             new mapboxgl.Popup({ offset: 25 }).setHTML(
               DOMPurify.sanitize(
@@ -227,16 +185,87 @@ export default function MapWithPlaces({ onSelectPlace, searchQuery, selectedType
     });
   }, [filteredCompanies, userLocation]);
 
-
   // Manejar el filtro de búsqueda en tiempo real
   useEffect(() => {
-    const filtered = companies.filter(
-      (company) =>
-        company.companyName?.toLowerCase().includes(searchQuery.toLowerCase()) &&
-        (selectedType === 'all' || company.giro === selectedType)
-    );
-    setFilteredCompanies(filtered);
-  }, [searchQuery, selectedType, companies]);
+    const fetchDataAndFilter = async () => {
+
+      const filtered = await Promise.all(
+        companies.map(async (company) => {
+         
+          const averageRating = Math.round(company.averageRating || 0);
+
+          // Obtener accesibilidad según el giro
+          let accessibilityData = null;
+          try {
+            if (company.giro === "HOTEL") {
+              accessibilityData = await getHotelAccessibility(company._id);
+            } else if (company.giro === "RESTAURANTE") {
+              accessibilityData = await getRestaurantAccessibility(company._id);
+            }
+          } catch (error) {
+            console.error("Error obteniendo accesibilidad:", error);
+          }
+
+          // Validar que accessibilityData.disabilities sea un array
+          const disabilities = accessibilityData?.disabilities || [];
+          if (!Array.isArray(disabilities)) {
+            console.warn(
+              `La propiedad 'disabilities' no es un array para ${company.companyName}`,
+              accessibilityData
+            );
+            return null; // Saltar esta compañía si los datos no son válidos
+          }
+
+          // Verificar si cumple con los criterios de accesibilidad
+          const matchesDisability =
+            selectedDisability === "all" ||
+            disabilities.some((disability) => {
+              // Verificar el tipo
+              if (disability.type === selectedDisability) {
+               
+                // Verificar las secciones y preguntas
+                return disability.sections.some((section) => {
+
+                  return section.questions.some((question) => {
+                    return question.response === true;
+                  });
+                });
+              }
+              return false;
+            });
+
+
+          // Verificar si cumple con los demás filtros
+          const matchesCompany =
+            company.companyName?.toLowerCase().includes(searchQuery.toLowerCase()) &&
+            (selectedType === "all" || company.giro === selectedType) &&
+            (selectedRating === "all" ||
+              (selectedRating === "high" && averageRating >= 4) ||
+              (selectedRating === "mid" && averageRating >= 3 && averageRating < 4) ||
+              (selectedRating === "low" && averageRating < 3)) && matchesDisability;
+
+          return matchesCompany ? company : null;
+        })
+      );
+
+      const validCompanies = filtered.filter(Boolean);
+
+      setFilteredCompanies(validCompanies);
+    };
+
+    fetchDataAndFilter();
+  }, [searchQuery, selectedType, selectedRating, selectedDisability, companies]);
+
+
+  const handleRatingChange = (e) => {
+    setSelectedRating(e.target.value);
+  };
+
+  const handleDisabilityChange = (e) => {
+    setSelectedDisability(e.target.value);
+  };
+
+
 
   // Función para centrar el mapa en un lugar específico
   const centerMapOnPlace = (place) => {
@@ -349,7 +378,7 @@ export default function MapWithPlaces({ onSelectPlace, searchQuery, selectedType
       {/* Header */}
 
       {/* Barra de búsqueda personalizada */}
-      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10 bg-white shadow-md rounded-full flex items-center px-4 py-2 w-[90%] max-w-2xl">
+      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10 bg-white shadow-md rounded-full flex items-center px-4 py-2 w-[90%] max-w-3xl">
         {/* Botón de retroceso */}
         <Link href="/" legacyBehavior>
           <a className="mr-4">
@@ -375,12 +404,45 @@ export default function MapWithPlaces({ onSelectPlace, searchQuery, selectedType
             value={selectedType}
             onChange={(e) => setSelectedType(e.target.value)}
           >
-            <option value="all">Todos</option>
+            <option value="all">Todos los establecimientos</option>
             <option value="HOTEL">Hoteles</option>
             <option value="RESTAURANTE">Restaurantes</option>
           </select>
+
         </div>
 
+        {/* Filtro de tipo de discapacidad */}
+        <div className="w-full sm:w-1/3 mb-2 sm:mb-0">
+
+          <select
+            id="disability"
+            value={selectedDisability}
+            onChange={handleDisabilityChange}
+            className="bg-gray-100 text-gray-700 rounded-full py-2 px-3 focus:outline-none focus:ring focus:ring-blue-200 text-sm"
+          >
+            <option value="all">Todas las discapacidades</option>
+            <option value="Visual">Visual</option>
+            <option value="Auditiva">Auditiva</option>
+            <option value="Motriz">Motriz</option>
+            <option value="Intelectual">Intelectual</option>
+            <option value="Neurodivergente">Neurodivergente</option>
+          </select>
+        </div>
+
+        {/* Filtro de mejor calificado */}
+        <div className="w-full sm:w-1/3">
+          <select
+            id="rating"
+            value={selectedRating}
+            onChange={handleRatingChange}
+            className="bg-gray-100 text-gray-700 rounded-full py-2 px-3 focus:outline-none focus:ring focus:ring-blue-200 text-sm"
+          >
+            <option value="all">Todas las calificaciones</option>
+            <option value="high">4 estrellas o más</option>
+            <option value="mid">3 estrellas</option>
+            <option value="low">2 estrellas o menos</option>
+          </select>
+        </div>
 
         {/* Busqueda de resultados dinamicos */}
         {searchQuery && !isVisible && (
@@ -399,6 +461,7 @@ export default function MapWithPlaces({ onSelectPlace, searchQuery, selectedType
                   <div>
                     <h3 className="font-medium text-gray-700">{company.companyName}</h3>
                     <p className="text-sm text-gray-500">{company.giro}</p>
+
                   </div>
                 </div>
               ))
@@ -410,7 +473,31 @@ export default function MapWithPlaces({ onSelectPlace, searchQuery, selectedType
       </div>
 
       {/* Contenedor del mapa */}
-      <div ref={mapContainer} className="!w-screen h-full rounded-lg shadow-md overflow-hidden" />
+      <div ref={mapContainer} className="!w-screen h-full rounded-lg shadow-md overflow-hidden">
+        {/* {selectedPlace && (
+          <aside
+            className={`w-full h-full sm:w-1/3 bg-gray-100 p-4 mb-2 border-l transform ${selectedPlace ? "translate-x-0" : "-translate-x-full"} transition-transform duration-300 ease-in-out relative`}
+          >
+            <div className="flex my-2 flex-col items-center w-2/3 bg-[#F5F0E5] h-full p-2 rounded">
+              <Image
+                src={selectedPlace.profilePicture} // URL de la imagen
+                alt="Imagen de perfil o logo de la empresa"
+                width={500}
+                height={300}
+                className="rounded"
+              />
+              <h2 className="text-lg font-bold">{selectedPlace.companyName}</h2>
+              <p className="text-center">{selectedPlace.description}</p>
+            </div>
+            <button
+              className="absolute top-1/2 right-[2px] bg-gray-400 text-gray-700 hover:text-gray-900 p-2 rounded transform -translate-x-1/2 -translate-y-1/2"
+              onClick={() => setSelectedPlace(null)}
+            >
+              <IoIosArrowBack size={24} />
+            </button>
+          </aside>
+        )}*/}
+      </div>
 
       {/* Botón para alternar visibilidad */}
       <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-0">
@@ -478,14 +565,17 @@ export default function MapWithPlaces({ onSelectPlace, searchQuery, selectedType
                       </div>
                       <div className="text-center">
                         <h3 className="font-semibold text-gray-800">{company.companyName}</h3>
-                        <div className="flex justify-center items-center gap-1">
-                          {[...Array(3)].map((_, i) => (
+                        <div className='flex'>
+                          {[1, 2, 3, 4, 5].map((star) => (
                             <svg
-                              key={i}
-                              className="w-5 h-5 text-yellow-400 fill-current"
-                              viewBox="0 0 24 24"
+                              key={star}
+                              className={`w-5 h-5 ${star <= Math.round(company.averageRating)
+                                ? 'text-yellow-400'
+                                : 'text-gray-300'
+                                } fill-current`}
+                              viewBox='0 0 24 24'
                             >
-                              <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z" />
+                              <path d='M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z' />
                             </svg>
                           ))}
                         </div>
@@ -505,18 +595,18 @@ export default function MapWithPlaces({ onSelectPlace, searchQuery, selectedType
       {/* Modal */}
       {isModalOpen && selectedEstablishment && (
         <EstablecimientoModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        establishment={selectedEstablishment}
-        onGetDirections={handleGetDirections}
-        onImageClick={async (id) => {
-          const companyType = await handleCardClick(id);
-          if (companyType !== "free" && companyType !== "premium") {
-            console.error("Tipo de compañía inválido para redirección.");
-          }
-        }}
-      />
-      
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          establishment={selectedEstablishment}
+          onGetDirections={handleGetDirections}
+          onImageClick={async (id) => {
+            const companyType = await handleCardClick(id);
+            if (companyType !== "free" && companyType !== "premium") {
+              console.error("Tipo de compañía inválido para redirección.");
+            }
+          }}
+        />
+
       )}
     </div>
   );

@@ -2,9 +2,7 @@
 import React from "react";
 
 export default function SearchBar({
-  searchQuery,
-  handleSearchChange,
-  selectedType,
+   selectedType,
   handleTypeChange,
   selectedRating,
   handleRatingChange,

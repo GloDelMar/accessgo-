@@ -76,8 +76,8 @@ export default function MapContainer() {
                         setMapInstance={setMapInstance} // Enviar la instancia del mapa
                         searchQuery={searchQuery}
                         selectedType={selectedType}
-                        selectedRating={selectedRating}
-                        selectedDisability={selectedDisability} // Pasar como prop
+                        selectebilidRating={selectedRating}
+                        selectedDisaty={selectedDisability} // Pasar como prop
                     />
                 </div>
             </div>
