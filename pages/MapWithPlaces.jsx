@@ -401,7 +401,7 @@ export default function MapWithPlaces() {
                   company?.latitude,
                   company?.longitude
                 );
-                return distance < 10;
+                return distance < 50;
               })
               .map((company) => {
                 const distance = calculateDistance(

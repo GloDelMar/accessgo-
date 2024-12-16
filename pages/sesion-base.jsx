@@ -5,8 +5,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import router from 'next/router';
 import { getBusinessAverageRanking } from './api/api_ranking';
 import { getCommentsByCompanyId } from './api/api_comment';
-import UploadImageACC from '@/components/Molecules/UploadImageACC';
-import ImageCarouselACC from '@/components/Molecules/ImageCarouselACC';
+import UpImgCarrouselACC from '@/components/Molecules/UpImgCarrouselACC';
+
 
 const View21 = () => {
   const [companyData, setCompanyData] = useState(null);
@@ -154,8 +154,8 @@ const View21 = () => {
           <h3 className='text-xl text-center font-semibold mb-10 text-[#2F4F4F]'>
             Cambia tus imágenes
           </h3>
-          <ImageCarouselACC userId={companyId} />
-          <UploadImageACC />
+          <UpImgCarrouselACC userId={companyId} />
+          
         </div>
 
         <div className='flex justify-center items-center py-5'>

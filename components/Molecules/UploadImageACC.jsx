@@ -80,7 +80,7 @@ const UploadImageACC = () => {
       {imageUrl && (
         <div className="mt-4">
           <p>Imagen subida con éxito!</p>
-          <img src={imageUrl} alt="Uploaded" width={200} className="mt-2" />
+          <img src={imageUrl} alt="Uploaded"  className="mt-2 w-[200px]" />
         </div>
       )}
     </div>
