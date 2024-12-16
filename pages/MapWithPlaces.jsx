@@ -12,7 +12,7 @@ import { getAllCompanies, getCompanyById } from './api/api_company';
 import { getBusinessAverageRanking } from './api/api_ranking';
 import { useRouter } from 'next/router';
 import { getHotelAccessibility, getRestaurantAccessibility } from './api/api_questionnaire';
-import IconButton from '@/components/atoms/IconButton';
+import { ChevronDown } from 'lucide-react';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiYWNjZXNnbyIsImEiOiJjbTI4NGVjNnowc2RqMmxwdnptcXAwbmhuIn0.0jG0XG0mwx_LHjdJ23Qx4A';
 
@@ -33,8 +33,9 @@ export default function MapWithPlaces() {
   const [selectedEstablishment, setSelectedEstablishment] = useState(null);
   const [selectedRating, setSelectedRating] = useState('all');
   const [selectedDisability, setSelectedDisability] = useState('all');
+  const [isOpen, setIsOpen] = useState(false);
 
-
+  let forAccesibilityIcons = new Set();
   // Obtener compañías desde la API
   useEffect(() => {
     setLoading(true);
@@ -191,7 +192,7 @@ export default function MapWithPlaces() {
 
       const filtered = await Promise.all(
         companies.map(async (company) => {
-         
+
           const averageRating = Math.round(company.averageRating || 0);
 
           // Obtener accesibilidad según el giro
@@ -222,7 +223,7 @@ export default function MapWithPlaces() {
             disabilities.some((disability) => {
               // Verificar el tipo
               if (disability.type === selectedDisability) {
-               
+
                 // Verificar las secciones y preguntas
                 return disability.sections.some((section) => {
 
@@ -256,14 +257,15 @@ export default function MapWithPlaces() {
     fetchDataAndFilter();
   }, [searchQuery, selectedType, selectedRating, selectedDisability, companies]);
 
+  const handleDisabilityChange = (e) => {
+    setSelectedDisability(e.target.value);
+  };
 
   const handleRatingChange = (e) => {
     setSelectedRating(e.target.value);
   };
 
-  const handleDisabilityChange = (e) => {
-    setSelectedDisability(e.target.value);
-  };
+
 
 
 
@@ -292,6 +294,45 @@ export default function MapWithPlaces() {
       console.error('Error al obtener el promedio de calificaciones:', error);
     }
 
+    let iconsData = null;
+    try {
+      if (company.giro === "HOTEL") {
+        iconsData = await getHotelAccessibility(company._id);
+      } else if (company.giro === "RESTAURANTE") {
+        iconsData = await getRestaurantAccessibility(company._id);
+      }
+    } catch (error) {
+      console.error("Error obteniendo accesibilidad:", error);
+    }
+
+    // Validar que iconsData.disabilities sea un array
+    const disabilities = iconsData?.disabilities || [];
+    if (!Array.isArray(disabilities)) {
+      console.warn(
+        `La propiedad 'disabilities' no es un array para ${company.companyName}`,
+        iconsData
+      );
+      return null; // Saltar esta compañía si los datos no son válidos
+    }
+
+    // Inicializar el Set si no lo has hecho antes
+    if (!forAccesibilityIcons) {
+      forAccesibilityIcons = new Set();
+    }
+
+    // Verificar si cumple con los criterios de accesibilidad
+    disabilities.forEach((disability) => {
+      if (disability.type) {
+        // Verificar las secciones y preguntas
+        const hasValidResponse = disability.sections.some((section) =>
+          section.questions.some((question) => question.response === true)
+        );
+        if (hasValidResponse) {
+          forAccesibilityIcons.add(disability.type); // Agregar el tipo a forAccesibilityIcons
+        }
+      }
+    });
+
     const transformedCompany = {
       id: company._id,
       name: company.companyName || "Sin nombre",
@@ -303,10 +344,13 @@ export default function MapWithPlaces() {
       latitude: company.latitude,
       longitude: company.longitude,
       comments: company.comments || [],
+      disabilities: Array.from(forAccesibilityIcons) // Convertir el Set a un array para asegurar unicidad
     };
+
 
     setSelectedEstablishment(transformedCompany);
     setIsModalOpen(true);
+
   };
 
   // Función para cancelar la ruta actual
@@ -378,99 +422,193 @@ export default function MapWithPlaces() {
       {/* Header */}
 
       {/* Barra de búsqueda personalizada */}
-      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10 bg-white shadow-md rounded-full flex items-center px-4 py-2 w-[90%] max-w-3xl">
-        {/* Botón de retroceso */}
-        <Link href="/" legacyBehavior>
-          <a className="mr-4">
-            <ArrowLeft className="h-6 w-6 text-gray-500 hover:text-gray-700 transition-colors" />
-          </a>
-        </Link>
-
-        {/* Campo de entrada */}
-        <div className="relative flex-1">
-          <input
-            type="text"
-            placeholder="Buscar en el mapa"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-gray-100 rounded-full focus:outline-none focus:ring focus:ring-blue-200 text-sm"
-          />
-        </div>
-
-        {/* Filtros desplegables */}
-        <div className="ml-4">
-          <select
-            className="bg-gray-100 text-gray-700 rounded-full py-2 px-3 focus:outline-none focus:ring focus:ring-blue-200 text-sm"
-            value={selectedType}
-            onChange={(e) => setSelectedType(e.target.value)}
+      <div className="container mx-auto px-4">
+        {/* Tamaño móvil */}
+        <div className="block md:hidden">
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="flex items-center justify-between w-full  bg-white text-black py-2 px-4 rounded-full focus:outline-none"
           >
-            <option value="all">Todos los establecimientos</option>
-            <option value="HOTEL">Hoteles</option>
-            <option value="RESTAURANTE">Restaurantes</option>
-          </select>
+            Filtros
+            <ChevronDown className={`ml-2 transition-transform ${isOpen ? 'transform rotate-180' : ''}`} />
+          </button>
 
-        </div>
+          {isOpen && (
+            <div className="bg-white shadow-md rounded-lg mt-2 space-y-4 px-4 py-2 w-full">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Buscar en el mapa"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 bg-gray-100 rounded-full focus:outline-none focus:ring focus:ring-blue-200 text-sm"
+                />
+              </div>
 
-        {/* Filtro de tipo de discapacidad */}
-        <div className="w-full sm:w-1/3 mb-2 sm:mb-0">
-
-          <select
-            id="disability"
-            value={selectedDisability}
-            onChange={handleDisabilityChange}
-            className="bg-gray-100 text-gray-700 rounded-full py-2 px-3 focus:outline-none focus:ring focus:ring-blue-200 text-sm"
-          >
-            <option value="all">Todas las discapacidades</option>
-            <option value="Visual">Visual</option>
-            <option value="Auditiva">Auditiva</option>
-            <option value="Motriz">Motriz</option>
-            <option value="Intelectual">Intelectual</option>
-            <option value="Neurodivergente">Neurodivergente</option>
-          </select>
-        </div>
-
-        {/* Filtro de mejor calificado */}
-        <div className="w-full sm:w-1/3">
-          <select
-            id="rating"
-            value={selectedRating}
-            onChange={handleRatingChange}
-            className="bg-gray-100 text-gray-700 rounded-full py-2 px-3 focus:outline-none focus:ring focus:ring-blue-200 text-sm"
-          >
-            <option value="all">Todas las calificaciones</option>
-            <option value="high">4 estrellas o más</option>
-            <option value="mid">3 estrellas</option>
-            <option value="low">2 estrellas o menos</option>
-          </select>
-        </div>
-
-        {/* Busqueda de resultados dinamicos */}
-        {searchQuery && !isVisible && (
-          <div className="absolute top-full left-0 w-full bg-white shadow-lg rounded-lg max-h-48 overflow-y-auto  z-20">
-            {filteredCompanies.length > 0 ? (
-              filteredCompanies.map((company) => (
-                <div
-                  key={company._id}
-                  className="p-2 hover:bg-gray-100 cursor-pointer flex items-center"
-                  onClick={() => {
-                    centerMapOnPlace(company);
-                    setSearchQuery('');
-                  }}
+              <div className="space-y-2">
+                <select
+                  className="bg-gray-100 text-gray-700 rounded-full py-2 px-3 w-full focus:outline-none focus:ring focus:ring-blue-200 text-sm"
+                  value={selectedType}
+                  onChange={(e) => setSelectedType(e.target.value)}
                 >
-                  <MapPin className="h-5 w-5 text-blue-500 mr-2" />
-                  <div>
-                    <h3 className="font-medium text-gray-700">{company.companyName}</h3>
-                    <p className="text-sm text-gray-500">{company.giro}</p>
+                  <option value="all">Todos los establecimientos</option>
+                  <option value="HOTEL">Hoteles</option>
+                  <option value="RESTAURANTE">Restaurantes</option>
+                </select>
 
+                <select
+                  id="disability"
+                  value={selectedDisability}
+                  onChange={handleDisabilityChange}
+                  className="bg-gray-100 text-gray-700 rounded-full py-2 px-3 w-full focus:outline-none focus:ring focus:ring-blue-200 text-sm"
+                >
+                  <option value="all">Todas las discapacidades</option>
+                  <option value="Visual">Visual</option>
+                  <option value="Auditiva">Auditiva</option>
+                  <option value="Motriz">Motriz</option>
+                  <option value="Intelectual">Intelectual</option>
+                  <option value="Neurodivergente">Neurodivergente</option>
+                </select>
+
+                <select
+                  id="rating"
+                  value={selectedRating}
+                  onChange={handleRatingChange}
+                  className="bg-gray-100 text-gray-700 rounded-full py-2 px-3 w-full focus:outline-none focus:ring focus:ring-blue-200 text-sm"
+                >
+                  <option value="all">Todas las calificaciones</option>
+                  <option value="high">4 estrellas o más</option>
+                  <option value="mid">3 estrellas</option>
+                  <option value="low">2 estrellas o menos</option>
+                </select>
+              </div>
+            </div>
+          )}
+
+          {searchQuery && !isVisible && (
+            <div className="absolute top-full left-0 w-full bg-white shadow-lg rounded-lg max-h-48 overflow-y-auto z-20">
+              {filteredCompanies.length > 0 ? (
+                filteredCompanies.map((company) => (
+                  <div
+                    key={company._id}
+                    className="p-2 hover:bg-gray-100 cursor-pointer flex items-center"
+                    onClick={() => {
+                      centerMapOnPlace(company);
+                      setSearchQuery('');
+                    }}
+                  >
+                    <MapPin className="h-5 w-5 text-blue-500 mr-2" />
+                    <div>
+                      <h3 className="font-medium text-gray-700">{company.companyName}</h3>
+                      <p className="text-sm text-gray-500">{company.giro}</p>
+                    </div>
                   </div>
-                </div>
-              ))
-            ) : (
-              <div className="p-2 text-gray-500 text-center">No se encontraron resultados</div>
-            )}
+                ))
+              ) : (
+                <div className="p-2 text-gray-500 text-center">No se encontraron resultados</div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Tamaño tablet y desktop */}
+        <div className="hidden md:flex absolute top-4 left-1/2 transform -translate-x-1/2 z-10 bg-white shadow-md rounded-full flex flex-wrap items-center px-4 py-2 w-[90%] max-w-4xl space-y-4 sm:space-y-0 md:flex-nowrap md:space-x-4">
+          {/* Botón de retroceso */}
+          <Link href="/" legacyBehavior>
+            <a className="mb-2 sm:mb-0 mr-4">
+              <ArrowLeft className="h-6 w-6 text-gray-500 hover:text-gray-700 transition-colors" />
+            </a>
+          </Link>
+
+          {/* Campo de entrada */}
+          <div className="relative flex-1 min-w-[150px]">
+            <input
+              type="text"
+              placeholder="Buscar en el mapa"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full px-4 py-2 bg-gray-100 rounded-full focus:outline-none focus:ring focus:ring-blue-200 text-sm"
+            />
           </div>
-        )}
+
+          {/* Filtros desplegables */}
+          <div className="w-full md:w-1/3">
+            <select
+              className="bg-gray-100 text-gray-700 rounded-full py-2 px-3 w-full focus:outline-none focus:ring focus:ring-blue-200 text-sm"
+              value={selectedType}
+              onChange={(e) => setSelectedType(e.target.value)}
+            >
+              <option value="all">Todos los establecimientos</option>
+              <option value="HOTEL">Hoteles</option>
+              <option value="RESTAURANTE">Restaurantes</option>
+            </select>
+          </div>
+
+          {/* Filtro de tipo de discapacidad */}
+          <div className="w-full md:w-1/3">
+            <select
+              id="disability"
+              value={selectedDisability}
+              onChange={handleDisabilityChange}
+              className="bg-gray-100 text-gray-700 rounded-full py-2 px-3 w-full focus:outline-none focus:ring focus:ring-blue-200 text-sm"
+            >
+              <option value="all">Todas las discapacidades</option>
+              <option value="Visual">Visual</option>
+              <option value="Auditiva">Auditiva</option>
+              <option value="Motriz">Motriz</option>
+              <option value="Intelectual">Intelectual</option>
+              <option value="Neurodivergente">Neurodivergente</option>
+            </select>
+          </div>
+
+          {/* Filtro de mejor calificado */}
+          <div className="w-full md:w-1/3">
+            <select
+              id="rating"
+              value={selectedRating}
+              onChange={handleRatingChange}
+              className="bg-gray-100 text-gray-700 rounded-full py-2 px-3 w-full focus:outline-none focus:ring focus:ring-blue-200 text-sm"
+            >
+              <option value="all">Todas las calificaciones</option>
+              <option value="high">4 estrellas o más</option>
+              <option value="mid">3 estrellas</option>
+              <option value="low">2 estrellas o menos</option>
+            </select>
+          </div>
+
+          {/* Busqueda de resultados dinámicos */}
+          {searchQuery && !isVisible && (
+            <div className="absolute top-full left-0 w-full bg-white shadow-lg rounded-lg max-h-48 overflow-y-auto z-20">
+              {filteredCompanies.length > 0 ? (
+                filteredCompanies.map((company) => (
+                  <div
+                    key={company._id}
+                    className="p-2 hover:bg-gray-100 cursor-pointer flex items-center"
+                    onClick={() => {
+                      centerMapOnPlace(company);
+                      setSearchQuery('');
+                    }}
+                  >
+                    <MapPin className="h-5 w-5 text-blue-500 mr-2" />
+                    <div>
+                      <h3 className="font-medium text-gray-700">{company.companyName}</h3>
+                      <p className="text-sm text-gray-500">{company.giro}</p>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="p-2 text-gray-500 text-center">No se encontraron resultados</div>
+              )}
+            </div>
+          )}
+        </div>
+
+
+
       </div>
+
+
+
 
       {/* Contenedor del mapa */}
       <div ref={mapContainer} className="!w-screen h-full rounded-lg shadow-md overflow-hidden">
