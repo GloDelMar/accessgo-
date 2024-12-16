@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay } from 'swiper';
 import 'swiper/swiper-bundle.css';
 
 const ImageCarouselACC = ({ userId }) => {
@@ -34,10 +35,15 @@ const ImageCarouselACC = ({ userId }) => {
     <div className='sm:w-[150px] md:w-[300px] lg:w-[600px] max-w-[1022px] mx-auto'>
       {images.length > 0 ? (
         <Swiper
+          modules={[Autoplay]}
           spaceBetween={20}
           slidesPerView={4}
           loop={true}
           centeredSlides={false}
+          autoplay={{
+            delay: 2500,
+            disableOnInteraction: false,
+          }}
           pagination={{
             clickable: true
           }}
