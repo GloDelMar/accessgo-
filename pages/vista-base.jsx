@@ -68,8 +68,12 @@ export default function CardFree() {
         <p className='text-[#2F4F4F] text-[20px] md:text-[40px] lg:text-[56px] text-center font-semibold'>
           ¡AccessGo!
         </p>
+        <p className='text-4xl md:text-5xl font-bold text-center text-[#2F4F4F] mt-2 mb-12'>
+          {companyData?.data?.company?.companyName ||
+            'Información no disponible.'}
+        </p>
         <img
-          className='w-[472px] h-[600px] md:w-[1264px] md:h-[500px] lg:w-[1304px] lg:h-[500px] mt-8 object-contain'
+          className='w-[472px] h-auto md:w-[1264px]  lg:w-[1304px]  mt-2 object-contain'
           src={companyData?.data?.company?.profilePicture || '/img-card.png'}
           alt='Foto principal de empresa'
           width={1300}
@@ -85,7 +89,7 @@ export default function CardFree() {
                 companyData?.data?.company?.profilePicture || defaultProfilePic
               }
               alt='Foto de perfil'
-              className='w-10 h-10 rounded-full p-2'
+              className='w-20 h-20 rounded-full p-1'
             />
             <p className='text-[#7E952A] text-[20px] md:text-2xl lg:text-3xl font-semibold ml-2'>
               {getValueOrDefault(companyData?.data?.company?.companyName)}
