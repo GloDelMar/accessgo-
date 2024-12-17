@@ -31,7 +31,7 @@ const olvidoContraseña = () => {
         </div>
 
         <div className='flex justify-center items-center mt-5 py-5'>
-          <Link legacyBehavior href='/25/view25'>
+          <Link legacyBehavior href='/autentificacion'>
             <button
               className='px-6 py-2 border border-transparent rounded-md shadow-sm
               text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none

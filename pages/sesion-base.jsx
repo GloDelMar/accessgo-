@@ -81,67 +81,63 @@ const View21 = () => {
           </p>
         </h1>
 
-        <div className='flex flex-col lg:flex-row gap-6 p-6 max-w-4xl mx-auto'>
-          <div className='w-full lg:w-1/3 flex justify-center'>
-            <div className='bg-[#F5F0E5] w-full max-w-[231px] h-[200px] rounded-[25px] shadow-md p-6 text-center'>
+        <div className="flex flex-col lg:flex-row gap-6 p-6 max-w-4xl mx-auto">
+          {/* Contenedor de perfil */}
+          <div className="w-full lg:w-1/3 flex justify-center">
+            <div className="bg-[#F5F0E5] w-full max-w-[231px] h-[200px] rounded-[25px] shadow-md p-6 flex justify-center items-center">
               <Image
-                src={
-                  companyData?.data?.company?.profilePicture || '/perfil1.png'
-                }
-                alt='Foto de perfil'
-                width={300}
+                src={companyData?.data?.company?.profilePicture || '/perfil1.png'}
+                alt="Foto de perfil"
+                width={150}
                 height={150}
-                className='rounded-full mx-auto mb-4'
+                className="rounded-full"
               />
             </div>
           </div>
 
-          <div className='w-full  lg:w-2/3 flex flex-col justify-center'>
-            <div className='bg-white rounded-[30px] shadow-md p-6 w-full'>
-              <div className='flex flex-col md:flex-row md:justify-start gap-4 md:items-center mb-4'>
-                <h3 className='text-lg font-semibold text-[#2F4F4F] mb-2 md:mb-0'>
+          {/* Contenedor de calificaciones y comentarios */}
+          <div className="w-full lg:w-2/3 flex flex-col justify-center">
+            <div className="bg-white rounded-[30px] shadow-md p-6 w-full">
+              <div className="flex flex-col md:flex-row md:justify-start gap-4 md:items-center mb-4">
+                <h3 className="text-lg font-semibold text-[#2F4F4F] mb-2 md:mb-0">
                   Tu calificación es de:
                 </h3>
-                <div className='flex'>
+                <div className="flex">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <svg
                       key={star}
-                      className={`w-5 h-5 ${
-                        star <= Math.round(averageRating)
+                      className={`w-5 h-5 ${star <= Math.round(averageRating)
                           ? 'text-yellow-400'
                           : 'text-gray-300'
-                      } fill-current`}
-                      viewBox='0 0 24 24'
+                        } fill-current`}
+                      viewBox="0 0 24 24"
                     >
-                      <path d='M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z' />
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z" />
                     </svg>
                   ))}
                 </div>
               </div>
               <div>
-                <h3 className='text-lg font-semibold mb-2'>
-                  Últimos comentarios:
-                </h3>
+                <h3 className="text-lg font-semibold mb-2">Últimos comentarios:</h3>
               </div>
-              <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 mt-4'>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 mt-4">
                 {comments.length > 0 ? (
                   comments.map((comment) => (
                     <p
                       key={comment?._id}
-                      className='bg-[#F5F0E5] p-2 rounded text-center text-sm'
+                      className="bg-[#F5F0E5] p-2 rounded text-center text-sm"
                     >
                       {comment.content}
                     </p>
                   ))
                 ) : (
-                  <p className='text-center text-sm'>
+                  <p className="text-center text-sm">
                     No hay comentarios disponibles.
                   </p>
                 )}
               </div>
-
               <button
-                className='px-2.5 py-0.5 mt-11 text-base bg-[#F5F0E5] rounded-[30px] md:mt-10'
+                className="px-2.5 py-0.5 mt-11 text-base bg-[#F5F0E5] rounded-[30px] md:mt-10"
                 onClick={() => setShowAllComments(!showAllComments)}
               >
                 {showAllComments ? 'Mostrar menos' : 'Todos los comentarios'}
@@ -149,6 +145,7 @@ const View21 = () => {
             </div>
           </div>
         </div>
+
 
         <div className='flex flex-col justify-center items-center h[200px] w[200px]'>
           <h3 className='text-xl text-center font-semibold mb-10 text-[#2F4F4F]'>
