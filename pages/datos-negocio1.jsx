@@ -90,7 +90,7 @@ const View23 = () => {
     try {
       const response = await axios.get(`https://backend-r159.onrender.com/api/company/${companyId}`);
       const companyData = response.data.data.company;
-    
+
 
       setFormValues({
         nombreComercial: companyData?.companyName || '',
@@ -106,7 +106,7 @@ const View23 = () => {
       });
       setAddress(companyData?.address || '');
       setSelectedDays(companyData?.diasDeServicio || []);
-   
+
 
       setLatitude(companyData?.latitude);
       setLongitude(companyData?.longitude);
@@ -172,14 +172,14 @@ const View23 = () => {
       diasDeServicio: selectedDays,
       description: formValues.descripcion,
       address: address,
-     phone: formValues.phone,
+      phone: formValues.phone,
       latitude: markerRef.current ? markerRef.current.getLngLat().lat : latitude,
       longitude: markerRef.current ? markerRef.current.getLngLat().lng : longitude,
-      
+
     };
 
     try {
-    
+
       const response = await updateCompany(companyId, formData);
       console.log("Respuesta de actualización:", response);
 
@@ -207,17 +207,17 @@ const View23 = () => {
 
         <div className="grid gap-8 lg:grid-cols-[300px,1fr] w-full">
           <div className="flex flex-col justify-items-center items-center space-y-4 w-full">
-          <div className="flex justify-center lg:justify-start">
-            <label htmlFor="imgUsuario" className="cursor-pointer">
-              {selectedImage ? (
-                <Image src={selectedImage} alt="Foto de perfil" width={200} height={200} className="rounded-full" />
-              ) : (
-                <Image src="/iconoframe.png" alt="Foto de perfil" width={200} height={200} className="rounded-full" />
-              )}
-         {/* Esto es para la subida de imagenes a aws */}
-        <UploadImageCPP userId={companyId} setSelectedImage={setSelectedImage} /> 
-            </label>
-          </div>
+            <div className="flex justify-center lg:justify-start">
+              <label htmlFor="imgUsuario" className="cursor-pointer">
+                {selectedImage ? (
+                  <Image src={selectedImage} alt="Foto de perfil" width={200} height={200} className="rounded-full" />
+                ) : (
+                  <Image src="/iconoframe.png" alt="Foto de perfil" width={200} height={200} className="rounded-full" />
+                )}
+                {/* Esto es para la subida de imagenes a aws */}
+                <UploadImageCPP userId={companyId} setSelectedImage={setSelectedImage} />
+              </label>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 space-y-6 w-full">
@@ -262,7 +262,7 @@ const View23 = () => {
                   <option>Giro de tu negocio</option>
                   <option value="HOTEL">HOTEL</option>
                   <option value="RESTAURANTE">RESTAURANTE</option>
-                  </select>
+                </select>
               </div>
               <div className="w-full">
                 <label htmlFor="horario" className="block text-sm font-medium text-[#546E7A] mb-1">Horario de servicio</label>
@@ -271,7 +271,7 @@ const View23 = () => {
                     type="time"
                     name="horarioAbre"
                     value={formValues.horario.abre}
-                    onChange={(e) => setFormValues(prev => ({ ...prev, horario: { ...prev.horario,  abre: e.target.value } }))}
+                    onChange={(e) => setFormValues(prev => ({ ...prev, horario: { ...prev.horario, abre: e.target.value } }))}
                     className="flex-1 px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50"
                   />
                   <span className="text-[#546E7A]">a</span>
@@ -316,7 +316,7 @@ const View23 = () => {
               </div>
             </div>
             <div className="w-full">
-              <label htmlFor="persona-moral" className="block text-sm font-medium text-[#546E7A] mb-1">Teléfono</label>
+              <label htmlFor="phone" className="block text-sm font-medium text-[#546E7A] mb-1">Teléfono</label>
               <InputWithLabel
                 name="phone"
                 id="phone"
@@ -339,11 +339,9 @@ const View23 = () => {
             <div className="aspect-video relative rounded-md overflow-hidden w-full" ref={mapDiv} style={{ height: '400px' }}></div>
           </div>
         </div>
-        <div className="mt-8 flex flex-col md:flex-row justify-center md:justify-end space-y-4 md:space-y-0 md:space-x-4 w-full">
-          <StyledButton variant="blancoCuadrado">CANCELAR</StyledButton>
-
-          <StyledButton variant="blancoCuadrado" onClick={handleSubmit}>GUARDAR</StyledButton>
-
+        <div className="mt-8 flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4 w-full justify-center md:justify-end">
+          <StyledButton variant="blancoCuadrado" className="w-full md:w-auto">CANCELAR</StyledButton>
+          <StyledButton variant="blancoCuadrado" className="w-full md:w-auto" onClick={handleSubmit}>GUARDAR</StyledButton>
         </div>
       </div>
     </>
