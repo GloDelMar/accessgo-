@@ -4,11 +4,12 @@ import axios from 'axios';
 import mapboxgl from 'mapbox-gl';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
-import { updateCompany } from "./api/api_company";
+import { updateCompany } from './api/api_company';
 import UploadImageCPP from '@/components/Molecules/UploadImageCPP';
 import Image from 'next/image';
 
-mapboxgl.accessToken = 'pk.eyJ1IjoiYWNjZXNnbyIsImEiOiJjbTI4NGVjNnowc2RqMmxwdnptcXAwbmhuIn0.0jG0XG0mwx_LHjdJ23Qx4A';
+mapboxgl.accessToken =
+  'pk.eyJ1IjoiYWNjZXNnbyIsImEiOiJjbTI4NGVjNnowc2RqMmxwdnptcXAwbmhuIn0.0jG0XG0mwx_LHjdJ23Qx4A';
 
 const View23 = () => {
   const mapDiv = useRef(null);
@@ -21,14 +22,14 @@ const View23 = () => {
   const [longitude, setLongitude] = useState(null);
   const [latitude, setLatitude] = useState(null);
   const [companyId, setCompanyId] = useState(null);
-  const [phone, setPhone] = useState('')
+  const [phone, setPhone] = useState('');
 
   useEffect(() => {
-    const companyIdFromLocalStorage = localStorage.getItem("userId");
+    const companyIdFromLocalStorage = localStorage.getItem('userId');
     if (companyIdFromLocalStorage) {
       setCompanyId(companyIdFromLocalStorage);
     } else {
-      console.error("No se encontró el ID de la empresa en localStorage");
+      console.error('No se encontró el ID de la empresa en localStorage');
     }
   }, []);
 
@@ -45,15 +46,33 @@ const View23 = () => {
       cierre: ''
     },
     descripcion: '',
-    phone: ''
+    phone: '',
+    facebook: '',
+    instagram: '',
+    tiktok: '',
+    twitter: ''
   });
 
-  const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo', 'Todos los días'];
+  const days = [
+    'Lunes',
+    'Martes',
+    'Miércoles',
+    'Jueves',
+    'Viernes',
+    'Sábado',
+    'Domingo',
+    'Todos los días'
+  ];
 
-  const toggleDay = (day) => setSelectedDays(prev => prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day]);
+  const toggleDay = (day) =>
+    setSelectedDays((prev) =>
+      prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]
+    );
 
   const getCoordinates = async (address) => {
-    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?access_token=${mapboxgl.accessToken}`;
+    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+      address
+    )}.json?access_token=${mapboxgl.accessToken}`;
     const response = await fetch(url);
     const data = await response.json();
 
@@ -71,7 +90,7 @@ const View23 = () => {
         container: mapDiv.current,
         style: 'mapbox://styles/mapbox/streets-v12',
         center: [longitude || -100.3899, latitude || 20.5888],
-        zoom: 9,
+        zoom: 9
       });
 
       markerRef.current = new mapboxgl.Marker()
@@ -84,12 +103,13 @@ const View23 = () => {
   }, [latitude, longitude]);
 
   const fetchCompanyData = async () => {
-    const companyId = localStorage.getItem("userId");
+    const companyId = localStorage.getItem('userId');
     if (!companyId) return;
 
     try {
-      const response = await axios.get(`https://backend-r159.onrender.com/api/company/${companyId}`);
-      const companyData = response.data.data.company;
+      const response = await axios.get(
+        `https://backend-r159.onrender.com/api/company/${companyId}`
+      );
 
 
       setFormValues({
@@ -111,14 +131,11 @@ const View23 = () => {
       setLatitude(companyData?.latitude);
       setLongitude(companyData?.longitude);
 
-      setSelectedImage(companyData.profilePicture || null)
-
-
+      setSelectedImage(companyData.profilePicture || null);
     } catch (error) {
-      console.error("Error fetching company data:", error);
+      console.error('Error fetching company data:', error);
     }
   };
-
 
   useEffect(() => {
     fetchCompanyData();
@@ -152,11 +169,11 @@ const View23 = () => {
   };
 
   const handleSubmit = async () => {
-    const companyId = localStorage.getItem("userId");
-    const userAccountType = localStorage.getItem("cuenta");
+    const companyId = localStorage.getItem('userId');
+    const userAccountType = localStorage.getItem('cuenta');
 
     if (!companyId) {
-      alert("No se encontró el ID de la empresa en localStorage");
+      alert('No se encontró el ID de la empresa en localStorage');
       return;
     }
 
@@ -167,7 +184,7 @@ const View23 = () => {
       giro: formValues.giro,
       horario: {
         abre: formValues.horario.abre,
-        cierra: formValues.horario.cierre,
+        cierra: formValues.horario.cierre
       },
       diasDeServicio: selectedDays,
       description: formValues.descripcion,
@@ -181,22 +198,21 @@ const View23 = () => {
     try {
 
       const response = await updateCompany(companyId, formData);
-      console.log("Respuesta de actualización:", response);
+      console.log('Respuesta de actualización:', response);
 
-      if (userAccountType === "premium") {
-        router.push("/sesion-prem");
+      if (userAccountType === 'premium') {
+        router.push('/sesion-prem');
       } else {
-        router.push("/sesion-base");
+        router.push('/sesion-base');
       }
     } catch (error) {
-      console.error("Error al actualizar la compañía:", error);
+      console.error('Error al actualizar la compañía:', error);
     }
   };
 
-
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setFormValues(prev => ({ ...prev, [name]: value }));
+    setFormValues((prev) => ({ ...prev, [name]: value }));
   };
 
   return (
@@ -216,132 +232,258 @@ const View23 = () => {
                 )}
                 {/* Esto es para la subida de imagenes a aws */}
                 <UploadImageCPP userId={companyId} setSelectedImage={setSelectedImage} />
+
               </label>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 space-y-6 w-full">
-            <h2 className="text-xl font-semibold text-[#263238]">Datos del negocio</h2>
-            <div className="grid gap-4 md:grid-cols-2 w-full">
+          <div className='grid grid-cols-1 space-y-6 w-full'>
+            <h2 className='text-xl font-semibold text-[#263238]'>
+              Datos del negocio
+            </h2>
+            <div className='grid gap-4 md:grid-cols-2 w-full'>
               <InputWithLabel
-                name="nombreComercial"
-                placeholder="Ingresar dato"
+                name='nombreComercial'
+                placeholder='Ingresar dato'
                 value={formValues.nombreComercial}
                 onChange={handleInputChange}
-                label="Nombre comercial de tu negocio"
+                label='Nombre comercial de tu negocio'
               />
               <InputWithLabel
-                name="rfc"
-                label="RFC"
-                placeholder="Ingresar dato"
+                name='rfc'
+                label='RFC'
+                placeholder='Ingresar dato'
                 value={formValues.rfc}
                 onChange={handleInputChange}
               />
             </div>
-            <div className="w-full">
-              <label htmlFor="persona-moral" className="block text-sm font-medium text-[#546E7A] mb-1">Persona moral</label>
+            <div className='w-full'>
+              <label
+                htmlFor='persona-moral'
+                className='block text-sm font-medium text-[#546E7A] mb-1'
+              >
+                Persona moral
+              </label>
               <InputWithLabel
-                name="representanteLegal"
-                label="Nombre y apellido representante legal del negocio"
-                id="persona-moral"
-                placeholder="Ingresar dato"
+                name='representanteLegal'
+                label='Nombre y apellido representante legal del negocio'
+                id='persona-moral'
+                placeholder='Ingresar dato'
                 value={formValues.representanteLegal}
                 onChange={handleInputChange}
               />
             </div>
-            <div className="grid gap-4 md:grid-cols-2 w-full">
-              <div className="w-full">
-                <label htmlFor="giro" className="block text-sm font-medium text-[#546E7A] mb-1">Giro de tu negocio</label>
+            <div className='grid gap-4 md:grid-cols-2 w-full'>
+              <div className='w-full'>
+                <label
+                  htmlFor='giro'
+                  className='block text-sm font-medium text-[#546E7A] mb-1'
+                >
+                  Giro de tu negocio
+                </label>
                 <select
-                  id="giro"
-                  name="giro"
+                  id='giro'
+                  name='giro'
                   value={formValues.giro}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50"
+                  className='w-full px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50'
                 >
                   <option>Giro de tu negocio</option>
+
                   <option value="HOTEL">HOTEL</option>
                   <option value="RESTAURANTE">RESTAURANTE</option>
-                </select>
+  </select>
               </div>
-              <div className="w-full">
-                <label htmlFor="horario" className="block text-sm font-medium text-[#546E7A] mb-1">Horario de servicio</label>
-                <div className="flex items-center space-x-2 w-full">
+              <div className='w-full'>
+                <label
+                  htmlFor='horario'
+                  className='block text-sm font-medium text-[#546E7A] mb-1'
+                >
+                  Horario de servicio
+                </label>
+                <div className='flex items-center space-x-2 w-full'>
                   <input
-                    type="time"
-                    name="horarioAbre"
+                    type='time'
+                    name='horarioAbre'
                     value={formValues.horario.abre}
+
                     onChange={(e) => setFormValues(prev => ({ ...prev, horario: { ...prev.horario, abre: e.target.value } }))}
                     className="flex-1 px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50"
+
                   />
-                  <span className="text-[#546E7A]">a</span>
+                  <span className='text-[#546E7A]'>a</span>
                   <input
-                    type="time"
-                    name="horarioCierre"
+                    type='time'
+                    name='horarioCierre'
                     value={formValues.horario.cierre}
-                    onChange={(e) => setFormValues(prev => ({ ...prev, horario: { ...prev.horario, cierre: e.target.value } }))}
-                    className="flex-1 px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50"
+                    onChange={(e) =>
+                      setFormValues((prev) => ({
+                        ...prev,
+                        horario: { ...prev.horario, cierre: e.target.value }
+                      }))
+                    }
+                    className='flex-1 px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50'
                   />
                 </div>
               </div>
             </div>
-            <div className="grid gap-4 md:grid-cols-2 w-full">
-              <div className="w-full">
-                <label htmlFor="descripcion" className="block text-sm font-medium text-[#546E7A] mb-1">Descripción de tu negocio</label>
+            <div className='grid gap-4 md:grid-cols-2 w-full'>
+              <div className='w-full'>
+                <label
+                  htmlFor='descripcion'
+                  className='block text-sm font-medium text-[#546E7A] mb-1'
+                >
+                  Descripción de tu negocio
+                </label>
                 <textarea
-                  id="descripcion"
-                  name="descripcion"
-                  placeholder="Ingresar dato"
+                  id='descripcion'
+                  name='descripcion'
+                  placeholder='Ingresar dato'
                   value={formValues.descripcion}
                   onChange={handleInputChange}
-                  className="w-full h-[100px] px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#263238] placeholder-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50"
+                  className='w-full h-[100px] px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#263238] placeholder-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50'
                 />
               </div>
-              <div className="w-full">
-                <span className="block text-sm font-medium text-[#546E7A] mb-2">Días de servicio</span>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 w-full">
+              <div className='w-full'>
+                <span className='block text-sm font-medium text-[#546E7A] mb-2'>
+                  Días de servicio
+                </span>
+                <div className='grid grid-cols-2 sm:grid-cols-3 gap-2 w-full'>
                   {days.map((day) => (
-                    <div key={day} className="flex items-center w-full">
+                    <div key={day} className='flex items-center w-full'>
                       <input
                         id={day}
-                        type="checkbox"
+                        type='checkbox'
                         checked={selectedDays.includes(day)}
                         onChange={() => toggleDay(day)}
-                        className="h-4 w-4 text-[#4CAF50] focus:ring-[#4CAF50] bg-[#F9F9F9] rounded"
+                        className='h-4 w-4 text-[#4CAF50] focus:ring-[#4CAF50] bg-[#F9F9F9] rounded'
                       />
-                      <label htmlFor={day} className="ml-2 block text-sm text-[#546E7A]">{day}</label>
+                      <label
+                        htmlFor={day}
+                        className='ml-2 block text-sm text-[#546E7A]'
+                      >
+                        {day}
+                      </label>
                     </div>
                   ))}
                 </div>
               </div>
             </div>
-            <div className="w-full">
-              <label htmlFor="phone" className="block text-sm font-medium text-[#546E7A] mb-1">Teléfono</label>
+
+            <div>
+              <span className='block text-sm font-medium text-[#546E7A] mb-2'>
+                Tus Redes Sociales
+              </span>
+              <div className=' flex flex-col gap-5 mt-2 justify-between w-full '>
+                <div>
+                  <div className='flex items-center mt-5 w-full sm:w-full md:w-full  border  rounded-md'>
+                    <img
+                      className='w-[25px] mr-2 ml-5'
+                      src='./facebook_logo.svg'
+                      alt='facebook'
+                    />
+                    <input
+                      name='facebook'
+                      id='facebook'
+                      placeholder='Facebook'
+                      value={formValues.facebook}
+                      onChange={handleInputChange}
+                      className='flex-1 p-2 border-0 outline-none'
+                    />
+                  </div>
+
+                  <div className='flex items-center mt-5 w-full sm:w-full md:w-full  border  rounded-md'>
+                    <img
+                      className='w-[25px] mr-2 ml-5'
+                      src='./instagram-logo.svg'
+                      alt='instagram'
+                    />
+                    <input
+                      name='instagram'
+                      id='instagram'
+                      placeholder='Instagram'
+                      value={formValues.instagram}
+                      onChange={handleInputChange}
+                      className='flex-1 p-2 border-0 outline-none'
+                    />
+                  </div>
+                  <div className='flex items-center mt-5 w-full sm:w-full md:w-full  border  rounded-md'>
+                    <img
+                      className='w-[25px] mr-2 ml-5'
+                      src='./tiktok-icon.svg'
+                      alt='tik-tok'
+                    />
+                    <input
+                      name='tiktok'
+                      id='tiktok'
+                      placeholder='Tik-Tok'
+                      value={formValues.tiktok}
+                      onChange={handleInputChange}
+                      className='flex-1 p-2 border-0 outline-none'
+                    />
+                  </div>
+                  <div className='flex items-center mt-5 w-full sm:w-full md:w-full  border  rounded-md'>
+                    <img
+                      className='w-[45px] mr-2 ml-4'
+                      src='./x-logo.svg'
+                      alt='X'
+                    />
+                    <input
+                      name='twitter'
+                      id='twitter'
+                      placeholder='twitter'
+                      value={formValues.x}
+                      onChange={handleInputChange}
+                      className='flex-1 p-2 border-0 outline-none'
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className='w-full'>
+              <label
+                htmlFor='persona-moral'
+                className='block text-sm font-medium text-[#546E7A] mb-1'
+              >
+                Teléfono
+              </label>
+
               <InputWithLabel
-                name="phone"
-                id="phone"
-                placeholder="Ingresar dato"
+                name='phone'
+                id='phone'
+                placeholder='Ingresar dato'
                 value={formValues.phone}
                 onChange={handleInputChange}
               />
             </div>
-            <div className="w-full">
+            <div className='w-full'>
               <InputWithLabel
-                name="direccion"
-                label="Dirección de tu negocio"
-                id="direccion"
-                placeholder="Ingresar dato"
+                name='direccion'
+                label='Dirección de tu negocio'
+                id='direccion'
+                placeholder='Ingresar dato'
                 value={address}
                 onChange={handleAddressChange}
               />
-              <button onClick={handleSearch} className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md">Buscar</button>
+              <button
+                onClick={handleSearch}
+                className='mt-2 px-4 py-2 bg-blue-500 text-white rounded-md'
+              >
+                Buscar
+              </button>
             </div>
-            <div className="aspect-video relative rounded-md overflow-hidden w-full" ref={mapDiv} style={{ height: '400px' }}></div>
+            <div
+              className='aspect-video relative rounded-md overflow-hidden w-full'
+              ref={mapDiv}
+              style={{ height: '400px' }}
+            ></div>
           </div>
         </div>
+
         <div className="mt-8 flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4 w-full justify-center md:justify-end">
           <StyledButton variant="blancoCuadrado" className="w-full md:w-auto">CANCELAR</StyledButton>
           <StyledButton variant="blancoCuadrado" className="w-full md:w-auto" onClick={handleSubmit}>GUARDAR</StyledButton>
+
         </div>
       </div>
     </>
