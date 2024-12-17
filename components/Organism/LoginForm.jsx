@@ -76,14 +76,14 @@ const LoginForm = () => {
     <Form onSubmit={onSubmit} className="grid gap-4">
       <div>
         <label htmlFor="whatsapp" className="block text-sm font-medium text-[#546E7A] mb-1">
-          Correo Electrónico o Número de WhatsApp
+          Correo Electrónico 
         </label>
         <Input
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           type="email"
           id="whatsapp"
-          placeholder="Introduce tu Email o número de WhatsApp"
+          placeholder="Introduce tu Correo Electronico"
           className="w-full px-3 py-2 border border-[#B0BEC5] text-xs md:text-sm bg-[#F9F9F9] rounded-md text-[#263238] placeholder-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50"
         />
       </div>
