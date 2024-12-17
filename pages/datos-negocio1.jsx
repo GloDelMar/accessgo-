@@ -318,7 +318,7 @@ const View23 = () => {
             <div className="w-full">
               <label htmlFor="persona-moral" className="block text-sm font-medium text-[#546E7A] mb-1">Teléfono</label>
               <InputWithLabel
-                name="telefono del establecimiento"
+                name="phone"
                 id="phone"
                 placeholder="Ingresar dato"
                 value={formValues.phone}

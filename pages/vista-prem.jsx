@@ -72,13 +72,19 @@ export default function CardFree() {
           ¡AccessGo!
         </p>
         <img
-          className='w-[472px] h-[600px] md:w-[1264px] md:h-[500px] lg:w-[1304px] lg:h-[500px] mt-8 object-contain'
+          className='w-[472px] h-[300px] md:w-[1264px] md:h-[500px] lg:w-[1304px] lg:h-[500px] mt-8 object-contain'
           src={companyData?.data?.company?.profilePicture || '/img-card.png'}
           alt='Foto principal de empresa'
           width={1300}
           height={500}
           layout='responsive'
         />
+        <div className=' flex flex-row gap-5 mt-2 justify-between '>
+          <img className='w-[50px]' src='./facebook_logo.svg' alt='' />
+          <img className='w-[50px]' src='./instagram-logo.svg' alt='' />
+          <img className='w-[50px]' src='./tiktok-icon.svg' alt='' />
+          <img className='w-[75px]' src='./x-logo.svg' alt='' />
+        </div>
       </div>
 
       <section className='flex flex-col justify-between p-2 md:flex-row lg:flex-row w-full mt-4'>
