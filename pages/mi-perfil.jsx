@@ -14,7 +14,7 @@ const View7 = () => {
   const [userId, setUserId] = useState(null);
   const [comments, setComments] = useState([]);
   const [showComents, setShowComents] = useState(false);
-  const router = useRouter(); 
+  const router = useRouter();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -57,7 +57,7 @@ const View7 = () => {
 
       // Obtener datos de la compañía
       const companyData = await getCompanyById(companyId);
-      
+
       const companyType = companyData?.data?.company?.cuenta;
 
       if (!companyType) {
@@ -94,7 +94,11 @@ const View7 = () => {
       <h1 className="text-center text-[#2F4F4F] text-2xl p-10 font-bold">
         ¡Bienvenid@ a AccessGo!
       </h1>
-      <div className="flex flex-col items-center lg:flex-row lg:justify-center lg:items-start lg:space-x-8 px-4">
+      <p className='text-4xl md:text-5xl font-bold text-center text-[#2F4F4F] mt-2 mb-12'>
+        {userData?.data?.user?.companyName ||
+          'Información no disponible.'}
+      </p>
+      <div className="flex flex-col items-center lg:flex-row lg:justify-center lg:items-start lg:space-x-4 px-2">
         <div className="w-full lg:w-1/3 flex flex-col items-center">
           <div className="flex md:gap-4 bg-[#F5F0E5] md:h-[250px] p-4 rounded-[25px] flex-col md:justify-center items-center">
             <Image
