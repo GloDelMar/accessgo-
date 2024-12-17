@@ -9,7 +9,7 @@ const olvidoContraseña = () => {
           ¿Olvidaste tu contraseña?
         </h1>
         <h3 className='text-center text-[#2F4F4F] p-1 font-extrabold'>
-          Escribe tu Correo Electronico o Numero de WhatsApp que usaste pare registrarte 
+          Escribe el Correo Electronico que usaste pare registrarte 
           y te enviaremos un codigo de verificacion.
         </h3>
         <div className='text-center flex justify-center p-10 '>
