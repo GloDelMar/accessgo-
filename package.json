@@ -56,8 +56,9 @@
   "devDependencies": {
     "axe-core": "^4.10.0",
     "css-loader": "^7.1.2",
-    "eslint": "^8",
+    "eslint": "^8.0.0",
     "eslint-config-next": "^15.0.3",
+    "eslint-plugin-console.ninja": "^1.0.0",
     "eslint-plugin-jsx-a11y": "^6.10.0",
     "postcss": "^8.4.47",
     "react-axe": "^3.5.4",
