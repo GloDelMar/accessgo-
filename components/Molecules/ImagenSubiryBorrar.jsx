@@ -4,6 +4,9 @@ import { Trash2 } from "lucide-react";
 const ImagenSubiryBorrar = ({ userId }) => {
   const [images, setImages] = useState([]);
   const [uploading, setUploading] = useState(false);
+  const [ selectedImage, setSelectedImage ] = useState([]);
+  
+  
 
   // Cargar imágenes del servidor
   useEffect(() => {
@@ -14,6 +17,7 @@ const ImagenSubiryBorrar = ({ userId }) => {
       const data = await response.json();
       if (Array.isArray(data)) {
         setImages(data);
+        setSelectedImage(data)
       } else {
         console.error("Expected an array, but got:", data);
         setImages([]);
@@ -21,6 +25,7 @@ const ImagenSubiryBorrar = ({ userId }) => {
     };
     fetchImages();
   }, [userId]);
+  console.log(selectedImage)
 
   const handleUpload = async (index, file) => {
     if (!file || !userId) {
@@ -68,11 +73,12 @@ const ImagenSubiryBorrar = ({ userId }) => {
     // Lógica para eliminar la imagen en el backend
     try {
       await fetch(
-        `https://backend-r159.onrender.com/api/images/${userId}/${index}`,
+        `http://localhost:8080/api/deleteacc/accimg/${userId}/1734493877239-469140120_430114283503257_8438227548859153359_n.jpg`,
         {
           method: "DELETE",
         }
       );
+      console.log("Se ha borrado imagen")
     } catch (error) {
       console.error("Failed to delete image:", error);
     }
@@ -100,7 +106,7 @@ const ImagenSubiryBorrar = ({ userId }) => {
                     onClick={() => handleDelete(index)}
                     className="absolute top-2 right-2 bg-gray-100 p-1 rounded-full"
                   >
-                    <Trash2 size={16} />
+                    <Trash2 size={16} image={selectedImage}  />
                   </button>
                 </>
               ) : (
