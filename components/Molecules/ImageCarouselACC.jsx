@@ -31,7 +31,7 @@ const ImageCarouselACC = ({ userId }) => {
   };
 
   return (
-    <div className='sm:w-[150px] md:w-[300px] lg:w-[600px] max-w-[1022px] mx-auto'>
+    <div className='sm:w-[150px] md:w-[300px] lg:w-[800px] max-w-[1022px] mx-auto'>
       {images.length > 0 ? (
         <Swiper
           spaceBetween={20}
@@ -59,7 +59,7 @@ const ImageCarouselACC = ({ userId }) => {
               <img
                 src={image}
                 alt={`Slide ${index}`}
-                className='w-[200px] h-[150px] object-cover rounded-lg cursor-pointer'
+                className='w-[200px] h-[200px] object-cover rounded-lg cursor-pointer'
                 onClick={() => handleImageClick(image)}
               />
             </SwiperSlide>
