@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Trash2 } from "lucide-react";
+import { toast, Toaster } from 'sonner';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 const ImagenSubiryBorrar = ({ userId }) => {
   const [images, setImages] = useState([]);
@@ -24,7 +27,7 @@ const ImagenSubiryBorrar = ({ userId }) => {
 
   const handleUpload = async (index, file) => {
     if (!file || !userId) {
-      alert("User ID or image missing");
+      toast.error("Imagen incompatible prueba con otra imagen diferente");
       return;
     }
 
@@ -50,8 +53,9 @@ const ImagenSubiryBorrar = ({ userId }) => {
         const newImages = [...images];
         newImages[index] = data.url;
         setImages(newImages);
+        toast.success("Imagen subida exitosamente");
       } else {
-        alert("Error uploading image");
+        toast.error("Error al subir imagen");
       }
     } catch (error) {
       console.error("Upload failed:", error);
@@ -60,44 +64,61 @@ const ImagenSubiryBorrar = ({ userId }) => {
     }
   };
 
-  const handleDelete = async (index) => {
+  const handleDelete = (index) => {
     const imageToDelete = images[index];
   
     if (!imageToDelete) {
-      alert("No image URL found");
+      toast.error("No se encontró la URL de la imagen");
       return;
     }
   
-    try {
-      const response = await fetch(
-        `http://localhost:8080/api/deleteacc`,
+    confirmAlert({
+      title: "Confirmar eliminación",
+      message: "¿Estás seguro de que deseas borrar esta imagen?",
+      buttons: [
         {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ url: imageToDelete }),
-        }
-      );
+          label: "Sí",
+          onClick: async () => {
+            try {
+              const response = await fetch(
+                `http://localhost:8080/api/deleteacc`,
+                {
+                  method: "DELETE",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({ url: imageToDelete }),
+                }
+              );
   
-      if (response.ok) {
-        const newImages = [...images];
-        newImages.splice(index, 1); // Elimina del estado
-        setImages(newImages);
-      } else {
-        alert("Error deleting image");
-      }
-    } catch (error) {
-      console.error("Failed to delete image:", error);
-    }
+              if (response.ok) {
+                const newImages = [...images];
+                newImages.splice(index, 1); // Elimina del estado
+                setImages(newImages);
+                toast.success("Imagen borrada exitosamente");
+              } else {
+                toast.error("Error al borrar la imagen");
+              }
+            } catch (error) {
+              console.error("Failed to delete image:", error);
+            }
+          },
+        },
+        {
+          label: "No",
+          onClick: () => toast.info("Eliminación cancelada"),
+        },
+      ],
+    });
   };
+  
   
 
   return (
     <div className="w-full max-w-[1022px] mx-auto">
       {/* Uploader Section */}
       <div className="flex gap-4 flex-wrap mb-8">
-        {Array(4)
+        {Array(8)
           .fill(null)
           .map((_, index) => (
             <div
@@ -137,6 +158,7 @@ const ImagenSubiryBorrar = ({ userId }) => {
             </div>
           ))}
       </div>
+      <Toaster />
     </div>
   );
 };

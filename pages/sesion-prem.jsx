@@ -21,6 +21,7 @@ import DOMPurify from 'dompurify';
 import ImageCarouselACC from '@/components/Molecules/ImageCarouselACC';
 import UploadImageACC from '@/components/Molecules/UploadImageACC';
 import ImagenSubiryBorrar from '@/components/Molecules/ImagenSubiryBorrar';
+import { toast, Toaster } from 'sonner';
 
 ChartJS.register(
   CategoryScale,
@@ -309,6 +310,7 @@ const SesionPremium = () => {
           </button>
         </div>
       </div>
+      <Toaster />
     </main>
   );
 };
