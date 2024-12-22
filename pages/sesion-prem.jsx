@@ -201,7 +201,7 @@ const SesionPremium = () => {
         <div className='mt-12'>
                    <div className='flex flex-col justify-center gap-5'>
             <ImagenSubiryBorrar userId={companyId} />
-            <UploadImageACC />
+
           </div>
         </div>
 

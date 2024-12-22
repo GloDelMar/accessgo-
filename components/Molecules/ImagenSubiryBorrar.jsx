@@ -61,22 +61,37 @@ const ImagenSubiryBorrar = ({ userId }) => {
   };
 
   const handleDelete = async (index) => {
-    const newImages = [...images];
-    newImages.splice(index, 1); // Elimina la imagen en el índice especificado
-    setImages(newImages);
-
-    // Lógica para eliminar la imagen en el backend
+    const imageToDelete = images[index];
+  
+    if (!imageToDelete) {
+      alert("No image URL found");
+      return;
+    }
+  
     try {
-      await fetch(
-        `https://backend-r159.onrender.com/api/images/${userId}/${index}`,
+      const response = await fetch(
+        `http://localhost:8080/api/deleteacc`,
         {
           method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ url: imageToDelete }),
         }
       );
+  
+      if (response.ok) {
+        const newImages = [...images];
+        newImages.splice(index, 1); // Elimina del estado
+        setImages(newImages);
+      } else {
+        alert("Error deleting image");
+      }
     } catch (error) {
       console.error("Failed to delete image:", error);
     }
   };
+  
 
   return (
     <div className="w-full max-w-[1022px] mx-auto">
