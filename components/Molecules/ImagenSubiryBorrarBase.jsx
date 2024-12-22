@@ -8,7 +8,7 @@ import ModalACC from '../atoms/modalAccessibilidadInfo';
 
 
 
-const ImagenSubiryBorrar = ({ userId }) => {
+const ImagenSubiryBorrarBase = ({ userId }) => {
   const [images, setImages] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [isModalACCOpen, setIsModalACCOpen] = useState(false);
@@ -134,7 +134,7 @@ const ImagenSubiryBorrar = ({ userId }) => {
         </p>
       </ModalACC>
       <div className='w-full grid grid-cols-4  gap-4 flex-row mb-8'>
-        {Array(8)
+        {Array(4)
           .fill(null)
           .map((_, index) => (
             <div
@@ -179,4 +179,4 @@ const ImagenSubiryBorrar = ({ userId }) => {
   );
 };
 
-export default ImagenSubiryBorrar;
+export default ImagenSubiryBorrarBase;

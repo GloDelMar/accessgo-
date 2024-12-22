@@ -5,8 +5,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import router from 'next/router';
 import { getBusinessAverageRanking } from './api/api_ranking';
 import { getCommentsByCompanyId } from './api/api_comment';
-import UploadImageACC from '@/components/Molecules/UploadImageACC';
-import ImageCarouselACC from '@/components/Molecules/ImageCarouselACC';
+import ImagenSubiryBorrarBase from '@/components/Molecules/ImagenSubiryBorrarBase';
 
 
 
@@ -153,8 +152,7 @@ const View21 = () => {
         </div>
 
         <div className='flex flex-col justify-center items-center h[200px] w[200px]'>
-            <ImageCarouselACC  userId={companyId} />
-          <UploadImageACC />
+        <ImagenSubiryBorrarBase userId={companyId} />
           </div>
 
         

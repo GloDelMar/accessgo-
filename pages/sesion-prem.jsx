@@ -18,10 +18,8 @@ import { getCommentsByCompanyId } from './api/api_comment';
 import EstadisticasVisitas from '../components/Molecules/Estadisticas';
 import { getPromoByCompanyId, deletePromo } from './api/api_promos';
 import DOMPurify from 'dompurify';
-import ImageCarouselACC from '@/components/Molecules/ImageCarouselACC';
-import UploadImageACC from '@/components/Molecules/UploadImageACC';
 import ImagenSubiryBorrar from '@/components/Molecules/ImagenSubiryBorrar';
-import { toast, Toaster } from 'sonner';
+import { Toaster } from 'sonner';
 
 ChartJS.register(
   CategoryScale,
@@ -200,9 +198,8 @@ const SesionPremium = () => {
         </div>
 
         <div className='mt-12'>
-                   <div className='flex flex-col justify-center gap-5'>
+          <div className='flex flex-col justify-center gap-5'>
             <ImagenSubiryBorrar userId={companyId} />
-
           </div>
         </div>
 
