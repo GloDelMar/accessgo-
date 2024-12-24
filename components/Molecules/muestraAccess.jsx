@@ -37,6 +37,13 @@ const AccessVisibility = ({ companyId }) => {
     return <p>Cargando...</p>;
   }
 
+  // Filtrar los tipos de discapacidad con datos válidos
+  const validConditions = data.disabilities?.filter((disability) =>
+    disability.sections.some((section) =>
+      section.questions.some((question) => question.response === true)
+    )
+  );
+
   const conditionData = data.disabilities?.find(
     (disability) =>
       disability.type.toLowerCase() === showCondition?.toLowerCase() &&
@@ -48,15 +55,26 @@ const AccessVisibility = ({ companyId }) => {
   return (
     <div className="max-w-[500px] text-[#2F4F4F] h-full mt-2 flex flex-col align-center p-2 max-w-screen-sm md:p-4 lg:p-8">
       {/* Botones de condiciones */}
+      <div className="text-[#2F4F4F] border-2 border-red p-2 mt-4 mb-5 text-justify">
+        <p>Haz clic en los <span className="font-bold"> íconos</span> para descubrir cómo trabajamos en
+          mejorar la accesibilidad y qué aspectos de tu experiencia hemos
+          optimizado para hacer tu visita más cómoda y accesible. Conoce las
+          acciones que hemos tomado para garantizar un entorno inclusivo.</p> 
+          <p className="mt-2">Haz clic una vez más en el mismo ícono para ocultar la información.</p> </div>
+          
       <div className="flex justify-around space-x-2 mb-6">
-        {["Motriz", "Visual", "Auditiva", "Intelectual", "Neurodivergente"].map((type) => (
-          <IconButton
-            key={type}
-            condition={type}
-            onClick={() => handleConditionClick(type)}
-          />
+        
+        {validConditions?.map((disability) => (
+          <div key={disability.type} className="flex flex-col items-center">
+            <IconButton
+              condition={disability.type}
+              onClick={() => handleConditionClick(disability.type)}
+            />
+            <p className="text-sm text-gray-600 mt-1">{disability.type}</p>
+          </div>
         ))}
       </div>
+
 
       {showCondition && (
         <div className="max-w-[500px] border rounded p-4 shadow-xl bg-white mt-4 flex flex-col items-center">
