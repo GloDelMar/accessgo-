@@ -112,8 +112,8 @@ export default function CardFree() {
               <Image
                 key={star}
                 className={`w-[15px] h-[20px] md:w-[18px] md:h-[23px] lg:w-[20px] lg:h-[25px] ${star <= Math.round(averageRating)
-                    ? 'opacity-100'
-                    : 'opacity-30'
+                  ? 'opacity-100'
+                  : 'opacity-30'
                   }`}
                 src='/estrellita.svg'
                 alt='Estrella'
@@ -243,12 +243,24 @@ export default function CardFree() {
                         <h4 className='text-base md:text-lg font-bold mb-2'>
                           {promocion.name || 'Sin título'}
                         </h4>
-                        {promocion.image && (
+                        {promocion.image ? (
+                          <div className='mb-4 w-full h-auto'>
+                            <Image
+                              src={promocion.image} // Imagen desde la base de datos
+                              alt={`Imagen de la promoción: ${promocion.name || 'Sin título'}`}
+                              width={500}
+                              height={300}
+                              className='w-full h-full object-cover rounded-md'
+                            />
+                          </div>
+                        ) : (
                           <div className='mb-4'>
-                            <img
-                              src={promocion.image}
-                              alt={`Imagen de la promoción: ${promocion.name}`}
-                              className='w-full h-auto object-cover rounded-md'
+                            <Image
+                              src={imageDefault} // Imagen predeterminada
+                              alt='Imagen predeterminada de promoción'
+                              width={500}
+                              height={300}
+                              className='max-w-xl h-auto object-cover rounded-md'
                             />
                           </div>
                         )}
@@ -260,12 +272,18 @@ export default function CardFree() {
                             )
                           }}
                         />
-                        <span className='text-xs md:text-sm text-gray-500'>
-                          Fecha de vencimiento:{' '}
+                        <div className='space-x-4'> <span className='text-xs md:text-sm text-gray-500'>
+                          Fecha de inicio:{' '}
                           {promocion.endDate
-                            ? new Date(promocion.endDate).toLocaleDateString()
+                            ? new Date(promocion.startDate).toLocaleDateString()
                             : 'Sin fecha'}
                         </span>
+                          <span className='text-xs md:text-sm text-gray-500'>
+                            Fecha de vencimiento:{' '}
+                            {promocion.endDate
+                              ? new Date(promocion.endDate).toLocaleDateString()
+                              : 'Sin fecha'}
+                          </span></div>
                       </div>
                     </li>
                   ))}

@@ -46,7 +46,7 @@ export default function CommentSection() {
       {userId ? (
         userType === 'company' ? (
           <p className="text-red-500 font-semibold text-center">
-            Las cuentas de empresas no pueden dejar comentarios.
+            Lo sentimos, las cuentas de empresas no pueden dejar comentarios.
           </p>
         ) : (
           <>
