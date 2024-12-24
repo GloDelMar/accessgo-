@@ -11,6 +11,7 @@ import DOMPurify from 'dompurify';
 import ImageCarouselACC from '@/components/Molecules/ImageCarouselACC';
 
 const defaultProfilePic = 'public/6073873.png';
+const imageDefault = "/4574c6_19f52cfb1ef44a3d844774c6078ffafc~mv2.png"
 
 export default function CardFree() {
   const router = useRouter();
@@ -240,7 +241,7 @@ export default function CardFree() {
                       className='p-4 md:p-6 border rounded-lg shadow-sm bg-[#F5F0E5] relative flex flex-col sm:flex-row sm:justify-between sm:items-start'
                     >
                       <div className='mt-6 sm:mt-0 sm:ml-6'>
-                        <h4 className='text-base md:text-lg font-bold mb-2'>
+                        <h4 className='text-base text-center md:text-2xlg font-bold mb-2'>
                           {promocion.name || 'Sin título'}
                         </h4>
                         {promocion.image ? (
