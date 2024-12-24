@@ -230,7 +230,7 @@ const AccesForm = () => {
           </Link>
         </Button>
         <Button
-          className="w-[155px] h-[40px] bg-[#2F4F4F] text-white border-2 rounded-lg"
+          className="px-12 py-2 border border-transparent rounded-md shadow-sm text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]"
           onClick={handleSubmit}
         >
           Continuar

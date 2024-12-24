@@ -84,18 +84,19 @@ const View21 = () => {
 
         <div className="flex flex-col lg:flex-row gap-6 p-6 max-w-4xl mx-auto">
           {/* Contenedor de perfil */}
-          <div className="w-full lg:w-1/3 flex justify-center">
-            <div className="bg-[#F5F0E5] w-full max-w-[231px] h-[200px] rounded-[25px] shadow-md p-6 flex justify-center items-center">
+          <div className='max-w-40 max-h-40 p-4 rounded-md bg-[#F5F0E5] lg:w-1/3 flex justify-center'>
+            <div className=' w-32 h-32 rounded-full overflow-hidden'>
               <Image
-                src={companyData?.data?.company?.profilePicture || '/perfil1.png'}
-                alt="Foto de perfil"
-                width={150}
+                src={
+                  companyData?.data?.company?.profilePicture || '/perfil1.png'
+                }
+                alt='Foto de perfil'
+                width={300}
                 height={150}
-                className="rounded-full"
+                className='w-full h-full object-cover'
               />
             </div>
           </div>
-
           {/* Contenedor de calificaciones y comentarios */}
           <div className="w-full lg:w-2/3 flex flex-col justify-center">
             <div className="bg-white rounded-[30px] shadow-md p-6 w-full">
@@ -108,8 +109,8 @@ const View21 = () => {
                     <svg
                       key={star}
                       className={`w-5 h-5 ${star <= Math.round(averageRating)
-                          ? 'text-yellow-400'
-                          : 'text-gray-300'
+                        ? 'text-yellow-400'
+                        : 'text-gray-300'
                         } fill-current`}
                       viewBox="0 0 24 24"
                     >

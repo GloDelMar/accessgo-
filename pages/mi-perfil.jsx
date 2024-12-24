@@ -95,18 +95,18 @@ const View7 = () => {
         ¡Bienvenid@ a AccessGo!
       </h1>
       <p className='text-4xl md:text-5xl font-bold text-center text-[#2F4F4F] mt-2 mb-12'>
-        {userData?.data?.user?.companyName ||
+        {userData?.data?.user?.firstName ||
           'Información no disponible.'}
       </p>
       <div className="flex flex-col items-center lg:flex-row lg:justify-center lg:items-start lg:space-x-4 px-2">
-        <div className="w-full lg:w-1/3 flex flex-col items-center">
-          <div className="flex md:gap-4 bg-[#F5F0E5] md:h-[250px] p-4 rounded-[25px] flex-col md:justify-center items-center">
+        <div className="max-w-40 max-h-40 p-4 rounded-md bg-[#F5F0E5] lg:w-1/3 flex justify-center">
+          <div className=" w-32 h-32 rounded-full overflow-hidden">
             <Image
               src={userData?.data?.user?.profilePicture || defaultProfilePic}
               alt="Foto de perfil"
               width={150}
               height={150}
-              className="rounded-full mx-auto mb-4"
+              className="w-full h-full object-cover"
             />
             <h2 className="text-xl font-semibold mb-2">
               {userData?.data?.user?.firstName} {userData?.data?.user?.lastName}
