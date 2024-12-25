@@ -31,7 +31,7 @@ const ImageCarouselACC = ({ userId }) => {
   };
 
   return (
-    <div className='sm:w-[150px] md:w-[300px] lg:w-[800px] max-w-[1022px] mx-auto'>
+    <div className='sm:w-[200px] sm:h-[300px] md:w-[300px] lg:w-[800px] max-w-[1022px] '>
       {images.length > 0 ? (
         <Swiper
           spaceBetween={20}
@@ -52,14 +52,13 @@ const ImageCarouselACC = ({ userId }) => {
               slidesPerView: 4
             }
           }}
-          className='flex justify-center items-center w-full h-[200px]'
         >
           {images.map((image, index) => (
             <SwiperSlide key={index}>
               <img
                 src={image}
                 alt={`Slide ${index}`}
-                className='w-[200px] h-[200px] object-cover rounded-lg cursor-pointer'
+                className='sm:w-[200px] sm:h-[300px] object-contain rounded-lg cursor-pointer'
                 onClick={() => handleImageClick(image)}
               />
             </SwiperSlide>
@@ -68,6 +67,9 @@ const ImageCarouselACC = ({ userId }) => {
       ) : (
         <p>No images found</p>
       )}
+      <p className='text-center sm:text-[10px] md:text-sm text-red-300'>
+        *haz click en una imagen para hacer zoom
+      </p>
 
       {selectedImage && (
         <div className='fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50'>

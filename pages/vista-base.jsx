@@ -9,7 +9,6 @@ import ImageCarouselACC from '@/components/Molecules/ImageCarouselACC';
 
 const defaultProfilePic = '/6073873.png';
 
-
 const getValueOrDefault = (
   value,
   defaultText = 'Información no disponible.'
@@ -137,7 +136,7 @@ export default function CardFree() {
         </div>
       </section>
 
-      <div className='w-full flex flex-col justify-center items-center mt-8'>
+      <div className='w-full flex flex-col gap-x-2 justify-center items-center mt-8'>
         <div className='border p-3 rounded mt-4 bg-[#ECEFF1] w-[290px]  md:w-full  justify-center flex flex-col items-center text-[#455A64]'>
           <h4 value='Place' className='text-[#546E7A] font-semibold'>
             Dirección:
@@ -155,13 +154,10 @@ export default function CardFree() {
             {companyData?.data?.company?.phone || 'Información no disponible.'}
           </p>
         </div>
-        <div className='flex flex-col justify-center gap-5'>
-          <h1 className='text-center text-[#2F4F4F] mt-8'>
-            Imagenes de accesibilidad proporcionadas por la empresa:
-          </h1>
+        <div className='sm:w-[200px] sm:h-[300px] flex flex-col justify-center'>
           <ImageCarouselACC userId={id} />
         </div>
-        <div>
+        <div className='mt-8'>
           <AccessVisibility companyId={id} />
         </div>
       </div>
@@ -171,4 +167,3 @@ export default function CardFree() {
     </div>
   );
 }
-
