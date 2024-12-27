@@ -3,6 +3,7 @@ import { Trash2 } from 'lucide-react';
 import { toast, Toaster } from 'sonner';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
+import Image from 'next/image';
 
 const ImagenSubiryBorrarBase = ({ userId }) => {
   const [images, setImages] = useState([]);
@@ -133,8 +134,10 @@ const ImagenSubiryBorrarBase = ({ userId }) => {
             >
               {images[index] ? (
                 <>
-                  <img
+                  <Image
                     src={images[index]}
+                    width={200}
+                    height={200}
                     alt={`Uploaded ${index}`}
                     className='w-full h-full object-cover'
                   />
@@ -147,8 +150,10 @@ const ImagenSubiryBorrarBase = ({ userId }) => {
                 </>
               ) : (
                 <label className='cursor-pointer flex flex-col items-center'>
-                  <img
+                  <Image
                     src='/foto.jpg'
+                    width={320}
+                    height={320}
                     alt='Upload Placeholder'
                     className='w-8 h-8'
                   />
