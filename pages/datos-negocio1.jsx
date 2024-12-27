@@ -23,6 +23,8 @@ const View23 = () => {
   const [latitude, setLatitude] = useState(null);
   const [companyId, setCompanyId] = useState(null);
   const [phone, setPhone] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const companyIdFromLocalStorage = localStorage.getItem('userId');
@@ -47,10 +49,12 @@ const View23 = () => {
     },
     descripcion: '',
     phone: '',
-    facebook: '',
-    instagram: '',
-    tiktok: '',
-    twitter: ''
+    redesSociales: {
+      facebook: '',
+      twitter: '',
+      instagram: '',
+      tiktok: ''
+    }
   });
 
   const days = [
@@ -94,8 +98,6 @@ const View23 = () => {
       });
 
       markerRef.current = new mapboxgl.Marker()
-        .setLngLat([longitude || -100.3899, latitude || 20.5888])
-        .addTo(mapRef.current);
     } else if (latitude && longitude && markerRef.current) {
       markerRef.current.setLngLat([longitude, latitude]);
       mapRef.current.flyTo({ center: [longitude, latitude], zoom: 14 });
@@ -104,13 +106,20 @@ const View23 = () => {
 
   const fetchCompanyData = async () => {
     const companyId = localStorage.getItem('userId');
-    if (!companyId) return;
+    if (companyId) {
+      setCompanyId(companyId);
+    } else {
+      console.error('No se encontró el ID de la empresa en localStorage');
+    }
 
     try {
       const response = await axios.get(
         `https://backend-r159.onrender.com/api/company/${companyId}`
       );
 
+      const companyData = response.data.data.company;
+
+      console.log('Datos de la compañía:', companyData);
 
       setFormValues({
         nombreComercial: companyData?.companyName || '',
@@ -122,11 +131,16 @@ const View23 = () => {
           cierre: companyData.horario?.cierra || ''
         },
         descripcion: companyData?.description || '',
-        phone: companyData?.phone || ''
+        phone: companyData?.phone || '',
+        redesSociales: {
+          facebook: companyData?.redesSociales?.facebook || '',
+          instagram: companyData?.redesSociales?.instagram || '',
+          twitter: companyData?.redesSociales?.twitter || '',
+          tiktok: companyData?.redesSociales?.tiktok || ''
+        }
       });
       setAddress(companyData?.address || '');
       setSelectedDays(companyData?.diasDeServicio || []);
-
 
       setLatitude(companyData?.latitude);
       setLongitude(companyData?.longitude);
@@ -192,7 +206,7 @@ const View23 = () => {
       phone: formValues.phone,
       latitude: markerRef.current ? markerRef.current.getLngLat().lat : latitude,
       longitude: markerRef.current ? markerRef.current.getLngLat().lng : longitude,
-
+      redesSociales: formValues.redesSociales
     };
 
     try {
@@ -215,6 +229,14 @@ const View23 = () => {
     setFormValues((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleRedesSocialesChange = (event) => {
+    const { name, value } = event.target;
+    setFormValues((prev) => ({
+      ...prev,
+      redesSociales: { ...prev.redesSociales, [name]: value }
+    }));
+  };
+
   return (
     <>
       <div className="w-full max-w-[900px] mx-auto p-4 md:p-6 bg-white rounded-lg shadow-sm">
@@ -232,7 +254,6 @@ const View23 = () => {
                 )}
                 {/* Esto es para la subida de imagenes a aws */}
                 <UploadImageCPP userId={companyId} setSelectedImage={setSelectedImage} />
-
               </label>
             </div>
           </div>
@@ -289,10 +310,9 @@ const View23 = () => {
                   className='w-full px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50'
                 >
                   <option>Giro de tu negocio</option>
-
                   <option value="HOTEL">HOTEL</option>
                   <option value="RESTAURANTE">RESTAURANTE</option>
-  </select>
+                </select>
               </div>
               <div className='w-full'>
                 <label
@@ -377,63 +397,54 @@ const View23 = () => {
               <div className=' flex flex-col gap-5 mt-2 justify-between w-full '>
                 <div>
                   <div className='flex items-center mt-5 w-full sm:w-full md:w-full  border  rounded-md'>
-                    <img
+                    <Image
                       className='w-[25px] mr-2 ml-5'
-                      src='./facebook_logo.svg'
+                      src='/facebook_logo.svg'
                       alt='facebook'
+                      width={25}
+                      height={25}
                     />
                     <input
-                      name='facebook'
-                      id='facebook'
-                      placeholder='Facebook'
-                      value={formValues.facebook}
-                      onChange={handleInputChange}
+                      type="text"
+                      id="facebook"
+                      name="facebook"
+                      value={formValues.redesSociales.facebook}
+                      onChange={handleRedesSocialesChange}
                       className='flex-1 p-2 border-0 outline-none'
                     />
                   </div>
 
                   <div className='flex items-center mt-5 w-full sm:w-full md:w-full  border  rounded-md'>
-                    <img
+                    <Image
                       className='w-[25px] mr-2 ml-5'
-                      src='./instagram-logo.svg'
+                      src='/instagram-logo.svg'
                       alt='instagram'
+                      width={25}
+                      height={25}
                     />
                     <input
-                      name='instagram'
-                      id='instagram'
-                      placeholder='Instagram'
-                      value={formValues.instagram}
-                      onChange={handleInputChange}
+                      type="text"
+                      id="instagram"
+                      name="instagram"
+                      value={formValues.redesSociales.instagram}
+                      onChange={handleRedesSocialesChange}
                       className='flex-1 p-2 border-0 outline-none'
                     />
                   </div>
                   <div className='flex items-center mt-5 w-full sm:w-full md:w-full  border  rounded-md'>
-                    <img
-                      className='w-[25px] mr-2 ml-5'
-                      src='./tiktok-icon.svg'
-                      alt='tik-tok'
-                    />
-                    <input
-                      name='tiktok'
-                      id='tiktok'
-                      placeholder='Tik-Tok'
-                      value={formValues.tiktok}
-                      onChange={handleInputChange}
-                      className='flex-1 p-2 border-0 outline-none'
-                    />
-                  </div>
-                  <div className='flex items-center mt-5 w-full sm:w-full md:w-full  border  rounded-md'>
-                    <img
+                    <Image
                       className='w-[45px] mr-2 ml-4'
-                      src='./x-logo.svg'
+                      src='/x-logo.svg'
                       alt='X'
+                      width={45}
+                      height={45}
                     />
                     <input
-                      name='twitter'
-                      id='twitter'
-                      placeholder='twitter'
-                      value={formValues.x}
-                      onChange={handleInputChange}
+                      type="text"
+                      id="twitter"
+                      name="twitter"
+                      value={formValues.redesSociales.twitter}
+                      onChange={handleRedesSocialesChange}
                       className='flex-1 p-2 border-0 outline-none'
                     />
                   </div>

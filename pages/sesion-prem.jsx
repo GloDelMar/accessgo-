@@ -121,7 +121,7 @@ const SesionPremium = () => {
   };
 
   return (
-    <main className='flex overflow-hidden flex-col items-center px-4 sm:px-10 md:px-20 pt-28 bg-white pb-[1572px] max-sm:px-5 max-sm:py-24'>
+    <main className='w-full flex overflow-hidden flex-col items-center px-4 sm:px-10 md:px-20 pt-28 bg-white pb-[1572px] max-sm:px-5 max-sm:py-24'>
       <div className='container mx-auto px-4 py-8 max-w-4xl'>
         <h1 className='text-4xl md:text-5xl font-bold text-center text-[#2F4F4F] mb-12'>
           ¡Bienvenido!
@@ -131,6 +131,7 @@ const SesionPremium = () => {
           </p>
         </h1>
 
+<<<<<<< Updated upstream
         <div className='flex  lg:flex-row gap-6 p-6 max-w-4xl mx-auto'>
           <div className='max-w-40 max-h-40 p-4 rounded-md bg-[#F5F0E5] lg:w-1/3 flex justify-center'>
             <div className=' w-32 h-32 rounded-full overflow-hidden'>
@@ -142,6 +143,17 @@ const SesionPremium = () => {
                 width={300}
                 height={150}
                 className='w-full h-full object-cover'
+=======
+        <div className='flex flex-col lg:flex-row gap-6 p-6 max-w-4xl mx-auto'>
+          <div className="w-full lg:w-1/3 flex justify-center">
+            <div className="bg-[#F5F0E5] max-w-[231px] w-full h-[231px] rounded-[25px] shadow-md p-4 flex justify-center items-center">
+              <Image
+                src={companyData?.data?.company?.profilePicture || '/perfil1.png'}
+                alt="Foto de perfil"
+                width={200}
+                height={200}
+                className="rounded-full object-cover"
+>>>>>>> Stashed changes
               />
             </div>
           </div>
@@ -157,8 +169,13 @@ const SesionPremium = () => {
                     <svg
                       key={star}
                       className={`w-5 h-5 ${star <= Math.round(averageRating)
+<<<<<<< Updated upstream
                         ? 'text-yellow-400'
                         : 'text-gray-300'
+=======
+                          ? 'text-yellow-400'
+                          : 'text-gray-300'
+>>>>>>> Stashed changes
                         } fill-current`}
                       viewBox='0 0 24 24'
                     >
@@ -263,11 +280,17 @@ const SesionPremium = () => {
                           ) : (
                             <div className='mb-4'>
                               <Image
+<<<<<<< Updated upstream
                                 src={imageDefault} // Imagen predeterminada
                                 alt='Imagen predeterminada de promoción'
                                 width={500}
                                 height={300}
                                 className='max-w-xl h-auto object-cover rounded-md'
+=======
+                                src={promocion.image}
+                                alt={`Imagen de la promoción: ${promocion.name}`}
+                                className='w-full h-auto object-cover rounded-md'
+>>>>>>> Stashed changes
                               />
                             </div>
                           )}
