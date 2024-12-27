@@ -182,6 +182,7 @@ export default function CardFree() {
           </div>
         </div>
       </section>
+      
       <div className='w-full flex flex-col justify-center items-center mt-8'>
         <div className='border p-3 rounded mt-4 bg-[#ECEFF1] w-[290px]  md:w-full  justify-center flex flex-col items-center text-[#455A64]'>
           <h4 value='Place' className='text-[#546E7A] font-semibold'>

@@ -1,4 +1,5 @@
 const API_URL = "https://backend-r159.onrender.com";
+// const API_URL = "http://localhost:8080";
 
 
 export const createComment = async (userId, content, businessId, rankingId) => {
@@ -95,4 +96,48 @@ export function getCommentsByCompanyId(companyId) {
             console.error("Error al obtener el comentario por companyId:", error.message);
             throw error;
         });
+}
+
+export async function addLike(commentId) {
+    try {
+        const response = await fetch(`${API_URL}/api/comments/like/${commentId}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            const errorMessage = errorData.message || "Error al agregar like.";
+            throw new Error(errorMessage);
+        }
+
+        const responseData = await response.json();
+        return responseData;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export async function addDislike(commentId) {
+    try {
+        const response = await fetch(`${API_URL}/api/comments/dislike/${commentId}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            const errorMessage = errorData.message || "Error al agregar dislike.";
+            throw new Error(errorMessage);
+        }
+
+        const responseData = await response.json();
+        return responseData;
+    } catch (error) {
+        throw error;
+    }
 }
