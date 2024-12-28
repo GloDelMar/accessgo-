@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import { createpromo, getPromoByCompanyId } from './api/api_promos';
 import { InputWithLabel } from '@/components/atoms/Input';
+import Link from 'next/link';
 
 const View18 = () => {
   const router = useRouter();
@@ -70,7 +71,8 @@ const View18 = () => {
 
     try {
       const promoCount = await getPromoByCompanyId(companyId);
-      if (promoCount >= 3) {
+      console.log("las promos", promoCount)
+      if (promoCount.data.length >= 3) {
         alert('Este negocio ya alcanzó el límite máximo de 3 promociones.');
         return;
       }
@@ -101,7 +103,7 @@ const View18 = () => {
   const handleRemoveImage = (index) => {
     setImages((prevImages) => prevImages.filter((_, i) => i !== index));
   };
-  
+
 
   return (
     <div className="m-10">
@@ -196,7 +198,12 @@ const View18 = () => {
               placeholder="DD/MM/YYYY"
             />
           </div>
-          <div className="mt-10 flex justify-center">
+          <div className="mt-10 flex justify-center space-x-4">
+            <button className="w-[155px] h-[40px] bg-white border-2 rounded-lg">
+              <Link legacyBehavior href="/sesion-prem">
+                <a>Cancelar</a>
+              </Link>
+            </button>
             <button
               type="submit"
               className="px-12 py-2 border border-transparent rounded-md shadow-sm text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]"

@@ -11,6 +11,7 @@ import DOMPurify from 'dompurify';
 import ImageCarouselACC from '@/components/Molecules/ImageCarouselACC';
 
 const defaultProfilePic = 'public/6073873.png';
+const imageDefault = "/4574c6_19f52cfb1ef44a3d844774c6078ffafc~mv2.png"
 
 export default function CardFree() {
   const router = useRouter();
@@ -112,8 +113,8 @@ export default function CardFree() {
               <Image
                 key={star}
                 className={`w-[15px] h-[20px] md:w-[18px] md:h-[23px] lg:w-[20px] lg:h-[25px] ${star <= Math.round(averageRating)
-                    ? 'opacity-100'
-                    : 'opacity-30'
+                  ? 'opacity-100'
+                  : 'opacity-30'
                   }`}
                 src='/estrellita.svg'
                 alt='Estrella'
@@ -181,6 +182,7 @@ export default function CardFree() {
           </div>
         </div>
       </section>
+      
       <div className='w-full flex flex-col justify-center items-center mt-8'>
         <div className='border p-3 rounded mt-4 bg-[#ECEFF1] w-[290px]  md:w-full  justify-center flex flex-col items-center text-[#455A64]'>
           <h4 value='Place' className='text-[#546E7A] font-semibold'>
@@ -240,15 +242,27 @@ export default function CardFree() {
                       className='p-4 md:p-6 border rounded-lg shadow-sm bg-[#F5F0E5] relative flex flex-col sm:flex-row sm:justify-between sm:items-start'
                     >
                       <div className='mt-6 sm:mt-0 sm:ml-6'>
-                        <h4 className='text-base md:text-lg font-bold mb-2'>
+                        <h4 className='text-base text-center md:text-2xlg font-bold mb-2'>
                           {promocion.name || 'Sin título'}
                         </h4>
-                        {promocion.image && (
+                        {promocion.image ? (
+                          <div className='mb-4 w-full h-auto'>
+                            <Image
+                              src={promocion.image} // Imagen desde la base de datos
+                              alt={`Imagen de la promoción: ${promocion.name || 'Sin título'}`}
+                              width={500}
+                              height={300}
+                              className='w-full h-full object-cover rounded-md'
+                            />
+                          </div>
+                        ) : (
                           <div className='mb-4'>
-                            <img
-                              src={promocion.image}
-                              alt={`Imagen de la promoción: ${promocion.name}`}
-                              className='w-full h-auto object-cover rounded-md'
+                            <Image
+                              src={imageDefault} // Imagen predeterminada
+                              alt='Imagen predeterminada de promoción'
+                              width={500}
+                              height={300}
+                              className='max-w-xl h-auto object-cover rounded-md'
                             />
                           </div>
                         )}
@@ -260,12 +274,18 @@ export default function CardFree() {
                             )
                           }}
                         />
-                        <span className='text-xs md:text-sm text-gray-500'>
-                          Fecha de vencimiento:{' '}
+                        <div className='space-x-4'> <span className='text-xs md:text-sm text-gray-500'>
+                          Fecha de inicio:{' '}
                           {promocion.endDate
-                            ? new Date(promocion.endDate).toLocaleDateString()
+                            ? new Date(promocion.startDate).toLocaleDateString()
                             : 'Sin fecha'}
                         </span>
+                          <span className='text-xs md:text-sm text-gray-500'>
+                            Fecha de vencimiento:{' '}
+                            {promocion.endDate
+                              ? new Date(promocion.endDate).toLocaleDateString()
+                              : 'Sin fecha'}
+                          </span></div>
                       </div>
                     </li>
                   ))}
