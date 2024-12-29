@@ -9,12 +9,10 @@ import ImageCarouselACC from '@/components/Molecules/ImageCarouselACC';
 
 const defaultProfilePic = '/6073873.png';
 
-
 const getValueOrDefault = (
   value,
   defaultText = 'Información no disponible.'
 ) => {
-  console.log('getValueOrDefault - value:', value, 'defaultText:', defaultText);
   return value || defaultText;
 };
 
@@ -44,7 +42,6 @@ export default function CardFree() {
       try {
         const data = await getCompanyById(id);
         setCompanyData(data);
-        console.log('aqui data', data);
         await fetchAverageRating();
       } catch (error) {
         console.error(error);
@@ -59,49 +56,49 @@ export default function CardFree() {
     }
   }, [id, fetchAverageRating]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <p>Cargando...</p>;
   if (error) return <p>{error}</p>;
 
   return (
-    <div className='flex flex-col justify-center max-w-screen-sm  h-full md:p-4 lg:p-8'>
-      <div className='w-full mt-4 flex flex-col justify-center items-center'>
-        <p className='text-[#2F4F4F] text-[20px] md:text-[40px] lg:text-[56px] text-center font-semibold'>
+    <div className="flex flex-col justify-center max-w-screen-sm w-full h-full md:p-4 lg:p-8">
+      <div className="w-full mt-4 flex flex-col justify-center items-center">
+        <p className="text-[#2F4F4F] text-[20px] md:text-[40px] lg:text-[56px] text-center font-semibold">
           ¡AccessGo!
         </p>
-        <p className='text-4xl md:text-5xl font-bold text-center text-[#2F4F4F] mt-2 mb-12'>
-          {companyData?.data?.company?.companyName ||
-            'Información no disponible.'}
+        <p className="text-4xl md:text-5xl font-bold text-center text-[#2F4F4F] mt-2 mb-12">
+          {companyData?.data?.company?.companyName || 'Información no disponible.'}
         </p>
-        <img
-          className='w-[472px] h-auto md:w-[1264px]  lg:w-[1304px]  mt-2 object-contain'
+        <Image
+          className="w-full h-auto md:w-full lg:w-full object-contain"
           src={companyData?.data?.company?.profilePicture || '/img-card.png'}
-          alt='Foto principal de empresa'
+          alt="Foto principal de empresa"
           width={1300}
           height={500}
-          layout='responsive'
+          layout="intrinsic"
         />
       </div>
-      <section className='flex flex-col md:flex-row lg:flex-row justify-between p-2 mt-4 w-full'>
-        <div className='flex flex-col max-w-[500px]'>
-          <div className='flex items-center'>
-            <img
-              src={
-                companyData?.data?.company?.profilePicture || defaultProfilePic
-              }
-              alt='Foto de perfil'
-              className='w-20 h-20 rounded-full p-1'
+
+      <section className="flex flex-col md:flex-row lg:flex-row justify-between p-2 mt-4 w-full">
+        <div className="flex flex-col max-w-full">
+          <div className="flex items-center">
+            <Image
+              src={companyData?.data?.company?.profilePicture || defaultProfilePic}
+              alt="Foto de perfil"
+              className="w-20 h-20 rounded-full p-1"
+              width={80}
+              height={80}
             />
-            <p className='text-[#7E952A] text-[20px] md:text-2xl lg:text-3xl font-semibold ml-2'>
+            <p className="text-[#7E952A] text-[20px] md:text-2xl lg:text-3xl font-semibold ml-2">
               {getValueOrDefault(companyData?.data?.company?.companyName)}
             </p>
           </div>
-          <div className='mt-2'>
-            <div className='flex flex-row'>
+          <div className="mt-2">
+            <div className="flex flex-row">
               {[1, 2, 3, 4, 5].map((star) => (
                 <Image
                   key={star}
-                  src='/estrellita.svg'
-                  alt='Estrella'
+                  src="/estrellita.svg"
+                  alt="Estrella"
                   className={
                     star <= Math.round(averageRating)
                       ? 'opacity-100'
@@ -113,23 +110,24 @@ export default function CardFree() {
               ))}
             </div>
           </div>
-          <p className='text-xs text-[#455A64] lg:text-md mt-2'>
+          <p className="text-xs text-[#455A64] lg:text-md mt-2">
             {getValueOrDefault(companyData?.data?.company?.giro)}
           </p>
-          <p className='text-sm text-[#455A64] lg:text-lg mt-2'>
+          <p className="text-sm text-[#455A64] lg:text-lg mt-2">
             {getValueOrDefault(companyData?.data?.company?.description)}
           </p>
         </div>
-        <div>
-          <p className='text-sm text-[#607D8B] mt-2'>Horarios</p>
-          <div className='flex flex-row mt-2'>
+
+        <div className="w-full mt-4 md:mt-0">
+          <p className="text-sm text-[#607D8B] mt-2">Horarios</p>
+          <div className="flex flex-row mt-2">
             <Image
-              src='/calendarVector.png'
-              alt='Calendario'
+              src="/calendarVector.png"
+              alt="Calendario"
               width={16}
               height={14}
             />
-            <p className='ml-2 text-sm text-[#546E7A]'>
+            <p className="ml-2 text-sm text-[#546E7A]">
               {(companyData?.data?.company?.diasDeServicio || []).join(', ') ||
                 'Información no disponible.'}
             </p>
@@ -137,38 +135,33 @@ export default function CardFree() {
         </div>
       </section>
 
-      <div className='w-full flex flex-col justify-center items-center mt-8'>
-        <div className='border p-3 rounded mt-4 bg-[#ECEFF1] w-[290px]  md:w-full  justify-center flex flex-col items-center text-[#455A64]'>
-          <h4 value='Place' className='text-[#546E7A] font-semibold'>
-            Dirección:
-          </h4>
-          <p className='text-center'>
-            {' '}
-            {companyData?.data?.company?.address ||
-              'Información no disponible.'}
+      <div className="w-full flex flex-col justify-center items-center mt-8">
+        <div className="border p-3 rounded mt-4 bg-[#ECEFF1] w-full max-w-screen-sm justify-center flex flex-col items-center text-[#455A64]">
+          <h4 className="text-[#546E7A] font-semibold">Dirección:</h4>
+          <p className="text-center">
+            {companyData?.data?.company?.address || 'Información no disponible.'}
           </p>
-          <h4 value='Place' className='text-[#546E7A] font-semibold mt-3'>
-            Teléfono:
-          </h4>
-          <p className='text-center'>
-            {' '}
+          <h4 className="text-[#546E7A] font-semibold mt-3">Teléfono:</h4>
+          <p className="text-center">
             {companyData?.data?.company?.phone || 'Información no disponible.'}
           </p>
         </div>
-        <div className='flex flex-col justify-center gap-5'>
-          <h1 className='text-center text-[#2F4F4F] mt-8'>
+        
+        <div className="flex flex-col md:w-full max-w-screen-sm justify-center gap-5">
+          <h1 className="text-center text-[#2F4F4F] mt-8">
             Imagenes de accesibilidad proporcionadas por la empresa:
           </h1>
           <ImageCarouselACC userId={id} />
         </div>
+        
         <div>
           <AccessVisibility companyId={id} />
         </div>
       </div>
-      <div className='w-full h-full mt-6 flex flex-col items-center'>
+
+      <div className="w-full h-full mt-6 flex flex-col items-center">
         <CommentSection onNewRating={fetchAverageRating} />
       </div>
     </div>
   );
 }
-
