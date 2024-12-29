@@ -1,28 +1,30 @@
+
 export const sendVerificationCode = async (email) => {
     try {
-        const requestBody = JSON.stringify({ email });
-       
-
-        const response = await fetch(`https://backend-r159.onrender.com/api/verification/send-code`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: requestBody,
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(`Error al enviar el código de verificación: ${errorData.message || 'Error desconocido'}`);
-        }
-
-        const data = await response.json();
-        return data.message;
+      const response = await fetch('https://backend-r159.onrender.com/api/verification/send-code', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+  
+      // Asegúrate de que la respuesta se parsee correctamente
+      const data = await response.json();
+  
+      if (!response.ok) {
+        console.error('Error en la solicitud:', data.message || 'Error desconocido');
+        
+      }
+  
+      return data; // Esto debería devolver un objeto JSON
     } catch (error) {
-        console.error(error);
-        throw error;
+      console.error('Error en la comunicación con el servidor:', error.message);
+      throw error;
     }
-};
+  };
+  
+
 
 export const verifyUserCode = async (userId, code) => {
     try {
