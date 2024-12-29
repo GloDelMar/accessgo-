@@ -131,19 +131,6 @@ const SesionPremium = () => {
           </p>
         </h1>
 
-<<<<<<< Updated upstream
-        <div className='flex  lg:flex-row gap-6 p-6 max-w-4xl mx-auto'>
-          <div className='max-w-40 max-h-40 p-4 rounded-md bg-[#F5F0E5] lg:w-1/3 flex justify-center'>
-            <div className=' w-32 h-32 rounded-full overflow-hidden'>
-              <Image
-                src={
-                  companyData?.data?.company?.profilePicture || '/perfil1.png'
-                }
-                alt='Foto de perfil'
-                width={300}
-                height={150}
-                className='w-full h-full object-cover'
-=======
         <div className='flex flex-col lg:flex-row gap-6 p-6 max-w-4xl mx-auto'>
           <div className="w-full lg:w-1/3 flex justify-center">
             <div className="bg-[#F5F0E5] max-w-[231px] w-full h-[231px] rounded-[25px] shadow-md p-4 flex justify-center items-center">
@@ -153,7 +140,6 @@ const SesionPremium = () => {
                 width={200}
                 height={200}
                 className="rounded-full object-cover"
->>>>>>> Stashed changes
               />
             </div>
           </div>
@@ -169,13 +155,8 @@ const SesionPremium = () => {
                     <svg
                       key={star}
                       className={`w-5 h-5 ${star <= Math.round(averageRating)
-<<<<<<< Updated upstream
                         ? 'text-yellow-400'
                         : 'text-gray-300'
-=======
-                          ? 'text-yellow-400'
-                          : 'text-gray-300'
->>>>>>> Stashed changes
                         } fill-current`}
                       viewBox='0 0 24 24'
                     >
@@ -254,7 +235,7 @@ const SesionPremium = () => {
                     .map((promocion) => (
                       <li
                         key={promocion._id}
-                        className='p-4 md:p-6 border justify-center items-center rounded-lg shadow-sm bg-[#F5F0E5] relative flex flex-col sm:flex-row sm:justify-between sm:items-start'
+                        className='p-4 md:p-6 border justify-center items-center rounded-lg shadow-sm bg-[#F5F0E5] relative flex flex-col sm:flex-row sm:justify-between '
                       >
                         <button
                           className='absolute top-2 right-2 px-2 py-1 md:px-3 md:py-1.5 border border-transparent rounded-md shadow-sm text-xs md:text-sm text-white 
@@ -280,17 +261,11 @@ const SesionPremium = () => {
                           ) : (
                             <div className='mb-4'>
                               <Image
-<<<<<<< Updated upstream
                                 src={imageDefault} // Imagen predeterminada
                                 alt='Imagen predeterminada de promoción'
                                 width={500}
                                 height={300}
                                 className='max-w-xl h-auto object-cover rounded-md'
-=======
-                                src={promocion.image}
-                                alt={`Imagen de la promoción: ${promocion.name}`}
-                                className='w-full h-auto object-cover rounded-md'
->>>>>>> Stashed changes
                               />
                             </div>
                           )}

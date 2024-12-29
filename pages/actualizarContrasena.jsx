@@ -20,7 +20,7 @@ const ActualizarContrasena = () => {
       toast.error('Información del usuario no encontrada.');
       router.push('/login');
     }
-  }, []);
+  }, [router]);
 
   const validatePassword = (password) => {
     const regex = /^.{6,}$/; // Contraseña debe tener al menos 8 caracteres
@@ -133,7 +133,7 @@ const ActualizarContrasena = () => {
     <div className="flex flex-col items-center justify-center mx-auto mt-5 space-y-4">
       <h1 className="text-center text-2xl text-[#2F4F4F] font-extrabold">Anota tu nueva contraseña</h1>
       <h3 className="text-center text-[#2F4F4F] p-1 font-extrabold">
-        Al darle en el botón "Actualizar" serás redirigido a la página de tu perfil.
+        Al darle en el botón  &quot;Actualizar&quot; serás redirigido a la página de tu perfil.
       </h3>
       <div className="w-full">
         <Form onSubmit={onSubmit}>
