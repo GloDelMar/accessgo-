@@ -67,7 +67,7 @@ export default function CardFree() {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className='flex flex-col justify-center max-w-screen-sm  h-full md:p-4 lg:p-8'>
+    <div className='flex flex-col justify-center max-w-screen-sm w-full  h-full md:p-4 lg:p-8'>
       <div className='w-full mt-4 flex flex-col justify-center items-center'>
         <p className='text-[#2F4F4F] text-[20px] md:text-[40px] lg:text-[56px] text-center font-semibold'>
           ¡AccessGo!
@@ -182,7 +182,7 @@ export default function CardFree() {
           </div>
         </div>
       </section>
-      
+
       <div className='w-full flex flex-col justify-center items-center mt-8'>
         <div className='border p-3 rounded mt-4 bg-[#ECEFF1] w-[290px]  md:w-full  justify-center flex flex-col items-center text-[#455A64]'>
           <h4 value='Place' className='text-[#546E7A] font-semibold'>
@@ -212,80 +212,76 @@ export default function CardFree() {
         </div>
       </div>
 
-      <div className='w-full flex flex-col mt-6'>
-        <div className='max-w-xxl mx-auto bg-white shadow-md rounded-lg overflow-hidden border border-gray-200 mt-4'>
-          <div className='bg-[#2F4F4F] text-white p-4'>
-            <h2 className='text-2xl lg:text-3xl text-center'>
+      <div className="md:w-full text-[#2F4F4F] h-full mt-2 flex flex-col items-center p-4 md:p-8 max-w-screen-sm">
+        <div className="w-full bg-white shadow-md rounded-lg overflow-hidden border border-gray-200 mt-4">
+          <div className="bg-[#2F4F4F] text-white p-4">
+            <h2 className="text-2xl lg:text-3xl text-center">
               ¡Checa estas promociones!
             </h2>
           </div>
-          <div className='p-4'>
-            {loading && (
-              <div className='text-center'>Cargando promociones...</div>
-            )}
+          <div className="p-4">
+            {loading && <div className="text-center">Cargando promociones...</div>}
 
-            {error && <div className='text-red-500'>{error}</div>}
+            {error && <div className="text-red-500">{error}</div>}
 
             {!loading && promociones && promociones.length === 0 && (
-              <div className='text-gray-500'>
+              <div className="text-gray-500">
                 No hay promociones disponibles.
               </div>
             )}
 
             {!loading && promociones && promociones.length > 0 && (
-              <ul className='space-y-4 md:space-y-6'>
+              <ul className="space-y-4">
                 {promociones
                   .sort((a, b) => new Date(b.endDate) - new Date(a.endDate))
                   .map((promocion) => (
                     <li
                       key={promocion._id}
-                      className='p-4 md:p-6 border rounded-lg shadow-sm bg-[#F5F0E5] relative flex flex-col sm:flex-row sm:justify-between sm:items-start'
+                      className="p-4 md:p-6 border rounded-lg shadow-sm bg-[#F5F0E5] flex flex-col sm:flex-row sm:justify-between sm:items-start"
                     >
-                      <div className='mt-6 sm:mt-0 sm:ml-6'>
-                        <h4 className='text-base text-center md:text-2xlg font-bold mb-2'>
+                      <div className="sm:w-1/2">
+                        <h4 className="text-base text-center md:text-2xl font-bold mb-2">
                           {promocion.name || 'Sin título'}
                         </h4>
                         {promocion.image ? (
-                          <div className='mb-4 w-full h-auto'>
-                            <Image
-                              src={promocion.image} // Imagen desde la base de datos
-                              alt={`Imagen de la promoción: ${promocion.name || 'Sin título'}`}
-                              width={500}
-                              height={300}
-                              className='w-full h-full object-cover rounded-md'
-                            />
-                          </div>
+                          <Image
+                            src={promocion.image} // Imagen desde la base de datos
+                            alt={`Imagen de la promoción: ${promocion.name || 'Sin título'}`}
+                            width={350}
+                            height={300}
+                            className="w-full h-auto object-cover rounded-md"
+                          />
                         ) : (
-                          <div className='mb-4'>
-                            <Image
-                              src={imageDefault} // Imagen predeterminada
-                              alt='Imagen predeterminada de promoción'
-                              width={500}
-                              height={300}
-                              className='max-w-xl h-auto object-cover rounded-md'
-                            />
-                          </div>
+                          <Image
+                            src={imageDefault} // Imagen predeterminada
+                            alt="Imagen predeterminada de promoción"
+                            width={350}
+                            height={300}
+                            className="w-full h-auto object-cover rounded-md"
+                          />
                         )}
+                      </div>
+                      <div className="sm:w-1/2 mt-6 sm:mt-0">
                         <div
-                          className='mb-2 text-sm md:text-base text-gray-700'
+                          className="text-sm md:text-base text-gray-700"
                           dangerouslySetInnerHTML={{
-                            __html: DOMPurify.sanitize(
-                              promocion.description || 'Sin descripción'
-                            )
+                            __html: DOMPurify.sanitize(promocion.description || 'Sin descripción'),
                           }}
                         />
-                        <div className='space-x-4'> <span className='text-xs md:text-sm text-gray-500'>
-                          Fecha de inicio:{' '}
-                          {promocion.endDate
-                            ? new Date(promocion.startDate).toLocaleDateString()
-                            : 'Sin fecha'}
-                        </span>
-                          <span className='text-xs md:text-sm text-gray-500'>
+                        <div className="space-x-4 text-xs md:text-sm text-gray-500 mt-2">
+                          <span>
+                            Fecha de inicio:{' '}
+                            {promocion.startDate
+                              ? new Date(promocion.startDate).toLocaleDateString()
+                              : 'Sin fecha'}
+                          </span>
+                          <span>
                             Fecha de vencimiento:{' '}
                             {promocion.endDate
                               ? new Date(promocion.endDate).toLocaleDateString()
                               : 'Sin fecha'}
-                          </span></div>
+                          </span>
+                        </div>
                       </div>
                     </li>
                   ))}
@@ -294,6 +290,7 @@ export default function CardFree() {
           </div>
         </div>
       </div>
+
 
       <section className='w-full h-full mt-6 flex flex-col items-center '>
         <CommentSection onNewRating={fetchAverageRating} />
