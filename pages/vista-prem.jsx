@@ -237,9 +237,9 @@ export default function CardFree() {
                   .map((promocion) => (
                     <li
                       key={promocion._id}
-                      className="p-4 md:p-6 border rounded-lg shadow-sm bg-[#F5F0E5] flex flex-col sm:flex-row sm:justify-between sm:items-start"
+                      className="p-4 md:p-6 border rounded-lg shadow-sm bg-[#F5F0E5] flex flex-col  sm:justify-between   "
                     >
-                      <div className="sm:w-1/2">
+                      <div >
                         <h4 className="text-base text-center md:text-2xl font-bold mb-2">
                           {promocion.name || 'Sin título'}
                         </h4>
@@ -261,7 +261,7 @@ export default function CardFree() {
                           />
                         )}
                       </div>
-                      <div className="sm:w-1/2 mt-6 sm:mt-0">
+                      <div className=" mt-6 sm:mt-0">
                         <div
                           className="text-sm md:text-base text-gray-700"
                           dangerouslySetInnerHTML={{
