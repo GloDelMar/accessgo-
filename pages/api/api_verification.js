@@ -1,9 +1,7 @@
-const API_URL = "http://localhost:8080" // "https://backend-r159.onrender.com"
-
 
 export const sendVerificationCode = async (email) => {
     try {
-      const response = await fetch('http://localhost:8080/api/verification/send-code', {
+      const response = await fetch('https://backend-r159.onrender.com/api/verification/send-code', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
