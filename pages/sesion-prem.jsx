@@ -21,7 +21,6 @@ import DOMPurify from 'dompurify';
 import ImagenSubiryBorrar from '@/components/Molecules/ImagenSubiryBorrar';
 import { Toaster } from 'sonner';
 
-
 const imageDefault = "/4574c6_19f52cfb1ef44a3d844774c6078ffafc~mv2.png"
 
 ChartJS.register(
