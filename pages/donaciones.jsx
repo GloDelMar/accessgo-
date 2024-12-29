@@ -48,7 +48,7 @@ export default function Donacion() {
       </div>
 
       <div className='flex flex-col md:space-x-[95px] '>
-        <div className='flex flex-col mt-2 items-center'>
+        <div className='mt-2 grid grid-cols-1 sm:grid-cols-2 gap-4 justify-items-center'>
           {PlanDonations.map((plan, index) => (
             <PlanDonation
               key={index}
