@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Trash2 } from 'lucide-react';
 import { toast, Toaster } from 'sonner';
-// import { confirmAlert } from 'react-confirm-alert';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import Image from 'next/image';

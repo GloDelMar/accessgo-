@@ -1,9 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { toast, Toaster } from 'sonner';
+import Image from 'next/image';
 
-const UploadImageCPP = ({ userId, setSelectedImage }) => {
+const UploadImageCPP = ({ userId, setSelectedImage, selectedImage }) => {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:8080/api/profilepicture/${userId}`
+        );
+        const data = await response.json();
+        if (data) {
+          setSelectedImage(data);
+        } else {
+          console.error('Expected a valid response, but got:', data);
+          setSelectedImage(null); // Asegúrate de manejar este caso correctamente
+        }
+      } catch (error) {
+        console.error('Error al obtener la imagen de perfil:', error);
+        setSelectedImage(null);
+      }
+    };
+  
+    if (userId) {
+      fetchImages();
+    }
+  }, [userId, setSelectedImage]);
+  
+  
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -29,18 +56,15 @@ const UploadImageCPP = ({ userId, setSelectedImage }) => {
     formData.append('userId', userId);
 
     try {
-      const response = await fetch(
-        'https://backend-r159.onrender.com/api/uploadcpp',
-        {
-          method: 'POST',
-          body: formData
-        }
-      );
+      const response = await fetch('http://localhost:8080/api/uploadcpp', {
+        method: 'POST',
+        body: formData
+      });
 
       const result = await response.json();
       if (response.ok) {
         setSelectedImage(result.imageUrl);
-        console.log(result.imageUrl)
+        console.log(result.imageUrl);
         toast.success('Imagen subida exitosamente');
       } else {
         toast.error(result.error || 'Error al subir la imagen');
@@ -56,9 +80,25 @@ const UploadImageCPP = ({ userId, setSelectedImage }) => {
   return (
     <div className='flex flex-col justify-center items-center space-y-4 '>
       <h3 className='text-md text-center font-semibold'>Imagen de perfil</h3>
-
-      
-    
+      <label htmlFor='imgUsuario' className='cursor-pointer'>
+        {selectedImage ? (
+          <Image
+            src={selectedImage}
+            alt='Foto de perfil'
+            width={200}
+            height={200}
+            className='rounded-full'
+          />
+        ) : (
+          <Image
+            src='/iconoframe.png'
+            alt='Foto de perfil'
+            width={200}
+            height={200}
+            className='rounded-full'
+          />
+        )}
+      </label>
 
       <label
         htmlFor='fileInput'
@@ -83,7 +123,7 @@ const UploadImageCPP = ({ userId, setSelectedImage }) => {
       >
         {uploading ? 'Subiendo...' : 'Subir'}
       </button>
-    
+
       <Toaster />
     </div>
   );
