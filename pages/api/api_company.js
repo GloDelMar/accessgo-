@@ -1,6 +1,6 @@
 
 
-const API_URL = "https://backend-r159.onrender.com";//"http://localhost:8080"
+const API_URL = "http://localhost:8080"//"https://backend-r159.onrender.com";
 
 export const createCompany = async (email, password, type) => {
     try {
@@ -98,3 +98,40 @@ export async function getAllCompanies() {
     throw error;
 }
 }
+
+export const getCompanyByEmail = async (email) => {
+    try {
+      if (typeof email !== 'string' || !email.includes('@')) {
+        throw new Error('Correo inválido');
+      }
+  
+      const response = await fetch(`${API_URL}/api/company/email`, {
+        method: 'POST', 
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }), 
+      });
+  
+      if (!response.ok) {
+        if (response.status === 404) {
+          // Usuario no encontrado
+         
+          return null;
+        }
+  
+        // Manejo de otros errores
+        const error = await response.json();
+        console.error('Error de la API:', error);
+        return null;
+      }
+  
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error en la función getUserByEmail:', error);
+      return null; // Retorna null en caso de error para continuar la búsqueda en otro lugar
+    }
+  };
+  
+  

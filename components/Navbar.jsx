@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import { getUserById } from '@/pages/api/api_getById';
+import { getCompanyById } from '@/pages/api/api_company';
+import { sendVerificationCode } from '@/pages/api/api_verification';
 
 const Navbar = () => {
   const router = useRouter();
@@ -26,10 +29,47 @@ const Navbar = () => {
     }
   };
 
+  const handleChangePassword = async (event) => {
+    event.preventDefault();
+    const user = localStorage.getItem('tipoUsuario'); // "user" o "company"
+  
+    // Determina el tipo de usuario
+    const userType = user === 'user' ? 'recuperaUser' : 'recuperaCompany';
+  
+    // Almacena el tipo de usuario actualizado en localStorage
+    localStorage.setItem('tipoUsuario', userType);
+  
+    const userId = localStorage.getItem('userId'); // ID del usuario o la compañía
+  
+    try {
+      // Llama a la función adecuada dependiendo del tipo de usuario
+      const data = userType === 'recuperaUser'
+        ? await getUserById(userId)
+        : await getCompanyById(userId);
+  
+      // Obtiene el email correcto según el tipo de usuario
+      const email = userType === 'recuperaUser'
+        ? data.data.user.email
+        : data.data.company.email;
+  
+      console.log('datos', data);
+      console.log('email', email);
+  
+      await sendVerificationCode(email)
+      // Guarda el email en el localStorage para recuperación
+      localStorage.setItem('recuperacion', email);
+  
+      // Redirige a la página de autenticación
+      router.push('/autentificacion');
+    } catch (error) {
+      console.error('Error al cambiar la contraseña:', error);
+    }
+  };
+  
+  
   const handleChangePerfil = () => {
     const userType = localStorage.getItem('tipoUsuario');
-    const cuentaUsuario = localStorage.getItem('cuentaUsuario'); // Obtener el tipo de cuenta de localStorage
-  
+    const cuentaUsuario = localStorage.getItem('cuentaUsuario');
 
     if (userType === 'company') {
       if (cuentaUsuario === 'free') {
@@ -37,22 +77,19 @@ const Navbar = () => {
       } else if (cuentaUsuario === 'premium') {
         router.push('/sesion-prem');
       } else {
-        console.error("Tipo de cuenta no reconocido. Redirigiendo a página de error.");
-        toast.error("No se pudo determinar el tipo de cuenta.");
+        console.error('Tipo de cuenta no reconocido.');
       }
     } else {
       router.push('/mi-perfil');
     }
   };
-  
 
   const handleLogout = () => {
-    localStorage.clear(); 
-    setIsLoggedIn(false); 
-    closeMenu(); 
-    router.push('/'); 
+    localStorage.clear();
+    setIsLoggedIn(false);
+    closeMenu();
+    router.push('/');
   };
-  
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -76,38 +113,34 @@ const Navbar = () => {
 
     const tokenCheckInterval = setInterval(() => {
       const currentToken = localStorage.getItem('token');
-      if (currentToken && !isLoggedIn) {
-        setIsLoggedIn(true);
-      } else if (!currentToken && isLoggedIn) {
-        setIsLoggedIn(false);
-      }
+      setIsLoggedIn(!!currentToken);
     }, 500);
 
     return () => clearInterval(tokenCheckInterval);
-  }, [isLoggedIn]);
+  }, []);
 
   return (
     <header className="bg-white border-b shadow-md p-2">
       <nav className="flex items-center justify-between">
         <div className="ml-[30px] md:ml-[40px] flex-shrink-0 flex items-center space-x-2">
-          <Link href="/" className="sm:block md:hidden text-xl font-bold hover:underline">
-            <img src="/Union.svg" alt="Logo AccessGo simplificado" />
+          <Link href="/">
+            <img src="/Union.svg" alt="Logo AccessGo simplificado" className="sm:block md:hidden" />
           </Link>
-          <Link href="/" className="hidden md:block text-xl font-bold hover:underline">
-            <img src="/logo2.svg" alt="Logo AccessGo" />
+          <Link href="/">
+            <img src="/logo2.svg" alt="Logo AccessGo" className="hidden md:block" />
           </Link>
         </div>
 
         <div className="flex items-center space-x-4 mr-[30px] md:mr-[40px]">
           {!isLoggedIn && router.pathname !== '/login' && (
-            <Link href="/login" className="hidden font-bold lg:block bg-white border-black border-2 hover:bg-[#2F4F4F] text-[#2F4F4F] hover:text-white px-4 py-2 rounded-l-full rounded-r-full">
+            <Link href="/login" className="hidden lg:block bg-white border-black border-2 px-4 py-2 rounded-full text-[#2F4F4F] hover:bg-[#2F4F4F] hover:text-white font-bold">
               Inicia Sesión
             </Link>
           )}
 
           {!isLoggedIn && router.pathname !== '/signup' && (
-            <Link href="/signup" className="bg-[#2F4F4F] font-bold hover:bg-[#4A6969] text-white px-4 py-2 rounded-l-full rounded-r-full flex items-center space-x-2 w-[117px]">
-              <img src="/heart_plus_24dp_5F6368_FILL1_wght400_GRAD0_opsz24 (1) 1.svg" alt="heart with plus" className="w-6 h-6" />
+            <Link href="/signup" className="bg-[#2F4F4F] px-4 py-2 rounded-full text-white hover:bg-[#4A6969] font-bold flex items-center">
+              <img src="/heart_plus_24dp_5F6368_FILL1_wght400_GRAD0_opsz24 (1) 1.svg" alt="Únete" className="w-6 h-6" />
               <span>¡Únete!</span>
             </Link>
           )}
@@ -117,7 +150,7 @@ const Navbar = () => {
               onClick={toggleMenu}
               className="bg-[#ECEFF1] hover:bg-[#B0BEC5] text-white p-2 rounded"
             >
-              <img src="/menu.svg" alt="menú desplegable" />
+              <img src="/menu.svg" alt="Menú desplegable" />
             </button>
 
             {menuVisible && (
@@ -125,16 +158,6 @@ const Navbar = () => {
                 {!isLoggedIn && (
                   <Link href="/login" className="block px-4 py-2 hover:bg-gray-100" onClick={closeMenu}>
                     Iniciar Sesión
-                  </Link>
-                )}
-                {isLoggedIn && (
-                  <Link href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleChangeDatos}>
-                    Editar datos
-                  </Link>
-                )}
-                {isLoggedIn && (
-                  <Link href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleChangePerfil}>
-                    Ir a mi perfil
                   </Link>
                 )}
                 <Link href="/" className="block px-4 py-2 hover:bg-gray-100" onClick={closeMenu}>
@@ -150,10 +173,24 @@ const Navbar = () => {
                   Donar a la página
                 </Link>
                 {isLoggedIn && (
-                  <Link href="/" className="block px-4 py-2 hover:bg-gray-100" onClick={handleLogout}>
-                    Cerrar Sesión
-                  </Link>
+                  <>
+                    <Link href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleChangeDatos}>
+                      Editar datos
+                    </Link>
+                    <Link href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleChangePerfil}>
+                      Ir a mi perfil
+                    </Link>
+                    <Link href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleChangePassword}>
+                      Cambiar contraseña
+                    </Link>
+                    <Link href="/" className="block px-4 py-2 hover:bg-gray-100" onClick={handleLogout}>
+                      Cerrar Sesión
+                    </Link>
+                  </>
                 )}
+
+
+
               </div>
             )}
           </div>
