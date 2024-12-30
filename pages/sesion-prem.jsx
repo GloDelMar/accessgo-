@@ -21,7 +21,6 @@ import DOMPurify from 'dompurify';
 import ImagenSubiryBorrar from '@/components/Molecules/ImagenSubiryBorrar';
 import { Toaster } from 'sonner';
 
-
 const imageDefault = "/4574c6_19f52cfb1ef44a3d844774c6078ffafc~mv2.png"
 
 ChartJS.register(
@@ -155,8 +154,8 @@ const SesionPremium = () => {
                     <svg
                       key={star}
                       className={`w-5 h-5 ${star <= Math.round(averageRating)
-                          ? 'text-yellow-400'
-                          : 'text-gray-300'
+                        ? 'text-yellow-400'
+                        : 'text-gray-300'
                         } fill-current`}
                       viewBox='0 0 24 24'
                     >
@@ -235,7 +234,7 @@ const SesionPremium = () => {
                     .map((promocion) => (
                       <li
                         key={promocion._id}
-                        className='p-4 md:p-6 border justify-center items-center rounded-lg shadow-sm bg-[#F5F0E5] relative flex flex-col sm:flex-row sm:justify-between sm:items-start'
+                        className='p-4 md:p-6 border justify-center items-center rounded-lg shadow-sm bg-[#F5F0E5] relative flex flex-col sm:flex-row sm:justify-between '
                       >
                         <button
                           className='absolute top-2 right-2 px-2 py-1 md:px-3 md:py-1.5 border border-transparent rounded-md shadow-sm text-xs md:text-sm text-white 
@@ -261,9 +260,11 @@ const SesionPremium = () => {
                           ) : (
                             <div className='mb-4'>
                               <Image
-                                src={promocion.image}
-                                alt={`Imagen de la promoción: ${promocion.name}`}
-                                className='w-full h-auto object-cover rounded-md'
+                                src={imageDefault} // Imagen predeterminada
+                                alt='Imagen predeterminada de promoción'
+                                width={500}
+                                height={300}
+                                className='max-w-xl h-auto object-cover rounded-md'
                               />
                             </div>
                           )}

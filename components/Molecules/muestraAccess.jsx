@@ -53,16 +53,16 @@ const AccessVisibility = ({ companyId }) => {
   );
 
   return (
-    <div className="max-w-[500px] text-[#2F4F4F] h-full mt-2 flex flex-col align-center p-2 max-w-screen-sm md:p-4 lg:p-8">
+    <div className="md:w-full text-[#2F4F4F] h-full mt-2 flex flex-col items-center align-center p-2 max-w-screen-sm md:p-4 lg:p-8">
       {/* Botones de condiciones */}
-      <div className="text-[#2F4F4F] border-2 border-red p-2 mt-4 mb-5 text-justify">
+      <div className="border p-3 rounded mt-4 bg-[#ECEFF1] w-[290px]  md:w-full  justify-center flex flex-col items-center text-[#455A64]">
         <p>Haz clic en los <span className="font-bold"> íconos</span> para descubrir cómo trabajamos en
           mejorar la accesibilidad y qué aspectos de tu experiencia hemos
           optimizado para hacer tu visita más cómoda y accesible. Conoce las
           acciones que hemos tomado para garantizar un entorno inclusivo.</p> 
           <p className="mt-2">Haz clic una vez más en el mismo ícono para ocultar la información.</p> </div>
           
-      <div className="flex justify-around space-x-2 mb-6">
+      <div className="flex justify-around mt-3 space-x-2 mb-6">
         
         {validConditions?.map((disability) => (
           <div key={disability.type} className="flex flex-col items-center">
