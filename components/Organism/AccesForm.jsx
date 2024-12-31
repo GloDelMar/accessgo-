@@ -8,6 +8,7 @@ import Button from "../atoms/Button";
 import Link from "next/link";
 import { FaWheelchair, FaEye, FaDeaf, FaBrain, FaPuzzlePiece } from "react-icons/fa";
 import Modal from "../Molecules/DisabilitiesInfo";
+import { restaurantQuestions, hotelQuestions } from "./AccesibilityData";
 
 
 const AccesForm = () => {
@@ -78,7 +79,7 @@ const AccesForm = () => {
         alert("Selecciona un tipo de establecimiento y completa el formulario.");
         return;
       }
-
+  
       // Verificar si se ha seleccionado al menos un checkpoint
       const selectedCheckpoints = formData.disabilities.find(
         (disability) => disability.type === selectedDisability
@@ -86,26 +87,25 @@ const AccesForm = () => {
         section.questions.some((question) => question.response === true)
       );
 
-
       if (!selectedCheckpoints) {
         alert("Por favor, selecciona al menos un checkpoint antes de continuar.");
         return;
       }
-
+  
       // Recupera el userId de localStorage.
       const userId = localStorage.getItem("userId");
       if (!userId) {
         alert("No se encontró el usuario. Por favor, inicia sesión.");
         return;
       }
-
+  
       // Crea el objeto dataToSave, asignando restaurantId o hotelId según corresponda.
       const dataToSave = {
         ...formData,
         restaurantId: establishmentType === "restaurante" ? userId : null,
         hotelId: establishmentType === "hotel" ? userId : null,
       };
-
+  
       // Elimina las propiedades con valor null
       if (dataToSave.restaurantId === null) {
         delete dataToSave.restaurantId;
@@ -113,14 +113,14 @@ const AccesForm = () => {
       if (dataToSave.hotelId === null) {
         delete dataToSave.hotelId;
       }
-
+  
       // Envía los datos al endpoint correspondiente.
       if (establishmentType === "hotel") {
         await createHotelAccessibility(dataToSave);
       } else if (establishmentType === "restaurante") {
         await createRestaurantAccessibility(dataToSave);
       }
-
+  
       // Redirige y limpia los estados tras un guardado exitoso.
       setFormData(null);
       setSelectedDisability("");
@@ -132,7 +132,7 @@ const AccesForm = () => {
       alert(`Ocurrió un error al guardar los datos. Detalles: ${error.message || error}`);
     }
   };
-
+  
 
   return (
     <div>
@@ -181,7 +181,7 @@ const AccesForm = () => {
                 <div key={type} className="flex flex-col items-center space-x-2 w-1/5">
                   <div>
                     <IconButton
-                      id={`boton-de-icono-${type}`}
+                    id={`boton-de-icono-${type}`}
                       condition={type}
                       icon={icon}
                       isSelected={selectedDisability === type} // Para resaltar el botón seleccionado.

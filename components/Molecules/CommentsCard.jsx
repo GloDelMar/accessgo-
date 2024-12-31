@@ -26,7 +26,7 @@ export default function CommentSection() {
 
   useEffect(() => {
     const storedUserType = localStorage.getItem('tipoUsuario');
-    console.log(storedUserType);
+   
     if (Array.isArray(comments)) {
       setCommens(comments);
     }
