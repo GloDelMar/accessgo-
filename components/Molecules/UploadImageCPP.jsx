@@ -1,9 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { toast, Toaster } from 'sonner';
+import Image from 'next/image';
+import axios from 'axios';
 
-const UploadImageCPP = ({ userId, setSelectedImage }) => {
+const UploadImageCPP = ({ userId }) => {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [companyId, setCompanyId] = useState(null);
+
+  const fetchCompanyData = async () => {
+    const companyId = localStorage.getItem('userId');
+    if (companyId) {
+      setCompanyId(companyId);
+    } else {
+      console.error('No se encontró el ID de la empresa en localStorage');
+    }
+
+    try {
+      const response = await axios.get(
+        `https://backend-r159.onrender.com/api/company/${companyId}`
+      );
+
+      const companyData = response.data.data.company;
+
+      setSelectedImage(companyData.profilePicture || null);
+    } catch (error) {
+      console.error('Error fetching company data:', error);
+    }
+  };
+  useEffect(() => {
+      fetchCompanyData();
+    }, []);
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -40,7 +68,7 @@ const UploadImageCPP = ({ userId, setSelectedImage }) => {
       const result = await response.json();
       if (response.ok) {
         setSelectedImage(result.imageUrl);
-        console.log(result.imageUrl)
+        console.log(result.imageUrl);
         toast.success('Imagen subida exitosamente');
       } else {
         toast.error(result.error || 'Error al subir la imagen');
@@ -57,8 +85,28 @@ const UploadImageCPP = ({ userId, setSelectedImage }) => {
     <div className='flex flex-col justify-center items-center space-y-4 '>
       <h3 className='text-md text-center font-semibold'>Imagen de perfil</h3>
 
-      
+      <div className='flex justify-center lg:justify-start'>
+        <label htmlFor='imgUsuario' className='cursor-pointer'>
+          {selectedImage ? (
+            <Image
+              src={selectedImage}
+              alt='Foto de perfil'
+              width={200}
+              height={200}
+              className='rounded-full'
+            />
+          ) : (
+            <Image
+              src='/iconoframe.png'
+              alt='Foto de perfil'
+              width={200}
+              height={200}
+              className='rounded-full'
+            />
+          )}
     
+        </label>
+      </div>
 
       <label
         htmlFor='fileInput'
@@ -83,7 +131,7 @@ const UploadImageCPP = ({ userId, setSelectedImage }) => {
       >
         {uploading ? 'Subiendo...' : 'Subir'}
       </button>
-    
+
       <Toaster />
     </div>
   );
