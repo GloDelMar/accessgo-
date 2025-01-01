@@ -5,7 +5,7 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import Image from 'next/image';
 
-const ImagenSubiryBorrar = ({ userId }) => {
+const ImagenSubiryBorrarPrem = ({ userId }) => {
   const [images, setImages] = useState([]);
   const [uploading, setUploading] = useState(false);
 
@@ -121,13 +121,13 @@ const ImagenSubiryBorrar = ({ userId }) => {
         de todas las personas. Estas imágenes ayudarán a destacar las
         características que promueven la inclusión.
       </p>
-      <div className='w-full grid grid-cols-4  gap-4 flex-row mb-8'>
+      <div className='w-full grid grid-cols-4 sm:gap- sm:gap-y-6 gap-4 flex-row mb-8'>
         {Array(8)
           .fill(null)
           .map((_, index) => (
             <div
               key={index}
-              className='relative w-[200px] h-[200px] border border-gray-300 flex justify-center items-center rounded-lg overflow-hidden'
+              className='relative sm:w-[125px] sm:h-[125px] w-[200px] h-[200px] border border-gray-300 flex justify-center items-center rounded-lg overflow-hidden'
             >
               {images[index] ? (
                 <>
@@ -152,7 +152,7 @@ const ImagenSubiryBorrar = ({ userId }) => {
                     width={320}
                     height={320}
                     alt='Upload Placeholder'
-                    className='w-8 h-8'
+                    className='w-full h-full'
                   />
                   <input
                     type='file'
@@ -171,4 +171,4 @@ const ImagenSubiryBorrar = ({ userId }) => {
   );
 };
 
-export default ImagenSubiryBorrar;
+export default ImagenSubiryBorrarPrem;

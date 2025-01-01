@@ -155,7 +155,7 @@ const ImagenSubiryBorrarBase = ({ userId }) => {
                     width={320}
                     height={320}
                     alt='Upload Placeholder'
-                    className='w-8 h-8'
+                    className='w-full h-full'
                   />
                   <input
                     type='file'

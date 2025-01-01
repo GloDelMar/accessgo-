@@ -5,7 +5,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import router from 'next/router';
 import { getBusinessAverageRanking } from './api/api_ranking';
 import { getCommentsByCompanyId } from './api/api_comment';
-import ImagenSubiryBorrar from '@/components/Molecules/ImagenSubiryBorrar';
+import ImagenSubiryBorrarPrem from '@/components/Molecules/ImagenSubiryBorrarPrem';
 import { Toaster } from 'sonner';
 
 
@@ -153,7 +153,7 @@ const View21 = () => {
           <h3 className='text-xl text-center font-semibold mb-10 text-[#2F4F4F]'>
             Cambia tus imágenes
           </h3>
-          <ImagenSubiryBorrar userId={companyId} />
+          <ImagenSubiryBorrarPrem userId={companyId} />
         </div>
 
         <div className='flex justify-center items-center py-5'>
