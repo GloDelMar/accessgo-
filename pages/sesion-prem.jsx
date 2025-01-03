@@ -196,11 +196,11 @@ const SesionPremium = () => {
           </div>
         </div>
 
-        <div className='mt-12'>
+        <div className='mt-12 w-full'>
           <h3 className='text-xl text-center font-semibold mb-10 text-[#2F4F4F]'>
             Cambia tus imágenes
           </h3>
-          <div className='flex flex-col justify-center gap-5'>
+          <div className='w-full flex flex-col justify-center gap-5'>
             <ImagenSubiryBorrarPrem userId={companyId} />
           </div>
         </div>
