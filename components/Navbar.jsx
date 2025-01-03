@@ -52,9 +52,7 @@ const Navbar = () => {
         ? data.data.user.email
         : data.data.company.email;
   
-      console.log('datos', data);
-      console.log('email', email);
-  
+     
       await sendVerificationCode(email)
       // Guarda el email en el localStorage para recuperación
       localStorage.setItem('recuperacion', email);
