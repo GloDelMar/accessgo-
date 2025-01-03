@@ -167,7 +167,7 @@ const View5 = () => {
   return (
     <div className="max-w-md w-full mx-auto">
       <h1 className="text-center text-2xl text-[#2F4F4F] p-10 font-extrabold">
-        ¡Revisa tu correo o tu WhatsApp!
+        ¡Revisa tu correo!
       </h1>
       <h3 className="text-center text-[#2F4F4F] p-1 font-extrabold">
         Te hemos enviado un código de verificación. A continuación, escribe el código que te enviamos para validar tu cuenta.
