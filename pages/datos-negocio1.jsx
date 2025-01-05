@@ -246,15 +246,10 @@ const View23 = () => {
         <div className="grid gap-8 lg:grid-cols-[300px,1fr] w-full">
           <div className="flex flex-col justify-items-center items-center space-y-4 w-full">
             <div className="flex justify-center lg:justify-start">
-              <label htmlFor="imgUsuario" className="cursor-pointer">
-                {selectedImage ? (
-                  <Image src={selectedImage} alt="Foto de perfil" width={200} height={200} className="rounded-full" />
-                ) : (
-                  <Image src="/iconoframe.png" alt="Foto de perfil" width={200} height={200} className="rounded-full" />
-                )}
+              
                 {/* Esto es para la subida de imagenes a aws */}
                 <UploadImageCPP userId={companyId} setSelectedImage={setSelectedImage} />
-              </label>
+              
             </div>
           </div>
 

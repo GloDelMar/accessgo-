@@ -18,7 +18,7 @@ import { getCommentsByCompanyId } from './api/api_comment';
 import EstadisticasVisitas from '../components/Molecules/Estadisticas';
 import { getPromoByCompanyId, deletePromo } from './api/api_promos';
 import DOMPurify from 'dompurify';
-import ImagenSubiryBorrar from '@/components/Molecules/ImagenSubiryBorrar';
+import ImagenSubiryBorrarPrem from '@/components/Molecules/ImagenSubiryBorrarPrem';
 import { Toaster } from 'sonner';
 
 const imageDefault = "/4574c6_19f52cfb1ef44a3d844774c6078ffafc~mv2.png"
@@ -196,12 +196,12 @@ const SesionPremium = () => {
           </div>
         </div>
 
-        <div className='mt-12'>
+        <div className='mt-12 w-full'>
           <h3 className='text-xl text-center font-semibold mb-10 text-[#2F4F4F]'>
             Cambia tus imágenes
           </h3>
-          <div className='flex flex-col justify-center gap-5'>
-            <ImagenSubiryBorrar userId={companyId} />
+          <div className='w-full flex flex-col justify-center gap-5'>
+            <ImagenSubiryBorrarPrem userId={companyId} />
           </div>
         </div>
 
