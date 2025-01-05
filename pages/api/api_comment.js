@@ -1,5 +1,4 @@
-// const API_URL = "https://backend-r159.onrender.com";
-const API_URL = "http://localhost:8080";
+const API_URL = "https://backend-r159.onrender.com";
 
 /**
  * Crear un nuevo comentario
