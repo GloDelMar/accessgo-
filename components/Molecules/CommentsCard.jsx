@@ -3,12 +3,11 @@
 import { MessageCircle, ThumbsDown, ThumbsUp } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Image } from 'react-bootstrap';
 import { toast, Toaster } from 'sonner';
 import { addDislike, addLike } from '../../pages/api/api_comment';
 import { useComments } from '../Molecules/useComments';
-
 const defaultProfilePic = '/6073873.png';
 
 export default function CommentSection() {
@@ -16,17 +15,16 @@ export default function CommentSection() {
   const { id: companyId } = router.query;
   const { comments, loading, addComment } = useComments(companyId);
   const [interactedComments, setInteractedComments] = useState({});
-
   const [userId, setUserId] = useState(null);
   const [userType, setUserType] = useState(null);
   const [comment, setComment] = useState('');
   const [rating, setRating] = useState(0);
   const [showInput, setShowInput] = useState(false);
   const [commens, setCommens] = useState([]);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   useEffect(() => {
     const storedUserType = localStorage.getItem('tipoUsuario');
-   
     if (Array.isArray(comments)) {
       setCommens(comments);
     }
@@ -41,59 +39,81 @@ export default function CommentSection() {
     }
   }, []);
 
-  const handleLike = async (commentId) => {
+  // Función para manejar el "like" en un comentario
+  const handleLike = useCallback(async (commentId) => {
+    if (isButtonDisabled) return;
+    setIsButtonDisabled(true);
+
     try {
-      if (interactedComments[commentId] === "like") {
-        toast.error("Ya diste like a este comentario.");
+      const hasLiked = interactedComments[commentId] === "like";
+
+      if (hasLiked) {
         return;
-      }
+      } else {
+        const response = await addLike(commentId, userId);
+        if (response) {
+          setInteractedComments((prev) => ({
+            ...prev,
+            [commentId]: "like",
+          }));
 
-      const response = await addLike(commentId);
-      if (response) {
-        setInteractedComments((prev) => ({
-          ...prev,
-          [commentId]: "like",
-        }));
-
-        setCommens((prevComments) =>
-          prevComments.map((comment) =>
-            comment._id === commentId
-              ? { ...comment, likes: (comment.likes || 0) + 1 }
-              : comment
-          )
-        );
+          setCommens((prevComments) =>
+            prevComments.map((comment) =>
+              comment._id === commentId
+                ? {
+                  ...comment,
+                  likes: (comment.likes || 0) + 1,
+                  dislikes: interactedComments[commentId] === "dislike" ? (comment.dislikes || 0) - 1 : comment.dislikes,
+                }
+                : comment
+            )
+          );
+        }
       }
     } catch (error) {
       toast.error(error.message, { style: { backgroundColor: "red", color: "white" } });
+    } finally {
+      setIsButtonDisabled(false);
     }
-  };
+  }, [isButtonDisabled, interactedComments, userId]);
 
-  const handleDislike = async (commentId) => {
+  // Función para manejar el "dislike" en un comentario
+  const handleDislike = useCallback(async (commentId) => {
+    if (isButtonDisabled) return;
+    setIsButtonDisabled(true);
+
     try {
-      if (interactedComments[commentId] === "dislike") {
-        toast.error("Ya diste dislike a este comentario.");
+      const hasDisliked = interactedComments[commentId] === "dislike";
+
+      if (hasDisliked) {
         return;
-      }
+      } else {
+        const response = await addDislike(commentId, userId);
+        if (response) {
+          setInteractedComments((prev) => ({
+            ...prev,
+            [commentId]: "dislike",
+          }));
 
-      const response = await addDislike(commentId);
-      if (response) {
-        setInteractedComments((prev) => ({
-          ...prev,
-          [commentId]: "dislike",
-        }));
-
-        setCommens((prevComments) =>
-          prevComments.map((comment) =>
-            comment._id === commentId
-              ? { ...comment, dislikes: (comment.dislikes || 0) + 1 }
-              : comment
-          )
-        );
+          setCommens((prevComments) =>
+            prevComments.map((comment) =>
+              comment._id === commentId
+                ? {
+                  ...comment,
+                  dislikes: (comment.dislikes || 0) + 1,
+                  likes: interactedComments[commentId] === "like" ? (comment.likes || 0) - 1 : comment.likes,
+                }
+                : comment
+            )
+          );
+        }
       }
     } catch (error) {
       toast.error(error.message, { style: { backgroundColor: "red", color: "white" } });
+    } finally {
+      setIsButtonDisabled(false);
     }
-  };
+  }, [isButtonDisabled, interactedComments, userId]);
 
   const handleCommentSubmit = async () => {
     try {
@@ -101,9 +121,9 @@ export default function CommentSection() {
       setComment('');
       setRating(0);
       setShowInput(false);
-      alert('Comentario enviado exitosamente');
+      toast.success('Comentario enviado exitosamente');
     } catch (error) {
-      alert('Error al enviar comentario. Intenta de nuevo.');
+      toast.error('Error al enviar comentario. Intenta de nuevo.');
     }
   };
 
@@ -169,9 +189,9 @@ export default function CommentSection() {
           <MessageCircle className="mr-3 text-blue-500" />
           Comentarios
         </h2>
-        {comments && comments.length > 0 ? (
+        {commens && commens.length > 0 ? (
           <ul className="space-y-10">
-            {comments.map((comment) => (
+            {commens.map((comment) => (
               <li key={comment._id} className="bg-white rounded-xl shadow-md p-6 transition-all duration-300 hover:shadow-lg border border-gray-100">
                 <div className="flex items-start space-x-4">
                   <Image
