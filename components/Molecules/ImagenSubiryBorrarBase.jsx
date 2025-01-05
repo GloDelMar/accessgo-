@@ -114,23 +114,20 @@ const ImagenSubiryBorrarBase = ({ userId }) => {
   return (
     <div className='flex flex-col justify-center items-center w-full max-w-[1022px] mx-auto'>
       <p className='text-[#2F4F4F] text-md mb-10'>
-        <p className='text-[#2F4F4F] text-md mb-10'>
-          Aquí puedes colocar imágenes que ilustren los aspectos que hacen tu
-          establecimiento incluyente y accesible. Por ejemplo, muestra
-          fotografías de rampas de acceso, señalización en braille, espacios
-          amplios para sillas de ruedas, o cualquier otro detalle que facilite
-          la experiencia de todas las personas. Estas imágenes ayudarán a
-          destacar las características que promueven la inclusión.
-        </p>
+        Aquí puedes colocar imágenes que ilustren los aspectos que hacen tu
+        establecimiento incluyente y accesible. Por ejemplo, muestra fotografías
+        de rampas de acceso, señalización en braille, espacios amplios para
+        sillas de ruedas, o cualquier otro detalle que facilite la experiencia
+        de todas las personas. Estas imágenes ayudarán a destacar las
+        características que promueven la inclusión.
       </p>
-
-      <div className='w-full grid grid-cols-4  gap-4 flex-row mb-8'>
+      <div className='w-full place-items-center grid sm:grid-cols-2 sm:gap-2  md:grid-cols-2 md:gap-4 lg:grid-cols-4 mb-8'>
         {Array(4)
           .fill(null)
           .map((_, index) => (
             <div
               key={index}
-              className='relative w-[200px] h-[200px] border border-gray-300 flex justify-center items-center rounded-lg overflow-hidden'
+              className='relative mt-8 sm:w-[200px] sm:h-[200px] border border-gray-300 flex justify-center items-center rounded-lg overflow-hidden'
             >
               {images[index] ? (
                 <>
@@ -145,7 +142,8 @@ const ImagenSubiryBorrarBase = ({ userId }) => {
                     onClick={() => handleDelete(index)}
                     className='absolute top-2 right-2 bg-gray-100 p-1 rounded-full'
                   >
-                    <Trash2 size={16} />
+                    <Trash2 size={16}
+                    className='sm:w-[16px] sm:h-[16px] md:w-[24px] md:h-[24px] lg:w-[36px] sm:h-[36px]' />
                   </button>
                 </>
               ) : (
@@ -155,7 +153,7 @@ const ImagenSubiryBorrarBase = ({ userId }) => {
                     width={320}
                     height={320}
                     alt='Upload Placeholder'
-                    className='w-8 h-8'
+                    className='sm:w-[] sm:h-full'
                   />
                   <input
                     type='file'

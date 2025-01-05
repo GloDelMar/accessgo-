@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Trash2 } from 'lucide-react';
 import { toast, Toaster } from 'sonner';
-// import { confirmAlert } from 'react-confirm-alert';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import Image from 'next/image';
 
-const ImagenSubiryBorrar = ({ userId }) => {
+const ImagenSubiryBorrarPrem = ({ userId }) => {
   const [images, setImages] = useState([]);
   const [uploading, setUploading] = useState(false);
 
@@ -122,13 +121,13 @@ const ImagenSubiryBorrar = ({ userId }) => {
         de todas las personas. Estas imágenes ayudarán a destacar las
         características que promueven la inclusión.
       </p>
-      <div className='w-full grid grid-cols-4  gap-4 flex-row mb-8'>
+      <div className='w-full place-items-center grid sm:grid-cols-2 sm:gap-2  md:grid-cols-2 md:gap-4 lg:grid-cols-4 mb-8'>
         {Array(8)
           .fill(null)
           .map((_, index) => (
             <div
               key={index}
-              className='relative w-[200px] h-[200px] border border-gray-300 flex justify-center items-center rounded-lg overflow-hidden'
+              className='relative mt-8 sm:w-[200px] sm:h-[200px] border border-gray-300 flex justify-center items-center rounded-lg overflow-hidden'
             >
               {images[index] ? (
                 <>
@@ -143,7 +142,8 @@ const ImagenSubiryBorrar = ({ userId }) => {
                     onClick={() => handleDelete(index)}
                     className='absolute top-2 right-2 bg-gray-100 p-1 rounded-full'
                   >
-                    <Trash2 size={16} />
+                    <Trash2 size={16}
+                    className='sm:w-[16px] sm:h-[16px] md:w-[24px] md:h-[24px] lg:w-[36px] sm:h-[36px]' />
                   </button>
                 </>
               ) : (
@@ -153,7 +153,7 @@ const ImagenSubiryBorrar = ({ userId }) => {
                     width={320}
                     height={320}
                     alt='Upload Placeholder'
-                    className='w-8 h-8'
+                    className='sm:w-[] sm:h-full'
                   />
                   <input
                     type='file'
@@ -172,4 +172,4 @@ const ImagenSubiryBorrar = ({ userId }) => {
   );
 };
 
-export default ImagenSubiryBorrar;
+export default ImagenSubiryBorrarPrem;
