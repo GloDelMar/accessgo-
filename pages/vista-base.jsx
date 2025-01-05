@@ -119,8 +119,8 @@ export default function CardFree() {
         </div>
 
         <div className="w-full mt-4 md:mt-0">
-          <p className="text-sm text-[#607D8B] mt-2">Horarios</p>
-          <div className="flex flex-row mt-2">
+          <p className="text-sm text-[#607D8B] mt-2 flex justify-end">Horarios</p>
+          <div className="flex flex-row mt-2 justify-end">
             <Image
               src="/calendarVector.png"
               alt="Calendario"
