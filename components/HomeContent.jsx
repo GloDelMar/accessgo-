@@ -4,13 +4,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { getAllCompanies } from "@/pages/api/api_company";
-
+import { getAllCompanies, getCompanyById } from "@/pages/api/api_company";
+import { toast } from "sonner";
+import Modal from "./Molecules/MapModal";
 
 const HomeContent = () => {
   const [companies, setCompanies] = useState([])
   const [filteredCompanies, setFilteredCompanies] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -27,9 +29,22 @@ const HomeContent = () => {
       });
   }, []);
 
+  const handleCardClick = async (id) => {
+    try {
+      const companyData = await getCompanyById(id);
+      const companyType = companyData?.data?.company?.cuenta;
 
-  const handleCardClick = () => {
-    router.push('/socios');
+      if (companyType === "free") {
+        router.push(`vista-base?id=${id}`);
+      } else if (companyType === "premium") {
+        router.push(`vista-prem?id=${id}`);
+      } else {
+        throw new Error("Tipo de compañía inválido.");
+      }
+    } catch (error) {
+      console.error("Error al manejar el clic de la tarjeta:", error.message);
+      toast.error("Error al redirigir a la página de la compañía.");
+    }
   };
 
   if (loading) {
@@ -39,6 +54,19 @@ const HomeContent = () => {
       </div>
     );
   }
+
+  const handleButtonClick = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      router.push("/MapWithPlaces");
+    } else {
+      setIsModalOpen(true);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <div className="flex flex-col text-[#2F4F4F] w-full p-4 justify-center font-sans">
@@ -60,9 +88,124 @@ const HomeContent = () => {
         </div>
       </div>
 
-      <div className="relative mb-8 group cursor-pointer flex justify-center">
+      <div className="mx-2 mt-[40] md:mx-[25px]">
+        <h3 className="text-2xl text-center md:text-left font-bold mb-2">¡Descubre a nuestros socios más recientes!</h3>
+        <p className="text-center mt-3 md:text-left">Porque sabemos que buscas lugares diseñados para disfrutar al máximo:</p>
+        <div className="hidden lg:hidden md:flex md:flex-wrap md:justify-center gap-4 mt-[51px] mb-4">
+          {filteredCompanies.slice(-3).map((company) => (
+            <div
+              key={company._id}
+              onClick={() => handleCardClick(company._id)}
+              className="relative rounded-lg w-[200px] h-[241px] shadow-md overflow-hidden cursor-pointer"
+            >
+              <Image
+                src={company.profilePicture || '/4574c6_19f52cfb1ef44a3d844774c6078ffafc~mv2.png'}
+                alt={company.companyName}
+                layout="fill"
+                objectFit="cover"
+                className="absolute inset-0 w-full"
+              />
+              <div className="relative p-4 w-[200px] h-[241px] bg-black bg-opacity-50 flex flex-col justify-end">
+                <h3 className="text-lg font-semibold text-white">{company.companyName}</h3>
+                <div className="flex items-center mt-2">
+                  {Array.from({ length: company.averageRating || 0 }).map((_, i) => (
+                    <svg
+                      key={i}
+                      className="w-5 h-5 text-yellow-400 fill-current"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z" />
+                    </svg>
+                  ))}
+                </div>
+                <p className="text-sm text-white mt-2">
+                  {company.giro || 'Información de accesibilidad no disponible'}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="hidden lg:grid lg:grid-cols-4 gap-4 justify-center mt-[51px] mb-4">
+          {filteredCompanies.slice(-4).map((company) => (
+            <div
+              key={company._id}
+              onClick={() => handleCardClick(company._id)}
+              className="relative rounded-lg w-[200px] h-[241px] shadow-md overflow-hidden cursor-pointer transition-transform transform hover:shadow-[0_0_15px_5px_#2F4F4F] hover:scale-105"
+            >
+              <Image
+                src={company.profilePicture || '/4574c6_19f52cfb1ef44a3d844774c6078ffafc~mv2.png'}
+                alt={company.companyName}
+                layout="fill"
+                objectFit="cover"
+                className="absolute inset-0 w-[80px]"
+              />
+              <div className="relative p-4 w-[200px] h-[241px] bg-black bg-opacity-50 flex flex-col justify-end">
+                <h3 className="text-lg font-semibold text-white">{company.companyName}</h3>
+                <div className="flex items-center mt-2">
+                  {[...Array(company.rating || 0)].map((_, i) => (
+                    <svg key={i} className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z" />
+                    </svg>
+                  ))}
+                </div> <div className="flex items-center mt-2">
+                  {Array.from({ length: company.averageRating || 0 }).map((_, i) => (
+                    <svg
+                      key={i}
+                      className="w-5 h-5 text-yellow-400 fill-current"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z" />
+                    </svg>
+                  ))}
+                </div>
+                <p className="text-sm text-white mt-2">{company.giro || 'Información de accesibilidad no disponible'}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="md:hidden mt-[40px] flex justify-center">
+        <Carousel>
+          {filteredCompanies.map((company, index) => (
+            <div
+              key={company._id}
+              onClick={() => handleCardClick(company._id)}
+              className="relative border rounded-md w-[90%] max-w-[200px] mx-auto h-[251px] overflow-hidden cursor-pointer"
+            >
+              <Image
+                src={company.profilePicture || '/4574c6_19f52cfb1ef44a3d844774c6078ffafc~mv2.png'}
+                alt={`Imagen de ${company.companyName}`}
+                layout="fill"
+                objectFit="cover"
+                className="w-full h-[251px]"
+              />
+              <div className="absolute bottom-0 left-0 p-2 bg-gradient-to-t from-black to-transparent w-full text-white">
+                <h4 className="text-[15px] font-bold">{company.companyName}</h4>
+                <div className="flex items-center mt-2">
+                  {Array.from({ length: company.averageRating || 0 }).map((_, i) => (
+                    <svg
+                      key={i}
+                      className="w-5 h-5 text-yellow-400 fill-current"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z" />
+                    </svg>
+                  ))}
+                </div>
+                <p className="text-[10px] mt-2">{company.giro || 'Información de accesibilidad no disponible'}</p>
+              </div>
+            </div>
+          ))}
+        </Carousel>
+
+      </div>
+
+      <p className="text-2xl mt-6 text-center md:text-left font-semibold mb-2">Encuentra los lugares más cercanos a ti con accesibilidad garantizada explorando el mapa en el siguiente botón:
+      </p>
+      <div className="relative mt-4 mb-5 group cursor-pointer flex justify-center">
+
         <button
-          onClick={() => router.push('/MapWithPlaces')}
+          onClick={handleButtonClick}
           className="flex items-center gap-2 px-6 py-3 bg-white dark:bg-[#F7D547] border border-[#8CC63F] 
                hover:bg-[#F7D547]/10 dark:hover:bg-[#F7D547]/20 rounded-full shadow-md 
                transition-all hover:shadow-lg group-hover:border-[#F7D547]"
@@ -104,118 +247,31 @@ const HomeContent = () => {
         </button>
       </div>
 
+      {/* Modal */}
+      <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
 
-      <div className="mx-2 mt-[40] md:mx-[25px]">
-        <h3 className="text-2xl text-center md:text-left font-bold mb-2">Visita a nuestros socios</h3>
-        <p className="text-center mt-3 md:text-left">Para ti, que buscas un lugar para pasar un buen rato:</p>
-        <div className="hidden lg:hidden md:grid md:grid-cols-3 md:grid-rows-2 gap-4 justify-center mt-[51px] mb-4">
-          {filteredCompanies.slice(-6).map((company) => (
-            <div
-              key={company._id}
-              onClick={handleCardClick}
-              className="relative rounded-lg w-[200px] h-[241px] shadow-md overflow-hidden cursor-pointer"
-            >
-              <Image
-                src={company.profilePicture || '/4574c6_19f52cfb1ef44a3d844774c6078ffafc~mv2.png'}
-                alt={company.companyName}
-                layout="fill"
-                objectFit="cover"
-                className="absolute inset-0 w-[80px]"
-              />
-              <div className="relative p-4 w-[200px] h-[241px] bg-black bg-opacity-50 flex flex-col justify-end">
-                <h3 className="text-lg font-semibold text-white">{company.companyName}</h3>
-                <div className="flex items-center mt-2">
-                  {Array.from({ length: company.averageRating || 0 }).map((_, i) => (
-                    <svg
-                      key={i}
-                      className="w-5 h-5 text-yellow-400 fill-current"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z" />
-                    </svg>
-                  ))}
-                </div>
-                <p className="text-sm text-white mt-2">{company.giro || 'Información de accesibilidad no disponible'}</p>
-              </div>
-            </div>
-          ))}
+        <h2 className="text-xl font-bold mb-4">¡Inicia Sesión!</h2>
+        <p className="mb-4">
+          Necesitas iniciar sesión o registrarte para explorar el mapa y ver lugares accesibles cercanos a ti.
+        </p>
+        <div className="flex flex-row justify-center mt-4 space-x-6">
+          <button
+            onClick={() => router.push("/login")}
+            className="px-6 py-2 border border-transparent rounded-md shadow-sm text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]"
+          >
+            Ir a Iniciar Sesión
+          </button>
+          <button
+            onClick={() => router.push("/signup")}
+            className="px-6 py-2 border border-transparent rounded-md shadow-sm text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]"
+          >
+            Ir a Registrarse
+          </button>
         </div>
-        <div className="hidden lg:grid lg:grid-cols-4 gap-4 justify-center mt-[51px] mb-4">
-          {filteredCompanies.slice(-4).map((company) => (
-            <div
-              key={company._id}
-              onClick={handleCardClick}
-              className="relative rounded-lg w-[200px] h-[241px] shadow-md overflow-hidden cursor-pointer transition-transform transform hover:shadow-[0_0_15px_5px_#2F4F4F] hover:scale-105"
-            >
-              <Image
-                src={company.profilePicture || '/4574c6_19f52cfb1ef44a3d844774c6078ffafc~mv2.png'}
-                alt={company.companyName}
-                layout="fill"
-                objectFit="cover"
-                className="absolute inset-0 w-[80px]"
-              />
-              <div className="relative p-4 w-[200px] h-[241px] bg-black bg-opacity-50 flex flex-col justify-end">
-                <h3 className="text-lg font-semibold text-white">{company.companyName}</h3>
-                <div className="flex items-center mt-2">
-                  {[...Array(company.rating || 0)].map((_, i) => (
-                    <svg key={i} className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 24 24">
-                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z" />
-                    </svg>
-                  ))}
-                </div> <div className="flex items-center mt-2">
-                  {Array.from({ length: company.averageRating || 0 }).map((_, i) => (
-                    <svg
-                      key={i}
-                      className="w-5 h-5 text-yellow-400 fill-current"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z" />
-                    </svg>
-                  ))}
-                </div>
-                <p className="text-sm text-white mt-2">{company.giro || 'Información de accesibilidad no disponible'}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-      <div className="md:hidden mt-[40px] flex justify-center">
-        <Carousel>
-          {filteredCompanies.map((company, index) => (
-            <div
-              key={index}
-              onClick={handleCardClick}
-              className="relative border rounded-md w-[90%] max-w-[200px] mx-auto h-[251px] overflow-hidden cursor-pointer"
-            >
-              <Image
-                src={company.profilePicture || '/4574c6_19f52cfb1ef44a3d844774c6078ffafc~mv2.png'}
-                alt={`Imagen de ${company.companyName}`}
-                layout="fill"
-                objectFit="cover"
-                className="w-full h-[251px]"
-              />
-              <div className="absolute bottom-0 left-0 p-2 bg-gradient-to-t from-black to-transparent w-full text-white">
-                <h4 className="text-[15px] font-bold">{company.companyName}</h4>
-                <div className="flex items-center mt-2">
-                  {Array.from({ length: company.averageRating || 0 }).map((_, i) => (
-                    <svg
-                      key={i}
-                      className="w-5 h-5 text-yellow-400 fill-current"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z" />
-                    </svg>
-                  ))}
-                </div>
-                <p className="text-[10px] mt-2">{company.giro || 'Información de accesibilidad no disponible'}</p>
-              </div>
-            </div>
-          ))}
-        </Carousel>
+      </Modal>
 
-      </div>
       <div className="mt-[40px] mx-2 ">
-        <h3 className="text-2xl text-center md:text-left font-bold mb-2">Y también para ti, que buscas ser parte del cambio:</h3>
+        <h3 className="text-2xl text-center md:text-left font-bold mb-2">Y para ti, que buscas ser parte del cambio:</h3>
         <p className="text-center my-[40px] md:text-left">Sé parte del cambio y muestra tu compromiso con la accesibilidad</p>
         <ul className="hidden sm:flex sm:flex-row items-center justify-center space-x-0 sm:space-x-4 mt-[40px]">
           <Link legacyBehavior href="/voluntariado">

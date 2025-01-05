@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
-import { restaurantQuestions, hotelQuestions } from "./AccesibilityData";
+import { createRestaurantAccessibility, createHotelAccessibility } from "@/pages/api/api_questionnaire";
 import CheckpointsSection from "./Checkpoints";
 import EstablishmentSelect from "../Molecules/TipoEstablecimiento";
 import IconButton from "../atoms/IconButton";
@@ -8,6 +8,7 @@ import Button from "../atoms/Button";
 import Link from "next/link";
 import { FaWheelchair, FaEye, FaDeaf, FaBrain, FaPuzzlePiece } from "react-icons/fa";
 import Modal from "../Molecules/DisabilitiesInfo";
+import { restaurantQuestions, hotelQuestions } from "./AccesibilityData";
 
 
 const AccesForm = () => {
@@ -82,8 +83,10 @@ const AccesForm = () => {
       // Verificar si se ha seleccionado al menos un checkpoint
       const selectedCheckpoints = formData.disabilities.find(
         (disability) => disability.type === selectedDisability
-      )?.sections?.some((section) => section.selected);
-  
+      )?.sections?.some((section) =>
+        section.questions.some((question) => question.response === true)
+      );
+
       if (!selectedCheckpoints) {
         alert("Por favor, selecciona al menos un checkpoint antes de continuar.");
         return;
