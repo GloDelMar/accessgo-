@@ -27,7 +27,7 @@ export default function CardFree() {
     if (id) {
       contarVisita(id, `vista-prem/${id}`);
     }
-  }, [id]); // El hook se ejecutará solo cuando 'id' cambie
+  }, [id]);
 
   const fetchAverageRating = useCallback(async () => {
     if (!id) return;
@@ -76,7 +76,7 @@ export default function CardFree() {
           {companyData?.data?.company?.companyName ||
             'Información no disponible.'}
         </p>
-        <img
+        <Image
           className='w-[472px] h-[300px] md:w-[1264px] md:h-[500px] lg:w-[1304px] lg:h-[500px] mt-8 object-contain'
           src={companyData?.data?.company?.profilePicture || '/img-card.png'}
           alt='Foto principal de empresa'
@@ -85,22 +85,35 @@ export default function CardFree() {
           layout='responsive'
         />
         <div className=' flex flex-row gap-5 mt-2 justify-between '>
-          <img className='w-[50px]' src='./facebook_logo.svg' alt='' />
-          <img className='w-[50px]' src='./instagram-logo.svg' alt='' />
-          <img className='w-[50px]' src='./tiktok-icon.svg' alt='' />
-          <img className='w-[75px]' src='./x-logo.svg' alt='' />
+          {companyData?.data?.company?.redesSociales?.facebook && (
+            <a href={companyData.data.company.redesSociales.facebook} target='_blank' rel='noopener noreferrer'>
+              <Image className='w-[50px]' src='/facebook_logo.svg' alt='Facebook' width={50} height={50} />
+            </a>
+          )}
+          {companyData?.data?.company?.redesSociales?.instagram && (
+            <a href={companyData.data.company.redesSociales.instagram} target='_blank' rel='noopener noreferrer'>
+              <Image className='w-[50px]' src='/instagram-logo.svg' alt='Instagram' width={50} height={50} />
+            </a>
+          )}
+          {companyData?.data?.company?.redesSociales?.twitter && (
+            <a href={companyData.data.company.redesSociales.twitter} target='_blank' rel='noopener noreferrer'>
+              <Image className='w-[75px]' src='/x-logo.svg' alt='Twitter' width={75} height={75} />
+            </a>
+          )}
         </div>
       </div>
 
       <section className='flex flex-col justify-between p-2 md:flex-row lg:flex-row w-full mt-4'>
         <div className='flex flex-col'>
           <div className='flex items-center mb-2'>
-            <img
+            <Image
               src={
                 companyData?.data?.company?.profilePicture || defaultProfilePic
               }
               alt='Foto de perfil'
               className='w-20 h-20 rounded-full p-1'
+              width={80}
+              height={80}
             />
             <p className='w-full h-[40px] text-[#7E952A] text-[20px] md:text-2xl font-semibold'>
               {companyData?.data?.company?.companyName ||
@@ -139,7 +152,7 @@ export default function CardFree() {
             Horarios
           </p>
           {/* Días de servicio */}
-          <div className='flex items-start items-center gap-2 mt-2'>
+          <div className='flex items-center gap-2 mt-2'>
             <Image
               src='/calendarVector.png'
               alt='ícono de calendario'
@@ -153,7 +166,7 @@ export default function CardFree() {
             </div>
           </div>
           {/* Hora de apertura */}
-          <div className='flex items-start items-center gap-2 mt-2'>
+          <div className='flex items-center gap-2 mt-2'>
             <Image
               src='/clockOpeningVector.png'
               alt='ícono de reloj para hora de iniciar'
@@ -167,7 +180,7 @@ export default function CardFree() {
             </p>
           </div>
           {/* Hora de cierre */}
-          <div className='flex items-start items-center gap-2 mt-2'>
+          <div className='flex items-center gap-2 mt-2'>
             <Image
               src='/clockClosingVector.png'
               alt='ícono de reloj para hora de salida'
@@ -245,7 +258,7 @@ export default function CardFree() {
                         </h4>
                         {promocion.image ? (
                           <Image
-                            src={promocion.image} // Imagen desde la base de datos
+                            src={promocion.image}
                             alt={`Imagen de la promoción: ${promocion.name || 'Sin título'}`}
                             width={350}
                             height={300}
@@ -253,7 +266,7 @@ export default function CardFree() {
                           />
                         ) : (
                           <Image
-                            src={imageDefault} // Imagen predeterminada
+                            src={imageDefault}
                             alt="Imagen predeterminada de promoción"
                             width={350}
                             height={300}

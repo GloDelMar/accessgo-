@@ -38,7 +38,6 @@ export const useComments = (companyId) => {
 
       await createComment(userId, comment, companyId, rankingId);
 
-      // Refresh comments and average rating
       const updatedComments = await getCommentsByCompanyId(companyId);
       setComments(updatedComments.data || []);
 
