@@ -149,6 +149,34 @@ export default function CardFree() {
                 'Información no disponible.'}
             </div>
           </div>
+          {/* Hora de apertura */}
+          <div className='flex items-center justify-end gap-2 mt-2'>
+            <Image
+              src='/clockOpeningVector.png'
+              alt='ícono de reloj para hora de iniciar'
+              width={14}
+              height={16}
+              className='flex-shrink-0'
+            />
+            <p className='text-[12.6px] md:text-sm lg:text-base text-[#546E7A]'>
+              {companyData?.data?.company?.horario?.abre ||
+                'Información no disponible.'}
+            </p>
+          </div>
+          {/* Hora de cierre */}
+          <div className='flex items-center justify-end gap-2 mt-2'>
+            <Image
+              src='/clockClosingVector.png'
+              alt='ícono de reloj para hora de salida'
+              width={14}
+              height={16}
+              className='flex-shrink-0'
+            />
+            <p className='text-[12.6px] text-[#546E7A] md:text-sm lg:text-base'>
+              {companyData?.data?.company?.horario?.cierra ||
+                'Información no disponible.'}
+            </p>
+          </div>
         </div>
       </section>
 
