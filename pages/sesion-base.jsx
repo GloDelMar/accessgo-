@@ -1,13 +1,11 @@
+import ImagenSubiryBorrarPrem from '@/components/Molecules/ImagenSubiryBorrarPrem';
+import { getCompanyById } from '@/pages/api/api_company';
 import Image from 'next/image';
 import Link from 'next/link';
-import { getCompanyById } from '@/pages/api/api_company';
-import React, { useEffect, useState, useRef } from 'react';
-import router from 'next/router';
-import { getBusinessAverageRanking } from './api/api_ranking';
-import { getCommentsByCompanyId } from './api/api_comment';
-import ImagenSubiryBorrarPrem from '@/components/Molecules/ImagenSubiryBorrarPrem';
+import { useEffect, useState } from 'react';
 import { Toaster } from 'sonner';
-
+import { getCommentsByCompanyId } from './api/api_comment';
+import { getBusinessAverageRanking } from './api/api_ranking';
 
 const View21 = () => {
   const [companyData, setCompanyData] = useState(null);
@@ -42,11 +40,10 @@ const View21 = () => {
 
         const commentsData = await getCommentsByCompanyId(companyId);
 
-        // Verificar si hay comentarios y ajustarlos
         if (commentsData.data && commentsData.data.length > 0) {
           setComments(commentsData?.data);
         } else {
-          setComments([]); // Si no hay comentarios, establecer un array vacío
+          setComments([]); 
         }
       } catch (error) {
         console.error(error);
@@ -68,8 +65,6 @@ const View21 = () => {
       </p>
     );
   if (error) return <p>{error}</p>;
-
-  // if (comments.length === 0) return <p className="text-xl text-center">No existen datos.</p>;
 
   return (
     <>
