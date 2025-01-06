@@ -36,53 +36,46 @@ const AccesForm = () => {
     const loadData = async () => {
       const accesibilidad = localStorage.getItem("accesibilidad");
       const userId = localStorage.getItem("userId");
-
+  
       if (!userId) {
         alert("No se encontró el usuario. Por favor, inicia sesión.");
         return;
       }
-
+  
       try {
-       
-        if (accesibilidad) { // Si "accesibilidad" existe, cargamos los datos para actualizar
-           const companyData = await getCompanyById(userId);
-       
-console.log("datos de compañia", companyData)
-        const tipo = companyData.data.company.giro.toLowerCase();
-        console.log("el tipo", tipo)
-        setEstablishmentType(tipo);
-
-         
+        if (accesibilidad) {
+          // Si "accesibilidad" existe, cargamos los datos para actualizar
+          const companyData = await getCompanyById(userId);
+  
+          const tipo = companyData.data.company.giro.toLowerCase();
+          console.log("el tipo", tipo);
+          setEstablishmentType(tipo);
+  
           let accessibilityData = {};
           if (tipo === "restaurante") {
             accessibilityData = await getRestaurantAccessibility(userId);
           } else if (tipo === "hotel") {
             accessibilityData = await getHotelAccessibility(userId);
           }
-
+  
           setFormData({
             ...formData,
             ...accessibilityData, // Precarga los datos existentes
           });
         } else {
-          // Si no existe, se preparan las preguntas para crear nuevos datos
-          const selectedType = e.target.value;
-          setEstablishmentType(selectedType);
-          
-          if (selectedType === "restaurante") {
-            setFormData(restaurantQuestions);
-          } else if (selectedType === "hotel") {
-            setFormData(hotelQuestions);
-          }
+          // Si no existe accesibilidad, se preparan las preguntas según el tipo
+          // No asignamos un valor predeterminado aquí
+          setEstablishmentType(""); // Sin un valor seleccionado
+          setFormData({}); // Inicializamos sin datos
         }
       } catch (error) {
-       
-        alert("Ocurrió un error al cargar los datos.");
+        console.error("Error al cargar los datos:", error);
       }
     };
-
+  
     loadData();
   }, []);
+  
 
 
   const handleEstablishmentChange = (e) => {
@@ -124,9 +117,15 @@ console.log("datos de compañia", companyData)
           : disability
       ),
     };
+  
+    // Actualiza el estado con los nuevos datos
     setFormData(updatedFormData);
+  
+    // Puedes loguear para depurar
+    console.log("Datos actualizados:", updatedFormData);
+    console.log ("FormData",formData)
   };
-
+  
   const handleSubmit = async () => {
     try {
       const userId = localStorage.getItem("userId");
@@ -134,9 +133,9 @@ console.log("datos de compañia", companyData)
         alert("No se encontró el usuario. Por favor, inicia sesión.");
         return;
       }
-
+  
       const accesibilidad = localStorage.getItem("accesibilidad");
-
+  
       if (!accesibilidad) {
         // Crear nuevos datos de accesibilidad
         const dataToSave = {
@@ -145,37 +144,40 @@ console.log("datos de compañia", companyData)
           hotelId: establishmentType === "hotel" ? userId : null,
         };
 
+ 
         if (establishmentType === "hotel") {
           await createHotelAccessibility(dataToSave);
         } else if (establishmentType === "restaurante") {
           await createRestaurantAccessibility(dataToSave);
         }
-
+  
         router.push("/planes");
       } else {
         // Actualizar datos existentes de accesibilidad
         let updateFunction;
-        const userId = localStorage.getItem("userId");
+  console.log("formData2",formData)
+
         if (establishmentType === "restaurante") {
-          updateFunction = updateRestaurantAccessibility( userId);
+          updateFunction = await updateRestaurantAccessibility( userId,formData);
         } else if (establishmentType === "hotel") {
-          updateFunction = updateHotelAccessibility(
-             userId);
+          updateFunction = await updateHotelAccessibility(userId,formData );
         }
-
-      
-
-        const cuentaUsuario = localStorage.getItem("cuentaUsuario");
-        if (cuentaUsuario === "premium") {
+  
+        const companyData = await getCompanyById(userId);
+        const cuenta=companyData.data.company.cuenta.toLowerCase();
+       
+        console.log("cuenta",cuenta)
+        if (cuenta === "premium") {
           router.push("/sesion-prem");
-        } else if (cuentaUsuario === "free") {
+        } else if (cuenta === "free") {
           router.push("/sesion-base");
         } else {
           console.warn("Cuenta de usuario no válida");
         }
       }
-
-      setFormData(null);
+  
+      // Restablece el formulario
+      setFormData({});
       setSelectedDisability("");
       setEstablishmentType("");
       alert("Datos guardados exitosamente.");
@@ -184,8 +186,8 @@ console.log("datos de compañia", companyData)
       alert(`Ocurrió un error al guardar los datos. Detalles: ${error.message || error}`);
     }
   };
-
-
+  
+  
   return (
     <div>
       <Modal isOpen={modalOpen} onClose={handleModalClose} disabilityType={modalDisability} />
