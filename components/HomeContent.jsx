@@ -14,6 +14,52 @@ const HomeContent = () => {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    setLoading(true);
+    getAllCompanies()
+      .then((companyData) => {
+        setCompanies(companyData);
+        setFilteredCompanies(companyData.slice(-4));
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("[getCompanies error]", error);
+        setLoading(false);
+      });
+  }, []);
+
+  const images = [
+    '/carlay/baston.jpg',
+    '/carlay/lse.jpg',
+    '/carlay/senas.jpg',
+    '/carlay/silla.jpg'
+  ]
+
+  const text = [
+    "La accesibilidad es un derecho fundamental.",
+    "Y AccessGo es el medio de comunicación entre los establecimientos incluyentes y las personas.",
+    "AccessGo facilita tu búsqueda de lugares accesibles cerca a tu ubicación actual o por zona a nivel nacional. Como parte de nuestros usuarios podrás compartir opiniones y recomendaciones con toda la comunidad.",
+    "AccessGo también es el apoyo para que los negocios, establecimientos y compañías tengan un Mayor alcance de marca y servicio. Demostrando su compromiso con las personas, la accesibilidad y la calidad al unirse como empresa."
+  ]
+
+  const images2 = [
+    "/referencias/calific.jpg",
+    "/referencias/comentar.jpg",
+    "/referencias/geo.jpg",
+    "/referencias/rest7.jpg"
+  ]
+
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
 
   useEffect(() => {
     setLoading(true);
@@ -70,25 +116,25 @@ const HomeContent = () => {
 
   return (
     <div className="flex flex-col text-[#2F4F4F] w-full p-4 justify-center font-sans">
-      <div className="flex flex-col md:items-center md:flex-row gap-4 mx-[40px] p-2 text-[#2F4F4F]">
-        <div className="flex-1 text-center md:text-left mt-[10px]">
-          <p className="text-center mt-[8px] md:text-left">Encuentra tu lugar favorito</p>
-          <h1 className="text-4xl font-bold mb-2">¡Bienvenido a AccessGo!</h1>
-          <p className="mt-[20px]">
-            La accesibilidad es un derecho fundamental. Con AccessGo facilitamos tu búsqueda de establecimientos incluyentes, ayudándote a encontrar lugares que se ajusten a tus necesidades específicas.
+      <h1 className="text-4xl text-center font-bold mb-4">¡Bienvenido a AccessGo!</h1>
+      <div className="bg-[#2F4F4F] text-white p-4 md:p-6 rounded-lg flex flex-col md:flex-row justify-center items-center gap-6 max-w-4xl mx-auto">
+        <div className="w-full md:w-1/2 flex items-center justify-center">
+          <p className="text-base md:text-xl font-medium text-center px-2 md:px-4 leading-relaxed">
+            {text[currentIndex]}
           </p>
         </div>
-
-        <div className="flex justify-center items-center">
-          <img
-            className="h-[200px] md:h-[400px]"
-            src="/Group 4717@2x.png"
-            alt="Tarjetas con tres imágenes de personas con discapacidad siendo incluidas en diferentes escenarios, de títulos: Accesibilidad, Inclusión, AccessGo"
+        <div className="relative w-full md:w-1/2 h-64 md:h-80 flex justify-center items-center">
+          <Image
+            src={images[currentIndex]}
+            alt="Accesibilidad"
+            className="object-cover rounded-lg"
+            width={400}
+            height={320}
+            priority
           />
         </div>
       </div>
-
-      <div className="mx-2 mt-[40] md:mx-[25px]">
+      <div className="mx-2 mt-4 md:mx-[25px]">
         <h3 className="text-2xl text-center md:text-left font-bold mb-2">¡Descubre a nuestros socios más recientes!</h3>
         <p className="text-center mt-3 md:text-left">Porque sabemos que buscas lugares diseñados para disfrutar al máximo:</p>
         <div className="hidden lg:hidden md:flex md:flex-wrap md:justify-center gap-4 mt-[51px] mb-4">
@@ -247,7 +293,6 @@ const HomeContent = () => {
         </button>
       </div>
 
-      {/* Modal */}
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
 
         <h2 className="text-xl font-bold mb-4">¡Inicia Sesión!</h2>
@@ -270,9 +315,48 @@ const HomeContent = () => {
         </div>
       </Modal>
 
-      <div className="mt-[40px] mx-2 ">
+      <div className="mt-[40px] mx-2 text-[#2F4858]">
         <h3 className="text-2xl text-center md:text-left font-bold mb-2">Y para ti, que buscas ser parte del cambio:</h3>
-        <p className="text-center my-[40px] md:text-left">Sé parte del cambio y muestra tu compromiso con la accesibilidad</p>
+        <div className="text-center text-xl my-10 md:text-left">
+          <p className="mb-4 font-semibold text-[#2F4858]">
+            AccessGo será de gran ayuda para impulsar tu marca mostrando:
+          </p>
+          <ul className="list-disc ml-4 list-inside md:list-outside space-y-2">
+            <li>Tu ubicación en tiempo real.</li>
+            <li>Compartiendo tus redes sociales.</li>
+            <li>Comentarios y calificaciones de tu servicio.</li>
+          </ul>
+        </div>
+        <div className='hidden flex-row md:flex  items-center justify-center gap-10'>
+          <img
+            src='/referencias/calific.jpg'
+            className='w-50 h-48 object-cover'
+          />
+          <img
+            src='/referencias/comentar.jpg'
+            className='w-48 h-48 object-cover'
+          />
+          <img src='/referencias/geo.jpg'
+            className='w-70 h-48 object-cover' />
+          <img
+            src='/referencias/rest7.jpg'
+            className='w-48 h-48 object-cover'
+          />
+        </div>
+        <div className="md:hidden flex items-center justify-center gap-10">
+          <div className="relative w-[400px] h-[320px]">
+            <Image
+              src={images2[currentIndex]}
+              alt="Accesibilidad"
+              className="object-cover rounded-lg h-full w-full"
+              width={400}
+              height={320}
+              priority
+            />
+          </div>
+        </div>
+        <h2 className="text-center font-bold text-2xl my-[40px] text-[#2F4858] md:text-left">
+          ¡Sé parte del cambio y muestra tu compromiso con la inclusión!</h2>
         <ul className="hidden sm:flex sm:flex-row items-center justify-center space-x-0 sm:space-x-4 mt-[40px]">
           <Link legacyBehavior href="/voluntariado">
             <li className="card border rounded w-[223px] rounded-[8px] border-[#E8DECF] h-[178px] mb-4 sm:mb-0 cursor-pointer">
