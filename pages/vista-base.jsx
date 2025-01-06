@@ -76,6 +76,23 @@ export default function CardFree() {
           height={500}
           layout="intrinsic"
         />
+        <div className=' flex flex-row gap-5 mt-2 justify-between '>
+          {companyData?.data?.company?.redesSociales?.facebook && (
+            <a href={companyData.data.company.redesSociales.facebook} target='_blank' rel='noopener noreferrer'>
+              <Image className='w-[50px]' src='/facebook_logo.svg' alt='Facebook' width={50} height={50} />
+            </a>
+          )}
+          {companyData?.data?.company?.redesSociales?.instagram && (
+            <a href={companyData.data.company.redesSociales.instagram} target='_blank' rel='noopener noreferrer'>
+              <Image className='w-[50px]' src='/instagram-logo.svg' alt='Instagram' width={50} height={50} />
+            </a>
+          )}
+          {companyData?.data?.company?.redesSociales?.twitter && (
+            <a href={companyData.data.company.redesSociales.twitter} target='_blank' rel='noopener noreferrer'>
+              <Image className='w-[75px]' src='/x-logo.svg' alt='Twitter' width={75} height={75} />
+            </a>
+          )}
+        </div>
       </div>
 
       <section className="flex flex-col md:flex-row lg:flex-row justify-between p-2 mt-4 w-full">
@@ -119,18 +136,18 @@ export default function CardFree() {
         </div>
 
         <div className="w-full mt-4 md:mt-0">
-          <p className="text-sm text-[#607D8B] mt-2">Horarios</p>
-          <div className="flex flex-row mt-2">
+          <p className="text-sm text-[#607D8B] mt-2 flex justify-end">Horarios</p>
+          <div className="flex flex-row mt-2 justify-end">
             <Image
               src="/calendarVector.png"
               alt="Calendario"
               width={16}
               height={14}
             />
-            <p className="ml-2 text-sm text-[#546E7A]">
+            <div className='text-[12px] md:text-sm lg:text-base text-[#546E7A]'>
               {(companyData?.data?.company?.diasDeServicio || []).join(', ') ||
                 'Información no disponible.'}
-            </p>
+            </div>
           </div>
         </div>
       </section>
@@ -146,14 +163,14 @@ export default function CardFree() {
             {companyData?.data?.company?.phone || 'Información no disponible.'}
           </p>
         </div>
-        
+
         <div className="flex flex-col md:w-full max-w-screen-sm justify-center gap-5">
           <h1 className="text-center text-[#2F4F4F] mt-8">
             Imagenes de accesibilidad proporcionadas por la empresa:
           </h1>
           <ImageCarouselACC userId={id} />
         </div>
-        
+
         <div>
           <AccessVisibility companyId={id} />
         </div>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getCommentsByCompanyId, createComment } from '@/pages/api/api_comment';
+import {getCommentsByCompanyId, createComment} from '../../pages/api/api_comment';
 import { getBusinessAverageRanking, createRanking } from '@/pages/api/api_ranking';
 
 export const useComments = (companyId) => {
@@ -38,7 +38,6 @@ export const useComments = (companyId) => {
 
       await createComment(userId, comment, companyId, rankingId);
 
-      // Refresh comments and average rating
       const updatedComments = await getCommentsByCompanyId(companyId);
       setComments(updatedComments.data || []);
 

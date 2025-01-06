@@ -1,6 +1,6 @@
 'use client';
 
-import { MessageCircle, ThumbsDown, ThumbsUp } from 'lucide-react';
+import { MessageCircle, MoreVertical, ThumbsDown, ThumbsUp } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -26,7 +26,7 @@ export default function CommentSection() {
 
   useEffect(() => {
     const storedUserType = localStorage.getItem('tipoUsuario');
-   
+    console.log(storedUserType);
     if (Array.isArray(comments)) {
       setCommens(comments);
     }
@@ -170,10 +170,10 @@ export default function CommentSection() {
           Comentarios
         </h2>
         {comments && comments.length > 0 ? (
-          <ul className="space-y-10">
-            {comments.map((comment) => (
-              <li key={comment._id} className="bg-white rounded-xl shadow-md p-6 transition-all duration-300 hover:shadow-lg border border-gray-100">
-                <div className="flex items-start space-x-4">
+          <div className="max-h-96 overflow-y-auto">
+            <ul className="space-y-10">
+              {comments.map((comment) => (
+                <li key={comment._id} className="bg-white rounded-xl shadow-md p-6 transition-all duration-300 hover:shadow-lg border border-gray-100 flex flex-col md:flex-row md:items-start space-y-4 md:space-y-0 md:space-x-4">
                   <Image
                     src={comment.userId?.profilePicture || defaultProfilePic}
                     alt="Foto de perfil"
@@ -196,6 +196,7 @@ export default function CommentSection() {
                           day: 'numeric'
                         })}
                       </span>
+                      <MoreVertical className="h-5 w-5 text-gray-600 cursor-pointer hover:text-gray-800 transition-colors duration-200" />
                     </div>
                     <p className="text-gray-700 text-base mt-2 leading-relaxed">{comment.content}</p>
                     {comment.rankingId?.stars && (
@@ -241,10 +242,10 @@ export default function CommentSection() {
                       </div>
                     )}
                   </div>
-                </div>
-              </li>
-            ))}
-          </ul>
+                </li>
+              ))}
+            </ul>
+          </div>
         ) : (
           <div className="text-center py-12 bg-gray-50 rounded-xl border border-gray-200">
             <MessageCircle className="mx-auto h-12 w-12 text-gray-400 mb-4" />
