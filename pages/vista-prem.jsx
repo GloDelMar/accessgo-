@@ -63,6 +63,8 @@ export default function CardFree() {
     }
   }, [id, fetchAverageRating]);
 
+  console.log(companyData);
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
 
