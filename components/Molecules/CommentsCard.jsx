@@ -55,6 +55,11 @@ export default function CommentSection() {
    */
   const handleLike = useCallback(
     async (commentId) => {
+      if (!userId) {
+        toast.error('Debe estar logueado para poder dar like.', { style: { backgroundColor: 'red', color: 'white' } });
+        return;
+      }
+
       if (isButtonDisabled) return;
       setIsButtonDisabled(true);
 
@@ -123,6 +128,11 @@ export default function CommentSection() {
    */
   const handleDislike = useCallback(
     async (commentId) => {
+      if (!userId) {
+        toast.error('Debe estar logueado para poder dar dislike.', { style: { backgroundColor: 'red', color: 'white' } });
+        return;
+      }
+
       if (isButtonDisabled) return;
       setIsButtonDisabled(true);
 
