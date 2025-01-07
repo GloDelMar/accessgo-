@@ -116,7 +116,7 @@ const HomeContent = () => {
 
   return (
     <div className="flex flex-col text-[#2F4F4F] w-full p-4 justify-center font-sans">
-      <h1 className="text-4xl text-center font-bold mb-4">¡Bienvenido a AccessGo!</h1>
+      <h1 className="text-4xl text-center font-bold mb-4">¡Bienvenido a AccessGo DEV!</h1>
       <div className="bg-[#2F4F4F] text-white p-4 md:p-6 rounded-lg flex flex-col md:flex-row justify-center items-center gap-6 max-w-4xl mx-auto">
         <div className="w-full md:w-1/2 flex items-center justify-center">
           <p className="text-base md:text-xl font-medium text-center px-2 md:px-4 leading-relaxed">
