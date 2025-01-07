@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { createRestaurantAccessibility, createHotelAccessibility } from "@/pages/api/api_questionnaire";
+import { createRestaurantAccessibility, createHotelAccessibility, updateHotelAccessibility, updateRestaurantAccessibility, getHotelAccessibility, getRestaurantAccessibility } from "@/pages/api/api_questionnaire";
 import CheckpointsSection from "./Checkpoints";
 import EstablishmentSelect from "../Molecules/TipoEstablecimiento";
 import IconButton from "../atoms/IconButton";
@@ -9,6 +9,7 @@ import Link from "next/link";
 import { FaWheelchair, FaEye, FaDeaf, FaBrain, FaPuzzlePiece } from "react-icons/fa";
 import Modal from "../Molecules/DisabilitiesInfo";
 import { restaurantQuestions, hotelQuestions } from "./AccesibilityData";
+import { getCompanyById } from "@/pages/api/api_company";
 
 
 const AccesForm = () => {
@@ -30,6 +31,52 @@ const AccesForm = () => {
     { type: "Intelectual", icon: <FaBrain /> },
     { type: "Neurodivergente", icon: <FaPuzzlePiece /> },
   ];
+
+  useEffect(() => {
+    const loadData = async () => {
+      const accesibilidad = localStorage.getItem("accesibilidad");
+      const userId = localStorage.getItem("userId");
+  
+      if (!userId) {
+        alert("No se encontró el usuario. Por favor, inicia sesión.");
+        return;
+      }
+  
+      try {
+        if (accesibilidad) {
+          // Si "accesibilidad" existe, cargamos los datos para actualizar
+          const companyData = await getCompanyById(userId);
+  
+          const tipo = companyData.data.company.giro.toLowerCase();
+          console.log("el tipo", tipo);
+          setEstablishmentType(tipo);
+  
+          let accessibilityData = {};
+          if (tipo === "restaurante") {
+            accessibilityData = await getRestaurantAccessibility(userId);
+          } else if (tipo === "hotel") {
+            accessibilityData = await getHotelAccessibility(userId);
+          }
+  
+          setFormData({
+            ...formData,
+            ...accessibilityData, // Precarga los datos existentes
+          });
+        } else {
+          // Si no existe accesibilidad, se preparan las preguntas según el tipo
+          // No asignamos un valor predeterminado aquí
+          setEstablishmentType(""); // Sin un valor seleccionado
+          setFormData({}); // Inicializamos sin datos
+        }
+      } catch (error) {
+        console.error("Error al cargar los datos:", error);
+      }
+    };
+  
+    loadData();
+  }, []);
+  
+
 
   const handleEstablishmentChange = (e) => {
     const selectedType = e.target.value;
@@ -70,70 +117,77 @@ const AccesForm = () => {
           : disability
       ),
     };
+  
+    // Actualiza el estado con los nuevos datos
     setFormData(updatedFormData);
+  
+    // Puedes loguear para depurar
+    console.log("Datos actualizados:", updatedFormData);
+    console.log ("FormData",formData)
   };
-
+  
   const handleSubmit = async () => {
     try {
-      if (!formData) {
-        alert("Selecciona un tipo de establecimiento y completa el formulario.");
-        return;
-      }
-  
-      // Verificar si se ha seleccionado al menos un checkpoint
-      const selectedCheckpoints = formData.disabilities.find(
-        (disability) => disability.type === selectedDisability
-      )?.sections?.some((section) =>
-        section.questions.some((question) => question.response === true)
-      );
-
-      if (!selectedCheckpoints) {
-        alert("Por favor, selecciona al menos un checkpoint antes de continuar.");
-        return;
-      }
-  
-      // Recupera el userId de localStorage.
       const userId = localStorage.getItem("userId");
       if (!userId) {
         alert("No se encontró el usuario. Por favor, inicia sesión.");
         return;
       }
   
-      // Crea el objeto dataToSave, asignando restaurantId o hotelId según corresponda.
-      const dataToSave = {
-        ...formData,
-        restaurantId: establishmentType === "restaurante" ? userId : null,
-        hotelId: establishmentType === "hotel" ? userId : null,
-      };
+      const accesibilidad = localStorage.getItem("accesibilidad");
   
-      // Elimina las propiedades con valor null
-      if (dataToSave.restaurantId === null) {
-        delete dataToSave.restaurantId;
-      }
-      if (dataToSave.hotelId === null) {
-        delete dataToSave.hotelId;
+      if (!accesibilidad) {
+        // Crear nuevos datos de accesibilidad
+        const dataToSave = {
+          ...formData,
+          restaurantId: establishmentType === "restaurante" ? userId : null,
+          hotelId: establishmentType === "hotel" ? userId : null,
+        };
+
+ 
+        if (establishmentType === "hotel") {
+          await createHotelAccessibility(dataToSave);
+        } else if (establishmentType === "restaurante") {
+          await createRestaurantAccessibility(dataToSave);
+        }
+  
+        router.push("/planes");
+      } else {
+        // Actualizar datos existentes de accesibilidad
+        let updateFunction;
+  console.log("formData2",formData)
+
+        if (establishmentType === "restaurante") {
+          updateFunction = await updateRestaurantAccessibility( userId,formData);
+        } else if (establishmentType === "hotel") {
+          updateFunction = await updateHotelAccessibility(userId,formData );
+        }
+  
+        const companyData = await getCompanyById(userId);
+        const cuenta=companyData.data.company.cuenta.toLowerCase();
+       
+        console.log("cuenta",cuenta)
+        if (cuenta === "premium") {
+          router.push("/sesion-prem");
+        } else if (cuenta === "free") {
+          router.push("/sesion-base");
+        } else {
+          console.warn("Cuenta de usuario no válida");
+        }
       }
   
-      // Envía los datos al endpoint correspondiente.
-      if (establishmentType === "hotel") {
-        await createHotelAccessibility(dataToSave);
-      } else if (establishmentType === "restaurante") {
-        await createRestaurantAccessibility(dataToSave);
-      }
-  
-      // Redirige y limpia los estados tras un guardado exitoso.
-      setFormData(null);
+      // Restablece el formulario
+      setFormData({});
       setSelectedDisability("");
       setEstablishmentType("");
       alert("Datos guardados exitosamente.");
-      router.push("/planes");
     } catch (error) {
       console.error("Error al guardar los datos:", error);
       alert(`Ocurrió un error al guardar los datos. Detalles: ${error.message || error}`);
     }
   };
   
-
+  
   return (
     <div>
       <Modal isOpen={modalOpen} onClose={handleModalClose} disabilityType={modalDisability} />
@@ -169,7 +223,7 @@ const AccesForm = () => {
           1. Para comenzar, elige el tipo de establecimiento que deseas registrar. Este es el primer paso para
           destacar las características que hacen tu espacio accesible e incluyente.
         </p>
-        <EstablishmentSelect onChange={handleEstablishmentChange} />
+        <EstablishmentSelect onChange={handleEstablishmentChange} selectedValue={establishmentType} />
         {formData && (
           <>
             <p className="my-4 text-[#2F4F4F] font-bold">
@@ -181,7 +235,7 @@ const AccesForm = () => {
                 <div key={type} className="flex flex-col items-center space-x-2 w-1/5">
                   <div>
                     <IconButton
-                    id={`boton-de-icono-${type}`}
+                      id={`boton-de-icono-${type}`}
                       condition={type}
                       icon={icon}
                       isSelected={selectedDisability === type} // Para resaltar el botón seleccionado.

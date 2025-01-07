@@ -11,6 +11,8 @@ const Navbar = () => {
   const [menuVisible, setMenuVisible] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  const userType = typeof window !== 'undefined' ? localStorage.getItem('tipoUsuario') : null;
+
   const toggleMenu = () => {
     setMenuVisible(!menuVisible);
   };
@@ -23,7 +25,7 @@ const Navbar = () => {
     const userType = localStorage.getItem('tipoUsuario');
 
     if (userType === 'company') {
-      router.push('/datos-negocio1');
+      router.push('/formulario-de-accesibilidad'); // Redirigir a la página de modificación del formulario de accesibilidad
     } else {
       router.push('/datos-de-usuario');
     }
@@ -32,39 +34,37 @@ const Navbar = () => {
   const handleChangePassword = async (event) => {
     event.preventDefault();
     const user = localStorage.getItem('tipoUsuario'); // "user" o "company"
-  
+
     // Determina el tipo de usuario
     const userType = user === 'user' ? 'recuperaUser' : 'recuperaCompany';
-  
+
     // Almacena el tipo de usuario actualizado en localStorage
     localStorage.setItem('tipoUsuario', userType);
-  
+
     const userId = localStorage.getItem('userId'); // ID del usuario o la compañía
-  
+
     try {
       // Llama a la función adecuada dependiendo del tipo de usuario
       const data = userType === 'recuperaUser'
         ? await getUserById(userId)
         : await getCompanyById(userId);
-  
+
       // Obtiene el email correcto según el tipo de usuario
       const email = userType === 'recuperaUser'
         ? data.data.user.email
         : data.data.company.email;
-  
-     
+
       await sendVerificationCode(email)
       // Guarda el email en el localStorage para recuperación
       localStorage.setItem('recuperacion', email);
-  
+
       // Redirige a la página de autenticación
       router.push('/autentificacion');
     } catch (error) {
       console.error('Error al cambiar la contraseña:', error);
     }
   };
-  
-  
+
   const handleChangePerfil = () => {
     const userType = localStorage.getItem('tipoUsuario');
     const cuentaUsuario = localStorage.getItem('cuentaUsuario');
@@ -181,14 +181,24 @@ const Navbar = () => {
                     <Link href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleChangePassword}>
                       Cambiar contraseña
                     </Link>
+                    {userType === "company" && (
+                      <Link
+                        href="/formulario-de-accesibilidad"
+                        className="block px-4 py-2 hover:bg-gray-100"
+                        onClick={() => {
+                          localStorage.setItem("accesibilidad", "actualización");
+                          closeMenu();
+                        }}
+                      >
+                        Modificar datos sobre accesibilidad
+                      </Link>
+                    )}
+
                     <Link href="/" className="block px-4 py-2 hover:bg-gray-100" onClick={handleLogout}>
                       Cerrar Sesión
                     </Link>
                   </>
                 )}
-
-
-
               </div>
             )}
           </div>
