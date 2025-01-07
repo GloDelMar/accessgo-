@@ -105,22 +105,7 @@ export default function CardFree() {
 
       <section className='flex flex-col justify-between p-2 md:flex-row lg:flex-row w-full mt-4'>
         <div className='flex flex-col'>
-          <div className='flex items-center mb-2'>
-            <Image
-              src={
-                companyData?.data?.company?.profilePicture || defaultProfilePic
-              }
-              alt='Foto de perfil'
-              className='w-20 h-20 rounded-full p-1'
-              width={80}
-              height={80}
-            />
-            <p className='w-full h-[40px] text-[#7E952A] text-[20px] md:text-2xl font-semibold'>
-              {companyData?.data?.company?.companyName ||
-                'Información no disponible.'}
-            </p>
-          </div>
-          {/* Contenedor de estrellas debajo del nombre */}
+          
           <div className='flex flex-row mt-2'>
             {[1, 2, 3, 4, 5].map((star) => (
               <Image
@@ -214,7 +199,7 @@ export default function CardFree() {
             {companyData?.data?.company?.phone || 'Información no disponible.'}
           </p>
         </div>
-        <div className='flex flex-col justify-center gap-5'>
+        <div className='sm:[30px] flex flex-col justify-center gap-5'>
           <h1 className='text-center text-[#2F4F4F] mt-8'>
             Imagenes de accesibilidad proporcionadas por la empresa:
           </h1>

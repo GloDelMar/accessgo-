@@ -31,35 +31,43 @@ const ImageCarouselACC = ({ userId }) => {
   };
 
   return (
-    <div className='sm:w-[150px] md:w-[300px] lg:w-[800px] max-w-[1022px] mx-auto'>
+    <div className='w-full sm:w-[300px] md:w-[300px] lg:w-[800px] w-[200px] mx-auto'>
       {images.length > 0 ? (
         <Swiper
-          spaceBetween={20}
-          slidesPerView={4}
+          
+          slidesPerView= {1}
+          spaceBetween= {5}
           loop={true}
           centeredSlides={false}
           pagination={{
             clickable: true
           }}
           breakpoints={{
+            240: {
+              slidesPerView: 1,
+              spaceBetween: 10,
+            },
             640: {
-              slidesPerView: 1
+              slidesPerView: 2,
+              spaceBetween: 10,
             },
             768: {
-              slidesPerView: 2
+              slidesPerView: 2,
+              spaceBetween: 20,
             },
             1024: {
-              slidesPerView: 4
+              slidesPerView: 4,
+              spaceBetween: 20,
             }
           }}
-          className='flex justify-center items-center w-full h-[200px]'
+          className='flex justify-center items-center w-[200px] h-[200px] md:w-[400px] md:h-[400px]'
         >
           {images.map((image, index) => (
             <SwiperSlide key={index}>
               <img
                 src={image}
                 alt={`Slide ${index}`}
-                className='w-[200px] h-[200px] object-cover rounded-lg cursor-pointer'
+                className='w-[200px] h-[200px] md:w-[350px] md:h-[350px] object-cover rounded-lg cursor-pointer'
                 onClick={() => handleImageClick(image)}
               />
             </SwiperSlide>
