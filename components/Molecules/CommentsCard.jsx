@@ -1,12 +1,20 @@
 'use client';
 
-import { MessageCircle, MoreVertical, ThumbsDown, ThumbsUp } from 'lucide-react';
+import { MessageCircle, ThumbsDown, ThumbsUp } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Image } from 'react-bootstrap';
 import { toast, Toaster } from 'sonner';
-import { addDislike, addLike } from '../../pages/api/api_comment';
+
+// IMPORTA TUS FUNCIONES
+import {
+  addDislike,
+  addLike,
+  removeDislike,
+  removeLike,
+} from '../../pages/api/api_comment';
+
 import { useComments } from '../Molecules/useComments';
 
 const defaultProfilePic = '/6073873.png';
@@ -16,17 +24,15 @@ export default function CommentSection() {
   const { id: companyId } = router.query;
   const { comments, loading, addComment } = useComments(companyId);
   const [interactedComments, setInteractedComments] = useState({});
-
   const [userId, setUserId] = useState(null);
   const [userType, setUserType] = useState(null);
   const [comment, setComment] = useState('');
   const [rating, setRating] = useState(0);
   const [showInput, setShowInput] = useState(false);
   const [commens, setCommens] = useState([]);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   useEffect(() => {
-    const storedUserType = localStorage.getItem('tipoUsuario');
-    console.log(storedUserType);
     if (Array.isArray(comments)) {
       setCommens(comments);
     }
@@ -41,69 +47,152 @@ export default function CommentSection() {
     }
   }, []);
 
-  const handleLike = async (commentId) => {
-    try {
-      if (interactedComments[commentId] === "like") {
-        toast.error("Ya diste like a este comentario.");
-        return;
+  /**
+   * handleLike: Cuando el usuario hace clic en "like".
+   * - Si ya tiene "like", no hace nada (doble clic en el mismo botón).
+   * - Si tenía "dislike", lo quita y pone "like" (flipping).
+   * - Si no tenía nada, simplemente agrega "like".
+   */
+  const handleLike = useCallback(
+    async (commentId) => {
+      if (isButtonDisabled) return;
+      setIsButtonDisabled(true);
+
+      try {
+        const hasLiked = interactedComments[commentId] === 'like';
+        const hasDisliked = interactedComments[commentId] === 'dislike';
+
+        // 1. Si YA tiene "like", no hace nada
+        if (hasLiked) {
+          setIsButtonDisabled(false);
+          return;
+        }
+
+        // 2. Si tenía "dislike", lo quitamos y luego ponemos "like"
+        if (hasDisliked) {
+          // Actualiza estado local a "like"
+          setInteractedComments((prev) => ({
+            ...prev,
+            [commentId]: 'like',
+          }));
+          // Ajusta contadores localmente
+          setCommens((prevComments) =>
+            prevComments.map((comment) => {
+              if (comment._id !== commentId) return comment;
+              return {
+                ...comment,
+                dislikes: (comment.dislikes || 0) - 1,
+                likes: (comment.likes || 0) + 1,
+              };
+            })
+          );
+          // Llamadas a la API: removeDislike, después addLike
+          await removeDislike(commentId, userId);
+          await addLike(commentId, userId);
+        } else {
+          // 3. Si no tenía nada, se agrega "like"
+          setInteractedComments((prev) => ({
+            ...prev,
+            [commentId]: 'like',
+          }));
+          setCommens((prevComments) =>
+            prevComments.map((comment) => {
+              if (comment._id !== commentId) return comment;
+              return {
+                ...comment,
+                likes: (comment.likes || 0) + 1,
+              };
+            })
+          );
+          await addLike(commentId, userId);
+        }
+      } catch (error) {
+        console.error(error.message);
+      } finally {
+        setIsButtonDisabled(false);
       }
+    },
+    [isButtonDisabled, interactedComments, userId]
+  );
 
-      const response = await addLike(commentId);
-      if (response) {
-        setInteractedComments((prev) => ({
-          ...prev,
-          [commentId]: "like",
-        }));
+  /**
+   * handleDislike: Cuando el usuario hace clic en "dislike".
+   * - Si ya tiene "dislike", no hace nada (doble clic).
+   * - Si tenía "like", lo quita y pone "dislike" (flipping).
+   * - Si no tenía nada, simplemente agrega "dislike".
+   */
+  const handleDislike = useCallback(
+    async (commentId) => {
+      if (isButtonDisabled) return;
+      setIsButtonDisabled(true);
 
-        setCommens((prevComments) =>
-          prevComments.map((comment) =>
-            comment._id === commentId
-              ? { ...comment, likes: (comment.likes || 0) + 1 }
-              : comment
-          )
-        );
+      try {
+        const hasLiked = interactedComments[commentId] === 'like';
+        const hasDisliked = interactedComments[commentId] === 'dislike';
+
+        // 1. Si YA está en "dislike", no hace nada
+        if (hasDisliked) {
+          setIsButtonDisabled(false);
+          return;
+        }
+
+        // 2. Si estaba en "like", quitar el like y poner "dislike"
+        if (hasLiked) {
+          // Actualiza estado local
+          setInteractedComments((prev) => ({
+            ...prev,
+            [commentId]: 'dislike',
+          }));
+          // Ajusta contadores localmente
+          setCommens((prevComments) =>
+            prevComments.map((comment) => {
+              if (comment._id !== commentId) return comment;
+              return {
+                ...comment,
+                likes: (comment.likes || 0) - 1,
+                dislikes: (comment.dislikes || 0) + 1,
+              };
+            })
+          );
+          // Primero quita el like en el backend, luego agrega el dislike
+          await removeLike(commentId, userId);
+          await addDislike(commentId, userId);
+        } else {
+          // 3. Si no tenía nada, agrega "dislike"
+          setInteractedComments((prev) => ({
+            ...prev,
+            [commentId]: 'dislike',
+          }));
+          setCommens((prevComments) =>
+            prevComments.map((comment) => {
+              if (comment._id !== commentId) return comment;
+              return {
+                ...comment,
+                dislikes: (comment.dislikes || 0) + 1,
+              };
+            })
+          );
+          await addDislike(commentId, userId);
+        }
+      } catch (error) {
+        console.error(error.message);
+      } finally {
+        setIsButtonDisabled(false);
       }
-    } catch (error) {
-      toast.error(error.message, { style: { backgroundColor: "red", color: "white" } });
-    }
-  };
+    },
+    [isButtonDisabled, interactedComments, userId]
+  );
 
-  const handleDislike = async (commentId) => {
-    try {
-      if (interactedComments[commentId] === "dislike") {
-        toast.error("Ya diste dislike a este comentario.");
-        return;
-      }
-
-      const response = await addDislike(commentId);
-      if (response) {
-        setInteractedComments((prev) => ({
-          ...prev,
-          [commentId]: "dislike",
-        }));
-
-        setCommens((prevComments) =>
-          prevComments.map((comment) =>
-            comment._id === commentId
-              ? { ...comment, dislikes: (comment.dislikes || 0) + 1 }
-              : comment
-          )
-        );
-      }
-    } catch (error) {
-      toast.error(error.message, { style: { backgroundColor: "red", color: "white" } });
-    }
-  };
-
+  // Función para enviar un nuevo comentario
   const handleCommentSubmit = async () => {
     try {
       await addComment(userId, comment, rating);
       setComment('');
       setRating(0);
       setShowInput(false);
-      alert('Comentario enviado exitosamente');
+      toast.success('Comentario enviado exitosamente');
     } catch (error) {
-      alert('Error al enviar comentario. Intenta de nuevo.');
+      toast.error('Error al enviar comentario. Intenta de nuevo.');
     }
   };
 
@@ -141,8 +230,9 @@ export default function CommentSection() {
                     <button
                       key={star}
                       onClick={() => setRating(star)}
-                      className={`w-8 h-8 rounded-full border ${star <= rating ? 'bg-yellow-400' : 'bg-gray-200'
-                        }`}
+                      className={`w-8 h-8 rounded-full border ${
+                        star <= rating ? 'bg-yellow-400' : 'bg-gray-200'
+                      }`}
                     >
                       ★
                     </button>
@@ -164,16 +254,20 @@ export default function CommentSection() {
         </p>
       )}
 
+      {/* Sección de comentarios */}
       <section className="w-full max-w-3xl mx-auto mt-12 bg-gradient-to-br from-gray-50 to-white p-8 rounded-xl shadow-xl">
         <h2 className="text-3xl font-bold text-gray-800 mb-8 flex items-center">
           <MessageCircle className="mr-3 text-blue-500" />
           Comentarios
         </h2>
-        {comments && comments.length > 0 ? (
-          <div className="max-h-96 overflow-y-auto">
-            <ul className="space-y-10">
-              {comments.map((comment) => (
-                <li key={comment._id} className="bg-white rounded-xl shadow-md p-6 transition-all duration-300 hover:shadow-lg border border-gray-100 flex flex-col md:flex-row md:items-start space-y-4 md:space-y-0 md:space-x-4">
+        {commens && commens.length > 0 ? (
+          <ul className="space-y-10">
+            {commens.map((comment) => (
+              <li
+                key={comment._id}
+                className="bg-white rounded-xl shadow-md p-6 transition-all duration-300 hover:shadow-lg border border-gray-100"
+              >
+                <div className="flex items-start space-x-4">
                   <Image
                     src={comment.userId?.profilePicture || defaultProfilePic}
                     alt="Foto de perfil"
@@ -193,21 +287,23 @@ export default function CommentSection() {
                         {new Date(comment.createdAt).toLocaleDateString('es-ES', {
                           year: 'numeric',
                           month: 'short',
-                          day: 'numeric'
+                          day: 'numeric',
                         })}
                       </span>
-                      <MoreVertical className="h-5 w-5 text-gray-600 cursor-pointer hover:text-gray-800 transition-colors duration-200" />
                     </div>
-                    <p className="text-gray-700 text-base mt-2 leading-relaxed">{comment.content}</p>
+                    <p className="text-gray-700 text-base mt-2 leading-relaxed">
+                      {comment.content}
+                    </p>
                     {comment.rankingId?.stars && (
                       <div className="mt-4 flex items-center">
                         {[...Array(5)].map((_, index) => (
                           <span
                             key={index}
-                            className={`text-2xl ${index < comment.rankingId?.stars
-                              ? 'text-yellow-400'
-                              : 'text-gray-300'
-                              }`}
+                            className={`text-2xl ${
+                              index < comment.rankingId?.stars
+                                ? 'text-yellow-400'
+                                : 'text-gray-300'
+                            }`}
                           >
                             ★
                           </span>
@@ -217,24 +313,27 @@ export default function CommentSection() {
                         </span>
                       </div>
                     )}
+                    {/* Botones de like / dislike para usuario normal */}
                     {userType !== 'company' && (
                       <div className="mt-6 flex items-center space-x-8">
                         <button
                           onClick={() => handleLike(comment._id)}
-                          className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-200 group ${interactedComments[comment._id] === "like"
-                            ? "bg-blue-100 text-blue-600"
-                            : "bg-gray-100 text-gray-600"
-                            } hover:bg-blue-200 hover:text-blue-700`}
+                          className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-200 group ${
+                            interactedComments[comment._id] === 'like'
+                              ? 'bg-blue-100 text-blue-600'
+                              : 'bg-gray-100 text-gray-600'
+                          } hover:bg-blue-200 hover:text-blue-700`}
                         >
                           <ThumbsUp className="h-5 w-5 group-hover:scale-110 transition-transform duration-200" />
                           <span className="font-medium">{comment.likes || 0}</span>
                         </button>
                         <button
                           onClick={() => handleDislike(comment._id)}
-                          className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-200 group ${interactedComments[comment._id] === "dislike"
-                            ? "bg-red-100 text-red-600"
-                            : "bg-gray-100 text-gray-600"
-                            } hover:bg-red-200 hover:text-red-700`}
+                          className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-200 group ${
+                            interactedComments[comment._id] === 'dislike'
+                              ? 'bg-red-100 text-red-600'
+                              : 'bg-gray-100 text-gray-600'
+                          } hover:bg-red-200 hover:text-red-700`}
                         >
                           <ThumbsDown className="h-5 w-5 group-hover:scale-110 transition-transform duration-200" />
                           <span className="font-medium">{comment.dislikes || 0}</span>
@@ -242,10 +341,10 @@ export default function CommentSection() {
                       </div>
                     )}
                   </div>
-                </li>
-              ))}
-            </ul>
-          </div>
+                </div>
+              </li>
+            ))}
+          </ul>
         ) : (
           <div className="text-center py-12 bg-gray-50 rounded-xl border border-gray-200">
             <MessageCircle className="mx-auto h-12 w-12 text-gray-400 mb-4" />
