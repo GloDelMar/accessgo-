@@ -25,12 +25,14 @@ const Navbar = () => {
     const userType = localStorage.getItem('tipoUsuario');
 
     if (userType === 'company') {
-      router.push('/formulario-de-accesibilidad'); // Redirigir a la página de modificación del formulario de accesibilidad
+      router.push('/datos-negocio1'); 
     } else {
       router.push('/datos-de-usuario');
     }
   };
-
+ const handleChangeAccesibilidad = ()=>{
+  router.push('/formulario-de-accesibilidad');
+ }
   const handleChangePassword = async (event) => {
     event.preventDefault();
     const user = localStorage.getItem('tipoUsuario'); // "user" o "company"
