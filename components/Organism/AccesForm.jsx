@@ -224,7 +224,7 @@ const AccesForm = () => {
           destacar las características que hacen tu espacio accesible e incluyente.
         </p>
         <EstablishmentSelect onChange={handleEstablishmentChange} selectedValue={establishmentType} />
-        {selectedDisability && formData && formData.disabilities && (
+        { formData && establishmentType && (
           <>
             <p className="my-4 text-[#2F4F4F] font-bold">
               2. Da clic en uno de los cinco botones a continuación para explorar las preguntas del formulario.
