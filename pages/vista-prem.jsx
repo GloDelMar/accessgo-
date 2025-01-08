@@ -10,7 +10,7 @@ import { getPromoByCompanyId } from './api/api_promos';
 import DOMPurify from 'dompurify';
 import ImageCarouselACC from '@/components/Molecules/ImageCarouselACC';
 
-const defaultProfilePic = 'public/6073873.png';
+const defaultProfilePic = '/6073873.png';
 const imageDefault = "/4574c6_19f52cfb1ef44a3d844774c6078ffafc~mv2.png"
 
 export default function CardFree() {
