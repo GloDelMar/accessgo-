@@ -134,22 +134,28 @@ export default function CardFree() {
             {getValueOrDefault(companyData?.data?.company?.description)}
           </p>
         </div>
-
         <div className="w-full mt-4 md:mt-0">
-          <p className="text-sm text-[#607D8B] mt-2 flex justify-end">Horarios</p>
-          <div className="flex flex-row mt-2 justify-end">
+          <br />
+          <p className="text-sm text-[#607D8B] mt-2 flex justify-end">Dias de servicio</p>
+          <div className="flex flex-row mt-2 justify-end items-start gap-2">
             <Image
               src="/calendarVector.png"
               alt="Calendario"
               width={16}
               height={14}
             />
-            <div className='text-[12px] md:text-sm lg:text-base text-[#546E7A]'>
-              {(companyData?.data?.company?.diasDeServicio || []).join(', ') ||
-                'Información no disponible.'}
+            <div className="text-[12px] md:text-sm lg:text-base text-[#546E7A] text-right">
+              {(companyData?.data?.company?.diasDeServicio || ['Información no disponible']).map(
+                (dia, index) => (
+                  <div key={index}>{dia}</div>
+                )
+              )}
             </div>
           </div>
+
+
           {/* Hora de apertura */}
+          <p className="text-sm text-[#607D8B] mt-2 flex justify-end">Horario</p>
           <div className='flex items-center justify-end gap-2 mt-2'>
             <Image
               src='/clockOpeningVector.png'
