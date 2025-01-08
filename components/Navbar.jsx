@@ -33,6 +33,7 @@ const Navbar = () => {
  const handleChangeAccesibilidad = ()=>{
   router.push('/formulario-de-accesibilidad');
  }
+
   const handleChangePassword = async (event) => {
     event.preventDefault();
     const user = localStorage.getItem('tipoUsuario'); // "user" o "company"
@@ -67,22 +68,34 @@ const Navbar = () => {
     }
   };
 
-  const handleChangePerfil = () => {
+  const handleChangePerfil = async () => {
     const userType = localStorage.getItem('tipoUsuario');
-    const cuentaUsuario = localStorage.getItem('cuentaUsuario');
-
+  
     if (userType === 'company') {
-      if (cuentaUsuario === 'free') {
-        router.push('/sesion-base');
-      } else if (cuentaUsuario === 'premium') {
-        router.push('/sesion-prem');
-      } else {
-        console.error('Tipo de cuenta no reconocido.');
+      const userId = localStorage.getItem("userId");
+  
+      try {
+        const Data = await getCompanyById(userId);
+  
+        console.log("data", Data);
+        const cuentaUsuario = Data.data.company.cuenta;
+        console.log("cuenta de compañia", cuentaUsuario);
+  
+        if (cuentaUsuario === 'free') {
+          router.push('/sesion-base');
+        } else if (cuentaUsuario === 'premium') {
+          router.push('/sesion-prem');
+        } else {
+          console.error('Tipo de cuenta no reconocido.');
+        }
+      } catch (error) {
+        console.error("Error al obtener los datos de la compañía:", error);
       }
     } else {
       router.push('/mi-perfil');
     }
   };
+  
 
   const handleLogout = () => {
     localStorage.clear();

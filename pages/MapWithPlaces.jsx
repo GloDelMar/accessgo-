@@ -462,12 +462,13 @@ export default function MapWithPlaces() {
                   onChange={handleDisabilityChange}
                   className="bg-gray-100 text-gray-700 rounded-full py-2 px-3 w-full focus:outline-none focus:ring focus:ring-blue-200 text-sm"
                 >
-                  <option value="all">Todas las discapacidades</option>
-                  <option value="Visual">Visual</option>
-                  <option value="Auditiva">Auditiva</option>
-                  <option value="Motriz">Motriz</option>
-                  <option value="Intelectual">Intelectual</option>
-                  <option value="Neurodivergente">Neurodivergente</option>
+                   <option value="" disabled selected >Accesible para:</option>
+              <option value="all">Inclusión para todos</option>
+              <option value="Visual">Personas con Discapacidad Visual</option>
+              <option value="Auditiva">Personas con Discapacidad Auditiva</option>
+              <option value="Motriz">Personas con Discapacidad Motriz</option>
+              <option value="Intelectual">Personas con Discapacidad Intelectual</option>
+              <option value="Neurodivergente">Personas Neurodivergentes</option>
                 </select>
 
                 <select
@@ -552,12 +553,13 @@ export default function MapWithPlaces() {
               onChange={handleDisabilityChange}
               className="bg-gray-100 text-gray-700 rounded-full py-2 px-3 w-full focus:outline-none focus:ring focus:ring-blue-200 text-sm"
             >
-              <option value="all">Todas las discapacidades</option>
-              <option value="Visual">Visual</option>
-              <option value="Auditiva">Auditiva</option>
-              <option value="Motriz">Motriz</option>
-              <option value="Intelectual">Intelectual</option>
-              <option value="Neurodivergente">Neurodivergente</option>
+              <option value="" disabled selected >Accesible para:</option>
+              <option value="all">Inclusivo para todos</option>
+              <option value="Visual">Personas con Discapacidad Visual</option>
+              <option value="Auditiva">Personas con Discapacidad Auditiva</option>
+              <option value="Motriz">Personas con Discapacidad Motriz</option>
+              <option value="Intelectual">Personas con Discapacidad Intelectual</option>
+              <option value="Neurodivergente">Personas Neurodivergentes</option>
             </select>
           </div>
 
