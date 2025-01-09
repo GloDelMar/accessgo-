@@ -45,7 +45,7 @@ const View15 = () => {
         'Números de contacto'
       ],
       buttonText: '¡UNETE AHORA!',
-      link: 'datos-negocio1' 
+      link: 'notificacion' 
     },
     {
       title: 'PREMIUM',
@@ -64,20 +64,20 @@ const View15 = () => {
   ];
 
   return (
-    <main className="flex overflow-hidden flex-col items-center pb-44 mx-auto w-full bg-white md:w-full">
-      <h1 className="mt-7 text-xl font-bold leading-3 text-slate-700">
+    <main className='flex overflow-hidden flex-col items-center pb-44 mx-auto w-full bg-white md:w-full'>
+      <h1 className='mt-7 text-4xl font-bold leading-3 text-[#2F4F4F]'>
         ¡ AccessoGo!
       </h1>
-      <p className="mt-6 text-sm font-bold text-center text-gray-600">
-        ¡Aqui puedes elegir el plan que te interese mas!
+      <p className='mt-8  text-xl font-bold text-center text-[#2F4F4F]'>
+        ¡Aqui puedes elegir el plan que más te convenga!
       </p>
-      <div className="flex flex-col items-start justify-start gap-16 mt-10 md:flex-row md:gap-12 md:items-start">
+      <div className='flex flex-col items-start justify-start gap-16 mt-10 md:flex-row md:gap-12 md:items-start'>
         {plans.map((plan, index) => (
           <PlanCard key={index} {...plan} />
         ))}
       </div>
 
-      <CancelButton cancelLink="/socios" /> 
+      <CancelButton cancelLink='/socios' />
       <style jsx>{`
         builder-component {
           max-width: none !important;
