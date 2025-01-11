@@ -4,6 +4,8 @@ import { toast, Toaster } from 'sonner';
 const UploadImageUPP = ({ userId, setSelectedImage }) => {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const allowedTypes = ["image/jpeg", "image/png"]; 
+  const maxSize = 10 * 1024 * 1024; 
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -12,6 +14,16 @@ const UploadImageUPP = ({ userId, setSelectedImage }) => {
   const handleUpload = async () => {
     if (!file) {
       toast.error('Selecciona un archivo primero');
+      return;
+    }
+
+    if (!allowedTypes.includes(file.type)) {
+      toast.error("Solo se permiten imágenes JPEG y PNG.");
+      return;
+    }
+
+    if (file.size > maxSize) {
+      toast.error("El archivo es demasiado grande. Tamaño máximo: 10MB.");
       return;
     }
 
