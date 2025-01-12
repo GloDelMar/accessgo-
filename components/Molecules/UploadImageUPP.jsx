@@ -1,9 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { toast, Toaster } from 'sonner';
+import Image from 'next/image';
 
-const UploadImageUPP = ({ userId, setSelectedImage }) => {
+const UploadImageUPP = ({ userId }) => {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!userId) return;
+
+      try {
+        const response = await fetch(
+          `https://backend-r159.onrender.com/api/users/${userId}`,
+          {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+          }
+        );
+
+        if (response.ok) {
+          const {
+            data: { user: userData }
+          } = await response.json();
+
+          setSelectedImage(userData.profilePicture || null);
+        } else {
+          console.error(
+            'Error al obtener datos del usuario:',
+            response.statusText
+          );
+        }
+      } catch (error) {
+        console.error('Error en la solicitud:', error);
+      }
+    };
+
+    fetchUserData();
+  }, [userId]);
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -40,7 +75,7 @@ const UploadImageUPP = ({ userId, setSelectedImage }) => {
       const result = await response.json();
       if (response.ok) {
         setSelectedImage(result.imageUrl);
-        console.log(result.imageUrl)
+        console.log(result.imageUrl);
         toast.success('Imagen subida exitosamente');
       } else {
         toast.error(result.error || 'Error al subir la imagen');
@@ -56,6 +91,27 @@ const UploadImageUPP = ({ userId, setSelectedImage }) => {
   return (
     <div className='flex flex-col justify-center items-center space-y-4 '>
       <h3 className='text-md text-center font-semibold'>Imagen de perfil</h3>
+      <div className='flex justify-center lg:justify-start'>
+        <label htmlFor='imgUsuario' className='cursor-pointer'>
+          {selectedImage ? (
+            <Image
+              src={selectedImage}
+              alt='Foto de perfil'
+              width={200}
+              height={200}
+              className='rounded-full'
+            />
+          ) : (
+            <Image
+              src='/iconoframe.png'
+              alt='Foto de perfil'
+              width={200}
+              height={200}
+              className='rounded-full'
+            />
+          )}
+        </label>
+      </div>
 
       <label
         htmlFor='fileInput'
