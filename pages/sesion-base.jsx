@@ -1,4 +1,4 @@
-import ImagenSubiryBorrarPrem from '@/components/Molecules/ImagenSubiryBorrarPrem';
+import ImagenSubiryBorrarBase from '@/components/Molecules/ImagenSubiryBorrarBase';
 import { getCompanyById } from '@/pages/api/api_company';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -148,7 +148,7 @@ const View21 = () => {
           <h3 className='text-xl text-center font-semibold mb-10 text-[#2F4F4F]'>
             Cambia tus imágenes
           </h3>
-          <ImagenSubiryBorrarPrem userId={companyId} />
+          <ImagenSubiryBorrarBase userId={companyId} />
         </div>
 
         <div className='flex justify-center items-center py-5'>
