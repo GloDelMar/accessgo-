@@ -8,6 +8,8 @@ import Image from 'next/image';
 const ImagenSubiryBorrarPrem = ({ userId }) => {
   const [images, setImages] = useState([]);
   const [uploading, setUploading] = useState(false);
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+  const maxSize = 10 * 1024 * 1024;
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -27,7 +29,13 @@ const ImagenSubiryBorrarPrem = ({ userId }) => {
 
   const handleUpload = async (index, file) => {
     if (!file || !userId) {
-      toast.error('Imagen incompatible prueba con otra imagen diferente');
+      toast.error('Imagen incompatible prueba con otra imagen diferente', {
+        duration: 10000,
+        style: {
+          backgroundColor: '#d81717',
+          color: '#ffffff'
+        }
+      });
       return;
     }
 
@@ -52,9 +60,21 @@ const ImagenSubiryBorrarPrem = ({ userId }) => {
         const newImages = [...images];
         newImages[index] = data.url;
         setImages(newImages);
-        toast.success('Imagen subida exitosamente');
+        toast.success('Imagen subida exitosamente', {
+          duration: 10000,
+          style: {
+            backgroundColor: '#1dcb7f',
+            color: '#ffffff'
+          }
+        });
       } else {
-        toast.error('Error al subir imagen');
+        toast.error('Error al subir imagen', {
+          duration: 10000,
+          style: {
+            backgroundColor: '#d81717',
+            color: '#ffffff'
+          }
+        });
       }
     } catch (error) {
       console.error('Upload failed:', error);
@@ -63,11 +83,39 @@ const ImagenSubiryBorrarPrem = ({ userId }) => {
     }
   };
 
+  const handleFileChange = (index, file) => {
+    if (!file) return;
+
+    if (!allowedTypes.includes(file.type)) {
+      toast.error('Solo se permiten imágenes JPEG, PNG y WEBP', {
+        duration: 10000,
+        style: { backgroundColor: '#d81717', color: '#ffffff' }
+      });
+      return;
+    }
+
+    if (file.size > maxSize) {
+      toast.error('El archivo es demasiado grande. Tamaño máximo: 10MB.', {
+        duration: 10000,
+        style: { backgroundColor: '#d81717', color: '#ffffff' }
+      });
+      return;
+    }
+
+    handleUpload(index, file);
+  };
+
   const handleDelete = (index) => {
     const imageToDelete = images[index];
 
     if (!imageToDelete) {
-      toast.error('No se encontró la URL de la imagen');
+      toast.error('No se encontró la URL de la imagen', {
+        duration: 10000,
+        style: {
+          backgroundColor: '#d81717',
+          color: '#ffffff'
+        }
+      });
       return;
     }
 
@@ -94,9 +142,21 @@ const ImagenSubiryBorrarPrem = ({ userId }) => {
                 const newImages = [...images];
                 newImages.splice(index, 1);
                 setImages(newImages);
-                toast.success('Imagen borrada exitosamente');
+                toast.success('Imagen borrada exitosamente', {
+                  duration: 10000,
+                  style: {
+                    backgroundColor: '#1dcb7f',
+                    color: '#ffffff'
+                  }
+                });
               } else {
-                toast.error('Error al borrar la imagen');
+                toast.error('Error al borrar la imagen', {
+                  duration: 10000,
+                  style: {
+                    backgroundColor: '#d81717',
+                    color: '#ffffff'
+                  }
+                });
               }
             } catch (error) {
               console.error('Failed to delete image:', error);
@@ -105,7 +165,14 @@ const ImagenSubiryBorrarPrem = ({ userId }) => {
         },
         {
           label: 'No',
-          onClick: () => toast.info('Eliminación cancelada')
+          onClick: () =>
+            toast.info('Eliminación cancelada', {
+              duration: 10000,
+              style: {
+                backgroundColor: '#143bed',
+                color: '#ffffff'
+              }
+            })
         }
       ]
     });
@@ -142,8 +209,10 @@ const ImagenSubiryBorrarPrem = ({ userId }) => {
                     onClick={() => handleDelete(index)}
                     className='absolute top-2 right-2 bg-gray-100 p-1 rounded-full'
                   >
-                    <Trash2 size={16}
-                    className='sm:w-[16px] sm:h-[16px] md:w-[24px] md:h-[24px] lg:w-[36px] sm:h-[36px]' />
+                    <Trash2
+                      size={16}
+                      className='sm:w-[16px] sm:h-[16px] md:w-[24px] md:h-[24px] lg:w-[36px] sm:h-[36px]'
+                    />
                   </button>
                 </>
               ) : (
@@ -159,7 +228,7 @@ const ImagenSubiryBorrarPrem = ({ userId }) => {
                     type='file'
                     accept='image/*'
                     className='hidden'
-                    onChange={(e) => handleUpload(index, e.target.files[0])}
+                    onChange={(e) => handleFileChange(index, e.target.files[0])}
                     disabled={uploading}
                   />
                 </label>
