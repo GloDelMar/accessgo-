@@ -48,7 +48,7 @@ const UploadImageUPP = ({ userId }) => {
     }
   };
 
-  const handleUpload = async () => {
+  const handleUpload = async (file) => {
     if (!file) {
       toast.error('Selecciona un archivo primero');
       return;
@@ -69,7 +69,7 @@ const UploadImageUPP = ({ userId }) => {
 
     try {
       const response = await fetch(
-        'https://backend-r159.onrender.com/api/uploadupp',
+        'http://localhost:8080/api/uploadupp',
         {
           method: 'POST',
           body: formData

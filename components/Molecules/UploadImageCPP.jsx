@@ -37,7 +37,7 @@ const UploadImageCPP = ({ userId }) => {
     const file = e.target.files[0];
     if (file) {
       setFile(file);
-      await handleUpload(file); // Llama a la función de subida automáticamente
+      await handleUpload(file); 
     }
   };
 
@@ -62,7 +62,7 @@ const UploadImageCPP = ({ userId }) => {
 
     try {
       const response = await fetch(
-        'https://backend-r159.onrender.com/api/uploadcpp',
+        'http://localhost:8080/api/uploadcpp',
         {
           method: 'POST',
           body: formData
@@ -91,7 +91,7 @@ const UploadImageCPP = ({ userId }) => {
 
       <div
         className='flex justify-center lg:justify-start cursor-pointer'
-        onClick={() => document.getElementById('fileInput').click()} // Abre el selector de archivo al hacer clic
+        onClick={() => document.getElementById('fileInput').click()} 
       >
         <label htmlFor='imgUsuario'>
           {selectedImage ? (
@@ -118,7 +118,7 @@ const UploadImageCPP = ({ userId }) => {
         type='file'
         id='fileInput'
         className='hidden'
-        onChange={handleFileChange} // Llama a handleFileChange al seleccionar un archivo
+        onChange={handleFileChange} 
       />
 
       <Toaster />
