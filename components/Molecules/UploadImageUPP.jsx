@@ -6,6 +6,8 @@ const UploadImageUPP = ({ userId }) => {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+  const maxSize = 10 * 1024 * 1024;
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -40,13 +42,34 @@ const UploadImageUPP = ({ userId }) => {
     fetchUserData();
   }, [userId]);
 
-  const handleFileChange = async (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setFile(file);
-      await handleUpload(file); 
-    }
-  };
+   const handleFileChange = async (e) => {
+     const file = e.target.files[0];
+     if (!file) return;
+ 
+     if (!allowedTypes.includes(file.type)) {
+       toast.error('Solo se permiten imágenes JPEG, PNG y WEBP', {
+         duration: 10000,
+         style: {
+           backgroundColor: '#d81717',
+           color: '#ffffff'
+         }
+       });
+       return;
+     }
+ 
+     if (file.size > maxSize) {
+       toast.error('El archivo es demasiado grande. Tamaño máximo: 10MB.', {
+         duration: 10000,
+         style: {
+           backgroundColor: '#d81717',
+           color: '#ffffff'
+         }
+       });
+       return;
+     }
+     setFile(file);
+     await handleUpload(file);
+   };
 
   const handleUpload = async (file) => {
     if (!file) {
@@ -56,7 +79,14 @@ const UploadImageUPP = ({ userId }) => {
 
     if (!userId) {
       toast.error(
-        'No se ha encontrado el userId. Asegúrate de haber iniciado sesión.'
+        'No se ha encontrado el userId. Asegúrate de haber iniciado sesión.',
+        {
+          duration: 10000,
+          style: {
+            backgroundColor: '#d81717',
+            color: '#ffffff'
+          }
+        }
       );
       return;
     }
@@ -69,7 +99,7 @@ const UploadImageUPP = ({ userId }) => {
 
     try {
       const response = await fetch(
-        'http://localhost:8080/api/uploadupp',
+        'https://backend-r159.onrender.com/api/uploadupp',
         {
           method: 'POST',
           body: formData
@@ -80,33 +110,53 @@ const UploadImageUPP = ({ userId }) => {
       if (response.ok) {
         setSelectedImage(result.imageUrl);
         console.log(result.imageUrl);
-        toast.success('Imagen subida exitosamente');
+        toast.success('Imagen subida exitosamente', {
+          duration: 10000,
+          style: {
+            backgroundColor: '#1dcb7f',
+            color: '#ffffff',
+          }
+        });
       } else {
-        toast.error(result.error || 'Error al subir la imagen');
+        toast.error(result.error || 'Error al subir la imagen', {
+          duration: 10000,
+          style: {
+            backgroundColor: '#d81717',
+            color: '#ffffff'
+          }
+        });
       }
     } catch (error) {
       console.error('Error al subir la imagen:', error);
-      toast.error('Hubo un problema con la carga de la imagen');
+      toast.error('Hubo un problema con la carga de la imagen', {
+        duration: 10000,
+          style: {
+            backgroundColor: '#d81717',
+            color: '#ffffff'
+          }
+      });
     } finally {
       setUploading(false);
     }
   };
 
   return (
-    <div className='flex flex-col justify-center items-center space-y-4 '>
+    <div className='flex flex-col lg:flex-col gap-6 p-6 max-w-4xl mx-auto '>
       <h3 className='text-md text-center font-semibold'>Imagen de perfil</h3>
+
+      <div className='max-w-40 max-h-40 p-4 rounded-md bg-[#F5F0E5] lg:w-full flex justify-center'> 
       <div
-        className='flex justify-center lg:justify-start'
+        className='w-32 h-32 rounded-full overflow-hidden'
         onClick={() => document.getElementById('fileInput').click()}
       >
-        <label htmlFor='imgUsuario' className='cursor-pointer'>
+        <label htmlFor='imgUsuario'>
           {selectedImage ? (
             <Image
               src={selectedImage}
               alt='Foto de perfil'
               width={200}
               height={200}
-              className='rounded-full'
+              className='w-full h-full object-cover cursor-pointer'
             />
           ) : (
             <Image
@@ -114,10 +164,12 @@ const UploadImageUPP = ({ userId }) => {
               alt='Foto de perfil'
               width={200}
               height={200}
-              className='rounded-full'
+              className='w-full h-full object-cover cursor-pointer'
             />
           )}
         </label>
+      </div>
+
       </div>
 
       <input
