@@ -114,7 +114,50 @@ export default function MapWithPlaces() {
       interactive: false,
     });
 
-    map.current.addControl(directions.current, 'top-right');
+    map.current.addControl(directions.current, 'top-left');
+    map.current.on('load', () => {
+      directions.current.on('route', () => {
+        // Obtener el contenedor de direcciones
+        const directionsContainer = document.querySelector('.mapboxgl-ctrl-directions');
+        if (directionsContainer) {
+          directionsContainer.style.display = 'none';
+        }
+
+        const collapseButton = document.createElement('button');
+        collapseButton.textContent = 'Mostrar/Ocultar Ruta';
+        collapseButton.className = 'mapboxgl-ctrl-directions-collapse';
+
+        // Estilos para el botón
+        collapseButton.style.position = 'absolute';
+        collapseButton.style.top = '10px';
+        collapseButton.style.left = '10px';
+        collapseButton.style.zIndex = '1';
+        collapseButton.style.backgroundColor = '#fff';
+        collapseButton.style.border = '1px solid #ccc';
+        collapseButton.style.borderRadius = '4px';
+        collapseButton.style.padding = '10px 35px';
+        collapseButton.style.cursor = 'pointer';
+        collapseButton.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+        collapseButton.style.fontFamily = 'Arial, sans-serif';
+        collapseButton.style.fontSize = '14px';
+        collapseButton.style.color = '#333';
+
+        collapseButton.addEventListener('click', () => {
+          if (directionsContainer) {
+            if (directionsContainer.style.display === 'none') {
+              directionsContainer.style.display = 'block';
+              collapseButton.textContent = 'Ocultar Ruta';
+            } else {
+              directionsContainer.style.display = 'none';
+              collapseButton.textContent = 'Mostrar Ruta';
+            }
+          }
+        });
+
+        // Agregar el botón al contenedor del mapa
+        map.current.getContainer().appendChild(collapseButton);
+      });
+    });
 
     // Agregar marcador para la ubicación del usuario
     new mapboxgl.Marker({ color: 'red' })
@@ -265,7 +308,7 @@ export default function MapWithPlaces() {
               }
               return false;
             });
-            
+
           // Verificar si cumple con los demás filtros
           const matchesCompany =
             company.companyName?.toLowerCase().includes(searchQuery.toLowerCase()) &&
@@ -480,14 +523,13 @@ export default function MapWithPlaces() {
     <div className="relative w-screen h-screen">
 
       {/* Header */}
-
       {/* Barra de búsqueda personalizada */}
       <div className="container mx-auto px-4">
         {/* Tamaño móvil */}
-        <div className="block md:hidden">
+        <div className="block md:hidden fixed top-0 left-0 right-0 z-20 bg-white shadow-md p-2">
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="flex items-center justify-between w-full  bg-white text-black py-2 px-4 rounded-full focus:outline-none"
+            className="flex items-center justify-between w-full bg-white text-black py-2 px-4 rounded-full focus:outline-none"
           >
             Filtros
             <ChevronDown className={`ml-2 transition-transform ${isOpen ? 'transform rotate-180' : ''}`} />
@@ -573,7 +615,7 @@ export default function MapWithPlaces() {
         </div>
 
         {/* Tamaño tablet y desktop */}
-        <div className="md:flex absolute top-4 left-1/2 transform -translate-x-1/2 z-10 bg-white shadow-md rounded-full flex flex-wrap items-center px-4 py-2 w-[90%] max-w-4xl space-y-4 sm:space-y-0 md:flex-nowrap md:space-x-4">
+        <div className="hidden md:flex absolute top-4 left-1/2 transform -translate-x-1/2 z-10 bg-white shadow-md rounded-full flex-wrap items-center px-4 py-2 w-[90%] max-w-4xl space-y-4 sm:space-y-0 md:flex-nowrap md:space-x-4">
           {/* Botón de retroceso */}
           <Link href="/" legacyBehavior>
             <a className="mb-2 sm:mb-0 mr-4">
@@ -664,43 +706,14 @@ export default function MapWithPlaces() {
             </div>
           )}
         </div>
-
-
-
       </div>
-
-
-
 
       {/* Contenedor del mapa */}
       <div ref={mapContainer} className="!w-screen h-full rounded-lg shadow-md overflow-hidden">
-        {/* {selectedPlace && (
-          <aside
-            className={`w-full h-full sm:w-1/3 bg-gray-100 p-4 mb-2 border-l transform ${selectedPlace ? "translate-x-0" : "-translate-x-full"} transition-transform duration-300 ease-in-out relative`}
-          >
-            <div className="flex my-2 flex-col items-center w-2/3 bg-[#F5F0E5] h-full p-2 rounded">
-              <Image
-                src={selectedPlace.profilePicture} // URL de la imagen
-                alt="Imagen de perfil o logo de la empresa"
-                width={500}
-                height={300}
-                className="rounded"
-              />
-              <h2 className="text-lg font-bold">{selectedPlace.companyName}</h2>
-              <p className="text-center">{selectedPlace.description}</p>
-            </div>
-            <button
-              className="absolute top-1/2 right-[2px] bg-gray-400 text-gray-700 hover:text-gray-900 p-2 rounded transform -translate-x-1/2 -translate-y-1/2"
-              onClick={() => setSelectedPlace(null)}
-            >
-              <IoIosArrowBack size={24} />
-            </button>
-          </aside>
-        )}*/}
       </div>
 
       {/* Botón para alternar visibilidad */}
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-0">
+      <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-20">
         <button
           className="bg-black text-white px-6 py-3 rounded-full flex items-center gap-2 shadow-lg hover:bg-gray-800 transition-all"
           onClick={() => setIsVisible(!isVisible)}
@@ -709,7 +722,6 @@ export default function MapWithPlaces() {
           {isVisible ? 'Cerrar lista' : 'Ver establecimientos'}
         </button>
       </div>
-
 
       {/* Lista de compañías */}
       {isVisible && (
@@ -789,9 +801,9 @@ export default function MapWithPlaces() {
                 );
               })}
           </div>
-
         </div>
       )}
+
       {/* Modal */}
       {isModalOpen && selectedEstablishment && (
         <EstablecimientoModal
@@ -806,7 +818,6 @@ export default function MapWithPlaces() {
             }
           }}
         />
-
       )}
     </div>
   );
