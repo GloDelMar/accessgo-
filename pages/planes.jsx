@@ -1,16 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
-import ModalACC from '@/components/atoms/modalAccesibilidadInfo';
 
-const PlanCard = ({
-  title,
-  icon,
-  features,
-  buttonText,
-  link,
-  openModal,
-  isPremium
-}) => (
+const PlanCard = ({ title, icon, features, buttonText, link }) => (
   <section className='flex flex-col items-start px-5 pt-7 pb-12 mt-10 w-full text-base bg-white rounded-2xl border border-gray-100 border-solid shadow-lg max-w-[328px] text-slate-700'>
     <div className='flex gap-5 ml-5 text-lg font-bold text-gray-800 whitespace-nowrap'>
       <img
@@ -34,24 +25,13 @@ const PlanCard = ({
         </li>
       ))}
     </ul>
-    {isPremium ? (
+    <Link legacyBehavior href={link}>
       <div className='flex justify-center w-full mt-5'>
-        <button
-          onClick={openModal}
-          className='w-[155px] h-[40px] bg-[#2F4F4F] text-white rounded-lg flex items-center justify-center'
-        >
+        <button className='w-[155px] h-[40px] bg-[#2F4F4F] text-white rounded-lg flex items-center justify-center'>
           {buttonText}
         </button>
       </div>
-    ) : (
-      <Link legacyBehavior href={link}>
-        <div className='flex justify-center w-full mt-5'>
-          <button className='w-[155px] h-[40px] bg-[#2F4F4F] text-white rounded-lg flex items-center justify-center'>
-            {buttonText}
-          </button>
-        </div>
-      </Link>
-    )}
+    </Link>
   </section>
 );
 
@@ -64,11 +44,6 @@ const CancelButton = ({ cancelLink }) => (
 );
 
 const View15 = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
-
   const plans = [
     {
       title: 'GRATUITO',
@@ -79,8 +54,7 @@ const View15 = () => {
         'Números de contacto'
       ],
       buttonText: '¡UNETE AHORA!',
-      link: 'notificacion',
-      isPremium: false
+      link: 'notificacion'
     },
     {
       title: 'PREMIUM',
@@ -94,8 +68,7 @@ const View15 = () => {
         'Datos y estadísticas sobre las visitas a tu negocio'
       ],
       buttonText: '¡UNETE AHORA!',
-      link: '/cobro',
-      isPremium: true
+      link: '/aviso'
     }
   ];
 
@@ -104,20 +77,16 @@ const View15 = () => {
       <h1 className='mt-7 text-4xl font-bold leading-3 text-[#2F4F4F]'>
         ¡ AccessoGo!
       </h1>
-      <p className='mt-8 text-xl font-bold text-center text-[#2F4F4F]'>
+      <p className='mt-8  text-xl font-bold text-center text-[#2F4F4F]'>
         ¡Aqui puedes elegir el plan que más te convenga!
       </p>
       <div className='flex flex-col items-start justify-start gap-16 mt-10 md:flex-row md:gap-12 md:items-start'>
         {plans.map((plan, index) => (
-          <PlanCard key={index} {...plan} openModal={openModal} />
+          <PlanCard key={index} {...plan} />
         ))}
       </div>
 
       <CancelButton cancelLink='/' />
-
-      {/* Modal */}
-      {isModalOpen && <ModalACC closeModal={closeModal} />}
-
       <style jsx>{`
         builder-component {
           max-width: none !important;
