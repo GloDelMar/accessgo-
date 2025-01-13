@@ -1,15 +1,15 @@
-import ParticipaSlider from "./Molecules/participaSlider";
-import Carousel from "./Molecules/Carrusel";
+import ParticipaSlider from './Molecules/participaSlider';
+import Carousel from './Molecules/Carrusel';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import { getAllCompanies, getCompanyById } from "@/pages/api/api_company";
-import { toast } from "sonner";
-import Modal from "./Molecules/MapModal";
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import { getAllCompanies, getCompanyById } from '@/pages/api/api_company';
+import { toast } from 'sonner';
+import Modal from './Molecules/MapModal';
 
 const HomeContent = () => {
-  const [companies, setCompanies] = useState([])
+  const [companies, setCompanies] = useState([]);
   const [filteredCompanies, setFilteredCompanies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -25,7 +25,7 @@ const HomeContent = () => {
         setLoading(false);
       })
       .catch((error) => {
-        console.error("[getCompanies error]", error);
+        console.error('[getCompanies error]', error);
         setLoading(false);
       });
   }, []);
@@ -35,22 +35,21 @@ const HomeContent = () => {
     '/carlay/lse.jpg',
     '/carlay/senas.jpg',
     '/carlay/silla.jpg'
-  ]
+  ];
 
   const text = [
-    "La accesibilidad es un derecho fundamental.",
-    "Y AccessGo es el medio de comunicación entre los establecimientos incluyentes y las personas.",
-    "AccessGo facilita tu búsqueda de lugares accesibles cerca a tu ubicación actual o por zona a nivel nacional. Como parte de nuestros usuarios podrás compartir opiniones y recomendaciones con toda la comunidad.",
-    "AccessGo también es el apoyo para que los negocios, establecimientos y compañías tengan un Mayor alcance de marca y servicio. Demostrando su compromiso con las personas, la accesibilidad y la calidad al unirse como empresa."
-  ]
+    'La accesibilidad es un derecho fundamental.',
+    'Y AccessGo es el medio de comunicación entre los establecimientos incluyentes y las personas.',
+    'AccessGo facilita tu búsqueda de lugares accesibles cerca a tu ubicación actual o por zona a nivel nacional. Como parte de nuestros usuarios podrás compartir opiniones y recomendaciones con toda la comunidad.',
+    'AccessGo también es el apoyo para que los negocios, establecimientos y compañías tengan un Mayor alcance de marca y servicio. Demostrando su compromiso con las personas, la accesibilidad y la calidad al unirse como empresa.'
+  ];
 
   const images2 = [
-    "/referencias/calific.jpg",
-    "/referencias/comentar.jpg",
-    "/referencias/geo.jpg",
-    "/referencias/rest7.jpg"
-  ]
-
+    '/referencias/calific.jpg',
+    '/referencias/comentar.jpg',
+    '/referencias/geo.jpg',
+    '/referencias/rest7.jpg'
+  ];
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -59,7 +58,6 @@ const HomeContent = () => {
 
     return () => clearInterval(interval);
   }, []);
-
 
   useEffect(() => {
     setLoading(true);
@@ -70,7 +68,7 @@ const HomeContent = () => {
         setLoading(false);
       })
       .catch((error) => {
-        console.error("[getCompanies error]", error);
+        console.error('[getCompanies error]', error);
         setLoading(false);
       });
   }, []);
@@ -80,31 +78,31 @@ const HomeContent = () => {
       const companyData = await getCompanyById(id);
       const companyType = companyData?.data?.company?.cuenta;
 
-      if (companyType === "free") {
+      if (companyType === 'free') {
         router.push(`vista-base?id=${id}`);
-      } else if (companyType === "premium") {
+      } else if (companyType === 'premium') {
         router.push(`vista-prem?id=${id}`);
       } else {
-        throw new Error("Tipo de compañía inválido.");
+        throw new Error('Tipo de compañía inválido.');
       }
     } catch (error) {
-      console.error("Error al manejar el clic de la tarjeta:", error.message);
-      toast.error("Error al redirigir a la página de la compañía.");
+      console.error('Error al manejar el clic de la tarjeta:', error.message);
+      toast.error('Error al redirigir a la página de la compañía.');
     }
   };
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
+      <div className='flex justify-center items-center h-screen'>
+        <div className='animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500'></div>
       </div>
     );
   }
 
   const handleButtonClick = () => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     if (token) {
-      router.push("/MapWithPlaces");
+      router.push('/MapWithPlaces');
     } else {
       setIsModalOpen(true);
     }
@@ -140,12 +138,28 @@ const HomeContent = () => {
         </div>
       </div>
       <div className='mx-2 mt-4 md:mx-[25px]'>
-        <h1 className='text-4xl text-center md:text-left font-bold mt-4 mb-2'>
-          ¡ Únete a nuestra comunidad !
-        </h1>
-        <h3 className='text-2xl text-center md:text-left font-bold mt-8 mb-2'>
-          Descubre nuevos destinos...
-        </h3>
+        <div className='justify-self-center flex flex-col '>
+          <div>
+            <h1 className='text-4xl text-center md:text-left font-bold mt-4 mb-2'>
+              ¡ Únete a nuestra comunidad !
+            </h1>
+            <div className='mt-10 gap-8 flex flex-col justify-center items-center '>
+              <Link legacyBehavior href='/signup'>
+                <button
+                  className='justify-center  px-6 py-2 border border-transparent rounded-md shadow-sm
+              text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none
+              focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]'
+                >
+                  Únete ahora
+                </button>
+              </Link>
+
+              <h3 className='text-2xl align-bottom md:text-left font-bold'>
+                Descubre nuevos destinos...
+              </h3>
+            </div>
+          </div>
+        </div>
 
         <div className='hidden lg:hidden md:flex md:flex-wrap md:justify-center gap-4 mt-[51px] mb-4'>
           {filteredCompanies.slice(-3).map((company) => (
@@ -367,8 +381,22 @@ const HomeContent = () => {
             <li>Tu ubicación en tiempo real.</li>
             <li>Compartiendo tus redes sociales.</li>
             <li>Comentarios y calificaciones de tu servicio.</li>
-            <li>Presenta tus eventos, ofertas, productos o actividades especiales.</li>
+            <li>
+              Presenta tus eventos, ofertas, productos o actividades especiales.
+            </li>
           </ul>
+
+          <div className='mt-10 gap-8 flex flex-col justify-center items-center '>
+              <Link legacyBehavior href='/signup'>
+                <button
+                  className='justify-center  px-6 py-2 border border-transparent rounded-md shadow-sm
+              text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none
+              focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]'
+                >
+                  Únete ahora como empresa
+                </button>
+              </Link>
+            </div>
         </div>
         <div className='hidden flex-row md:flex mb-12 items-center justify-center gap-10'>
           <img
@@ -397,7 +425,7 @@ const HomeContent = () => {
             />
           </div>
         </div>
-         
+
         <div className='sm:hidden'>
           <ParticipaSlider />
         </div>
