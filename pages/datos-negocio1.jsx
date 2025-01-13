@@ -25,6 +25,9 @@ const View23 = () => {
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [inputRecreativo, setInputRecreativo] = useState("")
+  const [inputEmergencia, setInputEmergencia] = useState("")
+
 
   useEffect(() => {
     const companyIdFromLocalStorage = localStorage.getItem('userId');
@@ -45,7 +48,8 @@ const View23 = () => {
     giro: '',
     horario: {
       abre: '',
-      cierre: ''
+      cierre: '',
+      abierto24horas: ''
     },
     descripcion: '',
     phone: '',
@@ -54,6 +58,10 @@ const View23 = () => {
       twitter: '',
       instagram: '',
       tiktok: ''
+    },
+    lugares: {
+      recreativos: [],
+      emergencia: []
     }
   });
 
@@ -127,8 +135,9 @@ const View23 = () => {
         representanteLegal: companyData?.representanteLegal || '',
         giro: companyData?.giro || '',
         horario: {
-          abre: companyData.horario?.abre || '',
-          cierre: companyData.horario?.cierra || ''
+          abre: companyData?.horario?.abre || '',
+          cierre: companyData?.horario?.cierra || '',
+          abierto24horas: companyData?.horario?.abierto24horas || ''
         },
         descripcion: companyData?.description || '',
         phone: companyData?.phone || '',
@@ -137,14 +146,18 @@ const View23 = () => {
           instagram: companyData?.redesSociales?.instagram || '',
           twitter: companyData?.redesSociales?.twitter || '',
           tiktok: companyData?.redesSociales?.tiktok || ''
+        },
+        lugares: {
+          recreativos: companyData?.lugares?.recreativos || '',
+          emergencia: companyData?.lugares?.emergencia || ''
         }
       });
+
       setAddress(companyData?.address || '');
       setSelectedDays(companyData?.diasDeServicio || []);
 
       setLatitude(companyData?.latitude);
       setLongitude(companyData?.longitude);
-
       setSelectedImage(companyData.profilePicture || null);
     } catch (error) {
       console.error('Error fetching company data:', error);
@@ -198,7 +211,8 @@ const View23 = () => {
       giro: formValues.giro,
       horario: {
         abre: formValues.horario.abre,
-        cierra: formValues.horario.cierre
+        cierra: formValues.horario.cierre,
+        abierto24horas: formValues.horario.abierto24horas
       },
       diasDeServicio: selectedDays,
       description: formValues.descripcion,
@@ -206,7 +220,8 @@ const View23 = () => {
       phone: formValues.phone,
       latitude: markerRef.current ? markerRef.current.getLngLat().lat : latitude,
       longitude: markerRef.current ? markerRef.current.getLngLat().lng : longitude,
-      redesSociales: formValues.redesSociales
+      redesSociales: formValues.redesSociales,
+      lugares: formValues.lugares
     };
 
     try {
@@ -237,6 +252,63 @@ const View23 = () => {
     }));
   };
 
+  const handleRecreativoChange = (event) => {
+    setInputRecreativo(event.target.value);
+  };
+
+  const handleEmergenciaChange = (event) => {
+    setInputEmergencia(event.target.value)
+  }
+
+  const handleAddEmergencia = () => {
+    if (inputEmergencia.trim() === '') return; // Validar entrada vacía
+    setFormValues((prev) => ({
+      ...prev,
+      lugares: {
+        ...prev.lugares,
+        emergencia: [...(prev.lugares.emergencia || []), inputEmergencia]
+      }
+    }));
+    setInputEmergencia(''); // Limpiar el input
+  };
+
+  const handleAddRecreativo = () => {
+    if (inputRecreativo.trim() === '') return; // Validar entrada vacía
+    setFormValues((prev) => ({
+      ...prev,
+      lugares: {
+        ...prev.lugares,
+        recreativos: [...(prev.lugares.recreativos || []), inputRecreativo]
+      }
+    }));
+    setInputRecreativo(''); // Limpiar el input
+  };
+
+  const handleDeleteRecreativo = (indexToRemove) => {
+    setFormValues((prev) => ({
+      ...prev,
+      lugares: {
+        ...prev.lugares,
+        recreativos: prev.lugares.recreativos.filter(
+          (_, index) => index !== indexToRemove
+        )
+      }
+    }));
+  };
+
+  const handleDeleteEmergencia = (indexToRemove) => {
+    setFormValues((prev) => ({
+      ...prev,
+      lugares: {
+        ...prev.lugares,
+        emergencia: prev.lugares.emergencia.filter(
+          (_, index) => index !== indexToRemove
+        )
+      }
+    }));
+  };
+
+
   return (
     <>
       <div className="w-full max-w-[900px] mx-auto p-4 md:p-6 bg-white rounded-lg shadow-sm">
@@ -246,10 +318,10 @@ const View23 = () => {
         <div className="grid gap-8 lg:grid-cols-[300px,1fr] w-full">
           <div className="flex flex-col justify-items-center items-center space-y-4 w-full">
             <div className="flex justify-center lg:justify-start">
-              
-                {/* Esto es para la subida de imagenes a aws */}
-                <UploadImageCPP userId={companyId} setSelectedImage={setSelectedImage} />
-              
+
+              {/* Esto es para la subida de imagenes a aws */}
+              <UploadImageCPP userId={companyId} setSelectedImage={setSelectedImage} />
+
             </div>
           </div>
 
@@ -297,50 +369,64 @@ const View23 = () => {
                 >
                   Giro de tu negocio
                 </label>
-                <select
-                  id='giro'
-                  name='giro'
-                  value={formValues.giro}
-                  onChange={handleInputChange}
-                  className='w-full px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50'
-                >
-                  <option>Giro de tu negocio</option>
-                  <option value="HOTEL">HOTEL</option>
-                  <option value="RESTAURANTE">RESTAURANTE</option>
-                </select>
+                <p className='text-sm font-medium text-[#546E7A] mb-1 border p-3 border-gray-400 rounded-md'>{formValues.giro}</p>
               </div>
-              <div className='w-full'>
+              <div className="w-full">
                 <label
-                  htmlFor='horario'
-                  className='block text-sm font-medium text-[#546E7A] mb-1'
+                  htmlFor="horario"
+                  className="block text-sm font-medium text-[#546E7A] mb-1"
                 >
                   Horario de servicio
                 </label>
-                <div className='flex items-center space-x-2 w-full'>
+                <div className="flex items-center space-x-2 w-full">
                   <input
-                    type='time'
-                    name='horarioAbre'
+                    type="time"
+                    name="horarioAbre"
                     value={formValues.horario.abre}
-
-                    onChange={(e) => setFormValues(prev => ({ ...prev, horario: { ...prev.horario, abre: e.target.value } }))}
-                    className="flex-1 px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50"
-
-                  />
-                  <span className='text-[#546E7A]'>a</span>
-                  <input
-                    type='time'
-                    name='horarioCierre'
-                    value={formValues.horario.cierre}
+                    disabled={formValues.horario.abierto24horas}
                     onChange={(e) =>
                       setFormValues((prev) => ({
                         ...prev,
-                        horario: { ...prev.horario, cierre: e.target.value }
+                        horario: { ...prev.horario, abre: e.target.value },
                       }))
                     }
-                    className='flex-1 px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50'
+                    className={`flex-1 px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50 ${formValues.horario.abierto24horas ? "opacity-50" : ""
+                      }`}
+                  />
+                  <span className="text-[#546E7A]">a</span>
+                  <input
+                    type="time"
+                    name="horarioCierre"
+                    value={formValues.horario.cierre}
+                    disabled={formValues.horario.abierto24horas}
+                    onChange={(e) =>
+                      setFormValues((prev) => ({
+                        ...prev,
+                        horario: { ...prev.horario, cierre: e.target.value },
+                      }))
+                    }
+                    className={`flex-1 px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50 ${formValues.horario.abierto24horas ? "opacity-50" : ""
+                      }`}
                   />
                 </div>
+                <div className="mt-2">
+                  <label className="inline-flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      checked={formValues.horario.abierto24horas}
+                      onChange={(e) =>
+                        setFormValues((prev) => ({
+                          ...prev,
+                          horario: { ...prev.horario, abierto24horas: e.target.checked },
+                        }))
+                      }
+                      className="h-4 w-4 text-blue-500 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                    />
+                    <span className="text-[#546E7A]">Abierto las 24 horas</span>
+                  </label>
+                </div>
               </div>
+
             </div>
             <div className='grid gap-4 md:grid-cols-2 w-full'>
               <div className='w-full'>
@@ -483,6 +569,73 @@ const View23 = () => {
               ref={mapDiv}
               style={{ height: '400px' }}
             ></div>
+            <div className='mt-4'>
+              <h2 className='text-xl font-semibold text-[#263238]'>Lugares Importantes Cerca de Ti</h2>
+
+              {/* Recreativos */}
+              <div className='mt-3 space-x-2'>
+                <h3 className='text-sm font-medium text-[#546E7A] mb-2'>Para conocer (museos, de recreación, playas, etc.):</h3>
+                <input
+                  type="text"
+                  placeholder="Agregar lugar recreativo"
+                  value={inputRecreativo}
+                  onChange={handleRecreativoChange}
+                  className="border px-2 py-1 rounded-md"
+                />
+                <button
+                  onClick={handleAddRecreativo}
+                  className="bg-blue-500 text-white px-4 py-1 rounded-lg hover:bg-blue-700"
+                >
+                  Agregar
+                </button>
+                <ul className='mt-1 rounded-lg'>
+                  {(formValues.lugares.recreativos || []).map((lugar, index) => (
+                    <li className='px-2 my-1 bg-[#F5F0E5] flex justify-between border rounded-lg' key={index}>
+                      {lugar}{" "}
+                      <button
+                        className="bg-red-500 px-2 rounded-full text-white hover:bg-red-700"
+                        onClick={() => handleDeleteRecreativo(index)}
+
+                      >
+                        X
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+
+              {/* Emergencia */}
+              <div className='mt-3 space-x-2'>
+                <h3 className='text-sm font-medium text-[#546E7A] mb-2'>Emergencias (Hospitales, farmacias, etc):</h3>
+                <input
+                  type="text"
+                  placeholder="Agregar lugares para una emergencia"
+                  value={inputEmergencia}
+                  onChange={handleEmergenciaChange}
+                  className="border px-2 py-1 rounded-md"
+                />
+                <button
+                  onClick={handleAddEmergencia}
+                  className="bg-blue-500 text-white px-4 py-1 rounded-lg hover:bg-blue-700"
+                >
+                  Agregar
+                </button>
+                <ul className='mt-1 rounded-lg'>
+                  {(formValues.lugares.emergencia || []).map((lugar, index) => (
+                    <li className='px-2 my-1 bg-[#F5F0E5] flex justify-between border rounded-lg' key={index}>
+                      {lugar}{" "}
+                      <button
+                        onClick={() => handleDeleteEmergencia(index)}
+                        className="bg-red-500 px-2 rounded-full text-white hover:bg-red-700"
+                      >
+                        X
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
 
