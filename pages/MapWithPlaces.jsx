@@ -17,6 +17,12 @@ import { ChevronDown } from 'lucide-react';
 mapboxgl.accessToken = 'pk.eyJ1IjoiYWNjZXNnbyIsImEiOiJjbTI4NGVjNnowc2RqMmxwdnptcXAwbmhuIn0.0jG0XG0mwx_LHjdJ23Qx4A';
 
 export default function MapWithPlaces() {
+
+  /**
+   * -----------------------------------------------------------------
+   * Inicialización de referencias y estados necesarios para el mapa y la funcionalidad principal
+   * -----------------------------------------------------------------
+   */
   const router = useRouter();
   const mapContainer = useRef(null);
   const map = useRef(null);
@@ -34,9 +40,14 @@ export default function MapWithPlaces() {
   const [selectedRating, setSelectedRating] = useState('all');
   const [selectedDisability, setSelectedDisability] = useState('all');
   const [isOpen, setIsOpen] = useState(false);
-
   let forAccesibilityIcons = new Set();
-  // Obtener compañías desde la API
+
+
+  /**
+   * -----------------------------------------------------------------
+   * Hook que carga todas las compañías desde la API al iniciar el componente
+   * -----------------------------------------------------------------
+   */
   useEffect(() => {
     setLoading(true);
     getAllCompanies()
@@ -52,7 +63,11 @@ export default function MapWithPlaces() {
       });
   }, []);
 
-  // Obtener la ubicación actual del usuario
+  /**
+   * -----------------------------------------------------------------
+   * Obtiene la ubicación actual del usuario utilizando la API de geolocalización del navegador
+   * -----------------------------------------------------------------
+   */
   useEffect(() => {
     if (!navigator.geolocation) {
       toast.error("La geolocalización no está soportada en tu navegador");
@@ -73,7 +88,11 @@ export default function MapWithPlaces() {
     );
   }, []);
 
-  // Inicializar el mapa cuando la ubicación del usuario esté disponible
+  /**
+   * -----------------------------------------------------------------
+   * Inicializa el mapa de Mapbox cuando la ubicación del usuario está disponible
+   * -----------------------------------------------------------------
+   */
   useEffect(() => {
     if (!userLocation || map.current) return;
 
@@ -92,6 +111,7 @@ export default function MapWithPlaces() {
       accessToken: mapboxgl.accessToken,
       unit: 'metric',
       profile: 'mapbox/driving',
+      interactive: false,
     });
 
     map.current.addControl(directions.current, 'top-right');
@@ -112,7 +132,16 @@ export default function MapWithPlaces() {
       .addTo(map.current);
   }, [userLocation]);
 
-  // Calcular la distancia entre dos puntos en el mapa
+  /**
+   * -----------------------------------------------------------------
+   * Calcula la distancia en kilómetros entre dos coordenadas geográficas
+   * @param {number} lat1 - Latitud del primer punto
+   * @param {number} lon1 - Longitud del primer punto
+   * @param {number} lat2 - Latitud del segundo punto
+   * @param {number} lon2 - Longitud del segundo punto
+   * @returns {number} Distancia en kilómetros
+   * -----------------------------------------------------------------
+   */
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
     const R = 6371;
     const dLat = (lat2 - lat1) * (Math.PI / 180);
@@ -127,7 +156,11 @@ export default function MapWithPlaces() {
     return R * c;
   };
 
-  // Agregar marcadores dinámicamente y establecimientos mas cercanos
+  /**
+   * -----------------------------------------------------------------
+   * Hook que agrega marcadores dinámicamente al mapa para mostrar compañías cercanas
+   * -----------------------------------------------------------------
+   */
   useEffect(() => {
     if (!map.current || !userLocation) return;
 
@@ -168,25 +201,26 @@ export default function MapWithPlaces() {
             new mapboxgl.Popup({ offset: 25 }).setHTML(
               DOMPurify.sanitize(
                 `<div>
-                                <h3 class="font-semibold">${companyName}</h3>
-                                <p>Distancia: ${distance.toFixed(2)} km</p>
-                            </div>`
+                  <h3 class="font-semibold">${companyName}</h3>
+                  <p>Distancia: ${distance.toFixed(2)} km</p>
+                 </div>`
               )
             )
           )
           .addTo(map.current);
 
         currentMarker.getElement().addEventListener('click', () => {
-          startRoute(
-            [userLocation.longitude, userLocation.latitude],
-            [longitude, latitude]
-          );
+          handleOpenModal(company);
         });
       }
     });
   }, [filteredCompanies, userLocation]);
 
-  // Manejar el filtro de búsqueda en tiempo real
+  /**
+   * -----------------------------------------------------------------
+   * Hook que maneja el filtro de búsqueda en tiempo real
+   * -----------------------------------------------------------------
+   */
   useEffect(() => {
     const fetchDataAndFilter = async () => {
 
@@ -214,7 +248,7 @@ export default function MapWithPlaces() {
               `La propiedad 'disabilities' no es un array para ${company.companyName}`,
               accessibilityData
             );
-            return null; // Saltar esta compañía si los datos no son válidos
+            return null;
           }
 
           // Verificar si cumple con los criterios de accesibilidad
@@ -223,10 +257,7 @@ export default function MapWithPlaces() {
             disabilities.some((disability) => {
               // Verificar el tipo
               if (disability.type === selectedDisability) {
-
-                // Verificar las secciones y preguntas
                 return disability.sections.some((section) => {
-
                   return section.questions.some((question) => {
                     return question.response === true;
                   });
@@ -234,8 +265,7 @@ export default function MapWithPlaces() {
               }
               return false;
             });
-
-
+            
           // Verificar si cumple con los demás filtros
           const matchesCompany =
             company.companyName?.toLowerCase().includes(searchQuery.toLowerCase()) &&
@@ -265,11 +295,11 @@ export default function MapWithPlaces() {
     setSelectedRating(e.target.value);
   };
 
-
-
-
-
-  // Función para centrar el mapa en un lugar específico
+  /**
+   * -----------------------------------------------------------------
+   * Función para centrar el mapa en un lugar específico
+   * -----------------------------------------------------------------
+   */
   const centerMapOnPlace = (place) => {
     if (!place || typeof place.longitude !== 'number' || typeof place.latitude !== 'number') {
       console.error('Invalid coordinates:', place);
@@ -284,7 +314,11 @@ export default function MapWithPlaces() {
     });
   };
 
-  // Función para abrir el modal de un establecimiento
+  /**
+   * -----------------------------------------------------------------
+   * Función para abrir el modal de un establecimiento
+   * -----------------------------------------------------------------
+   */
   const handleOpenModal = async (company) => {
     let averageRating = 0;
     try {
@@ -305,14 +339,13 @@ export default function MapWithPlaces() {
       console.error("Error obteniendo accesibilidad:", error);
     }
 
-    // Validar que iconsData.disabilities sea un array
     const disabilities = iconsData?.disabilities || [];
     if (!Array.isArray(disabilities)) {
       console.warn(
         `La propiedad 'disabilities' no es un array para ${company.companyName}`,
         iconsData
       );
-      return null; // Saltar esta compañía si los datos no son válidos
+      return null;
     }
 
     // Inicializar el Set si no lo has hecho antes
@@ -323,12 +356,11 @@ export default function MapWithPlaces() {
     // Verificar si cumple con los criterios de accesibilidad
     disabilities.forEach((disability) => {
       if (disability.type) {
-        // Verificar las secciones y preguntas
         const hasValidResponse = disability.sections.some((section) =>
           section.questions.some((question) => question.response === true)
         );
         if (hasValidResponse) {
-          forAccesibilityIcons.add(disability.type); // Agregar el tipo a forAccesibilityIcons
+          forAccesibilityIcons.add(disability.type);
         }
       }
     });
@@ -344,7 +376,7 @@ export default function MapWithPlaces() {
       latitude: company.latitude,
       longitude: company.longitude,
       comments: company.comments || [],
-      disabilities: Array.from(forAccesibilityIcons) // Convertir el Set a un array para asegurar unicidad
+      disabilities: Array.from(forAccesibilityIcons)
     };
 
 
@@ -353,7 +385,11 @@ export default function MapWithPlaces() {
 
   };
 
-  // Función para cancelar la ruta actual
+  /**
+   * -----------------------------------------------------------------
+   * Función para cancelar la ruta actual
+   * -----------------------------------------------------------------
+   */
   const cancelRoute = () => {
     if (directions.current && map.current) {
       map.current.removeControl(directions.current);
@@ -370,16 +406,30 @@ export default function MapWithPlaces() {
     }
   };
 
-  // Función para iniciar una nueva ruta
+  /**
+   * -----------------------------------------------------------------
+   * Función para iniciar una nueva ruta
+   * -----------------------------------------------------------------
+   */
   const startRoute = (origin, destination) => {
-    if (directions.current) {
+    if (!directions.current) return;
+
+    // Solo establece la ruta si ambos puntos están definidos
+    if (origin && destination) {
       directions.current.setOrigin(origin);
       directions.current.setDestination(destination);
       setIsRouting(true);
     }
   };
 
-  // Función para obtener las direcciones de un establecimiento
+
+  /**
+   * -----------------------------------------------------------------
+   * Función para obtener las direcciones de un establecimiento
+   * -----------------------------------------------------------------
+   * @param {Object} establishment - Establecimiento seleccionado
+   * -----------------------------------------------------------------
+   */
   const handleGetDirections = (establishment) => {
     if (!userLocation || !establishment.latitude || !establishment.longitude) {
       toast.error('No se pudo calcular la ruta. Faltan coordenadas.');
@@ -397,7 +447,17 @@ export default function MapWithPlaces() {
     }
   };
 
-  // Función para manejar el clic en una tarjeta
+  /**
+   * -----------------------------------------------------------------
+   * Función para manejar el clic de una tarjeta de establecimiento
+   * -----------------------------------------------------------------
+   * @param {string} id - ID de la compañía
+   * -----------------------------------------------------------------
+   * @returns {string} Tipo de compañía
+   * -----------------------------------------------------------------
+   * @throws {Error} Error al redirigir a la página de la compañía
+   * -----------------------------------------------------------------
+   */
   const handleCardClick = async (id) => {
     try {
       const companyData = await getCompanyById(id);
@@ -462,13 +522,13 @@ export default function MapWithPlaces() {
                   onChange={handleDisabilityChange}
                   className="bg-gray-100 text-gray-700 rounded-full py-2 px-3 w-full focus:outline-none focus:ring focus:ring-blue-200 text-sm"
                 >
-                   <option value="" disabled selected >Accesible para:</option>
-              <option value="all">Inclusión para todos</option>
-              <option value="Visual">Personas con Discapacidad Visual</option>
-              <option value="Auditiva">Personas con Discapacidad Auditiva</option>
-              <option value="Motriz">Personas con Discapacidad Motriz</option>
-              <option value="Intelectual">Personas con Discapacidad Intelectual</option>
-              <option value="Neurodivergente">Personas Neurodivergentes</option>
+                  <option value="" disabled selected >Accesible para:</option>
+                  <option value="all">Inclusión para todos</option>
+                  <option value="Visual">Personas con Discapacidad Visual</option>
+                  <option value="Auditiva">Personas con Discapacidad Auditiva</option>
+                  <option value="Motriz">Personas con Discapacidad Motriz</option>
+                  <option value="Intelectual">Personas con Discapacidad Intelectual</option>
+                  <option value="Neurodivergente">Personas Neurodivergentes</option>
                 </select>
 
                 <select
@@ -513,7 +573,7 @@ export default function MapWithPlaces() {
         </div>
 
         {/* Tamaño tablet y desktop */}
-        <div className="hidden md:flex absolute top-4 left-1/2 transform -translate-x-1/2 z-10 bg-white shadow-md rounded-full flex flex-wrap items-center px-4 py-2 w-[90%] max-w-4xl space-y-4 sm:space-y-0 md:flex-nowrap md:space-x-4">
+        <div className="md:flex absolute top-4 left-1/2 transform -translate-x-1/2 z-10 bg-white shadow-md rounded-full flex flex-wrap items-center px-4 py-2 w-[90%] max-w-4xl space-y-4 sm:space-y-0 md:flex-nowrap md:space-x-4">
           {/* Botón de retroceso */}
           <Link href="/" legacyBehavior>
             <a className="mb-2 sm:mb-0 mr-4">
