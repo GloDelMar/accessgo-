@@ -239,17 +239,23 @@ const View23 = () => {
 
   return (
     <>
-      <div className="w-full max-w-[900px] mx-auto p-4 md:p-6 bg-white rounded-lg shadow-sm">
-        <h1 className="text-2xl font-bold text-center mb-6 text-[#263238]">¡Cuéntanos sobre ustedes!</h1>
-        <p className="text-center mb-8 text-[#546E7A]">Para personalizar el perfil te pedimos que respondas los siguientes campos</p>
+      <div className='w-full max-w-[900px] mx-auto p-4 md:p-6 bg-white rounded-lg shadow-sm'>
+        <h1 className='text-4xl font-bold text-center mb-6 text-[#2F4F4F]'>
+          ¡Cuéntanos sobre ustedes!
+        </h1>
+        <p className='text-center text-2xl mb-8 text-[#2F4F4F]'>
+          Para personalizar el perfil te pedimos que respondas los siguientes
+          campos
+        </p>
 
-        <div className="grid gap-8 lg:grid-cols-[300px,1fr] w-full">
-          <div className="flex flex-col justify-items-center items-center space-y-4 w-full">
-            <div className="flex justify-center lg:justify-start">
-              
-                {/* Esto es para la subida de imagenes a aws */}
-                <UploadImageCPP userId={companyId} setSelectedImage={setSelectedImage} />
-              
+        <div className='grid gap-8 lg:grid-cols-[300px,1fr] w-full'>
+          <div className='flex flex-col justify-items-center items-center space-y-4 w-full'>
+            <div className='flex justify-center lg:justify-start'>
+              {/* Esto es para la subida de imagenes a aws */}
+              <UploadImageCPP
+                userId={companyId}
+                setSelectedImage={setSelectedImage}
+              />
             </div>
           </div>
 
@@ -264,13 +270,6 @@ const View23 = () => {
                 value={formValues.nombreComercial}
                 onChange={handleInputChange}
                 label='Nombre comercial de tu negocio'
-              />
-              <InputWithLabel
-                name='rfc'
-                label='RFC'
-                placeholder='Ingresar dato'
-                value={formValues.rfc}
-                onChange={handleInputChange}
               />
             </div>
             <div className='w-full'>
@@ -305,8 +304,8 @@ const View23 = () => {
                   className='w-full px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50'
                 >
                   <option>Giro de tu negocio</option>
-                  <option value="HOTEL">HOTEL</option>
-                  <option value="RESTAURANTE">RESTAURANTE</option>
+                  <option value='HOTEL'>HOTEL</option>
+                  <option value='RESTAURANTE'>RESTAURANTE</option>
                 </select>
               </div>
               <div className='w-full'>
@@ -321,10 +320,13 @@ const View23 = () => {
                     type='time'
                     name='horarioAbre'
                     value={formValues.horario.abre}
-
-                    onChange={(e) => setFormValues(prev => ({ ...prev, horario: { ...prev.horario, abre: e.target.value } }))}
-                    className="flex-1 px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50"
-
+                    onChange={(e) =>
+                      setFormValues((prev) => ({
+                        ...prev,
+                        horario: { ...prev.horario, abre: e.target.value }
+                      }))
+                    }
+                    className='flex-1 px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50'
                   />
                   <span className='text-[#546E7A]'>a</span>
                   <input
@@ -400,9 +402,9 @@ const View23 = () => {
                       height={25}
                     />
                     <input
-                      type="text"
-                      id="facebook"
-                      name="facebook"
+                      type='text'
+                      id='facebook'
+                      name='facebook'
                       value={formValues.redesSociales.facebook}
                       onChange={handleRedesSocialesChange}
                       className='flex-1 p-2 border-0 outline-none'
@@ -418,9 +420,9 @@ const View23 = () => {
                       height={25}
                     />
                     <input
-                      type="text"
-                      id="instagram"
-                      name="instagram"
+                      type='text'
+                      id='instagram'
+                      name='instagram'
                       value={formValues.redesSociales.instagram}
                       onChange={handleRedesSocialesChange}
                       className='flex-1 p-2 border-0 outline-none'
@@ -428,16 +430,16 @@ const View23 = () => {
                   </div>
                   <div className='flex items-center mt-5 w-full sm:w-full md:w-full  border  rounded-md'>
                     <Image
-                      className='w-[45px] mr-2 ml-4'
+                      className='w-[45px] mr-2 ml-2'
                       src='/x-logo.svg'
                       alt='X'
                       width={45}
                       height={45}
                     />
                     <input
-                      type="text"
-                      id="twitter"
-                      name="twitter"
+                      type='text'
+                      id='twitter'
+                      name='twitter'
                       value={formValues.redesSociales.twitter}
                       onChange={handleRedesSocialesChange}
                       className='flex-1 p-2 border-0 outline-none'
@@ -486,10 +488,17 @@ const View23 = () => {
           </div>
         </div>
 
-        <div className="mt-8 flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4 w-full justify-center md:justify-end">
-          <StyledButton variant="blancoCuadrado" className="w-full md:w-auto">CANCELAR</StyledButton>
-          <StyledButton variant="blancoCuadrado" className="w-full md:w-auto" onClick={handleSubmit}>GUARDAR</StyledButton>
-
+        <div className='mt-8 flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4 w-full justify-center md:justify-end'>
+          <StyledButton variant='blancoCuadrado' className='w-full md:w-auto'>
+            CANCELAR
+          </StyledButton>
+          <StyledButton
+            variant='blancoCuadrado'
+            className='w-full md:w-auto'
+            onClick={handleSubmit}
+          >
+            GUARDAR
+          </StyledButton>
         </div>
       </div>
     </>

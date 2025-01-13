@@ -57,7 +57,7 @@ export default function Notificacion() {
             instalaciones y servicios.
           </p>
           <p className='mt-6'>
-            Si tu establecimiento no cuenta con ninguna forma de accesibilidad
+            Si tu establecimiento no cuenta con ningun tipo de accesibilidad
             NO podrá calificar para ser parte de nuestra comunidad.
           </p>
           <p className='mt-6'>
