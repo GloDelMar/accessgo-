@@ -2,7 +2,7 @@
 
 AccessGo es una plataforma web que facilita la búsqueda de lugares accesibles para personas con discapacidad. Ofrece información sobre restaurantes, hoteles y espacios recreativos, garantizando que todos tengan la oportunidad de disfrutar de estos lugares. Los usuarios pueden contribuir evaluando la accesibilidad de los establecimientos. Con un enfoque en la inclusión y la usabilidad, AccessGo se dedica a mejorar la calidad de vida de las personas con discapacidad.
 
-
+Esto es un cambio en la rama testGit
 
 ## Características
 
