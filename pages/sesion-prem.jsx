@@ -277,18 +277,18 @@ const SesionPremium = () => {
                               )
                             }}
                           />
-                         <div className='space-x-4'> <span className='text-xs md:text-sm text-gray-500'>
+                          <div className='space-x-4'> <span className='text-xs md:text-sm text-gray-500'>
                             Fecha de inicio:{' '}
                             {promocion.endDate
                               ? new Date(promocion.startDate).toLocaleDateString()
                               : 'Sin fecha'}
                           </span>
-                          <span className='text-xs md:text-sm text-gray-500'>
-                            Fecha de vencimiento:{' '}
-                            {promocion.endDate
-                              ? new Date(promocion.endDate).toLocaleDateString()
-                              : 'Sin fecha'}
-                          </span></div>
+                            <span className='text-xs md:text-sm text-gray-500'>
+                              Fecha de vencimiento:{' '}
+                              {promocion.endDate
+                                ? new Date(promocion.endDate).toLocaleDateString()
+                                : 'Sin fecha'}
+                            </span></div>
                         </div>
                       </li>
                     ))}
@@ -307,8 +307,7 @@ const SesionPremium = () => {
 
         <div>
           <h3 className='text-2xl text-center font-semibold my-8 text-[#2F4F4F]'>
-            Estas son las estadísticas de visitas a tu perfil de AccessGo
-            Premium
+            Estas son las estadísticas de visitas a tu perfil de AccessGo Premium
           </h3>
 
           <EstadisticasVisitas rango={rango} />
@@ -319,6 +318,7 @@ const SesionPremium = () => {
             <option value='año'>Año</option>
           </select>
         </div>
+
 
         <div className='flex flex-row justify-center mt-4 space-x-4 md:space-x-[200px]'>
           <button className='w-[155px] h-[40px] bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C] text-white rounded-lg flex items-center justify-center'>
