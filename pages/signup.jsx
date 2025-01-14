@@ -59,7 +59,7 @@ const SignUp = () => {
             <div className='mt-8 w-[250px] md:w-[350px] '>
               {/* Agregar tipo de usuario como 'empresa' y redirigir */}
               <a
-                onClick={() => handleUserType('company', '/planes')}
+                onClick={() => handleUserType('company', '/notificacion')}
                 className='flex items-center rounded-full justify-between bg-[#F5F0E5] hover:bg-[#E0D7C6] px-4 py-2 cursor-pointer'
               >
                 <Image
