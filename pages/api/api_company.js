@@ -1,6 +1,6 @@
 
 
-const API_URL = "http://localhost:8080" //"https://backend-r159.onrender.com";
+const API_URL = "https://backend-r159.onrender.com";
 export const createCompany = async (email, password, type) => {
     try {
         // Construir el objeto con la estructura solicitada
