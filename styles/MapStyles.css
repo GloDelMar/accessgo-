@@ -1,0 +1,15 @@
+.fixed-button {
+  position: fixed;
+  top: 1rem; /* Ajusta la posición */
+  right: 1rem;
+  background-color: #f56565; /* Rojo */
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px; /* Botón redondeado */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.2s ease;
+}
+
+.fixed-button:hover {
+  background-color: #c53030; /* Rojo más oscuro */
+}
