@@ -98,12 +98,27 @@ export default function MapWithPlaces() {
 
     const { latitude, longitude } = userLocation;
 
+    
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/light-v10',
       center: [longitude, latitude],
       zoom: 13,
     });
+    
+    // Agregar el icono para dirigirte a tu ubicacion 
+    const geolocateControl = new mapboxgl.GeolocateControl({
+      positionOptions: {
+        enableHighAccuracy: true, 
+      },
+      trackUserLocation: true, 
+      showUserLocation: true, 
+      fitBoundsOptions: {
+        maxZoom: 14, 
+      },
+    });
+
+    map.current.addControl(geolocateControl, 'top-right');
 
     map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
