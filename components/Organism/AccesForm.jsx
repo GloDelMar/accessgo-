@@ -9,7 +9,7 @@ import Link from "next/link";
 import { FaWheelchair, FaEye, FaDeaf, FaBrain, FaPuzzlePiece } from "react-icons/fa";
 import Modal from "../Molecules/DisabilitiesInfo";
 import { restaurantQuestions, hotelQuestions } from "./AccesibilityData";
-import { getCompanyById } from "@/pages/api/api_company";
+import { getCompanyById, updateCompany } from "@/pages/api/api_company";
 
 
 const AccesForm = () => {
@@ -21,7 +21,7 @@ const AccesForm = () => {
   const router = useRouter();
   const [tooltipVisible, setTooltipVisible] = useState(null);
   const [activeForm, setActiveForm] = useState("");
-
+ 
 
   // Mapea las discapacidades con sus íconos correspondientes.
   const disabilityIcons = [
@@ -125,10 +125,11 @@ const AccesForm = () => {
     console.log("Datos actualizados:", updatedFormData);
     console.log ("FormData",formData)
   };
-  
   const handleSubmit = async () => {
     try {
       const userId = localStorage.getItem("userId");
+      console.log("User ID obtenido:", userId);
+  
       if (!userId) {
         alert("No se encontró el usuario. Por favor, inicia sesión.");
         return;
@@ -143,8 +144,13 @@ const AccesForm = () => {
           restaurantId: establishmentType === "restaurante" ? userId : null,
           hotelId: establishmentType === "hotel" ? userId : null,
         };
-
- 
+        console.log("Datos a guardar:", dataToSave);
+  
+        const giro = establishmentType === "hotel" ? "HOTEL" : "RESTAURANTE";
+        await updateCompany(userId, { giro });
+        console.log("Se actualizó el giro en la empresa con éxito:", { giro });
+        
+  
         if (establishmentType === "hotel") {
           await createHotelAccessibility(dataToSave);
         } else if (establishmentType === "restaurante") {
@@ -155,18 +161,19 @@ const AccesForm = () => {
       } else {
         // Actualizar datos existentes de accesibilidad
         let updateFunction;
-  console.log("formData2",formData)
-
+  
         if (establishmentType === "restaurante") {
-          updateFunction = await updateRestaurantAccessibility( userId,formData);
+          updateFunction = await updateRestaurantAccessibility(userId, formData);
         } else if (establishmentType === "hotel") {
-          updateFunction = await updateHotelAccessibility(userId,formData );
+          updateFunction = await updateHotelAccessibility(userId, formData);
         }
   
         const companyData = await getCompanyById(userId);
-        const cuenta=companyData.data.company.cuenta.toLowerCase();
+        console.log("Datos de la empresa obtenidos:", companyData);
+  
+        const cuenta = companyData.data.company.cuenta.toLowerCase();
        
-        console.log("cuenta",cuenta)
+  
         if (cuenta === "premium") {
           router.push("/sesion-prem");
         } else if (cuenta === "free") {
@@ -186,6 +193,7 @@ const AccesForm = () => {
       alert(`Ocurrió un error al guardar los datos. Detalles: ${error.message || error}`);
     }
   };
+  
   
   
   return (
