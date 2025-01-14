@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2'; 
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
-import { conteoVisita } from '@/pages/api/api_visits';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -18,70 +17,62 @@ const EstadisticasVisitas = ({ rango }) => {
       if (storedUserId) {
         setCompanyId(storedUserId);
       } else {
-        setError("Company ID not found in localStorage");
+        setError("Company ID no encontrado en localStorage");
         setLoading(false);
       }
     }
   }, []);
+
   useEffect(() => {
-    if (companyId) {
-      const fetchEstadisticas = async () => {
+    const fetchEstadisticas = async () => {
+      if (companyId) {
         try {
           console.log("Inicio de fetchEstadisticas");
-          if (!companyId) {
-            throw new Error("Company ID no está definido.");
-          }
-  
+
           const url = `https://backend-r159.onrender.com/api/visitas/${companyId}?rango=${rango}`;
-        
-  
+
           const response = await fetch(url);
-        
-  
+
           if (!response.ok) {
             throw new Error(`Error HTTP: ${response.status}`);
           }
-  
+
           const data = await response.json();
-         
-  
+
           if (!data.success) {
             throw new Error("La respuesta del servidor no indica éxito.");
           }
-  
+
           setEstadisticas(data.data || []);
-       
-  
+
           const total = (data.data || []).reduce(
             (sum, visita) => sum + (visita.totalVisits || 0),
             0
           );
           setTotalVisitas(total);
-        
+
         } catch (error) {
           console.error("Error en fetchEstadisticas: ", error);
           setError(error.message);
         } finally {
           setLoading(false);
-         
         }
-      };
-  
-      fetchEstadisticas();
-    }
+      }
+    };
+
+    fetchEstadisticas();
   }, [rango, companyId]);
-  
+
   if (loading) {
     console.log("Cargando estadísticas...");
     return <div>Cargando estadísticas...</div>;
   }
-  
+
   if (error) {
     console.error("Error mostrado en UI: ", error);
     return <div>Error: {error}</div>;
   }
-  
-  // Mostrar mensaje si totalVisitas es 0
+
   if (totalVisitas === 0) {
     console.log("Total de visitas es 0. Mostrando mensaje.");
     return (
@@ -92,9 +83,9 @@ const EstadisticasVisitas = ({ rango }) => {
       </div>
     );
   }
-  
+
   console.log("Datos para el gráfico: ", estadisticas);
-  
+
   const chartData = {
     labels: estadisticas.map((visita) => visita.date),
     datasets: [
@@ -108,7 +99,7 @@ const EstadisticasVisitas = ({ rango }) => {
       },
     ],
   };
-  
+
   return (
     <div>
       <h4 className='text-xl text-center font-semibold mb-10 text-[#2F4F4F]'>
