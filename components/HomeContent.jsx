@@ -1,12 +1,23 @@
+import { getAllCompanies, getCompanyById } from "@/pages/api/api_company";
+import { Card, CardContent } from "@mui/material";
+import { MapPin } from "lucide-react";
 import ParticipaSlider from './Molecules/participaSlider';
 import Carousel from './Molecules/Carrusel';
 import Image from 'next/image';
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+
+import Modal from "./Molecules/MapModal";
+
+import MapComponent from "./Organism/MapComponent";
+import MapSection from "./Organism/MapSection";
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import { getAllCompanies, getCompanyById } from '@/pages/api/api_company';
-import { toast } from 'sonner';
-import Modal from './Molecules/MapModal';
+
+
+
+
+
 
 const HomeContent = () => {
   const [companies, setCompanies] = useState([]);
@@ -15,6 +26,7 @@ const HomeContent = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [userLocation, setUserLocation] = useState(null);
 
   useEffect(() => {
     setLoading(true);
@@ -28,6 +40,32 @@ const HomeContent = () => {
         console.error('[getCompanies error]', error);
         setLoading(false);
       });
+  }, []);
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.error("Error obteniendo la ubicación:", error);
+          setUserLocation({
+            latitude: 20.5888,
+            longitude: -100.3899,
+          });
+        }
+      );
+    } else {
+      console.warn("Geolocalización no soportada por el navegador.");
+      setUserLocation({
+        latitude: 20.5888,
+        longitude: -100.3899,
+      });
+    }
   }, []);
 
   const images = [
@@ -297,11 +335,14 @@ const HomeContent = () => {
         </Carousel>
       </div>
 
-      <p className='text-2xl mt-8 text-center font-semibold mb-2'>
-        Encuentra lugares cercanos a ti con accesibilidad garantizada explorando
-        nuestro mapa
-      </p>
-      <div className='relative mt-4 mb-5 group cursor-pointer flex justify-center'>
+      {/* Aqui va el mapa */}
+      <MapSection
+        userLocation={userLocation}
+        filteredCompanies={filteredCompanies}
+        handleCardClick={handleCardClick}
+      />
+
+      {/* <div className='relative mt-4 mb-5 group cursor-pointer flex justify-center'>
         <button
           onClick={handleButtonClick}
           className='flex items-center gap-2 px-6 py-3 bg-white dark:bg-[#F7D547] border border-[#8CC63F] 
@@ -345,7 +386,7 @@ const HomeContent = () => {
             <path d='M9 21l3-6 3 6' />
           </svg>
         </button>
-      </div>
+      </div> */}
 
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         <h2 className='text-xl font-bold mb-4'>¡Inicia Sesión!</h2>
