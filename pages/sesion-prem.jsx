@@ -158,7 +158,7 @@ const SesionPremium = () => {
 
         <div className='flex flex-col lg:flex-row gap-6 p-6 max-w-4xl mx-auto'>
           <div className='w-full lg:w-1/3 flex justify-center'>
-            <div className='bg-[#F5F0E5] max-w-[231px] w-full h-[231px] rounded-[25px] shadow-md p-4 flex justify-center items-center'>
+            <div className='bg-[#F5F0E5] max-w-[231px] w-full max-h-[231px] rounded-[25px] shadow-md p-4 flex justify-center items-center'>
               <Image
                 src={
                   companyData?.data?.company?.profilePicture || '/perfil1.png'
@@ -166,7 +166,7 @@ const SesionPremium = () => {
                 alt='Foto de perfil'
                 width={200}
                 height={200}
-                className='rounded-full object-cover'
+                className='rounded-full object-cover justify-self-center w-full h-full'
               />
             </div>
           </div>
@@ -177,7 +177,7 @@ const SesionPremium = () => {
                 <h3 className='text-lg font-semibold text-[#2F4F4F] mb-2 md:mb-0'>
                   Tu calificación es de:
                 </h3>
-                <div className='flex'>
+                <div className='flex justify-center'>
                   {[1, 2, 3, 4, 5].map((star) => (
                     <svg
                       key={star}
@@ -250,8 +250,8 @@ const SesionPremium = () => {
           </Link>
         </div>
 
-        <div className='w-full flex flex-col mt-6'>
-          <div className='max-w-xxl mx-auto bg-white shadow-md rounded-lg overflow-hidden border border-gray-200 mt-4'>
+        <div className='w-full sm:w-[300px] sm:h-full lg:w-[600px] flex flex-col justify-self-center mt-6 '>
+          <div className='w-full max-w-xxl mx-auto bg-white shadow-md rounded-lg overflow-hidden border border-gray-200 mt-4'>
             <div className='bg-[#2F4F4F] text-white p-4'>
               <h2 className='text-2xl lg:text-3xl text-center'>
                 Tus promociones este mes:
@@ -311,7 +311,7 @@ const SesionPremium = () => {
                                 alt='Imagen predeterminada de promoción'
                                 width={500}
                                 height={300}
-                                className='max-w-xl h-auto object-cover rounded-md'
+                                className='w-full w-full max-w-xl h-auto object-cover rounded-md'
                               />
                             </div>
                           )}
@@ -324,7 +324,7 @@ const SesionPremium = () => {
                               )
                             }}
                           />
-                          <div className='space-x-4'>
+                          <div className='grid grid-cols-2 space-x-4 md:text-base lg:text-2xl'>
                             {' '}
                             <span className='text-xs md:text-sm text-gray-500'>
                               Fecha de inicio:{' '}
