@@ -31,18 +31,19 @@ const ImageCarouselACC = ({ userId }) => {
   };
 
   return (
-    <div className='sm:w-[150px] md:w-[300px] lg:w-[800px] max-w-[1022px] mx-auto'>
+    <div className='flex justify-center md:w-[750px] lg:w-[900px]' >
       {images.length > 0 ? (
         <Swiper
           spaceBetween={20}
-          slidesPerView={4}
+          slidesPerView={1}
           loop={true}
           centeredSlides={false}
           pagination={{
             clickable: true
           }}
           breakpoints={{
-            640: {
+            
+            320: {
               slidesPerView: 1
             },
             768: {
@@ -52,14 +53,14 @@ const ImageCarouselACC = ({ userId }) => {
               slidesPerView: 4
             }
           }}
-          className='flex justify-center items-center w-full h-[200px]'
+          className='flex flex-col justify-self-center max-w-[250px] md:max-w-[450px] lg:max-w-[900px] h-full'
         >
           {images.map((image, index) => (
             <SwiperSlide key={index}>
               <img
                 src={image}
                 alt={`Slide ${index}`}
-                className='w-[200px] h-[200px] object-cover rounded-lg cursor-pointer'
+                className='w-full h-[200px] object-cover rounded-lg cursor-pointer'
                 onClick={() => handleImageClick(image)}
               />
             </SwiperSlide>
