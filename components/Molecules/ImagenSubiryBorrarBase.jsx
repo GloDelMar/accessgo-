@@ -188,13 +188,16 @@ const ImagenSubiryBorrarBase = ({ userId }) => {
         de todas las personas. Estas imágenes ayudarán a destacar las
         características que promueven la inclusión.
       </p>
-      <div className='w-full place-items-center grid sm:grid-cols-2 sm:gap-2  md:grid-cols-2 md:gap-4 lg:grid-cols-4 mb-8'>
+
+      {/* className='w-full sm:max-w-[320px] sm:max-h-[200px] place-items-center grid sm:grid-cols-2 sm:gap-2  md:grid-cols-2 md:gap-4 lg:grid-cols-4 mb-8' */}
+      <div className='w-full sm:flex sm:flex-col justify-center md:flex-row md:flex-wrap md:gap-4'>
         {Array(4)
           .fill(null)
           .map((_, index) => (
             <div
               key={index}
-              className='relative mt-8 sm:w-[200px] sm:h-[200px] border border-gray-300 flex justify-center items-center rounded-lg overflow-hidden'
+              className=' relative sm:w-[200px] sm:h-[200px] border border-red-300 mb-8'
+              
             >
               {images[index] ? (
                 <>
@@ -222,7 +225,7 @@ const ImagenSubiryBorrarBase = ({ userId }) => {
                     width={320}
                     height={320}
                     alt='Upload Placeholder'
-                    className='sm:w-[] sm:h-full'
+                    className='sm:w-full sm:h-full'
                   />
                   <input
                     type='file'

@@ -311,6 +311,7 @@ const View23 = () => {
 
   return (
     <>
+
       <div className='w-full max-w-[900px] mx-auto p-4 md:p-6 bg-white rounded-lg shadow-sm'>
         <h1 className='text-4xl font-bold text-center mb-6 text-[#2F4F4F]'>
           ¡Cuéntanos sobre ustedes!
@@ -391,6 +392,7 @@ const View23 = () => {
                     }
                     className={`flex-1 px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50 ${formValues.horario.abierto24horas ? "opacity-50" : ""
                       }`}
+
                   />
                   <span className="text-[#546E7A]">a</span>
                   <input
