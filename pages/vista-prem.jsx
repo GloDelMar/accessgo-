@@ -69,7 +69,7 @@ export default function CardFree() {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className='flex flex-col justify-center max-w-screen-sm w-full  h-full md:p-4 lg:p-8'>
+    <div className='flex flex-col justify-center items-center max-w-screen-sm w-full h-full md:p-4 lg:p-8'>
       <div className='w-full mt-4 flex flex-col justify-center items-center'>
         <p className='text-[#2F4F4F] text-[20px] md:text-[40px] lg:text-[56px] text-center font-semibold'>
           ¡AccessGo!
@@ -86,7 +86,7 @@ export default function CardFree() {
           height={500}
           layout='responsive'
         />
-        <div className=' flex flex-row gap-5 mt-2 justify-between '>
+        <div className='grid grid-cols-3 gap-5 mt-2 justify-between items-center '>
           {companyData?.data?.company?.redesSociales?.facebook && (
             <a href={companyData.data.company.redesSociales.facebook} target='_blank' rel='noopener noreferrer'>
               <Image className='w-[50px]' src='/facebook_logo.svg' alt='Facebook' width={50} height={50} />
@@ -99,29 +99,15 @@ export default function CardFree() {
           )}
           {companyData?.data?.company?.redesSociales?.twitter && (
             <a href={companyData.data.company.redesSociales.twitter} target='_blank' rel='noopener noreferrer'>
-              <Image className='w-[75px]' src='/x-logo.svg' alt='Twitter' width={75} height={75} />
+              <Image className='w-[85px] h-[85px]' src='/x-logo.svg' alt='Twitter' width={75} height={75} />
             </a>
           )}
         </div>
       </div>
 
       <section className='flex flex-col justify-between p-2 md:flex-row lg:flex-row w-full mt-4'>
-        <div className='flex flex-col'>
-          <div className='flex items-center mb-2'>
-            <Image
-              src={
-                companyData?.data?.company?.profilePicture || defaultProfilePic
-              }
-              alt='Foto de perfil'
-              className='w-20 h-20 rounded-full p-1'
-              width={80}
-              height={80}
-            />
-            <p className='w-full h-[40px] text-[#7E952A] text-[20px] md:text-2xl font-semibold'>
-              {companyData?.data?.company?.companyName ||
-                'Información no disponible.'}
-            </p>
-          </div>
+        <div className='w-full flex flex-col'>
+          
           {/* Contenedor de estrellas debajo del nombre */}
           <div className='flex flex-row mt-2'>
             {[1, 2, 3, 4, 5].map((star) => (
@@ -198,8 +184,8 @@ export default function CardFree() {
         </div>
       </section>
 
-      <div className='w-full flex flex-col justify-center items-center mt-8'>
-        <div className='border p-3 rounded mt-4 bg-[#ECEFF1] w-[290px]  md:w-full  justify-center flex flex-col items-center text-[#455A64]'>
+      <div className='w-full sm:max-w-[320px] flex flex-col justify-self-center items-center mt-8'>
+        <div className='border p-3 rounded mt-4 bg-[#ECEFF1] w-[290px]  md:w-full  justify-center flex flex-col text-[#455A64]'>
           <h4 value='Place' className='text-[#546E7A] font-semibold'>
             Dirección:
           </h4>
@@ -216,11 +202,13 @@ export default function CardFree() {
             {companyData?.data?.company?.phone || 'Información no disponible.'}
           </p>
         </div>
-        <div className='flex flex-col justify-center gap-5'>
+        <div className='flex flex-col w-full justify-item-center gap-5'>
           <h1 className='text-center text-[#2F4F4F] mt-8'>
             Imagenes de accesibilidad proporcionadas por la empresa:
           </h1>
-          <ImageCarouselACC userId={id} />
+          <div className='flex justify-center w-full h-full'>
+          <ImageCarouselACC userId={id} className='sm:max-w-[300px]' />
+          </div>
         </div>
         <div>
           <AccessVisibility companyId={id} />
