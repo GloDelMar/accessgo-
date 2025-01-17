@@ -107,8 +107,8 @@ const View21 = () => {
 
         <div className='flex flex-col lg:flex-row gap-6 p-6 max-w-4xl mx-auto'>
           {/* Contenedor de perfil */}
-          <div className='max-w-40 max-h-40 p-4 rounded-md bg-[#F5F0E5] lg:w-1/3 flex justify-center'>
-            <div className=' w-32 h-32 rounded-full overflow-hidden'>
+          <div className='w-full lg:w-1/3 flex justify-center'>
+            <div className='bg-[#F5F0E5] max-w-[231px] w-full max-h-[231px] rounded-[25px] shadow-md p-4 flex justify-center items-center'>
               <Image
                 src={
                   companyData?.data?.company?.profilePicture || '/perfil1.png'
@@ -116,7 +116,7 @@ const View21 = () => {
                 alt='Foto de perfil'
                 width={300}
                 height={150}
-                className='w-full h-full object-cover'
+                className='rounded-full object-cover justify-self-center w-full h-full'
               />
             </div>
           </div>
@@ -127,7 +127,7 @@ const View21 = () => {
                 <h3 className='text-lg font-semibold text-[#2F4F4F] mb-2 md:mb-0'>
                   Tu calificación es de:
                 </h3>
-                <div className='flex'>
+                <div className='flex justify-center'>
                   {[1, 2, 3, 4, 5].map((star) => (
                     <svg
                       key={star}
