@@ -76,7 +76,7 @@ export default function CardFree() {
           height={500}
           layout="intrinsic"
         />
-        <div className=' flex flex-row gap-5 mt-2 justify-between '>
+        <div className='grid grid-cols-3 gap-5 mt-2 justify-between items-center'>
           {companyData?.data?.company?.redesSociales?.facebook && (
             <a href={companyData.data.company.redesSociales.facebook} target='_blank' rel='noopener noreferrer'>
               <Image className='w-[50px]' src='/facebook_logo.svg' alt='Facebook' width={50} height={50} />
@@ -89,7 +89,7 @@ export default function CardFree() {
           )}
           {companyData?.data?.company?.redesSociales?.twitter && (
             <a href={companyData.data.company.redesSociales.twitter} target='_blank' rel='noopener noreferrer'>
-              <Image className='w-[75px]' src='/x-logo.svg' alt='Twitter' width={75} height={75} />
+              <Image className='w-[85px] h-[85px]' src='/x-logo.svg' alt='Twitter' width={75} height={75} />
             </a>
           )}
         </div>
@@ -97,18 +97,7 @@ export default function CardFree() {
 
       <section className="flex flex-col md:flex-row lg:flex-row justify-between p-2 mt-4 w-full">
         <div className="flex flex-col max-w-full">
-          <div className="flex items-center">
-            <Image
-              src={companyData?.data?.company?.profilePicture || defaultProfilePic}
-              alt="Foto de perfil"
-              className="w-20 h-20 rounded-full p-1"
-              width={80}
-              height={80}
-            />
-            <p className="text-[#7E952A] text-[20px] md:text-2xl lg:text-3xl font-semibold ml-2">
-              {getValueOrDefault(companyData?.data?.company?.companyName)}
-            </p>
-          </div>
+          
           <div className="mt-2">
             <div className="flex flex-row">
               {[1, 2, 3, 4, 5].map((star) => (
@@ -134,17 +123,18 @@ export default function CardFree() {
             {getValueOrDefault(companyData?.data?.company?.description)}
           </p>
         </div>
-        <div className="w-full mt-4 md:mt-0">
+
+        <div className="flex flex-col justify-center items-start md:items-end  w-full mt-4 md:mt-0">
           <br />
-          <p className="text-sm text-[#607D8B] mt-2 flex justify-end">Dias de servicio</p>
-          <div className="flex flex-row mt-2 justify-end items-start gap-2">
+          <p className="text-sm text-[#607D8B] mt-2 flex ">Dias de servicio</p>
+          <div className="flex flex-row mt-2   gap-2">
             <Image
               src="/calendarVector.png"
               alt="Calendario"
               width={16}
               height={14}
             />
-            <div className="text-[12px] md:text-sm lg:text-base text-[#546E7A] text-right">
+            <div className="text-[12px] md:text-sm lg:text-base text-[#546E7A] ">
               {(companyData?.data?.company?.diasDeServicio || ['Información no disponible']).map(
                 (dia, index) => (
                   <div key={index}>{dia}</div>
@@ -155,8 +145,8 @@ export default function CardFree() {
 
 
           {/* Hora de apertura */}
-          <p className="text-sm text-[#607D8B] mt-2 flex justify-end">Horario</p>
-          <div className='flex items-center justify-end gap-2 mt-2'>
+          <p className="text-sm text-[#607D8B] mt-2 flex ">Horario</p>
+          <div className='flex items-center  gap-2 mt-2'>
             <Image
               src='/clockOpeningVector.png'
               alt='ícono de reloj para hora de iniciar'
@@ -170,7 +160,7 @@ export default function CardFree() {
             </p>
           </div>
           {/* Hora de cierre */}
-          <div className='flex items-center justify-end gap-2 mt-2'>
+          <div className='flex items-center  gap-2 mt-2'>
             <Image
               src='/clockClosingVector.png'
               alt='ícono de reloj para hora de salida'
@@ -198,11 +188,13 @@ export default function CardFree() {
           </p>
         </div>
 
-        <div className="flex flex-col md:w-full max-w-screen-sm justify-center gap-5">
+        <div className="flex flex-col w-full justify-item-center gap-5">
           <h1 className="text-center text-[#2F4F4F] mt-8">
             Imagenes de accesibilidad proporcionadas por la empresa:
           </h1>
-          <ImageCarouselACC userId={id} />
+          <div className='flex justify-center w-full h-full'>
+          <ImageCarouselACC userId={id} className='sm:max-w-[300px]' />
+          </div>
         </div>
 
         <div>
