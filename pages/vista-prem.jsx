@@ -25,7 +25,8 @@ export default function CardFree() {
 
   useEffect(() => {
     if (id) {
-      contarVisita(id, `vista-prem/${id}`);
+     
+      contarVisita(`vista-prem/${id}`, id)
     }
   }, [id]);
 

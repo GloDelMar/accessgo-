@@ -205,8 +205,8 @@ const SesionPremium = () => {
           </div>
         </div>
 
-        <div className='w-full flex flex-col mt-6'>
-          <div className='max-w-xxl mx-auto bg-white shadow-md rounded-lg overflow-hidden border border-gray-200 mt-4'>
+        <div className='"md:w-full text-[#2F4F4F] h-full mt-2 flex flex-col items-center p-4 md:p-8 max-w-screen-sm'>
+          <div className="w-full bg-white shadow-md rounded-lg overflow-hidden border border-gray-200 mt-4">
             <div className='bg-[#2F4F4F] text-white p-4'>
               <h2 className='text-2xl lg:text-3xl text-center'>
                 Tus promociones este mes:
@@ -228,13 +228,13 @@ const SesionPremium = () => {
               )}
 
               {!loading && promociones && promociones.length > 0 && (
-                <ul className='space-y-4 md:space-y-6'>
+                <ul className="space-y-4">
                   {promociones
                     .sort((a, b) => new Date(b.endDate) - new Date(a.endDate))
                     .map((promocion) => (
                       <li
                         key={promocion._id}
-                        className='p-4 md:p-6 border justify-center items-center rounded-lg shadow-sm bg-[#F5F0E5] relative flex flex-col sm:flex-row sm:justify-between '
+                        className="p-4 md:p-6 border rounded-lg shadow-sm bg-[#F5F0E5] flex flex-col  sm:justify-between   "
                       >
                         <button
                           className='absolute top-2 right-2 px-2 py-1 md:px-3 md:py-1.5 border border-transparent rounded-md shadow-sm text-xs md:text-sm text-white 
@@ -243,52 +243,49 @@ const SesionPremium = () => {
                         >
                           X
                         </button>
-                        <div className='mt-6 sm:mt-0  sm:ml-6'>
-                          <h4 className='text-base md:text-2xl text-center font-bold mb-2'>
+                        <div >
+                          <h4 className="text-base text-center md:text-2xl font-bold mb-2">
                             {promocion.name || 'Sin título'}
                           </h4>
                           {promocion.image ? (
-                            <div className='mb-4 w-full h-auto'>
-                              <Image
-                                src={promocion.image} // Imagen desde la base de datos
-                                alt={`Imagen de la promoción: ${promocion.name || 'Sin título'}`}
-                                width={500}
-                                height={300}
-                                className='w-full h-full object-cover rounded-md'
-                              />
-                            </div>
+                            <Image
+                              src={promocion.image}
+                              alt={`Imagen de la promoción: ${promocion.name || 'Sin título'}`}
+                              width={350}
+                              height={300}
+                              className="w-full h-auto object-cover rounded-md"
+                            />
                           ) : (
-                            <div className='mb-4'>
-                              <Image
-                                src={imageDefault} // Imagen predeterminada
-                                alt='Imagen predeterminada de promoción'
-                                width={500}
-                                height={300}
-                                className='max-w-xl h-auto object-cover rounded-md'
-                              />
-                            </div>
+                            <Image
+                              src={imageDefault}
+                              alt="Imagen predeterminada de promoción"
+                              width={350}
+                              height={300}
+                              className="w-full h-auto object-cover rounded-md"
+                            />
                           )}
-
+                        </div>
+                        <div className=" mt-6 sm:mt-0">
                           <div
-                            className='mb-2 text-sm md:text-base text-gray-700'
+                            className="text-sm md:text-base text-gray-700"
                             dangerouslySetInnerHTML={{
-                              __html: DOMPurify.sanitize(
-                                promocion.description || 'Sin descripción'
-                              )
+                              __html: DOMPurify.sanitize(promocion.description || 'Sin descripción'),
                             }}
                           />
-                          <div className='space-x-4'> <span className='text-xs md:text-sm text-gray-500'>
-                            Fecha de inicio:{' '}
-                            {promocion.endDate
-                              ? new Date(promocion.startDate).toLocaleDateString()
-                              : 'Sin fecha'}
-                          </span>
-                            <span className='text-xs md:text-sm text-gray-500'>
+                          <div className="space-x-4 text-xs md:text-sm text-gray-500 mt-2">
+                            <span>
+                              Fecha de inicio:{' '}
+                              {promocion.startDate
+                                ? new Date(promocion.startDate).toLocaleDateString()
+                                : 'Sin fecha'}
+                            </span>
+                            <span>
                               Fecha de vencimiento:{' '}
                               {promocion.endDate
                                 ? new Date(promocion.endDate).toLocaleDateString()
                                 : 'Sin fecha'}
-                            </span></div>
+                            </span>
+                          </div>
                         </div>
                       </li>
                     ))}

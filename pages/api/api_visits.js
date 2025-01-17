@@ -1,17 +1,19 @@
 
-const API_URL = "https://backend-r159.onrender.com"
-export const contarVisita = async (page, id) => {
+const API_URL = "http://localhost:8080"
+//  "https://backend-r159.onrender.com"
+
+export const contarVisita = async (page, companyId) => {
     try {
-        if (!page || !id) {
-            throw new Error('Los parámetros "page" y "id" son obligatorios');
+        if (!page || !companyId) {
+            throw new Error(`Los parámetros "page" y "id" son obligatorios`);
         }
 
-        const response = await fetch(`${API_URL}/api/visitas`, {  
+        const response = await fetch(`${API_URL}/api/visitas`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json', 
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ page, id })  
+            body: JSON.stringify({ page, companyId })
         });
 
         if (!response.ok) {
@@ -19,12 +21,19 @@ export const contarVisita = async (page, id) => {
         }
 
         const data = await response.json();
-        console.log('Visita registrada:', data);
+
+        if (data.message && data.message === 'Ya tiene visita registrada.') {
+            console.log('Ya tiene visita registrada.');
+        } else {
+            console.log('Visita registrada:', data);
+        }
 
     } catch (error) {
         console.error('Error al registrar la visita:', error);
     }
 };
+
+
 export const conteoVisita = async (id, periodo) => {
     try {
         if (!id || !periodo) {
