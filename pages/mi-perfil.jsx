@@ -113,7 +113,7 @@ const View7 = () => {
             </h2>
           </div>
         </div>
-        <div className="flex flex-col space-y-4 py-4 lg:items-center lg:space-y-6">
+        <div className="flex flex-col space-y-4 py-4 items-center lg:space-y-6">
           <h3 className="text-2xl text-[#2F4F4F] mb-4 lg:text-center">
             Acerca de mí
           </h3>

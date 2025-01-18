@@ -2,9 +2,13 @@ import { useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper-bundle.css';
 
+
+
 const ImageCarouselACC = ({ userId }) => {
+  
   const [images, setImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -30,37 +34,41 @@ const ImageCarouselACC = ({ userId }) => {
     setSelectedImage(null);
   };
 
+  
+
   return (
     <div className='flex justify-center md:w-[750px] lg:w-[900px]' >
       {images.length > 0 ? (
         <Swiper
+          pagination={{
+            clickable: images.length > 1,
+          }}
           spaceBetween={20}
           slidesPerView={1}
-          loop={true}
-          centeredSlides={false}
-          pagination={{
-            clickable: true
-          }}
+          loop={images.length > 1}
+          centeredSlides={images.length === 1}
           breakpoints={{
             
             320: {
               slidesPerView: 1
             },
             768: {
-              slidesPerView: 2
+              slidesPerView: Math.min(images.length, 2)
             },
             1024: {
-              slidesPerView: 4
+              slidesPerView: Math.min(images.length, 4)
             }
           }}
-          className='flex flex-col justify-self-center max-w-[250px] md:max-w-[450px] lg:max-w-[900px] h-full'
+          className={`flex ${
+            images.length === 1 ? 'justify-center' : ''
+          } flex-col justify-self-center max-w-[250px] md:max-w-[450px] lg:max-w-[900px] h-full`}
         >
           {images.map((image, index) => (
             <SwiperSlide key={index}>
               <img
                 src={image}
                 alt={`Slide ${index}`}
-                className='w-full h-[200px] object-cover rounded-lg cursor-pointer'
+                className='justify-self-center w-[200px] h-[200px] object-cover rounded-lg cursor-pointer'
                 onClick={() => handleImageClick(image)}
               />
             </SwiperSlide>
