@@ -5,7 +5,7 @@ import { getCompanyById } from './api/api_company';
 import { getBusinessAverageRanking } from './api/api_ranking';
 import CommentSection from '../components/Molecules/CommentsCard';
 import AccessVisibility from '@/components/Molecules/muestraAccess';
-import { contarVisita } from './api/api_visits';
+import { contarVisita, obtenerIP } from './api/api_visits';
 import { getPromoByCompanyId } from './api/api_promos';
 import DOMPurify from 'dompurify';
 import ImageCarouselACC from '@/components/Molecules/ImageCarouselACC';
@@ -24,10 +24,17 @@ export default function CardFree() {
   const { id } = router.query;
 
   useEffect(() => {
-    if (id) {
-      contarVisita(id, `vista-prem/${id}`);
-    }
-  }, [id]);
+    const registrarVisita = async () => {
+        if (id) {
+            const ip = await obtenerIP(); // Obtén la IP del cliente
+            if (ip) {
+                contarVisita(`vista-prem/${id}`, id, ip); // Envía la IP al backend
+            }
+        }
+    };
+
+    registrarVisita();
+}, [id]);
 
   const fetchAverageRating = useCallback(async () => {
     if (!id) return;

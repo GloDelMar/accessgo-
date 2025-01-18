@@ -329,7 +329,6 @@ const View23 = () => {
                 userId={companyId}
                 setSelectedImage={setSelectedImage}
               />
-
             </div>
           </div>
 
@@ -370,9 +369,7 @@ const View23 = () => {
                 >
                   Giro de tu negocio
                 </label>
-
                 <p className='text-sm font-medium text-[#546E7A] mb-1 border p-3 border-gray-400 rounded-md'>{formValues.giro}</p>
-
               </div>
               <div className="w-full">
                 <label
