@@ -439,19 +439,19 @@ const HomeContent = () => {
               </Link>
             </div>
         </div>
-        <div className='hidden flex-row md:flex mb-12 items-center justify-center gap-10'>
+        <div className='hidden w-full w-full  md:grid md:grid-cols-4 mb-12 items-center justify-center gap-2'>
           <img
             src='/referencias/calific.jpg'
-            className='w-50 h-48 object-cover'
+            className='w-full h-48 object-cover'
           />
           <img
             src='/referencias/comentar.jpg'
-            className='w-48 h-48 object-cover'
+            className='w-full h-48 object-cover'
           />
-          <img src='/referencias/geo.jpg' className='w-70 h-48 object-cover' />
+          <img src='/referencias/geo.jpg' className='w-full h-48 object-cover' />
           <img
             src='/referencias/rest7.jpg'
-            className='w-48 h-48 object-cover'
+            className='w-full h-48 object-cover'
           />
         </div>
         <div className='md:hidden flex items-center justify-center gap-10'>
@@ -467,9 +467,9 @@ const HomeContent = () => {
           </div>
         </div>
 
-        <div className='sm:hidden'>
+        {/* <div className='sm:hidden'>
           <ParticipaSlider />
-        </div>
+        </div> */}
       </div>
     </div>
   );

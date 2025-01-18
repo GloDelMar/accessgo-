@@ -127,13 +127,13 @@ export default function CardFree() {
         <div className="flex flex-col justify-center items-start md:items-end  w-full mt-4 md:mt-0">
           <br />
           <p className="text-sm text-[#607D8B] mt-2 flex ">Dias de servicio</p>
-          <div className="flex flex-row mt-2   gap-2">
             <Image
               src="/calendarVector.png"
               alt="Calendario"
               width={16}
               height={14}
             />
+          <div className="flex flex-row mt-2   gap-2">
             <div className="text-[12px] md:text-sm lg:text-base text-[#546E7A] ">
               {(companyData?.data?.company?.diasDeServicio || ['Información no disponible']).map(
                 (dia, index) => (

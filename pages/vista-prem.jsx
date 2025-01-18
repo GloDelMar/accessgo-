@@ -277,14 +277,14 @@ export default function CardFree() {
                             __html: DOMPurify.sanitize(promocion.description || 'Sin descripción'),
                           }}
                         />
-                        <div className="space-x-4 text-xs md:text-sm text-gray-500 mt-2">
-                          <span>
+                        <div className="grid grid-cols-2 space-x-4 text-xs md:text-sm text-gray-500 mt-2">
+                          <span className='text-xs md:text-sm text-gray-500'>
                             Fecha de inicio:{' '}
                             {promocion.startDate
                               ? new Date(promocion.startDate).toLocaleDateString()
                               : 'Sin fecha'}
                           </span>
-                          <span>
+                          <span className='text-xs md:text-sm text-gray-500'>
                             Fecha de vencimiento:{' '}
                             {promocion.endDate
                               ? new Date(promocion.endDate).toLocaleDateString()

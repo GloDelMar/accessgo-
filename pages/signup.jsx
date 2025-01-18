@@ -16,7 +16,7 @@ const SignUp = () => {
   return (
     <div className='flex items-center'>
       <div className='flex items-center w-full bg-white'>
-        <div className='flex flex-col h-screen my-[40px] items-center bg-white w-[300px] md:w-[600px] p-2'>
+        <div className='flex flex-col h-full my-[40px] items-center bg-white w-[300px] md:w-[600px] p-2'>
           <div className='flex flex-col items-center'>
             <h1 className='text-[#2F4F4F] text-2xl md:text-4xl font-bold mb-8'>
               ¡Bienvenid@ a AccessGo!
