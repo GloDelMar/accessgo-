@@ -1,11 +1,16 @@
 
-const API_URL = "http://localhost:8080"
-//  "https://backend-r159.onrender.com"
+const API_URL =  "https://backend-r159.onrender.com"
 
 export const contarVisita = async (page, companyId) => {
     try {
         if (!page || !companyId) {
-            throw new Error(`Los parámetros "page" y "id" son obligatorios`);
+            throw new Error('Los parámetros "page" y "companyId" son obligatorios');
+        }
+
+        const userIp = await obtenerIP(); // Obtén la IP del usuario
+        if (!userIp) {
+            console.warn('No se pudo obtener la IP del usuario');
+            return;
         }
 
         const response = await fetch(`${API_URL}/api/visitas`, {
@@ -13,7 +18,7 @@ export const contarVisita = async (page, companyId) => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ page, companyId })
+            body: JSON.stringify({ page, companyId, ip: userIp }), // Envía la IP al backend
         });
 
         if (!response.ok) {
@@ -34,13 +39,14 @@ export const contarVisita = async (page, companyId) => {
 };
 
 
-export const conteoVisita = async (id, periodo) => {
+
+export const conteoVisita = async (companyId, rango) => {
     try {
-        if (!id || !periodo) {
+        if (!companyId || !rango) {
             throw new Error('El parámetro "id" y "periodo" son obligatorios');
         }
 
-        const response = await fetch(`${API_URL}/api/visitas/${id}?rango=${periodo}`, {
+        const response = await fetch(`${API_URL}/api/visitas/${companyId}?rango=${rango}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -53,10 +59,10 @@ export const conteoVisita = async (id, periodo) => {
 
         const data = await response.json();
 
-        if (data && data.visitas) {
-            console.log(`Estadísticas de visitas para el período ${periodo}:`, data.visitas);
+        if (data && data.visits) {
+            console.log(`Estadísticas de visitas para el período ${rango}:`, data.visits);
         } else {
-            console.log(`No se encontraron visitas para el período ${periodo}.`);
+            console.log(`No se encontraron visitas para el período ${rango}.`);
         }
 
     } catch (error) {
@@ -64,3 +70,17 @@ export const conteoVisita = async (id, periodo) => {
     }
 };
 
+
+export const obtenerIP = async () => {
+    try {
+        const response = await fetch('https://api.ipify.org?format=json');
+        if (!response.ok) {
+            throw new Error(`Error al obtener la IP: ${response.statusText}`);
+        }
+        const data = await response.json();
+        return data.ip;
+    } catch (error) {
+        console.error('Error al obtener la IP:', error);
+        return null; // Manejar el caso en que no se pueda obtener la IP
+    }
+};
