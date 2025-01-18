@@ -157,7 +157,7 @@ const AccesForm = () => {
           await createRestaurantAccessibility(dataToSave);
         }
   
-        router.push("/planes");
+        router.push("/datos-negocio1");
       } else {
         // Actualizar datos existentes de accesibilidad
         let updateFunction;
