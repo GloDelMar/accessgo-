@@ -21,7 +21,7 @@ import DOMPurify from 'dompurify';
 import ImagenSubiryBorrarPrem from '@/components/Molecules/ImagenSubiryBorrarPrem';
 import { Toaster } from 'sonner';
 
-const imageDefault = "/4574c6_19f52cfb1ef44a3d844774c6078ffafc~mv2.png"
+const imageDefault = '/4574c6_19f52cfb1ef44a3d844774c6078ffafc~mv2.png';
 
 ChartJS.register(
   CategoryScale,
@@ -119,6 +119,32 @@ const SesionPremium = () => {
     }
   };
 
+  const handleClickListo = async () => {
+    const userType = localStorage.getItem('tipoUsuario');
+
+    if (userType === 'company') {
+      const userId = localStorage.getItem('userId');
+
+      try {
+        const Data = await getCompanyById(userId);
+
+        console.log('data', Data);
+        const cuentaUsuario = Data.data.company.cuenta;
+        console.log('cuenta de compañia', cuentaUsuario);
+
+        if (cuentaUsuario === 'free') {
+          router.push(`/vista-base?id=${userId}`);
+        } else if (cuentaUsuario === 'premium') {
+          router.push(`/vista-prem?id=${userId}`);
+        } else {
+          console.error('Tipo de cuenta no reconocido.');
+        }
+      } catch (error) {
+        console.error('Error al obtener los datos de la compañía:', error);
+      }
+    }
+  };
+
   return (
     <main className='w-full flex overflow-hidden flex-col items-center px-4 sm:px-10 md:px-20 pt-28 bg-white pb-[1572px] max-sm:px-5 max-sm:py-24'>
       <div className='container mx-auto px-4 py-8 max-w-4xl'>
@@ -131,14 +157,16 @@ const SesionPremium = () => {
         </h1>
 
         <div className='flex flex-col lg:flex-row gap-6 p-6 max-w-4xl mx-auto'>
-          <div className="w-full lg:w-1/3 flex justify-center">
-            <div className="bg-[#F5F0E5] max-w-[231px] w-full h-[231px] rounded-[25px] shadow-md p-4 flex justify-center items-center">
+          <div className='w-full lg:w-1/3 flex justify-center'>
+            <div className='bg-[#F5F0E5] max-w-[231px] w-full max-h-[231px] rounded-[25px] shadow-md p-4 flex justify-center items-center'>
               <Image
-                src={companyData?.data?.company?.profilePicture || '/perfil1.png'}
-                alt="Foto de perfil"
+                src={
+                  companyData?.data?.company?.profilePicture || '/perfil1.png'
+                }
+                alt='Foto de perfil'
                 width={200}
                 height={200}
-                className="rounded-full object-cover"
+                className='rounded-full object-cover justify-self-center w-full h-full'
               />
             </div>
           </div>
@@ -149,14 +177,15 @@ const SesionPremium = () => {
                 <h3 className='text-lg font-semibold text-[#2F4F4F] mb-2 md:mb-0'>
                   Tu calificación es de:
                 </h3>
-                <div className='flex'>
+                <div className='flex justify-center'>
                   {[1, 2, 3, 4, 5].map((star) => (
                     <svg
                       key={star}
-                      className={`w-5 h-5 ${star <= Math.round(averageRating)
-                        ? 'text-yellow-400'
-                        : 'text-gray-300'
-                        } fill-current`}
+                      className={`w-5 h-5 ${
+                        star <= Math.round(averageRating)
+                          ? 'text-yellow-400'
+                          : 'text-gray-300'
+                      } fill-current`}
                       viewBox='0 0 24 24'
                     >
                       <path d='M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z' />
@@ -205,8 +234,24 @@ const SesionPremium = () => {
           </div>
         </div>
 
-        <div className='"md:w-full text-[#2F4F4F] h-full mt-2 flex flex-col items-center p-4 md:p-8 max-w-screen-sm'>
-          <div className="w-full bg-white shadow-md rounded-lg overflow-hidden border border-gray-200 mt-4">
+        <div className='flex justify-self-center items-center py-'>
+          <Link
+            href='#'
+            className='block px-4 py-2 hover:bg-gray-100'
+            onClick={handleClickListo}
+          >
+            <button
+              className='px-6 py-2 border border-transparent rounded-md shadow-sm
+              text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none
+              focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]'
+            >
+              Listo
+            </button>
+          </Link>
+        </div>
+
+        <div className='w-full sm:w-[300px] sm:h-full lg:w-[600px] flex flex-col justify-self-center mt-6 '>
+          <div className='w-full max-w-xxl mx-auto bg-white shadow-md rounded-lg overflow-hidden border border-gray-200 mt-4'>
             <div className='bg-[#2F4F4F] text-white p-4'>
               <h2 className='text-2xl lg:text-3xl text-center'>
                 Tus promociones este mes:
@@ -228,13 +273,13 @@ const SesionPremium = () => {
               )}
 
               {!loading && promociones && promociones.length > 0 && (
-                <ul className="space-y-4">
+                <ul className='space-y-4 md:space-y-6'>
                   {promociones
                     .sort((a, b) => new Date(b.endDate) - new Date(a.endDate))
                     .map((promocion) => (
                       <li
                         key={promocion._id}
-                        className="p-4 md:p-6 border rounded-lg shadow-sm bg-[#F5F0E5] flex flex-col  sm:justify-between   "
+                        className='p-4 md:p-6 border justify-center items-center rounded-lg shadow-sm bg-[#F5F0E5] relative flex flex-col sm:flex-row sm:justify-between '
                       >
                         <button
                           className='absolute top-2 right-2 px-2 py-1 md:px-3 md:py-1.5 border border-transparent rounded-md shadow-sm text-xs md:text-sm text-white 
@@ -243,46 +288,58 @@ const SesionPremium = () => {
                         >
                           X
                         </button>
-                        <div >
-                          <h4 className="text-base text-center md:text-2xl font-bold mb-2">
+                        <div className='mt-6 sm:mt-0  sm:ml-6'>
+                          <h4 className='text-base md:text-2xl text-center font-bold mb-2'>
                             {promocion.name || 'Sin título'}
                           </h4>
                           {promocion.image ? (
-                            <Image
-                              src={promocion.image}
-                              alt={`Imagen de la promoción: ${promocion.name || 'Sin título'}`}
-                              width={350}
-                              height={300}
-                              className="w-full h-auto object-cover rounded-md"
-                            />
+                            <div className='mb-4 w-full h-auto'>
+                              <Image
+                                src={promocion.image} // Imagen desde la base de datos
+                                alt={`Imagen de la promoción: ${
+                                  promocion.name || 'Sin título'
+                                }`}
+                                width={500}
+                                height={300}
+                                className='w-full h-full object-cover rounded-md'
+                              />
+                            </div>
                           ) : (
-                            <Image
-                              src={imageDefault}
-                              alt="Imagen predeterminada de promoción"
-                              width={350}
-                              height={300}
-                              className="w-full h-auto object-cover rounded-md"
-                            />
+                            <div className='mb-4'>
+                              <Image
+                                src={imageDefault} // Imagen predeterminada
+                                alt='Imagen predeterminada de promoción'
+                                width={500}
+                                height={300}
+                                className='w-full w-full max-w-xl h-auto object-cover rounded-md'
+                              />
+                            </div>
                           )}
-                        </div>
-                        <div className=" mt-6 sm:mt-0">
+
                           <div
-                            className="text-sm md:text-base text-gray-700"
+                            className='mb-2 text-sm md:text-base text-gray-700'
                             dangerouslySetInnerHTML={{
-                              __html: DOMPurify.sanitize(promocion.description || 'Sin descripción'),
+                              __html: DOMPurify.sanitize(
+                                promocion.description || 'Sin descripción'
+                              )
                             }}
                           />
-                          <div className="space-x-4 text-xs md:text-sm text-gray-500 mt-2">
-                            <span>
+                          <div className='grid grid-cols-2 space-x-4 md:text-base lg:text-2xl'>
+                            {' '}
+                            <span className='text-xs md:text-sm text-gray-500'>
                               Fecha de inicio:{' '}
-                              {promocion.startDate
-                                ? new Date(promocion.startDate).toLocaleDateString()
+                              {promocion.endDate
+                                ? new Date(
+                                    promocion.startDate
+                                  ).toLocaleDateString()
                                 : 'Sin fecha'}
                             </span>
-                            <span>
+                            <span className='text-xs md:text-sm text-gray-500'>
                               Fecha de vencimiento:{' '}
                               {promocion.endDate
-                                ? new Date(promocion.endDate).toLocaleDateString()
+                                ? new Date(
+                                    promocion.endDate
+                                  ).toLocaleDateString()
                                 : 'Sin fecha'}
                             </span>
                           </div>
@@ -304,7 +361,8 @@ const SesionPremium = () => {
 
         <div>
           <h3 className='text-2xl text-center font-semibold my-8 text-[#2F4F4F]'>
-            Estas son las estadísticas de visitas a tu perfil de AccessGo Premium
+            Estas son las estadísticas de visitas a tu perfil de AccessGo
+            Premium
           </h3>
 
           <EstadisticasVisitas rango={rango} />
@@ -315,7 +373,6 @@ const SesionPremium = () => {
             <option value='año'>Año</option>
           </select>
         </div>
-
 
         <div className='flex flex-row justify-center mt-4 space-x-4 md:space-x-[200px]'>
           <button className='w-[155px] h-[40px] bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C] text-white rounded-lg flex items-center justify-center'>
