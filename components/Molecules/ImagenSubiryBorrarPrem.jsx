@@ -196,7 +196,7 @@ const ImagenSubiryBorrarPrem = ({ userId }) => {
           .map((_, index) => (
             <div
               key={index}
-              className=' relative sm:w-[200px] sm:h-[200px] border border-red-300 mb-8'
+              className=' relative sm:w-[200px] sm:h-[200px] mb-8'
               
             >
               {images[index] ? (
