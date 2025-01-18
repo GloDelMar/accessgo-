@@ -115,8 +115,11 @@ const View6 = () => {
           <h3 className='text-xl text-center text-[#2F4F4F] mb-4'>
             Datos personales
           </h3>
-
+          <div className='flex justify-center items-center'>
           <UploadImageUPP userId={userId} />
+
+          </div>
+
         </div>
 
         <div className='lg:w-2/3 flex flex-col items-center lg:items-start'>

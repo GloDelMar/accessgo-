@@ -34,7 +34,8 @@ export default function CommentSection() {
 
   useEffect(() => {
     if (Array.isArray(comments)) {
-      setCommens(comments);
+      const sortedComments = comments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      setCommens(sortedComments);
     }
   }, [comments]);
 
@@ -42,7 +43,7 @@ export default function CommentSection() {
     if (typeof window !== 'undefined') {
       const storedUserId = localStorage.getItem('userId');
       const storedUserType = localStorage.getItem('tipoUsuario');
-      setUserId(storedUserId);
+      setUserId(storedUserId); 7
       setUserType(storedUserType);
     }
   }, []);
@@ -240,9 +241,8 @@ export default function CommentSection() {
                     <button
                       key={star}
                       onClick={() => setRating(star)}
-                      className={`w-8 h-8 rounded-full border ${
-                        star <= rating ? 'bg-yellow-400' : 'bg-gray-200'
-                      }`}
+                      className={`w-8 h-8 rounded-full border ${star <= rating ? 'bg-yellow-400' : 'bg-gray-200'
+                        }`}
                     >
                       ★
                     </button>
@@ -265,7 +265,7 @@ export default function CommentSection() {
       )}
 
       {/* Sección de comentarios */}
-      <section className="w-full max-w-3xl mx-auto mt-12 bg-gradient-to-br from-gray-50 to-white p-8 rounded-xl shadow-xl">
+      <section className="w-full max-w-3xl mx-auto mt-12 bg-gradient-to-br from-gray-50 to-white p-8 rounded-xl shadow-xl h-96 md:h-[500px] overflow-y-auto">
         <h2 className="text-3xl font-bold text-gray-800 mb-8 flex items-center">
           <MessageCircle className="mr-3 text-blue-500" />
           Comentarios
@@ -277,7 +277,7 @@ export default function CommentSection() {
                 key={comment._id}
                 className="bg-white rounded-xl shadow-md p-6 transition-all duration-300 hover:shadow-lg border border-gray-100"
               >
-                <div className="flex items-start space-x-4">
+                <div className="flex flex-col md:flex-row items-start space-y-4 md:space-y-0 md:space-x-4">
                   <Image
                     src={comment.userId?.profilePicture || defaultProfilePic}
                     alt="Foto de perfil"
@@ -286,14 +286,14 @@ export default function CommentSection() {
                     className="w-14 h-14 rounded-full border-2 border-blue-200 object-cover shadow-sm"
                   />
                   <div className="flex-1">
-                    <div className="flex items-center justify-between mb-3">
+                    <div className="flex flex-row md:flex-row items-start md:items-center justify-between mb-3">
                       <Link
                         href={`/vistaPerfilUsuario?id=${comment.userId?._id}`}
                         className="text-xl font-semibold text-gray-800 hover:text-blue-600 transition-colors duration-200"
                       >
                         {comment.userId?.firstName || 'Nombre no disponible'}
                       </Link>
-                      <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                      <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full mt-0 md:mt-0">
                         {new Date(comment.createdAt).toLocaleDateString('es-ES', {
                           year: 'numeric',
                           month: 'short',
@@ -309,11 +309,10 @@ export default function CommentSection() {
                         {[...Array(5)].map((_, index) => (
                           <span
                             key={index}
-                            className={`text-2xl ${
-                              index < comment.rankingId?.stars
+                            className={`text-2xl ${index < comment.rankingId?.stars
                                 ? 'text-yellow-400'
                                 : 'text-gray-300'
-                            }`}
+                              }`}
                           >
                             ★
                           </span>
@@ -328,22 +327,20 @@ export default function CommentSection() {
                       <div className="mt-6 flex items-center space-x-8">
                         <button
                           onClick={() => handleLike(comment._id)}
-                          className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-200 group ${
-                            interactedComments[comment._id] === 'like'
+                          className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-200 group ${interactedComments[comment._id] === 'like'
                               ? 'bg-blue-100 text-blue-600'
                               : 'bg-gray-100 text-gray-600'
-                          } hover:bg-blue-200 hover:text-blue-700`}
+                            } hover:bg-blue-200 hover:text-blue-700`}
                         >
                           <ThumbsUp className="h-5 w-5 group-hover:scale-110 transition-transform duration-200" />
                           <span className="font-medium">{comment.likes || 0}</span>
                         </button>
                         <button
                           onClick={() => handleDislike(comment._id)}
-                          className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-200 group ${
-                            interactedComments[comment._id] === 'dislike'
+                          className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-200 group ${interactedComments[comment._id] === 'dislike'
                               ? 'bg-red-100 text-red-600'
                               : 'bg-gray-100 text-gray-600'
-                          } hover:bg-red-200 hover:text-red-700`}
+                            } hover:bg-red-200 hover:text-red-700`}
                         >
                           <ThumbsDown className="h-5 w-5 group-hover:scale-110 transition-transform duration-200" />
                           <span className="font-medium">{comment.dislikes || 0}</span>
