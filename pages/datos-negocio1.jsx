@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 import { updateCompany } from './api/api_company';
 import UploadImageCPP from '@/components/Molecules/UploadImageCPP';
 import Image from 'next/image';
+import PlacesNearBy from '@/components/Lugares';
 
 mapboxgl.accessToken =
   'pk.eyJ1IjoiYWNjZXNnbyIsImEiOiJjbTI4NGVjNnowc2RqMmxwdnptcXAwbmhuIn0.0jG0XG0mwx_LHjdJ23Qx4A';
@@ -25,8 +26,8 @@ const View23 = () => {
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [inputRecreativo, setInputRecreativo] = useState("")
-  const [inputEmergencia, setInputEmergencia] = useState("")
+  
+
 
 
   useEffect(() => {
@@ -147,10 +148,11 @@ const View23 = () => {
           twitter: companyData?.redesSociales?.twitter || '',
           tiktok: companyData?.redesSociales?.tiktok || ''
         },
-        lugares: {
+        lugares:{
           recreativos: companyData?.lugares?.recreativos || '',
           emergencia: companyData?.lugares?.emergencia || ''
         }
+
       });
 
       setAddress(companyData?.address || '');
@@ -195,49 +197,59 @@ const View23 = () => {
     }
   };
 
+  const handleupdateLugares = (type, value) => {
+    setFormValues((prev) => ({
+      ...prev,
+      lugares: {
+        ...prev.lugares,
+        [type]: [...(prev.lugares?.[type] || []), value],
+      },
+    }));
+  };
+  
   const handleSubmit = async () => {
     const companyId = localStorage.getItem('userId');
     const userAccountType = localStorage.getItem('cuenta');
 
     if (!companyId) {
-      alert('No se encontró el ID de la empresa en localStorage');
-      return;
+        alert('No se encontró el ID de la empresa en localStorage');
+        return;
     }
 
     const formData = {
-      companyName: formValues.nombreComercial,
-      rfc: formValues.rfc,
-      representanteLegal: formValues.representanteLegal,
-      giro: formValues.giro,
-      horario: {
-        abre: formValues.horario.abre,
-        cierra: formValues.horario.cierre,
-        abierto24horas: formValues.horario.abierto24horas
-      },
-      diasDeServicio: selectedDays,
-      description: formValues.descripcion,
-      address: address,
-      phone: formValues.phone,
-      latitude: markerRef.current ? markerRef.current.getLngLat().lat : latitude,
-      longitude: markerRef.current ? markerRef.current.getLngLat().lng : longitude,
-      redesSociales: formValues.redesSociales,
-      lugares: formValues.lugares
+        companyName: formValues.nombreComercial,
+        rfc: formValues.rfc,
+        representanteLegal: formValues.representanteLegal,
+        giro: formValues.giro,
+        horario: {
+            abre: formValues.horario.abre,
+            cierra: formValues.horario.cierre,
+            abierto24horas: formValues.horario.abierto24horas,
+        },
+        diasDeServicio: selectedDays,
+        description: formValues.descripcion,
+        address: address,
+        phone: formValues.phone,
+        latitude: markerRef.current ? markerRef.current.getLngLat().lat : latitude,
+        longitude: markerRef.current ? markerRef.current.getLngLat().lng : longitude,
+        redesSociales: formValues.redesSociales,
+        lugares: formValues.lugares, // Aquí se usa formValues.lugares
     };
 
     try {
+        const response = await updateCompany(companyId, formData);
+        console.log('Respuesta de actualización:', response);
 
-      const response = await updateCompany(companyId, formData);
-      console.log('Respuesta de actualización:', response);
-
-      if (userAccountType === 'premium') {
-        router.push('/sesion-prem');
-      } else {
-        router.push('/sesion-base');
-      }
+        if (userAccountType === 'premium') {
+            router.push('/sesion-prem');
+        } else {
+            router.push('/sesion-base');
+        }
     } catch (error) {
-      console.error('Error al actualizar la compañía:', error);
+        console.error('Error al actualizar la compañía:', error);
     }
-  };
+};
+
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -252,61 +264,6 @@ const View23 = () => {
     }));
   };
 
-  const handleRecreativoChange = (event) => {
-    setInputRecreativo(event.target.value);
-  };
-
-  const handleEmergenciaChange = (event) => {
-    setInputEmergencia(event.target.value)
-  }
-
-  const handleAddEmergencia = () => {
-    if (inputEmergencia.trim() === '') return; // Validar entrada vacía
-    setFormValues((prev) => ({
-      ...prev,
-      lugares: {
-        ...prev.lugares,
-        emergencia: [...(prev.lugares.emergencia || []), inputEmergencia]
-      }
-    }));
-    setInputEmergencia(''); // Limpiar el input
-  };
-
-  const handleAddRecreativo = () => {
-    if (inputRecreativo.trim() === '') return; // Validar entrada vacía
-    setFormValues((prev) => ({
-      ...prev,
-      lugares: {
-        ...prev.lugares,
-        recreativos: [...(prev.lugares.recreativos || []), inputRecreativo]
-      }
-    }));
-    setInputRecreativo(''); // Limpiar el input
-  };
-
-  const handleDeleteRecreativo = (indexToRemove) => {
-    setFormValues((prev) => ({
-      ...prev,
-      lugares: {
-        ...prev.lugares,
-        recreativos: prev.lugares.recreativos.filter(
-          (_, index) => index !== indexToRemove
-        )
-      }
-    }));
-  };
-
-  const handleDeleteEmergencia = (indexToRemove) => {
-    setFormValues((prev) => ({
-      ...prev,
-      lugares: {
-        ...prev.lugares,
-        emergencia: prev.lugares.emergencia.filter(
-          (_, index) => index !== indexToRemove
-        )
-      }
-    }));
-  };
 
 
   return (
@@ -571,90 +528,34 @@ const View23 = () => {
               style={{ height: '400px' }}
             ></div>
             <div className='mt-4'>
-              <h2 className='text-xl font-semibold text-[#263238]'>Lugares Importantes Cerca de Ti</h2>
-
-              {/* Recreativos */}
+             {/* Recreativos */}
               <div className='mt-3 space-x-2'>
-                <h3 className='text-sm font-medium text-[#546E7A] mb-2'>Para conocer (museos, de recreación, playas, etc.):</h3>
-                <input
-                  type="text"
-                  placeholder="Agregar lugar recreativo"
-                  value={inputRecreativo}
-                  onChange={handleRecreativoChange}
-                  className="border px-2 py-1 rounded-md"
+                <PlacesNearBy
+                  value={formValues.lugares}
+                  lugares={formValues?.lugares || {}} // Pasar lugares inicializados
+                  onUpdateLugares={handleupdateLugares}
                 />
-                <button
-                  onClick={handleAddRecreativo}
-                  className="bg-blue-500 text-white px-4 py-1 rounded-lg hover:bg-blue-700"
-                >
-                  Agregar
-                </button>
-                <ul className='mt-1 rounded-lg'>
-                  {(formValues.lugares.recreativos || []).map((lugar, index) => (
-                    <li className='px-2 my-1 bg-[#F5F0E5] flex justify-between border rounded-lg' key={index}>
-                      {lugar}{" "}
-                      <button
-                        className="bg-red-500 px-2 rounded-full text-white hover:bg-red-700"
-                        onClick={() => handleDeleteRecreativo(index)}
 
-                      >
-                        X
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-
-              {/* Emergencia */}
-              <div className='mt-3 space-x-2'>
-                <h3 className='text-sm font-medium text-[#546E7A] mb-2'>Emergencias (Hospitales, farmacias, etc):</h3>
-                <input
-                  type="text"
-                  placeholder="Agregar lugares para una emergencia"
-                  value={inputEmergencia}
-                  onChange={handleEmergenciaChange}
-                  className="border px-2 py-1 rounded-md"
-                />
-                <button
-                  onClick={handleAddEmergencia}
-                  className="bg-blue-500 text-white px-4 py-1 rounded-lg hover:bg-blue-700"
-                >
-                  Agregar
-                </button>
-                <ul className='mt-1 rounded-lg'>
-                  {(formValues.lugares.emergencia || []).map((lugar, index) => (
-                    <li className='px-2 my-1 bg-[#F5F0E5] flex justify-between border rounded-lg' key={index}>
-                      {lugar}{" "}
-                      <button
-                        onClick={() => handleDeleteEmergencia(index)}
-                        className="bg-red-500 px-2 rounded-full text-white hover:bg-red-700"
-                      >
-                        X
-                      </button>
-                    </li>
-                  ))}
-                </ul>
               </div>
             </div>
           </div>
-        </div>
 
-        <div className='mt-8 flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4 w-full justify-center md:justify-end'>
-          <StyledButton variant='blancoCuadrado' className='w-full md:w-auto'>
-            CANCELAR
-          </StyledButton>
-          <StyledButton
-            variant='blancoCuadrado'
-            className='w-full md:w-auto'
-            onClick={handleSubmit}
-          >
-            GUARDAR
-          </StyledButton>
+          <div className='mt-8 flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4 w-full justify-center md:justify-end'>
+            <StyledButton variant='blancoCuadrado' className='w-full md:w-auto'>
+              CANCELAR
+            </StyledButton>
+            <StyledButton
+              variant='blancoCuadrado'
+              className='w-full md:w-auto'
+              onClick={handleSubmit}
+            >
+              GUARDAR
+            </StyledButton>
+          </div>
         </div>
       </div>
     </>
   );
 };
 
-export default View23;
+export default View23
