@@ -5,6 +5,7 @@ import { getCompanyById } from "./api/api_company";
 import { getBusinessAverageRanking } from "./api/api_ranking";
 import CommentSection from "../components/Molecules/CommentsCard";
 import AccessVisibility from "@/components/Molecules/muestraAccess";
+import ImageCarrouselACC from "@/components/Molecules/ImageCarouselACC";
 
 const defaultProfilePic = "public/6073873.png"
 
@@ -135,10 +136,10 @@ export default function CardFree() {
           <h4 value="Place" className="text-[#546E7A] font-semibold mt-3">Teléfono:</h4>
           <p className="text-center"> {companyData?.data?.company?.phone || "Información no disponible."}</p>
         </div>
-
+        <div><ImageCarrouselACC companyId={id}/></div>
         <div >
           <AccessVisibility companyId={id} />
-        </div>
+                  </div>
       </div>
       <div className="flex justify-center">
       <CommentSection onNewRating={fetchAverageRating} />
