@@ -2,11 +2,15 @@ import React, { useState, useEffect } from "react";
 import { getHotelAccessibility, getRestaurantAccessibility } from "@/pages/api/api_questionnaire";
 import { getCompanyById } from "@/pages/api/api_company";
 import IconButton from "../atoms/IconButton";
+import Modal from "./DisabilitiesInfo";
 
 const AccessVisibility = ({ companyId }) => {
   const [data, setData] = useState(null);
   const [showCondition, setShowCondition] = useState(null);
   const [company, setCompany] = useState(null);
+  const [tooltipVisible, setTooltipVisible] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalDisability, setModalDisability] = useState("");
 
   useEffect(() => {
     const fetchCompany = async () => {
@@ -33,6 +37,16 @@ const AccessVisibility = ({ companyId }) => {
     setShowCondition(showCondition === condition ? null : condition);
   };
 
+  const handleShowModal = (condition) => {
+    setModalDisability(condition);
+    setModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+    setModalDisability("");
+  };
+
   if (!data || !company) {
     return <p>Cargando...</p>;
   }
@@ -54,23 +68,45 @@ const AccessVisibility = ({ companyId }) => {
 
   return (
     <div className="md:w-full text-[#2F4F4F] h-full mt-2 flex flex-col items-center align-center p-2 max-w-screen-sm md:p-4 lg:p-8">
+      <Modal isOpen={modalOpen} onClose={handleModalClose} disabilityType={modalDisability} />
       {/* Botones de condiciones */}
       <div className="border p-3 rounded mt-4 bg-[#ECEFF1] w-[290px]  md:w-full  justify-center flex flex-col items-center text-[#455A64]">
         <p>Haz clic en los <span className="font-bold"> íconos</span> para descubrir cómo trabajamos en
           mejorar la accesibilidad y qué aspectos de tu experiencia hemos
           optimizado para hacer tu visita más cómoda y accesible. Conoce las
-          acciones que hemos tomado para garantizar un entorno inclusivo.</p> 
-          <p className="mt-2">Haz clic una vez más en el mismo ícono para ocultar la información.</p> </div>
-          
+          acciones que hemos tomado para garantizar un entorno inclusivo.</p>
+        <p className="mt-2">Haz clic una vez más en el mismo ícono para ocultar la información.</p> </div>
+
       <div className="flex justify-around mt-3 space-x-2 mb-6">
-        
+
         {validConditions?.map((disability) => (
           <div key={disability.type} className="flex flex-col items-center">
             <IconButton
               condition={disability.type}
               onClick={() => handleConditionClick(disability.type)}
+              onMouseEnter={() => setTooltipVisible(type)}
+              onMouseLeave={() => setTooltipVisible(null)}
+              size="large" 
+              className="w-10 h-10" 
             />
-            <p className="text-sm text-gray-600 mt-1">{disability.type}</p>
+            <div className="relative m-1 md:m-2 text-sm text-[#2F4F4F] mt-1">
+              {/* Botón con Tooltip */}
+              <button
+                id={`boton-de-texto-${disability.type}`} // Asigna un ID único basado en el tipo.
+                className="texto-boton text-xs text-[#2F4F4F] relative"
+                onClick={() => handleShowModal(disability.type)}
+                onMouseEnter={() => setTooltipVisible(disability.type)}
+                onMouseLeave={() => setTooltipVisible(null)}
+              >
+                {disability.type}
+              </button>
+              {/* Tooltip solo visible si se está haciendo hover */}
+              {tooltipVisible === disability.type && (
+                <div className="absolute bg-gray-200 p-2 rounded-md shadow-lg top-8 left-0 z-10">
+                  ¿Saber más...?
+                </div>
+              )}
+            </div>
           </div>
         ))}
       </div>
