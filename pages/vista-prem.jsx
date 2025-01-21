@@ -190,7 +190,8 @@ export default function CardFree() {
         </div>
       </section>
 
-      <div className='w-full sm:max-w-[320px] flex flex-col justify-self-center items-center mt-8'>
+      <div className='w-full flex flex-col justify-self-center items-center mt-8'>
+       <div className='max-w-[400px]'> 
         <div className='border p-3 rounded mt-4 bg-[#ECEFF1] w-[290px]  md:w-full  justify-center flex flex-col text-[#455A64]'>
           <h4 value='Place' className='text-[#546E7A] font-semibold'>
             Dirección:
@@ -207,6 +208,7 @@ export default function CardFree() {
             {' '}
             {companyData?.data?.company?.phone || 'Información no disponible.'}
           </p>
+        </div>
         </div>
         <div className='flex flex-col w-full justify-item-center gap-5'>
           <h1 className='text-center text-[#2F4F4F] mt-8'>
