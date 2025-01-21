@@ -156,7 +156,7 @@ const AccesForm = () => {
         } else if (establishmentType === "restaurante") {
           await createRestaurantAccessibility(dataToSave);
         }
-
+  
         router.push("/planes");
       } else {
         // Actualizar datos existentes de accesibilidad
