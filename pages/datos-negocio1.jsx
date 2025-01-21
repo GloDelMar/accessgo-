@@ -26,7 +26,7 @@ const View23 = () => {
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
 
 
 
@@ -148,7 +148,7 @@ const View23 = () => {
           twitter: companyData?.redesSociales?.twitter || '',
           tiktok: companyData?.redesSociales?.tiktok || ''
         },
-        lugares:{
+        lugares: {
           recreativos: companyData?.lugares?.recreativos || '',
           emergencia: companyData?.lugares?.emergencia || ''
         }
@@ -206,49 +206,53 @@ const View23 = () => {
       },
     }));
   };
-  
+
   const handleSubmit = async () => {
     const companyId = localStorage.getItem('userId');
     const userAccountType = localStorage.getItem('cuenta');
 
     if (!companyId) {
-        alert('No se encontró el ID de la empresa en localStorage');
-        return;
+      alert('No se encontró el ID de la empresa en localStorage');
+      return;
     }
 
     const formData = {
-        companyName: formValues.nombreComercial,
-        rfc: formValues.rfc,
-        representanteLegal: formValues.representanteLegal,
-        giro: formValues.giro,
-        horario: {
-            abre: formValues.horario.abre,
-            cierra: formValues.horario.cierre,
-            abierto24horas: formValues.horario.abierto24horas,
-        },
-        diasDeServicio: selectedDays,
-        description: formValues.descripcion,
-        address: address,
-        phone: formValues.phone,
-        latitude: markerRef.current ? markerRef.current.getLngLat().lat : latitude,
-        longitude: markerRef.current ? markerRef.current.getLngLat().lng : longitude,
-        redesSociales: formValues.redesSociales,
-        lugares: formValues.lugares, // Aquí se usa formValues.lugares
+      companyName: formValues.nombreComercial,
+      rfc: formValues.rfc,
+      representanteLegal: formValues.representanteLegal,
+      giro: formValues.giro,
+      horario: {
+        abre: formValues.horario.abre,
+        cierra: formValues.horario.cierre,
+        abierto24horas: formValues.horario.abierto24horas,
+      },
+      diasDeServicio: selectedDays,
+      description: formValues.descripcion,
+      address: address,
+      phone: formValues.phone,
+      latitude: markerRef.current ? markerRef.current.getLngLat().lat : latitude,
+      longitude: markerRef.current ? markerRef.current.getLngLat().lng : longitude,
+      redesSociales: formValues.redesSociales,
+      lugares: formValues.lugares,
     };
 
     try {
-        const response = await updateCompany(companyId, formData);
-        console.log('Respuesta de actualización:', response);
 
-        if (userAccountType === 'premium') {
-            router.push('/sesion-prem');
-        } else {
-            router.push('/sesion-base');
-        }
+      console.log("el id", companyId)
+      console.log("la info", formData )
+      console.log("lugares", formValues)
+      const response = await updateCompany(companyId, formData);
+      console.log('Respuesta de actualización:', response);
+
+      if (userAccountType === 'premium') {
+        router.push('/sesion-prem');
+      } else {
+        router.push('/sesion-base');
+      }
     } catch (error) {
-        console.error('Error al actualizar la compañía:', error);
+      console.error('Error al actualizar la compañía:', error);
     }
-};
+  };
 
 
   const handleInputChange = (event) => {
@@ -528,7 +532,7 @@ const View23 = () => {
               style={{ height: '400px' }}
             ></div>
             <div className='mt-4'>
-             {/* Recreativos */}
+              {/* Recreativos */}
               <div className='mt-3 space-x-2'>
                 <PlacesNearBy
                   value={formValues.lugares}
