@@ -1,6 +1,7 @@
 
 
 const API_URL = "https://backend-r159.onrender.com";
+
 export const createCompany = async (email, password, type) => {
     try {
         // Construir el objeto con la estructura solicitada
@@ -53,20 +54,21 @@ export function getCompanyById(id){
 }
 
 
+
 export function updateCompany(id, companyData) {
-    return fetch(`${API_URL}/api/company/${id}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(companyData), // Convertir datos a JSON
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`Error updating company with id ${id}`);
-        }
-        return response.json(); // Devolver la respuesta actualizada si es necesario
-    });
+  return fetch(`${API_URL}/api/company/${id}`, {
+      method: "PUT",
+      headers: {
+          "Content-Type": "application/json",
+      },
+      body: JSON.stringify(companyData), // Convertir datos a JSON
+  })
+  .then(response => {
+      if (!response.ok) {
+          throw new Error(`Error updating company with id ${id}`);
+      }
+      return response.json(); // Devolver la respuesta actualizada si es necesario
+  });
 }
 
 export async function getAllCompanies() {

@@ -77,36 +77,34 @@ const AccessVisibility = ({ companyId }) => {
           acciones que hemos tomado para garantizar un entorno inclusivo.</p>
         <p className="mt-2">Haz clic una vez más en el mismo ícono para ocultar la información.</p> </div>
 
-      <div className="flex justify-around mt-3 space-x-2 mb-6">
-
+      <div className="flex justify-evenly space-x-4 md:space-x-6 items-center mt-3 mb-6">
         {validConditions?.map((disability) => (
-          <div key={disability.type} className="flex flex-col items-center">
+          <div
+            key={disability.type}
+            className="flex flex-col md:max-w-[100px] items-center justify-center text-center gap-2"
+          >
             <IconButton
               condition={disability.type}
               onClick={() => handleConditionClick(disability.type)}
-              onMouseEnter={() => setTooltipVisible(type)}
+              onMouseEnter={() => setTooltipVisible(disability.type)}
               onMouseLeave={() => setTooltipVisible(null)}
-              size="large" 
-              className="w-10 h-10" 
+              size="large"
+              className="w-10 h-10"
             />
-            <div className="relative m-1 md:m-2 text-sm text-[#2F4F4F] mt-1">
-              {/* Botón con Tooltip */}
-              <button
-                id={`boton-de-texto-${disability.type}`} // Asigna un ID único basado en el tipo.
-                className="texto-boton text-xs text-[#2F4F4F] relative"
-                onClick={() => handleShowModal(disability.type)}
-                onMouseEnter={() => setTooltipVisible(disability.type)}
-                onMouseLeave={() => setTooltipVisible(null)}
-              >
-                {disability.type}
-              </button>
-              {/* Tooltip solo visible si se está haciendo hover */}
-              {tooltipVisible === disability.type && (
-                <div className="absolute bg-gray-200 p-2 rounded-md shadow-lg top-8 left-0 z-10">
-                  ¿Saber más...?
-                </div>
-              )}
-            </div>
+            <button
+              id={`boton-de-texto-${disability.type}`}
+              className="hidden md:block text-2xs md:text-sm text-[#2F4F4F]"
+              onClick={() => handleShowModal(disability.type)}
+              onMouseEnter={() => setTooltipVisible(disability.type)}
+              onMouseLeave={() => setTooltipVisible(null)}
+            >
+              {disability.type}
+            </button>
+            {tooltipVisible === disability.type && (
+              <div className="absolute bg-gray-200 p-2 rounded-md shadow-lg top-12 left-1/2 transform -translate-x-1/2 z-10">
+                ¿Saber más...?
+              </div>
+            )}
           </div>
         ))}
       </div>
