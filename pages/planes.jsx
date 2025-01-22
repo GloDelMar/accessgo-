@@ -54,7 +54,7 @@ const View15 = () => {
         'Números de contacto'
       ],
       buttonText: '¡UNETE AHORA!',
-      link: 'registro'
+      link: 'datos-negocio1'
     },
     {
       title: 'PREMIUM',
