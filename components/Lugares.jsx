@@ -6,27 +6,32 @@ const PlacesNearBy = ({ lugares, onUpdateLugares }) => {
 
     const handleAddRecreativo = () => {
         if (inputRecreativo.trim() === "") return;
-        onUpdateLugares("recreativos", inputRecreativo);
+        const updatedRecreativos = [...(lugares.recreativos || []), inputRecreativo];
+        onUpdateLugares("recreativos", updatedRecreativos);
         setInputRecreativo("");
     };
 
     const handleAddEmergencia = () => {
         if (inputEmergencia.trim() === "") return;
-        onUpdateLugares("emergencia", inputEmergencia);
+        const updatedEmergencia = [...(lugares.emergencia || []), inputEmergencia];
+        onUpdateLugares("emergencia", updatedEmergencia);
         setInputEmergencia("");
     };
 
     const handleDeleteRecreativo = (indexToRemove) => {
-        onUpdateLugares("recreativos", lugares.recreativos.filter((_, index) => index !== indexToRemove));
+        const updatedRecreativos = (lugares.recreativos || []).filter((_, index) => index !== indexToRemove);
+        onUpdateLugares("recreativos", updatedRecreativos);
     };
 
     const handleDeleteEmergencia = (indexToRemove) => {
-        onUpdateLugares("emergencia", lugares.emergencia.filter((_, index) => index !== indexToRemove));
+        const updatedEmergencia = (lugares.emergencia || []).filter((_, index) => index !== indexToRemove);
+        onUpdateLugares("emergencia", updatedEmergencia);
     };
 
     return (
         <div className="mt-4">
             <h2 className="text-xl font-semibold text-[#263238]">Lugares Importantes Cerca de Ti</h2>
+            {/* Recreativos */}
             <div className="mt-3 space-x-2">
                 <h3 className="text-sm font-medium text-[#546E7A] mb-2">Para conocer (museos, recreación, playas, etc.):</h3>
                 <input
@@ -83,8 +88,8 @@ const PlacesNearBy = ({ lugares, onUpdateLugares }) => {
                         >
                             {lugar}
                             <button
-                                onClick={() => handleDeleteEmergencia(index)}
                                 className="bg-red-500 px-2 rounded-full text-white hover:bg-red-700"
+                                onClick={() => handleDeleteEmergencia(index)}
                             >
                                 X
                             </button>
@@ -95,6 +100,5 @@ const PlacesNearBy = ({ lugares, onUpdateLugares }) => {
         </div>
     );
 };
-
 
 export default PlacesNearBy;
