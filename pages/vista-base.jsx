@@ -197,7 +197,7 @@ export default function CardFree() {
           </div>
         </div>
 
-        <div className='w-full'>
+        <div>
           <AccessVisibility companyId={id} />
         </div>
       </div>
