@@ -21,7 +21,7 @@ const AccesForm = () => {
   const router = useRouter();
   const [tooltipVisible, setTooltipVisible] = useState(null);
   const [activeForm, setActiveForm] = useState("");
- 
+
 
   // Mapea las discapacidades con sus íconos correspondientes.
   const disabilityIcons = [
@@ -36,28 +36,28 @@ const AccesForm = () => {
     const loadData = async () => {
       const accesibilidad = localStorage.getItem("accesibilidad");
       const userId = localStorage.getItem("userId");
-  
+
       if (!userId) {
         alert("No se encontró el usuario. Por favor, inicia sesión.");
         return;
       }
-  
+
       try {
         if (accesibilidad) {
           // Si "accesibilidad" existe, cargamos los datos para actualizar
           const companyData = await getCompanyById(userId);
-  
+
           const tipo = companyData.data.company.giro.toLowerCase();
           console.log("el tipo", tipo);
           setEstablishmentType(tipo);
-  
+
           let accessibilityData = {};
           if (tipo === "restaurante") {
             accessibilityData = await getRestaurantAccessibility(userId);
           } else if (tipo === "hotel") {
             accessibilityData = await getHotelAccessibility(userId);
           }
-  
+
           setFormData({
             ...formData,
             ...accessibilityData, // Precarga los datos existentes
@@ -72,10 +72,10 @@ const AccesForm = () => {
         console.error("Error al cargar los datos:", error);
       }
     };
-  
+
     loadData();
   }, []);
-  
+
 
 
   const handleEstablishmentChange = (e) => {
@@ -117,26 +117,26 @@ const AccesForm = () => {
           : disability
       ),
     };
-  
+
     // Actualiza el estado con los nuevos datos
     setFormData(updatedFormData);
-  
+
     // Puedes loguear para depurar
     console.log("Datos actualizados:", updatedFormData);
-    console.log ("FormData",formData)
+    console.log("FormData", formData)
   };
   const handleSubmit = async () => {
     try {
       const userId = localStorage.getItem("userId");
       console.log("User ID obtenido:", userId);
-  
+
       if (!userId) {
         alert("No se encontró el usuario. Por favor, inicia sesión.");
         return;
       }
-  
+
       const accesibilidad = localStorage.getItem("accesibilidad");
-  
+
       if (!accesibilidad) {
         // Crear nuevos datos de accesibilidad
         const dataToSave = {
@@ -145,35 +145,35 @@ const AccesForm = () => {
           hotelId: establishmentType === "hotel" ? userId : null,
         };
         console.log("Datos a guardar:", dataToSave);
-  
+
         const giro = establishmentType === "hotel" ? "HOTEL" : "RESTAURANTE";
         await updateCompany(userId, { giro });
         console.log("Se actualizó el giro en la empresa con éxito:", { giro });
-        
-  
+
+
         if (establishmentType === "hotel") {
           await createHotelAccessibility(dataToSave);
         } else if (establishmentType === "restaurante") {
           await createRestaurantAccessibility(dataToSave);
         }
   
-        router.push("/datos-negocio1");
+        router.push("/planes");
       } else {
         // Actualizar datos existentes de accesibilidad
         let updateFunction;
-  
+
         if (establishmentType === "restaurante") {
           updateFunction = await updateRestaurantAccessibility(userId, formData);
         } else if (establishmentType === "hotel") {
           updateFunction = await updateHotelAccessibility(userId, formData);
         }
-  
+
         const companyData = await getCompanyById(userId);
         console.log("Datos de la empresa obtenidos:", companyData);
-  
+
         const cuenta = companyData.data.company.cuenta.toLowerCase();
-       
-  
+
+
         if (cuenta === "premium") {
           router.push("/sesion-prem");
         } else if (cuenta === "free") {
@@ -182,7 +182,7 @@ const AccesForm = () => {
           console.warn("Cuenta de usuario no válida");
         }
       }
-  
+
       // Restablece el formulario
       setFormData({});
       setSelectedDisability("");
@@ -193,9 +193,9 @@ const AccesForm = () => {
       alert(`Ocurrió un error al guardar los datos. Detalles: ${error.message || error}`);
     }
   };
-  
-  
-  
+
+
+
   return (
     <div>
       <Modal isOpen={modalOpen} onClose={handleModalClose} disabilityType={modalDisability} />
@@ -219,6 +219,42 @@ const AccesForm = () => {
             rápidamente las características que les brindan comodidad y confianza para elegir su establecimiento
             y disfrutar de una experiencia agradable.
           </p>
+          <p className="mt-4 text-center text-[#2F4F4F]">Estos son los íconos que utilizamos para facilitar el llenado de tus datos:</p>
+          <div className="mt-2">
+          {disabilityIcons.map(({ type, icon }) => (
+                <div key={type} className="flex flex-row items-center my-1 space-x-2 w-full">
+                  <div>
+                    <IconButton
+                      id={`boton-de-icono-${type}`}
+                      condition={type}
+                      icon={icon}
+                      isSelected={selectedDisability === type}
+                      onClick={() => handleShowModal(type)} 
+                      onMouseEnter={() => setTooltipVisible(type)} 
+                      onMouseLeave={() => setTooltipVisible(null)}  
+                      />
+                  </div>
+                  <div className="relative m-2 text-sm text-[#2F4F4F] mt-1">
+                    {/* Botón con Tooltip */}
+                    <button
+                      id={`boton-de-texto-${type}`} // Asigna un ID único basado en el tipo.
+                      className="texto-boton text-sm text-[#2F4F4F] relative"
+                      onClick={() => handleShowModal(type)} 
+                      onMouseEnter={() => setTooltipVisible(type)}
+                      onMouseLeave={() => setTooltipVisible(null)} 
+                    >
+                      {type}
+                    </button>
+                    {/* Tooltip solo visible si se está haciendo hover */}
+                    {tooltipVisible === type && (
+                      <div className="absolute bg-gray-200 p-2 rounded-md shadow-lg top-8 left-0 z-10">
+                        ¿Saber más...?
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+          </div>
           <p className="mt-4 text-justify text-[#2F4F4F]">
             Dada la importancia de esta información, le pedimos cordialmente que dedique un momento a
             revisar cuidadosamente cada sección y marque aquellas particularidades que lo hacen un espacio
@@ -232,7 +268,7 @@ const AccesForm = () => {
           destacar las características que hacen tu espacio accesible e incluyente.
         </p>
         <EstablishmentSelect onChange={handleEstablishmentChange} selectedValue={establishmentType} />
-        { formData && establishmentType && (
+        {formData && establishmentType && (
           <>
             <p className="my-4 text-[#2F4F4F] font-bold">
               2. Da clic en uno de los cinco botones a continuación para explorar las preguntas del formulario.
@@ -250,29 +286,9 @@ const AccesForm = () => {
                       onClick={() => handleConditionClick(type)}
                     />
                   </div>
-                  <div className="relative text-sm text-[#2F4F4F] mt-1">
-                    {/* Botón con Tooltip */}
-                    <button
-                      id={`boton-de-texto-${type}`} // Asigna un ID único basado en el tipo.
-                      className="texto-boton text-sm text-[#2F4F4F] relative"
-                      onClick={() => handleShowModal(type)} // Abre el modal al hacer clic.
-                      onMouseEnter={() => setTooltipVisible(type)} // Muestra tooltip al hover.
-                      onMouseLeave={() => setTooltipVisible(null)} // Oculta tooltip al salir del hover.
-                    >
-                      {type}
-                    </button>
-                    {/* Tooltip solo visible si se está haciendo hover */}
-                    {tooltipVisible === type && (
-                      <div className="absolute bg-gray-200 p-2 rounded-md shadow-lg top-8 left-0 z-10">
-                        ¿Saber más...?
-                      </div>
-                    )}
                   </div>
-                </div>
               ))}
             </div>
-
-
 
             {selectedDisability && (
               <CheckpointsSection

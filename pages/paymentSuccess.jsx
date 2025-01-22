@@ -41,7 +41,7 @@ const LoginPage = () => {
     <div className='flex flex-col justify-center items-center'>
       <header>Tu pago ha sido exitoso.</header>
 
-      <Link legacyBehavior href='/registro'>
+      <Link legacyBehavior href='/datos-negocio1'>
         <a className='mt-20 w-[155px] h-[40px] bg-[#2F4F4F] text-white rounded-lg flex items-center justify-center'>
           Siguiente
         </a>

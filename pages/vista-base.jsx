@@ -60,7 +60,7 @@ export default function CardFree() {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className="flex flex-col justify-center max-w-screen-sm w-full h-full md:p-4 lg:p-8">
+    <div className="flex flex-col justify-center max-w-screen w-full h-full md:p-4 lg:p-8">
       <div className="w-full mt-4 flex flex-col justify-center items-center">
         <p className="text-[#2F4F4F] text-[20px] md:text-[40px] lg:text-[56px] text-center font-semibold">
           ¡AccessGo!
@@ -177,7 +177,7 @@ export default function CardFree() {
       </section>
 
       <div className="w-full flex flex-col justify-center items-center mt-8">
-        <div className="border p-3 rounded mt-4 bg-[#ECEFF1] w-full max-w-screen-sm justify-center flex flex-col items-center text-[#455A64]">
+        <div className="border p-3 rounded mt-4 bg-[#ECEFF1] w-full justify-center flex flex-col items-center text-[#455A64]">
           <h4 className="text-[#546E7A] font-semibold">Dirección:</h4>
           <p className="text-center">
             {companyData?.data?.company?.address || 'Información no disponible.'}
@@ -197,7 +197,7 @@ export default function CardFree() {
           </div>
         </div>
 
-        <div>
+        <div className='w-full'>
           <AccessVisibility companyId={id} />
         </div>
       </div>
