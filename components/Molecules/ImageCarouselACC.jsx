@@ -1,14 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay, Pagination } from 'swiper/modules';
 import 'swiper/swiper-bundle.css';
 
-
-
 const ImageCarouselACC = ({ userId }) => {
-  
   const [images, setImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -34,12 +31,11 @@ const ImageCarouselACC = ({ userId }) => {
     setSelectedImage(null);
   };
 
-  
-
   return (
-    <div className='flex justify-center md:w-[750px] lg:w-[900px]' >
+    <div className='flex justify-self-center md:w-[750px] lg:w-[900px]' >
       {images.length > 0 ? (
         <Swiper
+          modules={[Autoplay, Pagination]} // Módulos explícitos
           pagination={{
             clickable: images.length > 1,
           }}
@@ -47,8 +43,11 @@ const ImageCarouselACC = ({ userId }) => {
           slidesPerView={1}
           loop={images.length > 1}
           centeredSlides={images.length === 1}
+          autoplay={{
+            delay: 3000, // 3 segundos
+            disableOnInteraction: false,
+          }}
           breakpoints={{
-            
             320: {
               slidesPerView: 1
             },
@@ -79,12 +78,12 @@ const ImageCarouselACC = ({ userId }) => {
       )}
 
       {selectedImage && (
-        <div className='fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50'>
-          <div className='relative bg-white p-4 rounded-lg'>
+        <div  className='max-w-screen max-h-screen fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50'>
+          <div className='w-full h-full relative bg-white p-4 rounded-lg'>
             <img
               src={selectedImage}
               alt='Selected Image'
-              className='w-[80vw] h-[80vh] object-contain'
+              className='w-full h-full object-contain'
             />
             <button
               onClick={handleCloseModal}
@@ -98,5 +97,4 @@ const ImageCarouselACC = ({ userId }) => {
     </div>
   );
 };
-
 export default ImageCarouselACC;

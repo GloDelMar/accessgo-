@@ -210,7 +210,7 @@ export default function CardFree() {
           </p>
         </div>
         </div>
-        <div className='flex flex-col w-full justify-item-center gap-5'>
+        <div className='flex flex-col w-full justify-self-center gap-5'>
           <h1 className='text-center text-[#2F4F4F] mt-8'>
             Imagenes de accesibilidad proporcionadas por la empresa:
           </h1>
