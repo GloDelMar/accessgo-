@@ -60,16 +60,16 @@ export default function CardFree() {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className="flex flex-col justify-center max-w-screen w-full h-full md:p-4 lg:p-8">
-      <div className="w-full mt-4 flex flex-col justify-center items-center">
-        <p className="text-[#2F4F4F] text-[20px] md:text-[40px] lg:text-[56px] text-center font-semibold">
+    <div className='flex flex-col justify-center items-center max-w-screen-sm w-full h-full md:p-4 lg:p-8'>
+      <div className='w-full mt-4 flex flex-col justify-center items-center'>
+        <p className='text-[#2F4F4F] text-[20px] md:text-[40px] lg:text-[56px] text-center font-semibold'>
           ¡AccessGo!
         </p>
-        <p className="text-4xl md:text-5xl font-bold text-center text-[#2F4F4F] mt-2 mb-12">
+        <p className='text-4xl md:text-5xl font-bold text-center text-[#2F4F4F] mt-2 mb-12'>
           {companyData?.data?.company?.companyName || 'Información no disponible.'}
         </p>
         <Image
-          className="w-full h-auto md:w-full lg:w-full object-contain"
+          className='w-[472px] h-[300px] md:w-[1264px] md:h-[500px] lg:w-[1304px] lg:h-[500px] mt-8 object-contain'
           src={companyData?.data?.company?.profilePicture || '/img-card.png'}
           alt="Foto principal de empresa"
           width={1300}
@@ -97,7 +97,7 @@ export default function CardFree() {
 
       <section className="flex flex-col md:flex-row lg:flex-row justify-between p-2 mt-4 w-full">
         <div className="flex flex-col max-w-full">
-          
+
           <div className="mt-2">
             <div className="flex flex-row">
               {[1, 2, 3, 4, 5].map((star) => (
@@ -127,12 +127,12 @@ export default function CardFree() {
         <div className="flex flex-col justify-center items-start md:items-end  w-full mt-4 md:mt-0">
           <br />
           <p className="text-sm text-[#607D8B] mt-2 flex ">Dias de servicio</p>
-            <Image
-              src="/calendarVector.png"
-              alt="Calendario"
-              width={16}
-              height={14}
-            />
+          <Image
+            src="/calendarVector.png"
+            alt="Calendario"
+            width={16}
+            height={14}
+          />
           <div className="flex flex-row mt-2   gap-2">
             <div className="text-[12px] md:text-sm lg:text-base text-[#546E7A] ">
               {(companyData?.data?.company?.diasDeServicio || ['Información no disponible']).map(
@@ -193,7 +193,7 @@ export default function CardFree() {
             Imagenes de accesibilidad proporcionadas por la empresa:
           </h1>
           <div className='flex justify-center w-full h-full'>
-          <ImageCarouselACC userId={id} className='sm:max-w-[300px]' />
+            <ImageCarouselACC userId={id} className='sm:max-w-[300px]' />
           </div>
         </div>
 

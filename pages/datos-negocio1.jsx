@@ -196,20 +196,19 @@ const View23 = () => {
       alert(error.message);
     }
   };
-
-  const handleupdateLugares = (type, value) => {
+  const handleupdateLugares = (type, updatedList) => {
     setFormValues((prev) => ({
       ...prev,
       lugares: {
         ...prev.lugares,
-        [type]: [...(prev.lugares?.[type] || []), value],
+        [type]: updatedList, // Reemplaza la lista existente con la lista actualizada
       },
     }));
   };
 
   const handleSubmit = async () => {
     const companyId = localStorage.getItem('userId');
-    const userAccountType = localStorage.getItem('cuenta');
+    const userAccountType = localStorage.getItem('cuentaUsuario');
 
     if (!companyId) {
       alert('No se encontró el ID de la empresa en localStorage');
@@ -239,7 +238,7 @@ const View23 = () => {
     try {
 
       console.log("el id", companyId)
-      console.log("la info", formData )
+      console.log("la info", formData)
       console.log("lugares", formValues)
       const response = await updateCompany(companyId, formData);
       console.log('Respuesta de actualización:', response);
@@ -251,6 +250,19 @@ const View23 = () => {
       }
     } catch (error) {
       console.error('Error al actualizar la compañía:', error);
+    }
+  };
+
+  const cancelUpDateChanges = (event) => {
+    try {
+      const userAccountType = localStorage.getItem('cuentaUsuario');
+      if (userAccountType === 'premium') {
+        router.push('/sesion-prem');
+      } else {
+        router.push('/sesion-base');
+      }
+    } catch (error) {
+      console.error('Error al redirigir al usuario:', error);
     }
   };
 
@@ -533,19 +545,20 @@ const View23 = () => {
             ></div>
             <div className='mt-4'>
               {/* Recreativos */}
-              <div className='mt-3 space-x-2'>
+              <div className="mt-3 space-x-2">
                 <PlacesNearBy
-                  value={formValues.lugares}
                   lugares={formValues?.lugares || {}} // Pasar lugares inicializados
-                  onUpdateLugares={handleupdateLugares}
+                  onUpdateLugares={handleupdateLugares} // Actualización correcta de la lista
                 />
-
               </div>
             </div>
           </div>
 
-          <div className='mt-8 flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4 w-full justify-center md:justify-end'>
-            <StyledButton variant='blancoCuadrado' className='w-full md:w-auto'>
+          
+        </div>
+        <div className='mt-8 flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4 w-full justify-center md:justify-end'>
+            <StyledButton variant='blancoCuadrado' className='w-full md:w-auto'
+            onClick={cancelUpDateChanges}>
               CANCELAR
             </StyledButton>
             <StyledButton
@@ -556,7 +569,6 @@ const View23 = () => {
               GUARDAR
             </StyledButton>
           </div>
-        </div>
       </div>
     </>
   );
