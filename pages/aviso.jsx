@@ -1,8 +1,53 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Modal from '@/components/Modal';
+import Image from 'next/image';
 
 export default function Aviso() {
   const [isChecked, setIsChecked] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(true);
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const imagecarr = [
+    '/carmodal/busines.png',
+    '/carmodal/close.png',
+    '/carmodal/efic.png',
+    '/carmodal/loca.png',
+    '/carmodal/rest8.png',
+    '/carmodal/union.png'
+  ];
+
+  const ImageCarousel = () => {
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    useEffect(() => {
+      const interval = setInterval(() => {
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % imagecarr.length);
+      }, 4000);
+
+      return () => clearInterval(interval);
+    }, []);
+
+    return (
+      <div className='flex justify-self-center items-center mt-4 h-40 w-40'>
+        <Image
+          src={imagecarr[currentIndex]}
+          alt={`Imagen carrusel ${currentIndex + 1}`}
+          className='object-cover rounded-lg'
+          priority
+          width={160}
+          height={160}
+        />
+      </div>
+    );
+  };
+
+  
+  useEffect(() => {
+    setIsModalOpen(true);
+  }, []);
 
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
@@ -10,6 +55,42 @@ export default function Aviso() {
 
   return (
     <div className='w-full h-full lg:w-2/3 flex flex-col text-[#2F4F4F] mt-4 px-4 sm:px-6 lg:px-0'>
+      {/* Modal - renderizado condicional */}
+      {isModalOpen && (
+        <Modal closeModal={closeModal}>
+          <h2 className='text-xl text-center font-bold '>¡Información!</h2>
+          <p className='text-center font-semibold'>
+            Es importante que leas los términos antes de aceptar.
+          </p>
+          <p className='text-center'>
+            AccessGo se pone a tu disposición como una herramienta más en apoyo
+            de tu Empresa. Y queremos ser parte de tu crecimiento mostrando al
+            público todo lo que tienes para ofrecerles. Mostrando a tus
+            clientes:
+          </p>
+          <br />
+          <ol>
+            <li>
+              La geolocalización que los guiará hasta donde te encuentres.
+            </li>
+            <li>Tus redes sociales y números de contacto.</li>
+            <li>Las Promociones y Eventos especiales que tengas para ellos.</li>
+            <li>
+              Recibe retroalimentación en base a sus comentarios y
+              calificaciones.
+            </li>
+            <li>Visualiza las visitas que recibe tu Perfil.</li>
+          </ol>
+          <ImageCarousel />
+          <button
+            className='mt-4 bg-[#2F4F4F] flex justify-self-center items-center text-white px-4 py-2 rounded'
+            onClick={closeModal}
+          >
+            Entendido
+          </button>
+        </Modal>
+      )}
+
       <div className='flex flex-col text-center'>
         <p className='text-lg sm:text-2xl md:text-[40px] lg:text-[56px] font-bold mt-8'>
           ¡Aviso!
@@ -78,14 +159,14 @@ export default function Aviso() {
 
       <div className='flex flex-col sm:flex-row justify-between items-center mt-8 mb-10 px-4'>
         <div className='mb-4 sm:mb-0'>
-          <Link legacyBehavior href='/'>
+          <Link href='/' passHref>
             <button className='w-[155px] h-[40px] md:w-[250px] md:h-[50px] border border-[#263238] rounded-lg text-center'>
               Cancelar
             </button>
           </Link>
         </div>
         <div>
-          <Link legacyBehavior href='/registro'>
+          <Link href='/registro' passHref>
             <button
               className='w-[155px] h-[40px] md:w-[250px] md:h-[50px] bg-[#2F4F4F] text-white rounded-lg flex items-center justify-center shadow-md shadow-gray-400'
               disabled={!isChecked}
