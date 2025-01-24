@@ -6,6 +6,7 @@ import { getCompanyById } from './api/api_company';
 import CommentSection from '../components/Molecules/CommentsCard';
 import AccessVisibility from '@/components/Molecules/muestraAccess';
 import ImageCarouselACC from '@/components/Molecules/ImageCarouselACC';
+import ShowNearPlaces from '@/components/Molecules/ShowNearPlaces';
 
 const defaultProfilePic = '/6073873.png';
 
@@ -144,35 +145,54 @@ export default function CardFree() {
           </div>
 
 
-          {/* Hora de apertura */}
-          <p className="text-sm text-[#607D8B] mt-2 flex ">Horario</p>
-          <div className='flex items-center  gap-2 mt-2'>
-            <Image
-              src='/clockOpeningVector.png'
-              alt='ícono de reloj para hora de iniciar'
-              width={14}
-              height={16}
-              className='flex-shrink-0'
-            />
-            <p className='text-[12.6px] md:text-sm lg:text-base text-[#546E7A]'>
-              {companyData?.data?.company?.horario?.abre ||
-                'Información no disponible.'}
-            </p>
+          <div>
+            <p className="text-sm ml-6 text-[#607D8B] mt-2 flex">Horario</p>
+
+            {companyData?.data?.company?.horario?.abre ? (
+              <>
+                <div className="flex items-center gap-2 mt-2">
+                  <Image
+                    src="/clockOpeningVector.png"
+                    alt="ícono de reloj para hora de iniciar"
+                    width={14}
+                    height={16}
+                    className="flex-shrink-0"
+                  />
+                  <p className="text-[12.6px] md:text-sm lg:text-base text-[#546E7A]">
+                    {companyData.data.company.horario.abre}
+                  </p>
+                </div>
+                {companyData?.data?.company?.horario?.cierra && (
+                  <div className="flex items-center gap-2 mt-2">
+                    <Image
+                      src="/clockClosingVector.png"
+                      alt="ícono de reloj para hora de salida"
+                      width={14}
+                      height={16}
+                      className="flex-shrink-0"
+                    />
+                    <p className="text-[12.6px] text-[#546E7A] md:text-sm lg:text-base">
+                      {companyData?.data?.company?.horario?.cierra}
+                    </p>
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="flex items-center gap-2 mt-2">
+                <Image
+                  src="/clockOpeningVector.png"
+                  alt="ícono de reloj para hora de iniciar"
+                  width={14}
+                  height={16}
+                  className="flex-shrink-0"
+                />
+                <p className="text-[12.6px] md:text-sm lg:text-base text-[#546E7A]">
+                  Abierto las 24 horas
+                </p>
+              </div>
+            )}
           </div>
-          {/* Hora de cierre */}
-          <div className='flex items-center  gap-2 mt-2'>
-            <Image
-              src='/clockClosingVector.png'
-              alt='ícono de reloj para hora de salida'
-              width={14}
-              height={16}
-              className='flex-shrink-0'
-            />
-            <p className='text-[12.6px] text-[#546E7A] md:text-sm lg:text-base'>
-              {companyData?.data?.company?.horario?.cierra ||
-                'Información no disponible.'}
-            </p>
-          </div>
+
         </div>
       </section>
 
@@ -200,6 +220,9 @@ export default function CardFree() {
         <div className='w-full'>
           <AccessVisibility companyId={id} />
         </div>
+      </div>
+      <div>
+        <ShowNearPlaces />
       </div>
 
       <div className="w-full h-full mt-6 flex flex-col items-center">
