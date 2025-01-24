@@ -43,7 +43,7 @@ const View23 = () => {
     giro: '',
     horario: {
       abre: '',
-      cierre: '',
+      cierra: '',
       abierto24horas: ''
     },
     descripcion: '',
@@ -131,7 +131,7 @@ const View23 = () => {
         giro: companyData?.giro || '',
         horario: {
           abre: companyData?.horario?.abre || '',
-          cierre: companyData?.horario?.cierra || '',
+          cierra: companyData?.horario?.cierra || '',
           abierto24horas: companyData?.horario?.abierto24horas || ''
         },
         descripcion: companyData?.description || '',
@@ -214,16 +214,20 @@ const View23 = () => {
       alert('No se encontró el ID de la empresa en localStorage');
       return;
     }
+    const horario = formValues.horario.abierto24horas
+      ? { abierto24horas: true }
+      : {
+        abierto24horas: false,
+        abre: formValues.horario.abre,
+        cierra: formValues.horario.cierra
+      };
 
     const formData = {
       companyName: formValues.nombreComercial,
       rfc: formValues.rfc,
       representanteLegal: formValues.representanteLegal,
       giro: formValues.giro,
-      horario: {
-        abre: formValues.horario.abre,
-        cierra: formValues.horario.cierre
-      },
+      horario,
       diasDeServicio: selectedDays,
       description: formValues.descripcion,
       address: address,
@@ -358,18 +362,17 @@ const View23 = () => {
                     }
                     className={`flex-1 px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50 ${formValues.horario.abierto24horas ? "opacity-50" : ""
                       }`}
-
                   />
                   <span className="text-[#546E7A]">a</span>
                   <input
                     type="time"
                     name="horarioCierre"
-                    value={formValues.horario.cierre}
+                    value={formValues.horario.cierra}
                     disabled={formValues.horario.abierto24horas}
                     onChange={(e) =>
                       setFormValues((prev) => ({
                         ...prev,
-                        horario: { ...prev.horario, cierre: e.target.value },
+                        horario: { ...prev.horario, cierra: e.target.value },
                       }))
                     }
                     className={`flex-1 px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50 ${formValues.horario.abierto24horas ? "opacity-50" : ""
@@ -381,18 +384,27 @@ const View23 = () => {
                     <input
                       type="checkbox"
                       checked={formValues.horario.abierto24horas}
-                      onChange={(e) =>
+                      onChange={(e) => {
+                        const is24Hours = e.target.checked;
+
                         setFormValues((prev) => ({
                           ...prev,
-                          horario: { ...prev.horario, abierto24horas: e.target.checked },
-                        }))
-                      }
+                          horario: {
+                            ...prev.horario,
+                            abierto24horas: is24Hours, // Aseguramos que el booleano se actualice
+                            abre: is24Hours ? "" : prev.horario.abre, // Limpia si está en 24 horas
+                            cierra: is24Hours ? "" : prev.horario.cierra, // Limpia si está en 24 horas
+                          },
+                        }));
+                      }}
                       className="h-4 w-4 text-blue-500 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
                     />
                     <span className="text-[#546E7A]">Abierto las 24 horas</span>
                   </label>
                 </div>
               </div>
+
+
 
             </div>
             <div className='grid gap-4 md:grid-cols-2 w-full'>
