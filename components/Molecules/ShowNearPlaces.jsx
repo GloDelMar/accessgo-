@@ -1,22 +1,24 @@
 import { useState, useEffect } from "react";
 import { getCompanyById } from "@/pages/api/api_company";
+import { useRouter } from 'next/router';
 
 const ShowNearPlaces = () => {
-  const [recreativos, setRecreativos] = useState([]); // Estado para lugares recreativos
-  const [emergencia, setEmergencia] = useState([]); // Estado para lugares de emergencia
+  const [recreativos, setRecreativos] = useState([]); 
+  const [emergencia, setEmergencia] = useState([]); 
+   const router = useRouter();
 
   useEffect(() => {
     const fetchCompanyData = async () => {
       try {
-        const companyId = localStorage.getItem("userId");
-
+        const { id } = router.query;
+        const companyId = id
         if (!companyId) {
           console.error("No se encontró el ID de la empresa en localStorage");
           return;
         }
 
         const companyData = await getCompanyById(companyId);
-
+        console.log("datos de compañia", companyData)
         // Asignar datos a los estados
         setRecreativos(companyData.data.company.lugares.recreativos || []);
         setEmergencia(companyData.data.company.lugares.emergencia || []);
