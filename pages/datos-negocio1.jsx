@@ -23,12 +23,6 @@ const View23 = () => {
   const [longitude, setLongitude] = useState(null);
   const [latitude, setLatitude] = useState(null);
   const [companyId, setCompanyId] = useState(null);
-  const [phone, setPhone] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-
-
 
   useEffect(() => {
     const companyIdFromLocalStorage = localStorage.getItem('userId');
@@ -196,12 +190,13 @@ const View23 = () => {
       alert(error.message);
     }
   };
-  const handleupdateLugares = (type, updatedList) => {
+
+  const handleupdateLugares = (type, updatedLugares) => {
     setFormValues((prev) => ({
       ...prev,
       lugares: {
         ...prev.lugares,
-        [type]: updatedList, // Reemplaza la lista existente con la lista actualizada
+        [type]: updatedLugares,
       },
     }));
   };
@@ -209,6 +204,11 @@ const View23 = () => {
   const handleSubmit = async () => {
     const companyId = localStorage.getItem('userId');
     const userAccountType = localStorage.getItem('cuentaUsuario');
+
+    if (!formValues.nombreComercial || !formValues.phone || !address) {
+      alert('Por favor completa todos los campos obligatorios');
+      return;
+    }
 
     if (!companyId) {
       alert('No se encontró el ID de la empresa en localStorage');
@@ -222,8 +222,7 @@ const View23 = () => {
       giro: formValues.giro,
       horario: {
         abre: formValues.horario.abre,
-        cierra: formValues.horario.cierre,
-        abierto24horas: formValues.horario.abierto24horas,
+        cierra: formValues.horario.cierre
       },
       diasDeServicio: selectedDays,
       description: formValues.descripcion,
@@ -232,14 +231,11 @@ const View23 = () => {
       latitude: markerRef.current ? markerRef.current.getLngLat().lat : latitude,
       longitude: markerRef.current ? markerRef.current.getLngLat().lng : longitude,
       redesSociales: formValues.redesSociales,
-      lugares: formValues.lugares,
+      lugares: formValues.lugares
     };
-
+    console.log("lo que se envía", formData)
     try {
 
-      console.log("el id", companyId)
-      console.log("la info", formData)
-      console.log("lugares", formValues)
       const response = await updateCompany(companyId, formData);
       console.log('Respuesta de actualización:', response);
 
@@ -253,7 +249,7 @@ const View23 = () => {
     }
   };
 
-  const cancelUpDateChanges = (event) => {
+  const cancelUpDateChanges = () => {
     try {
       const userAccountType = localStorage.getItem('cuentaUsuario');
       if (userAccountType === 'premium') {
@@ -265,7 +261,6 @@ const View23 = () => {
       console.error('Error al redirigir al usuario:', error);
     }
   };
-
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -279,8 +274,6 @@ const View23 = () => {
       redesSociales: { ...prev.redesSociales, [name]: value }
     }));
   };
-
-
 
   return (
     <>
@@ -550,25 +543,26 @@ const View23 = () => {
                   lugares={formValues?.lugares || {}} // Pasar lugares inicializados
                   onUpdateLugares={handleupdateLugares} // Actualización correcta de la lista
                 />
+
               </div>
             </div>
           </div>
 
-          
+
         </div>
         <div className='mt-8 flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4 w-full justify-center md:justify-end'>
-            <StyledButton variant='blancoCuadrado' className='w-full md:w-auto'
+          <StyledButton variant='blancoCuadrado' className='w-full md:w-auto'
             onClick={cancelUpDateChanges}>
-              CANCELAR
-            </StyledButton>
-            <StyledButton
-              variant='blancoCuadrado'
-              className='w-full md:w-auto'
-              onClick={handleSubmit}
-            >
-              GUARDAR
-            </StyledButton>
-          </div>
+            CANCELAR
+          </StyledButton>
+          <StyledButton
+            variant='blancoCuadrado'
+            className='w-full md:w-auto'
+            onClick={handleSubmit}
+          >
+            GUARDAR
+          </StyledButton>
+        </div>
       </div>
     </>
   );

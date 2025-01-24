@@ -5,18 +5,19 @@ const PlacesNearBy = ({ lugares, onUpdateLugares }) => {
     const [inputEmergencia, setInputEmergencia] = useState("");
 
     const handleAddRecreativo = () => {
-        if (inputRecreativo.trim() === "") return;
+        if (inputRecreativo.trim() === "" || (lugares.recreativos || []).includes(inputRecreativo)) return;
         const updatedRecreativos = [...(lugares.recreativos || []), inputRecreativo];
         onUpdateLugares("recreativos", updatedRecreativos);
         setInputRecreativo("");
     };
 
     const handleAddEmergencia = () => {
-        if (inputEmergencia.trim() === "") return;
+        if (inputEmergencia.trim() === "" || (lugares.emergencia || []).includes(inputEmergencia)) return;
         const updatedEmergencia = [...(lugares.emergencia || []), inputEmergencia];
         onUpdateLugares("emergencia", updatedEmergencia);
         setInputEmergencia("");
     };
+
 
     const handleDeleteRecreativo = (indexToRemove) => {
         const updatedRecreativos = (lugares.recreativos || []).filter((_, index) => index !== indexToRemove);
