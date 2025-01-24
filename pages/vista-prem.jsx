@@ -9,6 +9,7 @@ import { contarVisita, obtenerIP } from './api/api_visits';
 import { getPromoByCompanyId } from './api/api_promos';
 import DOMPurify from 'dompurify';
 import ImageCarouselACC from '@/components/Molecules/ImageCarouselACC';
+import ShowNearPlaces from '@/components/Molecules/ShowNearPlaces';
 
 const defaultProfilePic = '/6073873.png';
 const imageDefault = "/4574c6_19f52cfb1ef44a3d844774c6078ffafc~mv2.png"
@@ -25,16 +26,16 @@ export default function CardFree() {
 
   useEffect(() => {
     const registrarVisita = async () => {
-        if (id) {
-            const ip = await obtenerIP(); // Obtén la IP del cliente
-            if (ip) {
-                contarVisita(`vista-prem/${id}`, id, ip); // Envía la IP al backend
-            }
+      if (id) {
+        const ip = await obtenerIP(); // Obtén la IP del cliente
+        if (ip) {
+          contarVisita(`vista-prem/${id}`, id, ip); // Envía la IP al backend
         }
+      }
     };
 
     registrarVisita();
-}, [id]);
+  }, [id]);
 
   const fetchAverageRating = useCallback(async () => {
     if (!id) return;
@@ -113,7 +114,7 @@ export default function CardFree() {
 
       <section className='flex flex-col justify-between p-2 md:flex-row lg:flex-row w-full mt-4'>
         <div className='w-full flex flex-col'>
-          
+
           {/* Contenedor de estrellas debajo del nombre */}
           <div className='flex flex-row mt-2'>
             {[1, 2, 3, 4, 5].map((star) => (
@@ -140,82 +141,83 @@ export default function CardFree() {
           </p>
         </div>
 
-        {/* Contenedor de horarios y detalles adicionales */}
         <div>
-          <p className='text-[10.5px] md:text-[12px] lg:text-sm text-[#607D8B] mt-2'>
-            Horarios
-          </p>
-          {/* Días de servicio */}
-          <div className='flex items-center gap-2 mt-2'>
-            <Image
-              src='/calendarVector.png'
-              alt='ícono de calendario'
-              width={14}
-              height={16}
-              className='flex-shrink-0'
-            />
-            <div className='text-[12px] md:text-sm lg:text-base text-[#546E7A]'>
-              {(companyData?.data?.company?.diasDeServicio || []).join(', ') ||
-                'Información no disponible.'}
+          <p className="text-sm ml-6 text-[#607D8B] mt-2 flex">Horario</p>
+
+          {companyData?.data?.company?.horario?.abre ? (
+            <>
+              <div className="flex items-center gap-2 mt-2">
+                <Image
+                  src="/clockOpeningVector.png"
+                  alt="ícono de reloj para hora de iniciar"
+                  width={14}
+                  height={16}
+                  className="flex-shrink-0"
+                />
+                <p className="text-[12.6px] md:text-sm lg:text-base text-[#546E7A]">
+                  {companyData.data.company.horario.abre}
+                </p>
+              </div>
+              {companyData?.data?.company?.horario?.cierra && (
+                <div className="flex items-center gap-2 mt-2">
+                  <Image
+                    src="/clockClosingVector.png"
+                    alt="ícono de reloj para hora de salida"
+                    width={14}
+                    height={16}
+                    className="flex-shrink-0"
+                  />
+                  <p className="text-[12.6px] text-[#546E7A] md:text-sm lg:text-base">
+                    {companyData?.data?.company?.horario?.cierra}
+                  </p>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="flex items-center gap-2 mt-2">
+              <Image
+                src="/clockOpeningVector.png"
+                alt="ícono de reloj para hora de iniciar"
+                width={14}
+                height={16}
+                className="flex-shrink-0"
+              />
+              <p className="text-[12.6px] md:text-sm lg:text-base text-[#546E7A]">
+                Abierto las 24 horas
+              </p>
             </div>
-          </div>
-          {/* Hora de apertura */}
-          <div className='flex items-center gap-2 mt-2'>
-            <Image
-              src='/clockOpeningVector.png'
-              alt='ícono de reloj para hora de iniciar'
-              width={14}
-              height={16}
-              className='flex-shrink-0'
-            />
-            <p className='text-[12.6px] md:text-sm lg:text-base text-[#546E7A]'>
-              {companyData?.data?.company?.horario?.abre ||
-                'Información no disponible.'}
-            </p>
-          </div>
-          {/* Hora de cierre */}
-          <div className='flex items-center gap-2 mt-2'>
-            <Image
-              src='/clockClosingVector.png'
-              alt='ícono de reloj para hora de salida'
-              width={14}
-              height={16}
-              className='flex-shrink-0'
-            />
-            <p className='text-[12.6px] text-[#546E7A] md:text-sm lg:text-base'>
-              {companyData?.data?.company?.horario?.cierra ||
-                'Información no disponible.'}
-            </p>
-          </div>
+          )}
         </div>
+
+
       </section>
 
       <div className='w-full flex flex-col justify-self-center items-center mt-8'>
-       <div className='max-w-[400px]'> 
-        <div className='border p-3 rounded mt-4 bg-[#ECEFF1] w-[290px]  md:w-full  justify-center flex flex-col text-[#455A64]'>
-          <h4 value='Place' className='text-[#546E7A] font-semibold'>
-            Dirección:
-          </h4>
-          <p className='text-center'>
-            {' '}
-            {companyData?.data?.company?.address ||
-              'Información no disponible.'}
-          </p>
-          <h4 value='Place' className='text-[#546E7A] font-semibold mt-3'>
-            Teléfono:
-          </h4>
-          <p className='text-center'>
-            {' '}
-            {companyData?.data?.company?.phone || 'Información no disponible.'}
-          </p>
-        </div>
+        <div className='max-w-[400px]'>
+          <div className='border p-3 rounded mt-4 bg-[#ECEFF1] w-[290px]  md:w-full  justify-center flex flex-col text-[#455A64]'>
+            <h4 value='Place' className='text-[#546E7A] font-semibold'>
+              Dirección:
+            </h4>
+            <p className='text-center'>
+              {' '}
+              {companyData?.data?.company?.address ||
+                'Información no disponible.'}
+            </p>
+            <h4 value='Place' className='text-[#546E7A] font-semibold mt-3'>
+              Teléfono:
+            </h4>
+            <p className='text-center'>
+              {' '}
+              {companyData?.data?.company?.phone || 'Información no disponible.'}
+            </p>
+          </div>
         </div>
         <div className='flex flex-col w-full justify-self-center gap-5'>
           <h1 className='text-center text-[#2F4F4F] mt-8'>
             Imagenes de accesibilidad proporcionadas por la empresa:
           </h1>
           <div className='flex justify-center w-full h-full'>
-          <ImageCarouselACC userId={id} className='sm:max-w-[300px]' />
+            <ImageCarouselACC userId={id} className='sm:max-w-[300px]' />
           </div>
         </div>
         <div>
@@ -301,7 +303,9 @@ export default function CardFree() {
           </div>
         </div>
       </div>
-
+      <div>
+        <ShowNearPlaces />
+      </div>
 
       <section className='w-full h-full mt-6 flex flex-col items-center '>
         <CommentSection onNewRating={fetchAverageRating} />
