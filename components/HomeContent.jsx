@@ -13,6 +13,7 @@ import Modal from "./Molecules/MapModal";
 import MapComponent from "./Organism/MapComponent";
 import MapSection from "./Organism/MapSection";
 import Link from 'next/link';
+import { ModalBeneficiosPrem } from "./Modals/ModalBeneficiosPrem";
 
 
 
@@ -342,6 +343,8 @@ const HomeContent = () => {
         handleCardClick={handleCardClick}
       />
 
+      {/* <ModalBeneficiosPrem /> */}
+
       {/* <div className='relative mt-4 mb-5 group cursor-pointer flex justify-center'>
         <button
           onClick={handleButtonClick}
@@ -428,16 +431,16 @@ const HomeContent = () => {
           </ul>
 
           <div className='mt-10 gap-8 flex flex-col justify-center items-center '>
-              <Link legacyBehavior href='/signup'>
-                <button
-                  className='justify-center  px-6 py-2 border border-transparent rounded-md shadow-sm
+            <Link legacyBehavior href='/signup'>
+              <button
+                className='justify-center  px-6 py-2 border border-transparent rounded-md shadow-sm
               text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none
               focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]'
-                >
-                  Únete ahora como empresa
-                </button>
-              </Link>
-            </div>
+              >
+                Únete ahora como empresa
+              </button>
+            </Link>
+          </div>
         </div>
         <div className='hidden w-full w-full  md:grid md:grid-cols-4 mb-12 items-center justify-center gap-2'>
           <img
