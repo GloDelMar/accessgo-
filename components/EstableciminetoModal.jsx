@@ -17,20 +17,20 @@ const EstablecimientoModal = ({ isOpen, onClose, establishment, onGetDirections,
 
   return (
     <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white w-full max-w-4xl rounded-lg shadow-lg overflow-hidden flex flex-col">
+      <div className="bg-white w-full max-w-2xl md:max-w-4xl rounded-lg shadow-lg overflow-hidden flex flex-col max-h-screen md:max-h-full">
         {/* Header */}
-        <div className="p-6 flex justify-between items-start border-b">
-          <div>
-            <h2 className="text-2xl font-bold text-[#2F4858]">{establishment.name}</h2>
-            <p className="text-sm text-gray-600 mt-1">{establishment.address}</p>
+        <button
+          className="text-white pt-2 hover:text-gray-800 flex items-end justify-end mr-4 text-2xl font-extrabold"
+          onClick={onClose}
+          aria-label="Cerrar modal"
+        >
+          <p className="bg-red-500 rounded-full p-1">X</p>
+        </button>
+        <div className="flex flex-col space-y-2 text-center sm:text-left border-b pb-4">
+          <div className="p-4">
+            <h2 className="font-semibold text-foreground text-xl text-[#2F4858]">{establishment.name}</h2>
+            <p class="text-sm text-gray-600">{establishment.address}</p>
           </div>
-          <button
-            className="text-gray-500 hover:text-gray-800"
-            onClick={onClose}
-            aria-label="Cerrar modal"
-          >
-            ✕
-          </button>
         </div>
 
         {/* Body */}
@@ -40,7 +40,7 @@ const EstablecimientoModal = ({ isOpen, onClose, establishment, onGetDirections,
             <div className="space-y-4">
               {establishment.images && establishment.images.length > 0 ? (
                 <div
-                  className="relative aspect-video rounded-lg overflow-hidden cursor-pointer"
+                  className="relative aspect-video rounded-xl overflow-hidden cursor-pointer"
                   onClick={() => onImageClick && onImageClick(establishment.id)}
                 >
                   <Image
@@ -78,12 +78,9 @@ const EstablecimientoModal = ({ isOpen, onClose, establishment, onGetDirections,
                 <h3>Descripción:</h3>
                 <p className="text-gray-600">{establishment.description}</p>
               </div>
-
-              {/* Íconos de discapacidades */}
               <div>
                 <h3>Accesibles para:</h3>
-                <div className="flex flex-wrap mt-1 gap-4 items-center">
-
+                <div className="flex flex-wrap mt-1 gap-4 items-center justify-center sm:justify-start">
                   {establishment.disabilities.length > 0 ? (
                     establishment.disabilities.map((disability) => (
                       <div key={disability} className="flex flex-col items-center">
