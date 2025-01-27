@@ -98,23 +98,23 @@ export default function MapWithPlaces() {
 
     const { latitude, longitude } = userLocation;
 
-    
+
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/light-v10',
       center: [longitude, latitude],
       zoom: 13,
     });
-    
+
     // Agregar el icono para dirigirte a tu ubicacion 
     const geolocateControl = new mapboxgl.GeolocateControl({
       positionOptions: {
-        enableHighAccuracy: true, 
+        enableHighAccuracy: true,
       },
-      trackUserLocation: true, 
-      showUserLocation: true, 
+      trackUserLocation: true,
+      showUserLocation: true,
       fitBoundsOptions: {
-        maxZoom: 14, 
+        maxZoom: 14,
       },
     });
 
@@ -129,7 +129,13 @@ export default function MapWithPlaces() {
       interactive: false,
     });
 
-    map.current.addControl(directions.current, 'top-left');
+    directions.current.on('route', (e) => {
+      if (e.route && e.route.length > 0) {
+        map.current.addControl(directions.current, 'top-left');
+      } else {
+        map.current.removeControl(directions.current);
+      }
+    });
     map.current.on('load', () => {
       directions.current.on('route', () => {
         // Obtener el contenedor de direcciones
@@ -138,7 +144,7 @@ export default function MapWithPlaces() {
           directionsContainer.style.display = 'none';
         }
 
-        const collapseButton = document.createElement('button');
+        /* const collapseButton = document.createElement('button');
         collapseButton.textContent = 'Mostrar/Ocultar Ruta';
         collapseButton.className = 'mapboxgl-ctrl-directions-collapse';
 
@@ -170,8 +176,48 @@ export default function MapWithPlaces() {
         });
 
         // Agregar el botón al contenedor del mapa
-        map.current.getContainer().appendChild(collapseButton);
+        map.current.getContainer().appendChild(collapseButton); */
       });
+
+      // Botón para limpiar la ruta
+      const clearRouteButton = document.createElement('button');
+      clearRouteButton.textContent = 'Limpiar Ruta';
+      clearRouteButton.className = 'mapboxgl-ctrl-clear-route';
+
+      // Estilos para el botón
+      clearRouteButton.style.position = 'absolute';
+      clearRouteButton.style.top = '70px';
+      clearRouteButton.style.left = '10px';
+      clearRouteButton.style.zIndex = '1';
+      clearRouteButton.style.backgroundColor = '#fff';
+      clearRouteButton.style.border = '1px solid #ccc';
+      clearRouteButton.style.borderRadius = '4px';
+      clearRouteButton.style.padding = '10px 35px';
+      clearRouteButton.style.cursor = 'pointer';
+      clearRouteButton.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+      clearRouteButton.style.fontFamily = 'Arial, sans-serif';
+      clearRouteButton.style.fontSize = '14px';
+      clearRouteButton.style.color = '#333';
+      clearRouteButton.style.display = 'none';
+
+      clearRouteButton.addEventListener('click', () => {
+        if (directions.current) {
+          directions.current.removeRoutes();
+          clearRouteButton.style.display = 'none'; // Ocultar el botón al limpiar la ruta
+        }
+      });
+
+      // Mostrar el botón solo cuando haya una ruta
+      directions.current.on('route', (e) => {
+        if (e.route && e.route.length > 0) {
+          clearRouteButton.style.display = 'block';
+        } else {
+          clearRouteButton.style.display = 'none';
+        }
+      });
+
+      // Agregar el botón al contenedor del mapa
+      map.current.getContainer().appendChild(clearRouteButton);
     });
 
     // Agregar marcador para la ubicación del usuario
