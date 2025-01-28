@@ -12,7 +12,7 @@ const Footer = () => {
       <Link legacyBehavior href='/politica'>
         <a  className="text-center cursor-pointer hover:font-semibold">Política de privacidad</a>
       </Link >
-      <Link legacyBehavior href='/ticket'>
+      <Link legacyBehavior href='/equipoaccessgo'>
         <a  className="text-center cursor-pointer hover:font-semibold">Contacto</a>
       </Link>
       </div>
