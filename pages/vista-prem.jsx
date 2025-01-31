@@ -85,14 +85,15 @@ export default function CardFree() {
           {companyData?.data?.company?.companyName ||
             'Información no disponible.'}
         </p>
-        <Image
-          className='w-[472px] h-[300px] md:w-[1264px] md:h-[500px] lg:w-[1304px] lg:h-[500px] mt-8 object-contain'
-          src={companyData?.data?.company?.profilePicture || '/img-card.png'}
-          alt='Foto principal de empresa'
-          width={1300}
-          height={500}
-          layout='responsive'
-        />
+        <div className="relative w-[300px] h-[200px] sm:w-[400px] sm:h-[250px] md:w-[800px] md:h-[400px] lg:w-[1304px] lg:h-[500px]">
+          <Image
+            src={companyData?.data?.company?.profilePicture || '/img-card.png'}
+            alt="Foto principal de empresa"
+            fill
+            className="object-contain"
+          />
+        </div>
+
         <div className='grid grid-cols-3 gap-5 mt-2 justify-between items-center '>
           {companyData?.data?.company?.redesSociales?.facebook && (
             <a href={companyData.data.company.redesSociales.facebook} target='_blank' rel='noopener noreferrer'>

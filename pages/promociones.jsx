@@ -4,6 +4,7 @@ import { Editor } from '@tinymce/tinymce-react';
 import { createpromo, getPromoByCompanyId } from './api/api_promos';
 import { InputWithLabel } from '@/components/atoms/Input';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const View18 = () => {
   const router = useRouter();
@@ -143,7 +144,7 @@ const View18 = () => {
               <div className="mt-4 flex justify-center gap-4">
                 {images.map((img, index) => (
                   <div key={index} className="relative">
-                    <img
+                    <Image
                       src={img}
                       alt={`Preview ${index}`}
                       className="w-32 h-32 object-cover border border-gray-300 rounded-lg shadow-md"

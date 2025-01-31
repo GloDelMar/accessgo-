@@ -55,15 +55,20 @@ export function getCommentByUserId(userId) {
         },
     })
         .then((response) => {
+            // Verifica si la respuesta fue exitosa
             if (!response.ok) {
-                throw new Error(`Error fetching comment with user ID ${userId}`);
+                // Si no fue exitosa, solo muestra el mensaje en consola y no lanza un error
+                console.log("No existen comentarios");
+                return null; // Retorna null si no hay comentarios
             }
             return response.json();
         })
         .then((data) => {
+            // Si hay comentarios, devuelve la data
             return data;
         })
         .catch((error) => {
+            // Solo se muestra el error si ocurre un problema al hacer la petición
             console.error("Error al obtener el comentario por userId:", error.message);
             throw error;
         });

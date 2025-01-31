@@ -19,6 +19,7 @@ import Link from 'next/link';
 
 
 
+
 const HomeContent = () => {
   const [companies, setCompanies] = useState([]);
   const [filteredCompanies, setFilteredCompanies] = useState([]);
@@ -95,7 +96,7 @@ const HomeContent = () => {
     }, 5000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [images.length]);
 
   useEffect(() => {
     setLoading(true);
@@ -215,6 +216,8 @@ const HomeContent = () => {
                 layout='fill'
                 objectFit='cover'
                 className='absolute inset-0 w-full'
+                priority
+
               />
               <div className='relative p-4 w-[200px] h-[241px] bg-black bg-opacity-50 flex flex-col justify-end'>
                 <h3 className='text-lg font-semibold text-white'>
@@ -428,30 +431,41 @@ const HomeContent = () => {
           </ul>
 
           <div className='mt-10 gap-8 flex flex-col justify-center items-center '>
-              <Link legacyBehavior href='/signup'>
-                <button
-                  className='justify-center  px-6 py-2 border border-transparent rounded-md shadow-sm
+            <Link legacyBehavior href='/signup'>
+              <button
+                className='justify-center  px-6 py-2 border border-transparent rounded-md shadow-sm
               text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none
               focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]'
-                >
-                  Únete ahora como empresa
-                </button>
-              </Link>
-            </div>
+              >
+                Únete ahora como empresa
+              </button>
+            </Link>
+          </div>
         </div>
         <div className='hidden w-full w-full  md:grid md:grid-cols-4 mb-12 items-center justify-center gap-2'>
-          <img
+          <Image
             src='/referencias/calific.jpg'
             className='w-full h-48 object-cover'
+            alt="Imagen de alguien asignandi una calificación a un sitio web"
+            width={400}
+            height={320}
           />
-          <img
+          <Image
             src='/referencias/comentar.jpg'
             className='w-full h-48 object-cover'
+            alt="Alguien agregando un comentario en algun sitio web"
+            width={400}
+            height={320}
           />
-          <img src='/referencias/geo.jpg' className='w-full h-48 object-cover' />
-          <img
+          <Image src='/referencias/geo.jpg' className='w-full h-48 object-cover' alt="Sobre referencias geográficas"
+            width={400}
+            height={320} />
+          <Image
             src='/referencias/rest7.jpg'
             className='w-full h-48 object-cover'
+            alt="sobre referencias"
+            width={400}
+            height={320}
           />
         </div>
         <div className='md:hidden flex items-center justify-center gap-10'>

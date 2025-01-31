@@ -13,6 +13,7 @@ import { getBusinessAverageRanking } from './api/api_ranking';
 import { useRouter } from 'next/router';
 import { getHotelAccessibility, getRestaurantAccessibility } from './api/api_questionnaire';
 import { ChevronDown } from 'lucide-react';
+import { useCallback } from 'react';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiYWNjZXNnbyIsImEiOiJjbTI4NGVjNnowc2RqMmxwdnptcXAwbmhuIn0.0jG0XG0mwx_LHjdJ23Qx4A';
 
@@ -41,6 +42,7 @@ export default function MapWithPlaces() {
   const [selectedDisability, setSelectedDisability] = useState('all');
   const [isOpen, setIsOpen] = useState(false);
   let forAccesibilityIcons = new Set();
+  const forAccesibilityIconsRef = useRef(new Set());
 
 
   /**
@@ -272,7 +274,7 @@ export default function MapWithPlaces() {
         });
       }
     });
-  }, [filteredCompanies, userLocation]);
+  }, [filteredCompanies, userLocation, handleOpenModal]);
 
   /**
    * -----------------------------------------------------------------
@@ -377,7 +379,7 @@ export default function MapWithPlaces() {
    * Función para abrir el modal de un establecimiento
    * -----------------------------------------------------------------
    */
-  const handleOpenModal = async (company) => {
+  const handleOpenModal = useCallback(async (company) => {
     let averageRating = 0;
     try {
       const avgData = await getBusinessAverageRanking(company._id);
@@ -406,19 +408,13 @@ export default function MapWithPlaces() {
       return null;
     }
 
-    // Inicializar el Set si no lo has hecho antes
-    if (!forAccesibilityIcons) {
-      forAccesibilityIcons = new Set();
-    }
-
-    // Verificar si cumple con los criterios de accesibilidad
     disabilities.forEach((disability) => {
       if (disability.type) {
         const hasValidResponse = disability.sections.some((section) =>
           section.questions.some((question) => question.response === true)
         );
         if (hasValidResponse) {
-          forAccesibilityIcons.add(disability.type);
+          forAccesibilityIconsRef.current.add(disability.type);
         }
       }
     });
@@ -434,14 +430,12 @@ export default function MapWithPlaces() {
       latitude: company.latitude,
       longitude: company.longitude,
       comments: company.comments || [],
-      disabilities: Array.from(forAccesibilityIcons)
+      disabilities: Array.from(forAccesibilityIconsRef.current)
     };
-
 
     setSelectedEstablishment(transformedCompany);
     setIsModalOpen(true);
-
-  };
+  }, []); // El segundo parámetro vacío asegura que la función no se vuelva a crear
 
   /**
    * -----------------------------------------------------------------
