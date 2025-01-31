@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Carousel from './Carrusel';
 import LocalesList from '../atoms/establecimientosList';
+import Image from 'next/image';
 
 const EstablecimientoFiltrado = () => {
   const [filter, setFilter] = useState('');
@@ -46,7 +47,7 @@ const EstablecimientoFiltrado = () => {
       <Carousel>
         {filteredLocales.map((local, index) => (
           <div key={index} className="relative border rounded-md w-[90%] max-w-[200px] mx-auto h-[251px]">
-            <img 
+            <Image 
               src={local.img} 
               alt={`Imagen de ${local.label}`} 
               className="w-full h-[251px] rounded object-cover" 
@@ -55,10 +56,10 @@ const EstablecimientoFiltrado = () => {
               <h4 className="text-[15px] font-bold">{local.label}</h4>
               <div className="flex items-center mb-1">
                 {Array(local.rating).fill().map((_, i) => (
-                  <img 
+                  <Image 
                     key={i} 
                     src="/estrellita.svg" 
-                    alt="star" 
+                    alt="Estrellas de calificación" 
                     className="w-4 h-4 mr-[3px]" 
                   />
                 ))}
