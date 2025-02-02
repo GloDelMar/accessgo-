@@ -16,38 +16,35 @@ const View7 = () => {
   const [showComents, setShowComents] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const id = localStorage.getItem("userId");
-      if (id) {
-        setUserId(id);
-      } else {
-        setError("User ID not found.");
-        setLoading(false);
-      }
-    }
-  }, []);
+
 
   useEffect(() => {
     const fetchUserData = async () => {
+    
       setLoading(true);
-      try {
-        const data = await getUserById(userId);
-        setUserData(data);
-        setShowComents(false);
-        const commentsData = await getCommentByUserId(userId);
-        setComments(commentsData.data || []);
-      } catch (error) {
-        setError("Failed to fetch user data.");
-      } finally {
-        setLoading(false);
+      const userId = localStorage.getItem("userId");
+    
+      console.log("id de usuario", userId);
+      const data = await getUserById(userId);
+     
+      console.log("datos de usuario", data);
+      setUserData(data);
+
+      const commentsData = await getCommentByUserId(userId);
+      console.log("comentarios de usuario", commentsData);
+
+      // Condición para verificar si no hay comentarios
+      if (commentsData === undefined ) {
+        setComments("No hay comentarios aún");
+      } else {
+        setComments(commentsData);
       }
     };
 
-    if (userId) {
-      fetchUserData();
-    }
+    fetchUserData();
   }, [userId]);
+
+
 
   const handleCompanyClick = async (companyId) => {
     try {
@@ -123,7 +120,10 @@ const View7 = () => {
             className="bg-[#F6F9FF] p-6 rounded-md mb-4 text-[#2F4F4F] shadow-lg w-full resize-none"
           />
           <button
-            onClick={() => setShowComents(!showComents)}
+            onClick={() => {
+              console.log("Toggling showComents", showComents); // Verifica si está cambiando el estado
+              setShowComents(!showComents);
+            }}
             className="w-[300px] bg-[#F5F0E5] py-2 px-4 rounded-md text-center"
           >
             {showComents ? "Ocultar comentarios" : "Ver tus comentarios"}
@@ -157,6 +157,13 @@ const View7 = () => {
               )}
             </ul>
           )}
+
+          {/* Si no hay comentarios y no se está cargando, mostrar el mensaje sin interrumpir el renderizado */}
+          {comments.length === 0 && !loading && !error && showComents && (
+            <p className="text-center text-gray-500 mt-4">No se han encontrado comentarios para este usuario.</p>
+          )}
+
+
         </div>
       </div>
     </>

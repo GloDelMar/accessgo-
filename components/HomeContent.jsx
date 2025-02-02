@@ -20,6 +20,7 @@ import { ModalBeneficiosPrem } from "./Modals/ModalBeneficiosPrem";
 
 
 
+
 const HomeContent = () => {
   const [companies, setCompanies] = useState([]);
   const [filteredCompanies, setFilteredCompanies] = useState([]);
@@ -96,7 +97,7 @@ const HomeContent = () => {
     }, 5000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [images.length]);
 
   useEffect(() => {
     setLoading(true);
@@ -159,7 +160,7 @@ const HomeContent = () => {
       <h2 className='text-2xl text-center font-bold mt-4 mb-8'>
         El punto de unión entre las empresas accesibles y las personas
       </h2>
-      <div className='bg-[#2F4F4F] text-white p-4 md:p-6 rounded-lg flex flex-col md:flex-row justify-center items-center gap-6 max-w-4xl mx-auto'>
+      <div className='bg-[#2F4F4F] h-[500px] md:h-auto text-white p-4 md:p-6 rounded-lg flex flex-col md:flex-row justify-center items-center gap-6 max-w-4xl mx-auto'>
         <div className='w-full md:w-1/2 flex items-center justify-center'>
           <p className='text-base md:text-xl font-medium text-center px-2 md:px-4 leading-relaxed'>
             {text[currentIndex]}
@@ -168,11 +169,11 @@ const HomeContent = () => {
         <div className='relative w-full md:w-1/2 h-64 md:h-80 flex justify-center items-center'>
           <Image
             src={images[currentIndex]}
-            alt='Accesibilidad'
-            className='object-cover rounded-lg'
-            width={400}
-            height={320}
-            priority
+            alt="Accesibilidad"
+            className="w-auto h-full object-cover rounded-lg"
+            priority={true}
+            width={500} // Valor arbitrario solo para cumplir con Next.js
+            height={500}
           />
         </div>
       </div>
@@ -213,9 +214,10 @@ const HomeContent = () => {
                   '/4574c6_19f52cfb1ef44a3d844774c6078ffafc~mv2.png'
                 }
                 alt={company.companyName}
-                layout='fill'
-                objectFit='cover'
-                className='absolute inset-0 w-full'
+                className="absolute inset-0 w-full h-full object-cover"
+                fill={true}
+                priority={true}
+
               />
               <div className='relative p-4 w-[200px] h-[241px] bg-black bg-opacity-50 flex flex-col justify-end'>
                 <h3 className='text-lg font-semibold text-white'>
@@ -254,9 +256,9 @@ const HomeContent = () => {
                   '/4574c6_19f52cfb1ef44a3d844774c6078ffafc~mv2.png'
                 }
                 alt={company.companyName}
-                layout='fill'
-                objectFit='cover'
-                className='absolute inset-0 w-[80px]'
+                fill={true}
+                className='absolute inset-0 w-[80px] object-cover'
+                priority={true}
               />
               <div className='relative p-4 w-[200px] h-[241px] bg-black bg-opacity-25 flex flex-col justify-end'>
                 <h3 className='text-lg font-semibold text-white'>
@@ -308,9 +310,9 @@ const HomeContent = () => {
                   '/4574c6_19f52cfb1ef44a3d844774c6078ffafc~mv2.png'
                 }
                 alt={`Imagen de ${company.companyName}`}
-                layout='fill'
-                objectFit='cover'
-                className='w-full h-[251px]'
+                fill={true}
+                className='w-full h-[251px] object-cover'
+                priority={true}
               />
               <div className='absolute bottom-0 left-0 p-2 bg-gradient-to-t from-black to-transparent w-full text-white'>
                 <h4 className='text-[15px] font-bold'>{company.companyName}</h4>
@@ -443,18 +445,33 @@ const HomeContent = () => {
           </div>
         </div>
         <div className='hidden w-full w-full  md:grid md:grid-cols-4 mb-12 items-center justify-center gap-2'>
-          <img
+          <Image
             src='/referencias/calific.jpg'
+            alt="Imagen de alguien asignandi una calificación a un sitio web"
             className='w-full h-48 object-cover'
+            width={400}
+            height={320}
+            priority={true}
           />
-          <img
+          <Image
             src='/referencias/comentar.jpg'
             className='w-full h-48 object-cover'
+            alt="Alguien agregando un comentario en algun sitio web"
+            width={400}
+            height={320}
+            priority={true}
           />
-          <img src='/referencias/geo.jpg' className='w-full h-48 object-cover' />
-          <img
+          <Image src='/referencias/geo.jpg' className='w-full h-48 object-cover' alt="Sobre referencias geográficas"
+            width={400}
+            height={320}
+            priority={true} />
+          <Image
             src='/referencias/rest7.jpg'
             className='w-full h-48 object-cover'
+            alt="sobre referencias"
+            width={400}
+            height={320}
+            priority={true}
           />
         </div>
         <div className='md:hidden flex items-center justify-center gap-10'>
@@ -462,10 +479,10 @@ const HomeContent = () => {
             <Image
               src={images2[currentIndex]}
               alt='Accesibilidad'
-              className='object-cover rounded-lg h-full w-full'
+              className='w-full h-48 object-cover'
               width={400}
               height={320}
-              priority
+              priority={true}
             />
           </div>
         </div>

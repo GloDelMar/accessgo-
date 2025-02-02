@@ -7,18 +7,18 @@ const ShowNearPlaces = () => {
   const [emergencia, setEmergencia] = useState([]); 
    const router = useRouter();
 
-  useEffect(() => {
+   useEffect(() => {
     const fetchCompanyData = async () => {
       try {
         const { id } = router.query;
-        const companyId = id
+        const companyId = id;
         if (!companyId) {
-          console.error("No se encontró el ID de la empresa en localStorage");
+          console.error("No se encontró el ID de la empresa en router.query");
           return;
         }
-
+  
         const companyData = await getCompanyById(companyId);
-        console.log("datos de compañia", companyData)
+        console.log("Datos de la compañía:", companyData);
         // Asignar datos a los estados
         setRecreativos(companyData.data.company.lugares.recreativos || []);
         setEmergencia(companyData.data.company.lugares.emergencia || []);
@@ -26,9 +26,11 @@ const ShowNearPlaces = () => {
         console.error("Error al obtener los datos de la empresa:", error);
       }
     };
-
-    fetchCompanyData(); // Llama a la función
-  }, []);
+  
+    if (router.query.id) {  
+      fetchCompanyData(); 
+    }
+  }, [router.query]); // Incluye router.query como dependencia
 
   return (
     <div className="flex flex-col items-center p-4">

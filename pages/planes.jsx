@@ -1,10 +1,11 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const PlanCard = ({ title, icon, features, buttonText, link }) => (
   <section className='flex flex-col items-start px-5 pt-7 pb-12 mt-10 w-full text-base bg-white rounded-2xl border border-gray-100 border-solid shadow-lg max-w-[328px] text-slate-700'>
     <div className='flex gap-5 ml-5 text-lg font-bold text-gray-800 whitespace-nowrap'>
-      <img
+      <Image
         loading='lazy'
         src={icon}
         alt={`${title} plan icon`}
@@ -15,7 +16,7 @@ const PlanCard = ({ title, icon, features, buttonText, link }) => (
     <ul className='list-none p-0'>
       {features.map((feature, index) => (
         <li key={index} className='flex gap-2 mt-5'>
-          <img
+          <Image
             loading='lazy'
             src='https://cdn.builder.io/api/v1/image/assets/TEMP/c570330027866616a4ff9fd294f6b8a3a32f349511a4c11a7dcee980e9ca9f40?placeholderIfAbsent=true&apiKey=94b7d1b7a1ff491ea399fe140abd93c0'
             alt=''

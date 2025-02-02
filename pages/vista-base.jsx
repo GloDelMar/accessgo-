@@ -69,30 +69,42 @@ export default function CardFree() {
         <p className='text-4xl md:text-5xl font-bold text-center text-[#2F4F4F] mt-2 mb-12'>
           {companyData?.data?.company?.companyName || 'Información no disponible.'}
         </p>
-        <Image
-          className='w-[472px] h-[300px] md:w-[1264px] md:h-[500px] lg:w-[1304px] lg:h-[500px] mt-8 object-contain'
-          src={companyData?.data?.company?.profilePicture || '/img-card.png'}
-          alt="Foto principal de empresa"
-          width={1300}
-          height={500}
-          layout="intrinsic"
-        />
-        <div className='grid grid-cols-3 gap-5 mt-2 justify-between items-center'>
-          {companyData?.data?.company?.redesSociales?.facebook && (
-            <a href={companyData.data.company.redesSociales.facebook} target='_blank' rel='noopener noreferrer'>
-              <Image className='w-[50px]' src='/facebook_logo.svg' alt='Facebook' width={50} height={50} />
-            </a>
-          )}
-          {companyData?.data?.company?.redesSociales?.instagram && (
-            <a href={companyData.data.company.redesSociales.instagram} target='_blank' rel='noopener noreferrer'>
-              <Image className='w-[50px]' src='/instagram-logo.svg' alt='Instagram' width={50} height={50} />
-            </a>
-          )}
-          {companyData?.data?.company?.redesSociales?.twitter && (
-            <a href={companyData.data.company.redesSociales.twitter} target='_blank' rel='noopener noreferrer'>
-              <Image className='w-[85px] h-[85px]' src='/x-logo.svg' alt='Twitter' width={75} height={75} />
-            </a>
-          )}
+        <div className="relative w-[250px] h-[170px] sm:w-[350px] sm:h-[220px] md:w-[600px] md:h-[350px] lg:w-[900px] lg:h-[450px]">
+          <Image
+            src={companyData?.data?.company?.profilePicture || "/img-card.png"}
+            alt="Foto principal de empresa"
+            fill
+            className="object-contain"
+          />
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-4">
+            {companyData?.data?.company?.redesSociales?.facebook && (
+              <a
+                href={companyData.data.company.redesSociales.facebook}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Image src="/pngwing.com (3).png" alt="Facebook" width={40} height={40} className='rounded-lg' />
+              </a>
+            )}
+            {companyData?.data?.company?.redesSociales?.instagram && (
+              <a
+                href={companyData.data.company.redesSociales.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Image src="/instagram-logo.svg" alt="Instagram" width={40} height={40} />
+              </a>
+            )}
+            {companyData?.data?.company?.redesSociales?.twitter && (
+              <a
+                href={companyData.data.company.redesSociales.twitter}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Image src="/sl_z_072523_61700_01.jpg" alt="Twitter" width={40} height={40} className="rounded-lg" />
+              </a>
+            )}
+          </div>
         </div>
       </div>
 
