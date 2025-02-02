@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 
 const UploadImageACC = () => {
   const [image, setImage] = useState(null);
@@ -80,7 +81,7 @@ const UploadImageACC = () => {
       {imageUrl && (
         <div className="mt-4">
           <p>Imagen subida con éxito!</p>
-          <img src={imageUrl} alt="Uploaded" width={200} className="mt-2" />
+          <Image src={imageUrl} alt="Uploaded" width={200} className="mt-2" />
         </div>
       )}
     </div>

@@ -30,7 +30,7 @@ const MapSection = ({ userLocation, filteredCompanies, handleCardClick }) => {
                       <Image
                         src={
                           company.profilePicture ||
-                          "/placeholder.svg?height=64&width=64"
+                          "/4574c6_19f52cfb1ef44a3d844774c6078ffafc~mv2.png"
                         }
                         alt={company.companyName}
                         width={64}

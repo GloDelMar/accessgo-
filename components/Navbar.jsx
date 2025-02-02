@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { getUserById } from '@/pages/api/api_getById';
 import { getCompanyById } from '@/pages/api/api_company';
 import { sendVerificationCode } from '@/pages/api/api_verification';
+import Image from 'next/image';
 
 const Navbar = () => {
   const router = useRouter();
@@ -25,14 +26,14 @@ const Navbar = () => {
     const userType = localStorage.getItem('tipoUsuario');
 
     if (userType === 'company') {
-      router.push('/datos-negocio1'); 
+      router.push('/datos-negocio1');
     } else {
       router.push('/datos-de-usuario');
     }
   };
- const handleChangeAccesibilidad = ()=>{
-  router.push('/formulario-de-accesibilidad');
- }
+  const handleChangeAccesibilidad = () => {
+    router.push('/formulario-de-accesibilidad');
+  }
 
   const handleChangePassword = async (event) => {
     event.preventDefault();
@@ -70,17 +71,17 @@ const Navbar = () => {
 
   const handleChangePerfil = async () => {
     const userType = localStorage.getItem('tipoUsuario');
-  
+
     if (userType === 'company') {
       const userId = localStorage.getItem("userId");
-  
+
       try {
         const Data = await getCompanyById(userId);
-  
+
         console.log("data", Data);
         const cuentaUsuario = Data.data.company.cuenta;
         console.log("cuenta de compañia", cuentaUsuario);
-  
+
         if (cuentaUsuario === 'free') {
           router.push('/sesion-base');
         } else if (cuentaUsuario === 'premium') {
@@ -95,7 +96,7 @@ const Navbar = () => {
       router.push('/mi-perfil');
     }
   };
-  
+
 
   const handleLogout = () => {
     localStorage.clear();
@@ -137,10 +138,25 @@ const Navbar = () => {
       <nav className="flex items-center justify-between">
         <div className="ml-[30px] md:ml-[40px] flex-shrink-0 flex items-center space-x-2">
           <Link href="/">
-            <img src="/Union.svg" alt="Logo AccessGo simplificado" className="sm:block md:hidden" />
+            <Image
+              src="/Union.svg"
+              alt="Logo AccessGo simplificado"
+              className="sm:block md:hidden w-[50px] h-[50px]"
+              width={40}
+              height={40}
+              priority={true}
+            />
+
           </Link>
-          <Link href="/">
-            <img src="/logo2.svg" alt="Logo AccessGo" className="hidden md:block" />
+          <Link href="/" className="relative w-[80px] h-[50px] md:w-[100px] md:h-[50px]">
+            <Image
+              src="/logo2.svg"
+              alt="Logo AccessGo"
+              fill
+              sizes="(max-width: 768px) 80px, 100px"
+              priority={true}
+              className="object-contain hidden md:block"
+            />
           </Link>
         </div>
 
@@ -153,7 +169,12 @@ const Navbar = () => {
 
           {!isLoggedIn && router.pathname !== '/signup' && (
             <Link href="/signup" className="bg-[#2F4F4F] px-4 py-2 rounded-full text-white hover:bg-[#4A6969] font-bold flex items-center">
-              <img src="/heart_plus_24dp_5F6368_FILL1_wght400_GRAD0_opsz24 (1) 1.svg" alt="Únete" className="w-6 h-6" />
+              <Image
+                src="/heart_plus_24dp_5F6368_FILL1_wght400_GRAD0_opsz24 (1) 1.svg"
+                alt="Únete"
+                className="w-6 h-6"
+                width={24} // Ajusta el tamaño en píxeles
+                height={24} />
               <span>¡Únete!</span>
             </Link>
           )}
@@ -163,7 +184,11 @@ const Navbar = () => {
               onClick={toggleMenu}
               className="bg-[#ECEFF1] hover:bg-[#B0BEC5] text-white p-2 rounded"
             >
-              <img src="/menu.svg" alt="Menú desplegable" />
+              <Image
+                src="/menu.svg"
+                alt="Menú desplegable"
+                width={24} // Ajusta el tamaño en píxeles
+                height={24} />
             </button>
 
             {menuVisible && (
@@ -176,8 +201,8 @@ const Navbar = () => {
                 <Link href="/" className="block px-4 py-2 hover:bg-gray-100" onClick={closeMenu}>
                   Ir a inicio
                 </Link>
-               
-                
+
+
                 {isLoggedIn && (
                   <>
                     <Link href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleChangeDatos}>

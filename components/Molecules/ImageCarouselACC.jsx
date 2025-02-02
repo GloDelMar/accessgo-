@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination } from 'swiper/modules';
 import 'swiper/swiper-bundle.css';
+import Image from 'next/image';
 
 const ImageCarouselACC = ({ userId }) => {
   const [images, setImages] = useState([]);
@@ -64,11 +65,13 @@ const ImageCarouselACC = ({ userId }) => {
         >
           {images.map((image, index) => (
             <SwiperSlide key={index}>
-              <img
+              <Image
                 src={image}
                 alt={`Slide ${index}`}
-                className='justify-self-center w-[200px] h-[200px] object-cover rounded-lg cursor-pointer'
+                className='object-contain justify-self-center w-[200px] h-[200px] object-cover rounded-lg cursor-pointer'
                 onClick={() => handleImageClick(image)}
+                 fill
+           
               />
             </SwiperSlide>
           ))}
@@ -80,10 +83,12 @@ const ImageCarouselACC = ({ userId }) => {
       {selectedImage && (
         <div  className='max-w-screen max-h-screen fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50'>
           <div className='w-full h-full relative bg-white p-4 rounded-lg'>
-            <img
+            <Image
               src={selectedImage}
               alt='Selected Image'
               className='w-full h-full object-contain'
+               fill
+          
             />
             <button
               onClick={handleCloseModal}

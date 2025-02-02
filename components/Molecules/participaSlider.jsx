@@ -2,6 +2,7 @@ import React from 'react';
 import Carousel from './Carrusel';
 import participaList from '../atoms/participaList';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const ParticipaSlider = () => {
   const items = participaList(); 
@@ -14,7 +15,7 @@ const ParticipaSlider = () => {
           href={item.title === 'Voluntariado' ? '/voluntariado' : '/donaciones'} 
         >
           <a className="relative border border-[#E8DECF] rounded-[8px] w-[90%] max-w-[200px] mx-auto h-[155px] flex flex-col items-start">
-            <img 
+            <Image 
               src={item.img} 
               alt={`Icono de ${item.title}`} 
               className="w-[24px] h-[24px] mt-[16px] ml-[16px] mb-[13px]" 

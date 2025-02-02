@@ -19,9 +19,9 @@ const EstablecimientoSlider = ({ companies, onCardClick }) => {
           <Image
             src={company.profilePicture || '/4574c6_19f52cfb1ef44a3d844774c6078ffafc~mv2.png'}
             alt={company.companyName}
-            layout="fill"
-            objectFit="cover"
-            className="absolute inset-0 w-full h-full"
+            fill={true}
+            className="absolute inset-0 w-full h-full object-cover"
+            priority={true}
           />
           <div className="relative p-4 bg-black bg-opacity-50 flex flex-col justify-end h-full">
             <h3 className="text-lg font-semibold text-white truncate">

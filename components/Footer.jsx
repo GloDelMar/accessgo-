@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const Footer = () => {
   return (
@@ -19,13 +20,23 @@ const Footer = () => {
       
       <div className='flex items-center justify-center space-x-5 mb-6'>
         <Link legacyBehavior href="https://www.facebook.com/profile.php?id=100088546064193" passHref>
-          <a target="_blank"><img src="/Vector - 0 (1).svg" alt="Logo de Meta" 
-              className='w-6 h-6 transition-transform duration-300 hover:scale-110' /></a>
+          <a target="_blank">
+            <Image 
+            src="/Vector - 0 (1).svg" 
+            alt="Logo de Meta" 
+              className='w-6 h-6 transition-transform duration-300 hover:scale-110'
+              width={24} // Ajusta el tamaño en píxeles
+              height={24} /></a>
         </Link>
         
         <Link legacyBehavior href="https://www.instagram.com/accessgo4/" passHref>
-          <a target="_blank"><img src="/insta.svg" alt="Logo de Instagram" 
-              className='w-6 h-6 transition-transform duration-300 hover:scale-110' /></a>
+          <a target="_blank">
+            <Image 
+            src="/insta.svg" 
+            alt="Logo de Instagram" 
+              className='w-6 h-6 transition-transform duration-300 hover:scale-110' 
+              width={24} // Ajusta el tamaño en píxeles
+              height={24}/></a>
         </Link>
       </div>
       
