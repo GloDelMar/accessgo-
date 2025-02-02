@@ -14,6 +14,7 @@ const View4 = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
+  const [emailError, setEmailError] = useState('');
   const [type, setType] = useState('');
 
   useEffect(() => {
@@ -23,15 +24,25 @@ const View4 = () => {
     }
   }, []);
 
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const passwordRegex = /^[a-zA-Z0-9]{6,}$/;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log("Datos recibidos en handleSubmit:", {
-      email,
-      password,
-      confirmPassword,
-      type
-    });
+    // Validar email
+    if (!emailRegex.test(email)) {
+      setEmailError("Por favor, ingresa un correo electrónico válido.");
+      return;
+    } else {
+      setEmailError(''); // Limpiar el error si el email es válido
+    }
+
+    // Validar contraseñas
+    if (!passwordRegex.test(password)) {
+      setError('Tu contraseña debe tener al menos 6 caracteres, entre letras y números.');
+      return;
+    }
 
     if (password !== confirmPassword) {
       setError('Las contraseñas no coinciden');
@@ -42,7 +53,7 @@ const View4 = () => {
       console.log("tipo de usuario", type);
       let response;
 
-      // Usa createAccount o createCompany según el tipo de usuario
+      // Crear cuenta según el tipo de usuario
       if (type === "user") {
         response = await createAccount(email, password, type);
       } else if (type === "company") {
@@ -58,18 +69,18 @@ const View4 = () => {
         }
         console.log("respuesta", response);
 
-        // Guarda el tipo de usuario en localStorage
+        // Guardar tipo de usuario en localStorage
         localStorage.setItem('tipoUsuario', type);
 
-        // Inicia sesión automáticamente después de crear la cuenta
+        // Iniciar sesión automáticamente después de crear la cuenta
         const data = await login(email, password);
 
         if (data && data.token) {
-          // Guarda el token y el ID del usuario en el localStorage
+          // Guardar token e ID del usuario en localStorage
           localStorage.setItem('token', data.token);
           localStorage.setItem('userId', userId);
-          
-          // Vuelve a establecer el tipo de usuario después de login para asegurar persistencia
+
+          // Establecer el tipo de usuario nuevamente después de login
           if (!localStorage.getItem('tipoUsuario')) {
             localStorage.setItem('tipoUsuario', type);
           }
@@ -81,15 +92,15 @@ const View4 = () => {
             }
           });
 
-          // Envía el código de verificación
+          // Enviar código de verificación
           await sendVerificationCode(email);
 
-          // Redirige a la pantalla de autenticación
+          // Redirigir a la pantalla de autenticación
           setTimeout(() => {
             router.push('/autentificacion');
           }, 2000);
 
-          // Limpia los campos
+          // Limpiar los campos
           setEmail('');
           setPassword('');
           setConfirmPassword('');
@@ -125,6 +136,7 @@ const View4 = () => {
               placeholder='Correo Electrónico'
               className='w-full px-3 py-2 border text-xs md:text-sm border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#263238] placeholder-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50'
             />
+            {emailError && <p className="text-red-600">{emailError}</p>}  {/* Muestra el error de email */}
           </div>
 
           <div className="relative">
