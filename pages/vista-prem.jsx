@@ -77,41 +77,53 @@ export default function CardFree() {
 
   return (
     <div className='flex flex-col justify-center items-center max-w-screen-sm w-full h-full md:p-4 lg:p-8'>
-      <div className='w-full mt-4 flex flex-col justify-center items-center'>
-        <p className='text-[#2F4F4F] text-[20px] md:text-[40px] lg:text-[56px] text-center font-semibold'>
+      <div className="w-full mt-4 flex flex-col justify-center items-center">
+        <p className="text-[#2F4F4F] text-[20px] md:text-[40px] lg:text-[56px] text-center font-semibold">
           ¡AccessGo!
         </p>
-        <p className='text-4xl md:text-5xl font-bold text-center text-[#2F4F4F] mt-2 mb-12'>
-          {companyData?.data?.company?.companyName ||
-            'Información no disponible.'}
+        <p className="text-4xl md:text-5xl font-bold text-center text-[#2F4F4F] mt-2 mb-12">
+          {companyData?.data?.company?.companyName || "Información no disponible."}
         </p>
-        <div className="relative w-[300px] h-[200px] sm:w-[400px] sm:h-[250px] md:w-[800px] md:h-[400px] lg:w-[1304px] lg:h-[500px]">
+
+        <div className="relative w-[250px] h-[170px] sm:w-[350px] sm:h-[220px] md:w-[600px] md:h-[350px] lg:w-[900px] lg:h-[450px]">
           <Image
-            src={companyData?.data?.company?.profilePicture || '/img-card.png'}
+            src={companyData?.data?.company?.profilePicture || "/img-card.png"}
             alt="Foto principal de empresa"
             fill
             className="object-contain"
           />
-        </div>
-
-        <div className='grid grid-cols-3 gap-5 mt-2 justify-between items-center '>
-          {companyData?.data?.company?.redesSociales?.facebook && (
-            <a href={companyData.data.company.redesSociales.facebook} target='_blank' rel='noopener noreferrer'>
-              <Image className='w-[50px]' src='/facebook_logo.svg' alt='Facebook' width={50} height={50} />
-            </a>
-          )}
-          {companyData?.data?.company?.redesSociales?.instagram && (
-            <a href={companyData.data.company.redesSociales.instagram} target='_blank' rel='noopener noreferrer'>
-              <Image className='w-[50px]' src='/instagram-logo.svg' alt='Instagram' width={50} height={50} />
-            </a>
-          )}
-          {companyData?.data?.company?.redesSociales?.twitter && (
-            <a href={companyData.data.company.redesSociales.twitter} target='_blank' rel='noopener noreferrer'>
-              <Image className='w-[85px] h-[85px]' src='/x-logo.svg' alt='Twitter' width={75} height={75} />
-            </a>
-          )}
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-4">
+            {companyData?.data?.company?.redesSociales?.facebook && (
+              <a
+                href={companyData.data.company.redesSociales.facebook}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Image src="/pngwing.com (3).png" alt="Facebook" width={40} height={40} className='rounded-lg' />
+              </a>
+            )}
+            {companyData?.data?.company?.redesSociales?.instagram && (
+              <a
+                href={companyData.data.company.redesSociales.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Image src="/instagram-logo.svg" alt="Instagram" width={40} height={40} />
+              </a>
+            )}
+            {companyData?.data?.company?.redesSociales?.twitter && (
+              <a
+                href={companyData.data.company.redesSociales.twitter}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Image src="/sl_z_072523_61700_01.jpg" alt="Twitter" width={40} height={40} className="rounded-lg" />
+              </a>
+            )}
+          </div>
         </div>
       </div>
+
 
       <section className='flex flex-col justify-between p-2 md:flex-row lg:flex-row w-full mt-4'>
         <div className='w-full flex flex-col'>
@@ -192,27 +204,25 @@ export default function CardFree() {
 
 
       </section>
-
-      <div className='w-full flex flex-col justify-self-center items-center mt-8'>
-        <div className='max-w-[400px]'>
-          <div className='border p-3 rounded mt-4 bg-[#ECEFF1] w-[290px]  md:w-full  justify-center flex flex-col text-[#455A64]'>
-            <h4 value='Place' className='text-[#546E7A] font-semibold'>
-              Dirección:
-            </h4>
-            <p className='text-center'>
-              {' '}
-              {companyData?.data?.company?.address ||
-                'Información no disponible.'}
-            </p>
-            <h4 value='Place' className='text-[#546E7A] font-semibold mt-3'>
-              Teléfono:
-            </h4>
-            <p className='text-center'>
-              {' '}
-              {companyData?.data?.company?.phone || 'Información no disponible.'}
-            </p>
-          </div>
+      <div className="w-full flex flex-col justify-center items-center mt-8">
+        <div className="border p-3 rounded mt-4 bg-[#ECEFF1] w-full justify-center flex flex-col items-center text-[#455A64]">
+          <h4 className="text-[#546E7A] font-semibold">
+            Dirección:
+          </h4>
+          <p className='text-center'>
+            {' '}
+            {companyData?.data?.company?.address ||
+              'Información no disponible.'}
+          </p>
+          <h4 value='Place' className='text-[#546E7A] font-semibold mt-3'>
+            Teléfono:
+          </h4>
+          <p className='text-center'>
+            {' '}
+            {companyData?.data?.company?.phone || 'Información no disponible.'}
+          </p>
         </div>
+
         <div className='flex flex-col w-full justify-self-center gap-5'>
           <h1 className='text-center text-[#2F4F4F] mt-8'>
             Imagenes de accesibilidad proporcionadas por la empresa:
