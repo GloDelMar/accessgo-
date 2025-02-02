@@ -11,64 +11,53 @@ const View7 = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [userId, setUserId] = useState(null);
   const [comments, setComments] = useState([]);
   const [showComents, setShowComents] = useState(false);
   const router = useRouter();
 
-
-
   useEffect(() => {
     const fetchUserData = async () => {
-    
-      setLoading(true);
-      const userId = localStorage.getItem("userId");
-    
-      console.log("id de usuario", userId);
-      const data = await getUserById(userId);
-     
-      console.log("datos de usuario", data);
-      setUserData(data);
-
-      const commentsData = await getCommentByUserId(userId);
-      console.log("comentarios de usuario", commentsData);
-
-      // Condición para verificar si no hay comentarios
-      if (commentsData === undefined ) {
-        setComments("No hay comentarios aún");
-      } else {
-        setComments(commentsData);
+      try {
+        setLoading(true);
+        const userId = localStorage.getItem("userId");
+        if (!userId) {
+          setError("Usuario no encontrado.");
+          setLoading(false);
+          return;
+        }
+        const data = await getUserById(userId);
+        setUserData(data);
+        const commentsData = await getCommentByUserId(userId);
+        setComments(commentsData || []);
+      } catch (err) {
+        setError("Error al cargar los datos.");
+        console.error(err);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchUserData();
-  }, [userId]);
-
-
+  }, []);
 
   const handleCompanyClick = async (companyId) => {
+    if (!companyId) {
+      console.error("ID de la compañía no encontrado.");
+      return;
+    }
+
     try {
-      if (!companyId) {
-        throw new Error("ID de la compañía no encontrado.");
-      }
-
-      // Obtener datos de la compañía
       const companyData = await getCompanyById(companyId);
-
       const companyType = companyData?.data?.company?.cuenta;
 
       if (!companyType) {
-        throw new Error("Tipo de compañía no encontrado.");
+        console.error("Tipo de compañía no encontrado.");
+        return;
       }
 
-      // Redirigir según el tipo de compañía
-      if (companyType === "free") {
-        router.push(`/vista-base?id=${companyId}`);
-      } else if (companyType === "premium") {
-        router.push(`/vista-prem?id=${companyId}`);
-      } else {
-        throw new Error("Tipo de compañía inválido.");
-      }
+      router.push(
+        companyType === "free" ? `/vista-base?id=${companyId}` : `/vista-prem?id=${companyId}`
+      );
     } catch (error) {
       console.error("Error al manejar el clic de la compañía:", error.message);
     }
@@ -91,13 +80,13 @@ const View7 = () => {
       <h1 className="text-center text-[#2F4F4F] text-2xl p-10 font-bold">
         ¡Bienvenid@ a AccessGo!
       </h1>
-      <p className='text-4xl md:text-5xl font-bold text-center text-[#2F4F4F] mt-2 mb-12'>
-        {userData?.data?.user?.firstName ||
-          'Información no disponible.'}
+      <p className="text-4xl md:text-5xl font-bold text-center text-[#2F4F4F] mt-2 mb-12">
+        {userData?.data?.user?.firstName || "Información no disponible."}
       </p>
+
       <div className="flex flex-col items-center lg:flex-row lg:justify-center lg:items-start lg:space-x-4 px-2">
-        <div className="max-w-40 max-h-40 p-4 rounded-md bg-[#F5F0E5] lg:w-1/3 flex justify-center">
-          <div className=" w-32 h-32 rounded-full overflow-hidden">
+        <div className="max-w-40 max-h-40 p-4 rounded-md bg-[#F5F0E5] lg:w-1/3 flex flex-col items-center">
+          <div className="w-32 h-32 rounded-full overflow-hidden">
             <Image
               src={userData?.data?.user?.profilePicture || defaultProfilePic}
               alt="Foto de perfil"
@@ -105,11 +94,12 @@ const View7 = () => {
               height={150}
               className="w-full h-full object-cover"
             />
-            <h2 className="text-xl font-semibold mb-2">
-              {userData?.data?.user?.firstName} {userData?.data?.user?.lastName}
-            </h2>
           </div>
+          <h2 className="text-xl font-semibold mt-2">
+            {userData?.data?.user?.firstName} {userData?.data?.user?.lastName}
+          </h2>
         </div>
+
         <div className="flex flex-col space-y-4 py-4 items-center lg:space-y-6">
           <h3 className="text-2xl text-[#2F4F4F] mb-4 lg:text-center">
             Acerca de mí
@@ -120,10 +110,7 @@ const View7 = () => {
             className="bg-[#F6F9FF] p-6 rounded-md mb-4 text-[#2F4F4F] shadow-lg w-full resize-none"
           />
           <button
-            onClick={() => {
-              console.log("Toggling showComents", showComents); // Verifica si está cambiando el estado
-              setShowComents(!showComents);
-            }}
+            onClick={() => setShowComents(!showComents)}
             className="w-[300px] bg-[#F5F0E5] py-2 px-4 rounded-md text-center"
           >
             {showComents ? "Ocultar comentarios" : "Ver tus comentarios"}
@@ -142,8 +129,7 @@ const View7 = () => {
                         onClick={() => handleCompanyClick(comment.businessId?._id)}
                         className="text-gray-600 text-sm font-semibold hover:underline"
                       >
-                        Comentario para:{" "}
-                        {comment.businessId?.companyName || "Sin nombre"}
+                        Comentario para: {comment.businessId?.companyName || "Sin nombre"}
                       </button>
                     </div>
                     <p className="mt-2">{comment.content}</p>
@@ -158,12 +144,11 @@ const View7 = () => {
             </ul>
           )}
 
-          {/* Si no hay comentarios y no se está cargando, mostrar el mensaje sin interrumpir el renderizado */}
           {comments.length === 0 && !loading && !error && showComents && (
-            <p className="text-center text-gray-500 mt-4">No se han encontrado comentarios para este usuario.</p>
+            <p className="text-center text-gray-500 mt-4">
+              No se han encontrado comentarios para este usuario.
+            </p>
           )}
-
-
         </div>
       </div>
     </>
