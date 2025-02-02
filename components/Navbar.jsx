@@ -141,20 +141,22 @@ const Navbar = () => {
             <Image
               src="/Union.svg"
               alt="Logo AccessGo simplificado"
-              className="sm:block md:hidden"
+              className="sm:block md:hidden w-[50px] h-[50px]"
               width={40}
               height={40}
+              priority={true}
             />
 
           </Link>
-          <Link href="/">
+          <Link href="/" className="relative w-[80px] h-[50px] md:w-[100px] md:h-[50px]">
             <Image
               src="/logo2.svg"
               alt="Logo AccessGo"
-              className="hidden md:block"
-               layout="intrinsic"
-              width={80} // Ajusta el tamaño en píxeles
-              height={80} />
+              fill
+              sizes="(max-width: 768px) 80px, 100px"
+              priority={true}
+              className="object-contain hidden md:block"
+            />
           </Link>
         </div>
 

@@ -218,66 +218,6 @@ export default function MapWithPlaces() {
 
   /**
    * -----------------------------------------------------------------
-   * Hook que agrega marcadores dinámicamente al mapa para mostrar compañías cercanas
-   * -----------------------------------------------------------------
-   */
-  useEffect(() => {
-    if (!map.current || !userLocation) return;
-
-    document.querySelectorAll('.mapboxgl-marker').forEach((marker) => marker.remove());
-
-    new mapboxgl.Marker({ color: 'red' })
-      .setLngLat([userLocation.longitude, userLocation.latitude])
-      .setPopup(
-        new mapboxgl.Popup({ offset: 25 }).setHTML(
-          DOMPurify.sanitize(
-            `<div>
-                        <h3 class="font-semibold">Tu ubicación</h3>
-                        <p>Esta es tu ubicación actual</p>
-                    </div>`
-          )
-        )
-      )
-      .addTo(map.current);
-
-    const companiesWithDistance = filteredCompanies.map((company) => {
-      const distance = calculateDistance(
-        userLocation.latitude,
-        userLocation.longitude,
-        company.latitude,
-        company.longitude
-      );
-      return { ...company, distance };
-    }).sort((a, b) => a.distance - b.distance);
-
-    companiesWithDistance.forEach((company, index) => {
-      const { latitude, longitude, companyName, distance } = company;
-      const color = index === 0 ? '#00FF00' : index <= 3 ? '#FFA500' : '#0000FF';
-
-      if (latitude && longitude) {
-        const currentMarker = new mapboxgl.Marker({ color })
-          .setLngLat([longitude, latitude])
-          .setPopup(
-            new mapboxgl.Popup({ offset: 25 }).setHTML(
-              DOMPurify.sanitize(
-                `<div>
-                  <h3 class="font-semibold">${companyName}</h3>
-                  <p>Distancia: ${distance.toFixed(2)} km</p>
-                 </div>`
-              )
-            )
-          )
-          .addTo(map.current);
-
-        currentMarker.getElement().addEventListener('click', () => {
-          handleOpenModal(company);
-        });
-      }
-    });
-  }, [filteredCompanies, userLocation, handleOpenModal]);
-
-  /**
-   * -----------------------------------------------------------------
    * Hook que maneja el filtro de búsqueda en tiempo real
    * -----------------------------------------------------------------
    */
@@ -422,7 +362,7 @@ export default function MapWithPlaces() {
     const transformedCompany = {
       id: company._id,
       name: company.companyName || "Sin nombre",
-      images: company.images || [company.profilePicture || "/placeholder.svg"],
+      images: company.images || [company.profilePicture || "/4574c6_19f52cfb1ef44a3d844774c6078ffafc~mv2.png"],
       rating: averageRating || 0,
       features: company.features || [],
       description: company.description || "No hay descripción disponible.",
@@ -436,6 +376,68 @@ export default function MapWithPlaces() {
     setSelectedEstablishment(transformedCompany);
     setIsModalOpen(true);
   }, []); // El segundo parámetro vacío asegura que la función no se vuelva a crear
+
+
+  /**
+   * -----------------------------------------------------------------
+   * Hook que agrega marcadores dinámicamente al mapa para mostrar compañías cercanas
+   * -----------------------------------------------------------------
+   */
+  useEffect(() => {
+    if (!map.current || !userLocation) return;
+
+    document.querySelectorAll('.mapboxgl-marker').forEach((marker) => marker.remove());
+
+    new mapboxgl.Marker({ color: 'red' })
+      .setLngLat([userLocation.longitude, userLocation.latitude])
+      .setPopup(
+        new mapboxgl.Popup({ offset: 25 }).setHTML(
+          DOMPurify.sanitize(
+            `<div>
+                        <h3 class="font-semibold">Tu ubicación</h3>
+                        <p>Esta es tu ubicación actual</p>
+                    </div>`
+          )
+        )
+      )
+      .addTo(map.current);
+
+    const companiesWithDistance = filteredCompanies.map((company) => {
+      const distance = calculateDistance(
+        userLocation.latitude,
+        userLocation.longitude,
+        company.latitude,
+        company.longitude
+      );
+      return { ...company, distance };
+    }).sort((a, b) => a.distance - b.distance);
+
+    companiesWithDistance.forEach((company, index) => {
+      const { latitude, longitude, companyName, distance } = company;
+      const color = index === 0 ? '#00FF00' : index <= 3 ? '#FFA500' : '#0000FF';
+
+      if (latitude && longitude) {
+        const currentMarker = new mapboxgl.Marker({ color })
+          .setLngLat([longitude, latitude])
+          .setPopup(
+            new mapboxgl.Popup({ offset: 25 }).setHTML(
+              DOMPurify.sanitize(
+                `<div>
+                  <h3 class="font-semibold">${companyName}</h3>
+                  <p>Distancia: ${distance.toFixed(2)} km</p>
+                 </div>`
+              )
+            )
+          )
+          .addTo(map.current);
+
+        currentMarker.getElement().addEventListener('click', () => {
+          handleOpenModal(company);
+        });
+      }
+    });
+  }, [filteredCompanies, userLocation, handleOpenModal]);
+
 
   /**
    * -----------------------------------------------------------------
@@ -777,7 +779,7 @@ export default function MapWithPlaces() {
                     <div className="p-4 flex flex-col items-center gap-2">
                       <div className="w-16 h-16 bg-muted rounded overflow-hidden">
                         <Image
-                          src={company.profilePicture || "/placeholder.svg?height=64&width=64"}
+                          src={company.profilePicture || "/4574c6_19f52cfb1ef44a3d844774c6078ffafc~mv2.png"}
                           alt={company.companyName}
                           width={400}
                           height={100}
