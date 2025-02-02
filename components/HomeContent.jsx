@@ -13,6 +13,7 @@ import Modal from "./Molecules/MapModal";
 import MapComponent from "./Organism/MapComponent";
 import MapSection from "./Organism/MapSection";
 import Link from 'next/link';
+import { ModalBeneficiosPrem } from "./Modals/ModalBeneficiosPrem";
 
 
 
@@ -343,6 +344,8 @@ const HomeContent = () => {
         filteredCompanies={filteredCompanies}
         handleCardClick={handleCardClick}
       />
+
+      {/* <ModalBeneficiosPrem /> */}
 
       {/* <div className='relative mt-4 mb-5 group cursor-pointer flex justify-center'>
         <button
