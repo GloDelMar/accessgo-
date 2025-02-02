@@ -18,18 +18,18 @@ const EstablecimientoModal = ({ isOpen, onClose, establishment, onGetDirections,
   return (
     <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
       <div className="bg-white w-full max-w-2xl md:max-w-4xl rounded-lg shadow-lg overflow-hidden flex flex-col max-h-screen md:max-h-full">
-        {/* Header */}
+        <br />
         <button
-          className="text-white pt-2 hover:text-gray-800 flex items-end justify-end mr-4 text-2xl font-extrabold"
+          className="text-white hover:text-gray-800 flex items-end justify-end mr-4 text-2xl font-extrabold"
           onClick={onClose}
           aria-label="Cerrar modal"
         >
-          <p className="bg-red-500 rounded-full p-1">X</p>
+          <p className="bg-red-500 rounded-full p-2 w-10 h-10 flex items-center justify-center">X</p>
         </button>
         <div className="flex flex-col space-y-2 text-center sm:text-left border-b pb-4">
           <div className="p-4">
             <h2 className="font-semibold text-foreground text-xl text-[#2F4858]">{establishment.name}</h2>
-            <p class="text-sm text-gray-600">{establishment.address}</p>
+            <p className="text-sm text-gray-600">{establishment.address}</p>
           </div>
         </div>
 

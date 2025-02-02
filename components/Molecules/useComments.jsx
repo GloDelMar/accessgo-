@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import {getCommentsByCompanyId, createComment} from '../../pages/api/api_comment';
+import { getCommentsByCompanyId, createComment, deleteComment } from '../../pages/api/api_comment';
 import { getBusinessAverageRanking, createRanking } from '@/pages/api/api_ranking';
 
 export const useComments = (companyId) => {
@@ -18,7 +18,7 @@ export const useComments = (companyId) => {
 
         const avgData = await getBusinessAverageRanking(companyId);
         setAverageRating(avgData.averageRating || 0);
-      }  finally {
+      } finally {
         setLoading(false);
       }
     };
@@ -49,5 +49,19 @@ export const useComments = (companyId) => {
     }
   };
 
-  return { comments, averageRating, loading, addComment };
+  const delComment = async (commentId) => {
+    try {
+      const response = await deleteComment(commentId);
+      if (response.success) {
+        const updatedComments = await getCommentsByCompanyId(companyId);
+        setComments(updatedComments.data || []);
+      }
+      return response;
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+      throw error;
+    }
+  };
+
+  return { comments, averageRating, loading, addComment, delComment };
 };

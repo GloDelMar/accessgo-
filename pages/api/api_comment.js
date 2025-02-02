@@ -209,3 +209,31 @@ export async function removeDislike(commentId, userId) {
         throw error;
     }
 }
+
+/**
+ * Eliminar un comentario
+ * @param {string} commentId - ID del comentario
+ * @returns {Object} - Respuesta del servidor
+ */
+
+export async function deleteComment(commentId) {
+    try {
+        const response = await fetch(`${API_URL}/api/comments/${commentId}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            const errorMessage = errorData.message || "Error al eliminar comentario.";
+            throw new Error(errorMessage);
+        }
+
+        const responseData = await response.json();
+        return responseData;
+    } catch (error) {
+        throw error;
+    }
+}
