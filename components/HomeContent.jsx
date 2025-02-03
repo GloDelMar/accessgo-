@@ -174,6 +174,7 @@ const HomeContent = () => {
             priority={true}
             width={500} // Valor arbitrario solo para cumplir con Next.js
             height={500}
+            quality={70}
           />
         </div>
       </div>
@@ -217,6 +218,7 @@ const HomeContent = () => {
                 className="absolute inset-0 w-full h-full object-cover"
                 fill={true}
                 priority={true}
+                quality={20}
 
               />
               <div className='relative p-4 w-[200px] h-[241px] bg-black bg-opacity-50 flex flex-col justify-end'>
@@ -259,6 +261,7 @@ const HomeContent = () => {
                 fill={true}
                 className='absolute inset-0 w-[80px] object-cover'
                 priority={true}
+                quality={10}
               />
               <div className='relative p-4 w-[200px] h-[241px] bg-black bg-opacity-25 flex flex-col justify-end'>
                 <h3 className='text-lg font-semibold text-white'>
@@ -313,6 +316,8 @@ const HomeContent = () => {
                 fill={true}
                 className='w-full h-[251px] object-cover'
                 priority={true}
+                quality={20}
+
               />
               <div className='absolute bottom-0 left-0 p-2 bg-gradient-to-t from-black to-transparent w-full text-white'>
                 <h4 className='text-[15px] font-bold'>{company.companyName}</h4>
@@ -452,6 +457,7 @@ const HomeContent = () => {
             width={400}
             height={320}
             priority={true}
+            quality={50}
           />
           <Image
             src='/referencias/comentar.jpg'
@@ -460,11 +466,13 @@ const HomeContent = () => {
             width={400}
             height={320}
             priority={true}
+            quality={50}
           />
           <Image src='/referencias/geo.jpg' className='w-full h-48 object-cover' alt="Sobre referencias geográficas"
             width={400}
             height={320}
-            priority={true} />
+            priority={true}
+            quality={50} />
           <Image
             src='/referencias/rest7.jpg'
             className='w-full h-48 object-cover'
@@ -472,6 +480,7 @@ const HomeContent = () => {
             width={400}
             height={320}
             priority={true}
+            quality={50}
           />
         </div>
         <div className='md:hidden flex items-center justify-center gap-10'>
@@ -483,6 +492,7 @@ const HomeContent = () => {
               width={400}
               height={320}
               priority={true}
+              quality={50}
             />
           </div>
         </div>
