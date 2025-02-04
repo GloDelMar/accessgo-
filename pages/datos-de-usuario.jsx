@@ -13,6 +13,27 @@ const View6 = () => {
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
 
+  // Regex para validar solo letras y longitud máxima de 20 caracteres
+  const nameRegex = /^[A-Za-z]{1,20}$/;
+
+  // Función para manejar la actualización de los nombres
+  const handleNombreChange = (e) => {
+    const value = e.target.value;
+    // Verifica si el valor cumple con el regex
+    if (nameRegex.test(value) || value === '') {
+      setDataNombre(value);
+    }
+  };
+
+  // Función para manejar la actualización de los apellidos
+  const handleApellidoChange = (e) => {
+    const value = e.target.value;
+    // Verifica si el valor cumple con el regex
+    if (nameRegex.test(value) || value === '') {
+      setDataApellido(value);
+    }
+  };
+
   // Verifica si estamos en el cliente y establece el `userId`
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -131,19 +152,14 @@ const View6 = () => {
         ¡Cuéntanos un poco de ti!
       </h1>
       <h3 className='text-center text-[#2F4F4F] px-4 pb-10'>
-        Para personalizar tu perfil te pedimos que llenes los siguientes campos
+        Para personalizar tu perfil te pedimos que llenes los siguientes campos.
       </h3>
 
       <div className='flex flex-col md:flex-row md:justify-between md:items-start md:space-x-8 lg:space-x-8 px-4'>
         <div className='lg:w-1/3 text-center lg:text-left mb-8 lg:mb-0'>
-          <h3 className='text-xl text-center text-[#2F4F4F] mb-4'>
-            Datos personales
-          </h3>
           <div className='flex justify-center items-center'>
-          <UploadImageUPP userId={userId} />
-
+            <UploadImageUPP userId={userId} />
           </div>
-
         </div>
 
         <div className='lg:w-2/3 flex flex-col items-center lg:items-start'>
@@ -152,7 +168,7 @@ const View6 = () => {
               <input
                 type='text'
                 value={dataNombre}
-                onChange={(e) => setDataNombre(e.target.value)}
+                onChange={handleNombreChange}
                 placeholder='Nombre'
                 className='w-full px-4 py-2 border bg-[#F9F9F9] rounded-md text-sm font-medium text-[#546E7A] hover:bg-[#ECEFF1] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#B0BEC5]'
               />
@@ -162,7 +178,7 @@ const View6 = () => {
               <input
                 type='text'
                 value={dataApellido}
-                onChange={(e) => setDataApellido(e.target.value)}
+                onChange={handleApellidoChange}
                 placeholder='Apellido'
                 className='w-full px-4 py-2 border bg-[#F9F9F9] rounded-md text-sm font-medium text-[#546E7A] hover:bg-[#ECEFF1] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#B0BEC5]'
               />
