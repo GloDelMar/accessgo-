@@ -77,14 +77,17 @@ const View5 = () => {
   
       // Buscar usuario por ID
       const user = await getUserById(id);
-      
+      console.log("usuario", user)
       if (user?.data?.user?.email) {
         email = user.data.user.email;
       } else {
+        console.log("id de compañia", id)
         // Buscar compañía por ID si no se encontró usuario
         const company = await getCompanyById(id);
+        console.log("compañia", company)
         if (company?.data?.company?.email) {
           email = company.data.company.email;
+          console.log ("email", email)
         } else {
           console.log("❌ No se encontró un email asociado al ID.");
         }
