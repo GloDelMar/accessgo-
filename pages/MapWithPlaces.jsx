@@ -14,6 +14,8 @@ import { useRouter } from 'next/router';
 import { getHotelAccessibility, getRestaurantAccessibility } from './api/api_questionnaire';
 import { ChevronDown } from 'lucide-react';
 import { useCallback } from 'react';
+import { getUserById } from './api/api_getById';
+import CustomModal from '@/components/Molecules/CostumModal';
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiYWNjZXNnbyIsImEiOiJjbTI4NGVjNnowc2RqMmxwdnptcXAwbmhuIn0.0jG0XG0mwx_LHjdJ23Qx4A';
 
@@ -43,8 +45,39 @@ export default function MapWithPlaces() {
   const [isOpen, setIsOpen] = useState(false);
   let forAccesibilityIcons = new Set();
   const forAccesibilityIconsRef = useRef(new Set());
+    const [showModal, setShowModal] = useState(false);
 
 
+    useEffect(() => {
+      const fetchUserData = async () => {
+        try {
+          const type = localStorage.getItem("tipoUsuario");
+          const id = localStorage.getItem("userId");
+    
+          if (!id || !type) return;
+    
+          const userData = type === "user" ? await getUserById(id) : await getCompanyById(id);
+          if (!userData) {
+            throw new Error("No se encontró el usuario.");
+          }
+    
+          const verificada = type === "user" ? userData.data.user.verified : userData.data.company.verified;
+    
+          if (!verificada) {
+            setShowModal(true);
+          }
+        } catch (error) {
+          console.error("Error al obtener datos del usuario:", error);
+        }
+      };
+    
+      fetchUserData();
+    }, []);
+    
+    const handleModal2Close = () => {
+      setShowModal(false);
+      router.push("/autentificacion");
+    };
   /**
    * -----------------------------------------------------------------
    * Hook que carga todas las compañías desde la API al iniciar el componente
@@ -578,7 +611,14 @@ export default function MapWithPlaces() {
 
   return (
     <div className="relative w-screen h-screen">
-
+ {showModal && (
+        <CustomModal 
+          isOpen={showModal}
+          onClose={handleModal2Close}
+          title="Verificación requerida"
+          message="Debes verificar tu cuenta para continuar."
+          buttonText="Aceptar"
+        />)}
       {/* Header */}
       {/* Barra de búsqueda personalizada */}
       <div className="container mx-auto px-4">
