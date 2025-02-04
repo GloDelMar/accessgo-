@@ -10,6 +10,8 @@ import { FaWheelchair, FaEye, FaDeaf, FaBrain, FaPuzzlePiece } from "react-icons
 import Modal from "../Molecules/DisabilitiesInfo";
 import { restaurantQuestions, hotelQuestions } from "./AccesibilityData";
 import { getCompanyById, updateCompany } from "@/pages/api/api_company";
+import { toast, Toaster } from 'react-hot-toast';
+import CustomModal from "../Molecules/CostumModal";
 
 
 const AccesForm = () => {
@@ -20,10 +22,10 @@ const AccesForm = () => {
   const [modalDisability, setModalDisability] = useState("");
   const router = useRouter();
   const [tooltipVisible, setTooltipVisible] = useState(null);
-  const [activeForm, setActiveForm] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
 
-  // Mapea las discapacidades con sus íconos correspondientes.
+ 
   const disabilityIcons = [
     { type: "Motriz", icon: <FaWheelchair /> },
     { type: "Visual", icon: <FaEye /> },
@@ -34,55 +36,61 @@ const AccesForm = () => {
 
   useEffect(() => {
     const loadData = async () => {
-      const accesibilidad = localStorage.getItem("accesibilidad");
-      const userId = localStorage.getItem("userId");
-
-      if (!userId) {
-        alert("No se encontró el usuario. Por favor, inicia sesión.");
-        return;
-      }
-
       try {
+        const userId = localStorage.getItem("userId");
+        if (!userId) {
+          alert("No se encontró el usuario. Por favor, inicia sesión.");
+          router.push("/login");
+          return;
+        }
+  
+        const companyData = await getCompanyById(userId);
+        if (!companyData || !companyData.data?.company) {
+          throw new Error("No se encontró la empresa.");
+        }
+  
+        const { verified, giro } = companyData.data.company;
+        
+        if (!verified) {
+          setShowModal(true); // Activamos el modal
+          return;
+        }
+  
+        const accesibilidad = localStorage.getItem("accesibilidad");
         if (accesibilidad) {
-          // Si "accesibilidad" existe, cargamos los datos para actualizar
-          const companyData = await getCompanyById(userId);
-
-          const tipo = companyData.data.company.giro.toLowerCase();
-          console.log("el tipo", tipo);
-          setEstablishmentType(tipo);
-
+          setEstablishmentType(giro.toLowerCase());
+  
           let accessibilityData = {};
-          if (tipo === "restaurante") {
+          if (giro.toLowerCase() === "restaurante") {
             accessibilityData = await getRestaurantAccessibility(userId);
-          } else if (tipo === "hotel") {
+          } else if (giro.toLowerCase() === "hotel") {
             accessibilityData = await getHotelAccessibility(userId);
           }
-
-          setFormData({
-            ...formData,
-            ...accessibilityData, // Precarga los datos existentes
-          });
+  
+          setFormData((prevData) => ({
+            ...prevData,
+            ...accessibilityData,
+          }));
         } else {
-          // Si no existe accesibilidad, se preparan las preguntas según el tipo
-          // No asignamos un valor predeterminado aquí
-          setEstablishmentType(""); // Sin un valor seleccionado
-          setFormData({}); // Inicializamos sin datos
+          setEstablishmentType("");
+          setFormData({});
         }
       } catch (error) {
         console.error("Error al cargar los datos:", error);
+        toast.error("Hubo un problema al cargar los datos.");
+        router.push("/login");
       }
     };
-
+  
     loadData();
-  }, [formData]);
-
+  }, [router]); 
+  
 
 
   const handleEstablishmentChange = (e) => {
     const selectedType = e.target.value;
     setEstablishmentType(selectedType);
 
-    // Carga las preguntas correspondientes al tipo de establecimiento seleccionado.
     if (selectedType === "restaurante") {
       setFormData(restaurantQuestions);
     } else if (selectedType === "hotel") {
@@ -91,7 +99,7 @@ const AccesForm = () => {
       setFormData(null);
     }
 
-    setSelectedDisability(""); // Resetea la discapacidad seleccionada.
+    setSelectedDisability(""); 
   };
 
   const handleConditionClick = (disabilityType) => {
@@ -106,6 +114,11 @@ const AccesForm = () => {
   const handleModalClose = () => {
     setModalOpen(false);
     setModalDisability("");
+  };
+
+  const handleModal2Close = () => {
+    setShowModal(false);
+    router.push("/autentificacion");
   };
 
   const handleUpdate = (updatedSections) => {
@@ -199,7 +212,15 @@ const AccesForm = () => {
   return (
     <div>
       <Modal isOpen={modalOpen} onClose={handleModalClose} disabilityType={modalDisability} />
-
+      {showModal && (
+        <CustomModal 
+          isOpen={showModal}
+          onClose={handleModal2Close}
+          title="Verificación requerida"
+          message="Debes verificar tu cuenta para continuar."
+          buttonText="Aceptar"
+        />
+      )}
       <div className="bg-white border border-[#E8DECF] shadow-sm rounded-[15px] px-8 pt-6 pb-8 mb-4 w-full md:w-[750px] lg:w-[1000px]">
         {/* Header y Selección */}
         <div className="flex flex-col mb-4 text-center items-center">
