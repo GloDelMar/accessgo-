@@ -68,10 +68,12 @@ const ImageCarouselACC = ({ userId }) => {
               <Image
                 src={image}
                 alt={`Slide ${index}`}
-                className='object-contain justify-self-center w-[200px] h-[200px] object-cover rounded-lg cursor-pointer'
+                width={200}
+                height={200}
+                className='justify-self-center w-[200px] h-[200px] object-cover rounded-lg cursor-pointer'
                 onClick={() => handleImageClick(image)}
-                 fill
-           
+                quality={20}
+                
               />
             </SwiperSlide>
           ))}
@@ -86,9 +88,12 @@ const ImageCarouselACC = ({ userId }) => {
             <Image
               src={selectedImage}
               alt='Selected Image'
+              width={1000}
+              height={1000}
               className='w-full h-full object-contain'
-               fill
-          
+              quality={100}
+
+              
             />
             <button
               onClick={handleCloseModal}
