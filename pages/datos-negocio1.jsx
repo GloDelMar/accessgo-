@@ -8,6 +8,7 @@ import { updateCompany } from './api/api_company';
 import UploadImageCPP from '@/components/Molecules/UploadImageCPP';
 import Image from 'next/image';
 import PlacesNearBy from '@/components/Lugares';
+import CustomModal from '@/components/Molecules/CostumModal';
 
 mapboxgl.accessToken =
   'pk.eyJ1IjoiYWNjZXNnbyIsImEiOiJjbTI4NGVjNnowc2RqMmxwdnptcXAwbmhuIn0.0jG0XG0mwx_LHjdJ23Qx4A';
@@ -23,6 +24,7 @@ const View23 = () => {
   const [longitude, setLongitude] = useState(null);
   const [latitude, setLatitude] = useState(null);
   const [companyId, setCompanyId] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const companyIdFromLocalStorage = localStorage.getItem('userId');
@@ -111,6 +113,7 @@ const View23 = () => {
     const companyId = localStorage.getItem('userId');
     if (companyId) {
       setCompanyId(companyId);
+      
     } else {
       console.error('No se encontró el ID de la empresa en localStorage');
     }
@@ -123,6 +126,13 @@ const View23 = () => {
       const companyData = response.data.data.company;
 
       console.log('Datos de la compañía:', companyData);
+
+      const verified = companyData.verified;
+        
+      if (!verified) {
+        setShowModal(true); // Activamos el modal
+        return;
+      }
 
       setFormValues({
         nombreComercial: companyData?.companyName || '',
@@ -166,6 +176,11 @@ const View23 = () => {
 
   const handleAddressChange = (event) => {
     setAddress(event.target.value);
+  };
+
+  const handleModal2Close = () => {
+    setShowModal(false);
+    router.push("/autentificacion");
   };
 
   const handleSearch = async () => {
@@ -283,6 +298,15 @@ const View23 = () => {
     <>
 
       <div className='w-full max-w-[900px] mx-auto p-4 md:p-6 bg-white rounded-lg shadow-sm'>
+      {showModal && (
+        <CustomModal 
+          isOpen={showModal}
+          onClose={handleModal2Close}
+          title="Verificación requerida"
+          message="Debes verificar tu cuenta para continuar."
+          buttonText="Aceptar"
+        />
+      )}
         <h1 className='text-4xl font-bold text-center mb-6 text-[#2F4F4F]'>
           ¡Cuéntanos sobre ustedes!
         </h1>

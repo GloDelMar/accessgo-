@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { verifyUserCode, sendVerificationCode, updateVerificationStatus } from "./api/api_verification";
-import { getUserByEmail } from "./api/api_getById";
-import { getCompanyByEmail } from "./api/api_company";
+import { getUserByEmail, getUserById } from "./api/api_getById";
+import { getCompanyByEmail, getCompanyById } from "./api/api_company";
+
 
 const View5 = () => {
   const router = useRouter();
@@ -54,22 +55,75 @@ const View5 = () => {
 
       // Enviar el código de verificación
       await sendVerificationCode(userId);
-      setCanResend(false);
-      console.log("Código de verificación enviado. Desactivando botón de reenviar.");
-
-      // Configurar temporizador para habilitar nuevamente el botón
-      const countdown = setTimeout(() => {
-        setCanResend(true);
-        console.log("Tiempo de espera terminado. Botón de reenviar habilitado.");
-      }, 3600000);
-
-      setTimer(countdown);
+     
     } catch (error) {
       console.error("Error al enviar el código:", error);
       setError(error.message || "Error al enviar el código. Inténtalo de nuevo.");
     }
   };
 
+  const handleResendCode = async () => {
+    try {
+      // Obtener el userId del localStorage
+      const id = window.localStorage.getItem("userId");
+     
+      const type = localStorage.getItem("tipoUsuario")
+  
+      if (!id) {
+        throw new Error("⚠️ No se encontró un ID de usuario. Intenta registrarte de nuevo.");
+      }
+  
+      let email = "";
+  
+      // Buscar usuario por ID
+      const user = await getUserById(id);
+      
+      if (user?.data?.user?.email) {
+        email = user.data.user.email;
+      } else {
+        // Buscar compañía por ID si no se encontró usuario
+        const company = await getCompanyById(id);
+        if (company?.data?.company?.email) {
+          email = company.data.company.email;
+        } else {
+          console.log("❌ No se encontró un email asociado al ID.");
+        }
+      }
+  
+      if (!email) {
+        throw new Error("No se pudo encontrar un correo electrónico asociado a este usuario.");
+      }
+  
+      // Enviar el código de verificación
+      const response = await sendVerificationCode(email);
+      
+      if (response?.success) {
+        console.log("Código de verificación enviado con éxito.");
+      } else {
+        throw new Error(response?.message || "❌ Error al enviar el código.");
+      }
+  
+      // Desactivar el botón y configurar temporizador de espera (1 hora)
+      setCanResend(false);
+  
+      // Limpiar temporizador anterior si existe
+      if (timer) {
+        clearTimeout(timer);
+      }
+  
+      const countdown = setTimeout(() => {
+        setCanResend(true);
+      }, 3600000); // 1 hora en milisegundos
+  
+      setTimer(countdown);
+    } catch (error) {
+      console.error("❌ Error al reenviar el código:", error);
+      setError(String(error) || "Error al reenviar el código. Inténtalo de nuevo.");
+    }
+  };
+  
+  
+  
 
   const handleVerification = async () => {
     if (code.length !== 6) {
@@ -200,7 +254,7 @@ const View5 = () => {
       </div>
       <div className="flex flex-col items-center mt-5">
         <button
-          onClick={handleSendCode}
+          onClick={handleResendCode}
           disabled={!canResend}
           className="w-[155px] h-[40px] bg-white border-2 rounded-lg"
         >

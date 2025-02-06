@@ -20,6 +20,7 @@ import { getPromoByCompanyId, deletePromo } from './api/api_promos';
 import DOMPurify from 'dompurify';
 import ImagenSubiryBorrarPrem from '@/components/Molecules/ImagenSubiryBorrarPrem';
 import { Toaster } from 'sonner';
+import CustomModal from '@/components/Molecules/CostumModal';
 
 const imageDefault = '/4574c6_19f52cfb1ef44a3d844774c6078ffafc~mv2.png';
 
@@ -49,6 +50,7 @@ const SesionPremium = () => {
   ]);
   const [rango, setRango] = useState('semana');
   const [promociones, setPromociones] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   const handleRangoChange = (event) => {
     setRango(event.target.value);
@@ -75,7 +77,12 @@ const SesionPremium = () => {
 
         const data = await getCompanyById(companyId);
         setCompanyData(data);
-
+        const verified = data.data.company.verified;
+        
+        if (!verified) {
+          setShowModal(true); // Activamos el modal
+          return;
+        }
         const avgData = await getBusinessAverageRanking(companyId);
         setAverageRating(avgData.data.averageRating || 0);
 
@@ -145,8 +152,22 @@ const SesionPremium = () => {
     }
   };
 
+  const handleModal2Close = () => {
+    setShowModal(false);
+    router.push("/autentificacion");
+  };
+
   return (
     <main className='w-full flex overflow-hidden flex-col items-center px-4 sm:px-10 md:px-20 pt-28 bg-white pb-[1572px] max-sm:px-5 max-sm:py-24'>
+      {showModal && (
+        <CustomModal 
+          isOpen={showModal}
+          onClose={handleModal2Close}
+          title="Verificación requerida"
+          message="Debes verificar tu cuenta para continuar."
+          buttonText="Aceptar"
+        />
+      )}
       <div className='container mx-auto px-4 py-8 max-w-4xl'>
         <h1 className='text-4xl md:text-5xl font-bold text-center text-[#2F4F4F] mb-12'>
           ¡Bienvenido!
