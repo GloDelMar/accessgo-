@@ -7,6 +7,7 @@ import { Toaster } from 'sonner';
 import { getCommentsByCompanyId } from './api/api_comment';
 import { getBusinessAverageRanking } from './api/api_ranking';
 import { useRouter } from 'next/router';
+import CustomModal from '@/components/Molecules/CostumModal';
 
 const View21 = () => {
   const [companyData, setCompanyData] = useState(null);
@@ -17,6 +18,7 @@ const View21 = () => {
   const [averageRating, setAverageRating] = useState(0);
   const [comments, setComments] = useState([]);
   const router = useRouter();
+  const [showModal, setShowModal] = useState(false);
 
   const handleClickListo = async () => {
     const userType = localStorage.getItem('tipoUsuario');
@@ -26,7 +28,7 @@ const View21 = () => {
 
       try {
         const Data = await getCompanyById(userId);
-
+       
         console.log('data', Data);
         const cuentaUsuario = Data.data.company.cuenta;
         console.log('cuenta de compañia', cuentaUsuario);
@@ -62,6 +64,13 @@ const View21 = () => {
       try {
         const data = await getCompanyById(companyId);
         setCompanyData(data);
+        
+        const verified = data.data.company.verified;
+        
+        if (!verified) {
+          setShowModal(true); // Activamos el modal
+          return;
+        }
 
         const avgData = await getBusinessAverageRanking(companyId);
         setAverageRating(avgData.averageRating || 0);
@@ -94,9 +103,23 @@ const View21 = () => {
     );
   if (error) return <p>{error}</p>;
 
+  const handleModal2Close = () => {
+    setShowModal(false);
+    router.push("/autentificacion");
+  };
+  
   return (
     <>
       <div className='container mx-auto px-4 py-8 max-w-4xl'>
+      {showModal && (
+        <CustomModal 
+          isOpen={showModal}
+          onClose={handleModal2Close}
+          title="Verificación requerida"
+          message="Debes verificar tu cuenta para continuar."
+          buttonText="Aceptar"
+        />
+      )}
         <h1 className='text-4xl md:text-5xl font-bold text-center text-[#2F4F4F] mb-12'>
           ¡Bienvenido!
           <p className='text-4xl md:text-5xl font-bold text-center text-[#2F4F4F] mt-2 mb-12'>

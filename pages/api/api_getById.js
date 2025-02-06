@@ -9,10 +9,8 @@ export function getUserById(id) {
       },
     })
       .then(response => {
-        if (!response.ok) {
-          throw new Error(`Error fetching user with id ${id}`);
-        }
-        return response.json();
+       
+        return 
       });
   }
   

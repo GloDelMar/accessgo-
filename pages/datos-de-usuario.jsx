@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import UploadImageUPP from '@/components/Molecules/UploadImageUPP';
+import CustomModal from '@/components/Molecules/CostumModal';
 
 const View6 = () => {
   const [dataNombre, setDataNombre] = useState('');
@@ -10,6 +11,7 @@ const View6 = () => {
   const [userId, setUserId] = useState(null);
   const [isClient, setIsClient] = useState(false); // Indica si el componente está montado en cliente
   const router = useRouter();
+  const [showModal, setShowModal] = useState(false);
 
   // Regex para validar solo letras y longitud máxima de 20 caracteres
   const nameRegex = /^[A-Za-z]{1,20}$/;
@@ -62,6 +64,7 @@ const View6 = () => {
         );
 
         if (response.ok) {
+          
           const {
             data: { user: userData }
           } = await response.json();
@@ -73,6 +76,13 @@ const View6 = () => {
               : ''
           );
           setDataBio(userData.biography || '');
+          
+          const verified = userData.verified;
+          
+            if (!verified) {
+              setShowModal(true); // Activamos el modal
+              return;
+            }
         } else {
           console.error(
             'Error al obtener datos del usuario:',
@@ -122,8 +132,22 @@ const View6 = () => {
   // No renderiza hasta que `isClient` sea true
   if (!isClient) return null;
 
+  const handleModal2Close = () => {
+    setShowModal(false);
+    router.push("/autentificacion");
+  };
+
   return (
     <>
+      {showModal && (
+        <CustomModal 
+          isOpen={showModal}
+          onClose={handleModal2Close}
+          title="Verificación requerida"
+          message="Debes verificar tu cuenta para continuar."
+          buttonText="Aceptar"
+        />
+      )}
       <h1 className='text-center text-2xl p-4 font-bold text-[#2F4F4F]'>
         ¡Cuéntanos un poco de ti!
       </h1>
