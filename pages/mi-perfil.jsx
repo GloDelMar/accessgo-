@@ -143,12 +143,6 @@ const View7 = () => {
               )}
             </ul>
           )}
-
-          {comments.length === 0 && !loading && !error && showComents && (
-            <p className="text-center text-gray-500 mt-4">
-              No se han encontrado comentarios para este usuario.
-            </p>
-          )}
         </div>
       </div>
     </>

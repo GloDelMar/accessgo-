@@ -4,7 +4,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'encrypted-tbn0.gstatic.com', // Asegúrate de las configuraciones específicas
+        hostname: 'encrypted-tbn0.gstatic.com',
         pathname: '**',
       },
       {
@@ -13,7 +13,9 @@ const nextConfig = {
         pathname: '**',
       },
     ],
-    dangerouslyAllowSVG: true, // Opcional si necesitas permitir SVG
+    minimumCacheTTL: 60, // Reduce la carga en Next.js cacheando imágenes
+    formats: ['image/webp'], // Soporte de formatos optimizados
+    unoptimized: true, // Desactiva optimización si el problema persiste
   },
 };
 
