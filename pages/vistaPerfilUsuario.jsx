@@ -54,6 +54,7 @@ console.log("el id", id)
           width={150}
           height={150}
           className="rounded-full mx-auto mb-4"
+          
         />
         <h2 className="text-xl font-semibold mb-2">
           {userData?.data?.user?.firstName} {userData?.data?.user?.lastName}
