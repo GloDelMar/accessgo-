@@ -36,7 +36,7 @@ const ImageCarouselACC = ({ userId }) => {
     <div className='flex justify-self-center md:w-[750px] lg:w-[900px]' >
       {images.length > 0 ? (
         <Swiper
-          modules={[Autoplay, Pagination]} // Módulos explícitos
+          modules={[Autoplay, Pagination]} 
           pagination={{
             clickable: images.length > 1,
           }}
@@ -45,7 +45,7 @@ const ImageCarouselACC = ({ userId }) => {
           loop={images.length > 1}
           centeredSlides={images.length === 1}
           autoplay={{
-            delay: 3000, // 3 segundos
+            delay: 3000, 
             disableOnInteraction: false,
           }}
           breakpoints={{
