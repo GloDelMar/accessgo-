@@ -2,17 +2,23 @@ const API_URL = 'https://backend-r159.onrender.com';
 
 export function getUserById(id) {
   return fetch(`${API_URL}/api/users/${id}`, {
-    method: 'GET',
+    method: "GET",
     headers: {
-      'Content-Type': 'application/json'
-    }
-  }).then((response) => {
-    if (!response.ok) {
-      throw new Error(`Error fetching user with id ${id}`);
-    }
-    return response.json();
-  });
+      "Content-Type": "application/json",
+    },
+  })
+    .then(response => {
+     
+      return response.json(); // Convertir la respuesta a JSON
+    })
+    .catch(error => {
+      console.error("Error obteniendo el usuario:", error);
+      throw error; // Reenviar el error para manejarlo donde se llame la función
+    });
 }
+
+
+
 
 export const updateUser = async (userId, userData) => {
   try {
