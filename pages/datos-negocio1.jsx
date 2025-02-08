@@ -26,6 +26,24 @@ const View23 = () => {
   const [companyId, setCompanyId] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
+  
+  const regexSeguridad = /^[A-Za-z .,/#+]{1,80}$/;
+
+  // Manejo del cambio en el input
+  const manejarCambio = (e) => {
+    const nuevoValor = e.target.value;
+    setValor(nuevoValor);
+
+    // Validación con regex
+    if (!regexSeguridad.test(nuevoValor)) {
+      setError(
+        'Solo puedes usar letras, numeros y un máximo de 80 caracteres.'
+      );
+    } else {
+      setError('');
+    }
+  };
+
   useEffect(() => {
     const companyIdFromLocalStorage = localStorage.getItem('userId');
     if (companyIdFromLocalStorage) {
@@ -102,7 +120,7 @@ const View23 = () => {
         zoom: 9
       });
 
-      markerRef.current = new mapboxgl.Marker()
+      markerRef.current = new mapboxgl.Marker();
     } else if (latitude && longitude && markerRef.current) {
       markerRef.current.setLngLat([longitude, latitude]);
       mapRef.current.flyTo({ center: [longitude, latitude], zoom: 14 });
@@ -113,7 +131,6 @@ const View23 = () => {
     const companyId = localStorage.getItem('userId');
     if (companyId) {
       setCompanyId(companyId);
-      
     } else {
       console.error('No se encontró el ID de la empresa en localStorage');
     }
@@ -128,7 +145,7 @@ const View23 = () => {
       console.log('Datos de la compañía:', companyData);
 
       const verified = companyData.verified;
-        
+
       if (!verified) {
         setShowModal(true); // Activamos el modal
         return;
@@ -156,7 +173,6 @@ const View23 = () => {
           recreativos: companyData?.lugares?.recreativos || '',
           emergencia: companyData?.lugares?.emergencia || ''
         }
-
       });
 
       setAddress(companyData?.address || '');
@@ -180,7 +196,7 @@ const View23 = () => {
 
   const handleModal2Close = () => {
     setShowModal(false);
-    router.push("/autentificacion");
+    router.push('/autentificacion');
   };
 
   const handleSearch = async () => {
@@ -211,8 +227,8 @@ const View23 = () => {
       ...prev,
       lugares: {
         ...prev.lugares,
-        [type]: updatedLugares,
-      },
+        [type]: updatedLugares
+      }
     }));
   };
 
@@ -232,10 +248,10 @@ const View23 = () => {
     const horario = formValues.horario.abierto24horas
       ? { abierto24horas: true }
       : {
-        abierto24horas: false,
-        abre: formValues.horario.abre,
-        cierra: formValues.horario.cierra
-      };
+          abierto24horas: false,
+          abre: formValues.horario.abre,
+          cierra: formValues.horario.cierra
+        };
 
     const formData = {
       companyName: formValues.nombreComercial,
@@ -247,14 +263,17 @@ const View23 = () => {
       description: formValues.descripcion,
       address: address,
       phone: formValues.phone,
-      latitude: markerRef.current ? markerRef.current.getLngLat().lat : latitude,
-      longitude: markerRef.current ? markerRef.current.getLngLat().lng : longitude,
+      latitude: markerRef.current
+        ? markerRef.current.getLngLat().lat
+        : latitude,
+      longitude: markerRef.current
+        ? markerRef.current.getLngLat().lng
+        : longitude,
       redesSociales: formValues.redesSociales,
       lugares: formValues.lugares
     };
-    console.log("lo que se envía", formData)
+    console.log('lo que se envía', formData);
     try {
-
       const response = await updateCompany(companyId, formData);
       console.log('Respuesta de actualización:', response);
 
@@ -296,17 +315,16 @@ const View23 = () => {
 
   return (
     <>
-
       <div className='w-full max-w-[900px] mx-auto p-4 md:p-6 bg-white rounded-lg shadow-sm'>
-      {showModal && (
-        <CustomModal 
-          isOpen={showModal}
-          onClose={handleModal2Close}
-          title="Verificación requerida"
-          message="Debes verificar tu cuenta para continuar."
-          buttonText="Aceptar"
-        />
-      )}
+        {showModal && (
+          <CustomModal
+            isOpen={showModal}
+            onClose={handleModal2Close}
+            title='Verificación requerida'
+            message='Debes verificar tu cuenta para continuar.'
+            buttonText='Aceptar'
+          />
+        )}
         <h1 className='text-4xl font-bold text-center mb-6 text-[#2F4F4F]'>
           ¡Cuéntanos sobre ustedes!
         </h1>
@@ -335,7 +353,7 @@ const View23 = () => {
                 name='nombreComercial'
                 placeholder='Ingresar dato'
                 value={formValues.nombreComercial}
-                onChange={handleInputChange}
+                onChange={(handleInputChange)}
                 label='Nombre comercial de tu negocio'
               />
             </div>
@@ -363,50 +381,54 @@ const View23 = () => {
                 >
                   Giro de tu negocio
                 </label>
-                <p className='text-sm font-medium text-[#546E7A] mb-1 border p-3 border-gray-400 rounded-md'>{formValues.giro}</p>
+                <p className='text-sm font-medium text-[#546E7A] mb-1 border p-3 border-gray-400 rounded-md'>
+                  {formValues.giro}
+                </p>
               </div>
-              <div className="w-full">
+              <div className='w-full'>
                 <label
-                  htmlFor="horario"
-                  className="block text-sm font-medium text-[#546E7A] mb-1"
+                  htmlFor='horario'
+                  className='block text-sm font-medium text-[#546E7A] mb-1'
                 >
                   Horario de servicio
                 </label>
-                <div className="flex items-center space-x-2 w-full">
+                <div className='flex items-center space-x-2 w-full'>
                   <input
-                    type="time"
-                    name="horarioAbre"
+                    type='time'
+                    name='horarioAbre'
                     value={formValues.horario.abre}
                     disabled={formValues.horario.abierto24horas}
                     onChange={(e) =>
                       setFormValues((prev) => ({
                         ...prev,
-                        horario: { ...prev.horario, abre: e.target.value },
+                        horario: { ...prev.horario, abre: e.target.value }
                       }))
                     }
-                    className={`flex-1 px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50 ${formValues.horario.abierto24horas ? "opacity-50" : ""
-                      }`}
+                    className={`flex-1 px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50 ${
+                      formValues.horario.abierto24horas ? 'opacity-50' : ''
+                    }`}
                   />
-                  <span className="text-[#546E7A]">a</span>
+                  <span className='text-[#546E7A]'>a</span>
                   <input
-                    type="time"
-                    name="horarioCierre"
+                    type='time'
+                    name='horarioCierre'
                     value={formValues.horario.cierra}
                     disabled={formValues.horario.abierto24horas}
                     onChange={(e) =>
                       setFormValues((prev) => ({
                         ...prev,
-                        horario: { ...prev.horario, cierra: e.target.value },
+                        horario: { ...prev.horario, cierra: e.target.value }
                       }))
                     }
-                    className={`flex-1 px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50 ${formValues.horario.abierto24horas ? "opacity-50" : ""
-                      }`}
+                    className={`flex-1 px-3 py-2 border border-[#B0BEC5] bg-[#F9F9F9] rounded-md text-[#78909C] focus:outline-none focus:ring-2 focus:ring-[#B0BEC5] focus:border-transparent focus:bg-blue-50 ${
+                      formValues.horario.abierto24horas ? 'opacity-50' : ''
+                    }`}
                   />
                 </div>
-                <div className="mt-2">
-                  <label className="inline-flex items-center space-x-2">
+                <div className='mt-2'>
+                  <label className='inline-flex items-center space-x-2'>
                     <input
-                      type="checkbox"
+                      type='checkbox'
                       checked={formValues.horario.abierto24horas}
                       onChange={(e) => {
                         const is24Hours = e.target.checked;
@@ -416,20 +438,17 @@ const View23 = () => {
                           horario: {
                             ...prev.horario,
                             abierto24horas: is24Hours, // Aseguramos que el booleano se actualice
-                            abre: is24Hours ? "" : prev.horario.abre, // Limpia si está en 24 horas
-                            cierra: is24Hours ? "" : prev.horario.cierra, // Limpia si está en 24 horas
-                          },
+                            abre: is24Hours ? '' : prev.horario.abre, // Limpia si está en 24 horas
+                            cierra: is24Hours ? '' : prev.horario.cierra // Limpia si está en 24 horas
+                          }
                         }));
                       }}
-                      className="h-4 w-4 text-blue-500 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                      className='h-4 w-4 text-blue-500 border-gray-300 rounded focus:ring-2 focus:ring-blue-500'
                     />
-                    <span className="text-[#546E7A]">Abierto las 24 horas</span>
+                    <span className='text-[#546E7A]'>Abierto las 24 horas</span>
                   </label>
                 </div>
               </div>
-
-
-
             </div>
             <div className='grid gap-4 md:grid-cols-2 w-full'>
               <div className='w-full'>
@@ -574,21 +593,21 @@ const View23 = () => {
             ></div>
             <div className='mt-4'>
               {/* Recreativos */}
-              <div className="mt-3 space-x-2">
+              <div className='mt-3 space-x-2'>
                 <PlacesNearBy
                   lugares={formValues?.lugares || {}} // Pasar lugares inicializados
                   onUpdateLugares={handleupdateLugares} // Actualización correcta de la lista
                 />
-
               </div>
             </div>
           </div>
-
-
         </div>
         <div className='mt-8 flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4 w-full justify-center md:justify-end'>
-          <StyledButton variant='blancoCuadrado' className='w-full md:w-auto'
-            onClick={cancelUpDateChanges}>
+          <StyledButton
+            variant='blancoCuadrado'
+            className='w-full md:w-auto'
+            onClick={cancelUpDateChanges}
+          >
             CANCELAR
           </StyledButton>
           <StyledButton
