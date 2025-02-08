@@ -54,6 +54,7 @@ console.log("el id", id)
           width={150}
           height={150}
           className="rounded-full mx-auto mb-4"
+          quality={65}
           
         />
         <h2 className="text-xl font-semibold mb-2">

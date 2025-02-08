@@ -340,6 +340,7 @@ export default function CommentSection() {
                     width={56}
                     height={56}
                     className="w-14 h-14 rounded-full border-2 border-blue-200 object-cover shadow-sm"
+                    quality={1}
                   />
                   <div className="flex-1">
                     <div className="flex justify-between items-center">
