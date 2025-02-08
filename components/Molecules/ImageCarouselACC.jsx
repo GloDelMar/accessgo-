@@ -36,7 +36,7 @@ const ImageCarouselACC = ({ userId }) => {
     <div className='flex justify-self-center md:w-[750px] lg:w-[900px]' >
       {images.length > 0 ? (
         <Swiper
-          modules={[Autoplay, Pagination]} // Módulos explícitos
+          modules={[Autoplay, Pagination]} 
           pagination={{
             clickable: images.length > 1,
           }}
@@ -45,7 +45,7 @@ const ImageCarouselACC = ({ userId }) => {
           loop={images.length > 1}
           centeredSlides={images.length === 1}
           autoplay={{
-            delay: 3000, // 3 segundos
+            delay: 3000, 
             disableOnInteraction: false,
           }}
           breakpoints={{
@@ -68,10 +68,12 @@ const ImageCarouselACC = ({ userId }) => {
               <Image
                 src={image}
                 alt={`Slide ${index}`}
-                className='object-contain justify-self-center w-[200px] h-[200px] object-cover rounded-lg cursor-pointer'
+                width={200}
+                height={200}
+                className='justify-self-center w-[200px] h-[200px] object-cover rounded-lg cursor-pointer'
                 onClick={() => handleImageClick(image)}
-                 fill
-           
+                quality={35}
+                
               />
             </SwiperSlide>
           ))}
@@ -86,9 +88,12 @@ const ImageCarouselACC = ({ userId }) => {
             <Image
               src={selectedImage}
               alt='Selected Image'
+              width={1000}
+              height={1000}
               className='w-full h-full object-contain'
-               fill
-          
+              quality={100}
+
+              
             />
             <button
               onClick={handleCloseModal}

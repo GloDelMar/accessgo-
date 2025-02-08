@@ -207,6 +207,7 @@ const ImagenSubiryBorrarBase = ({ userId }) => {
                     height={200}
                     alt={`Uploaded ${index}`}
                     className='w-full h-full object-cover'
+                    quality={35}
                   />
                   <button
                     onClick={() => handleDelete(index)}

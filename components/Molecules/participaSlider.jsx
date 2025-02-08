@@ -18,6 +18,8 @@ const ParticipaSlider = () => {
             <Image 
               src={item.img} 
               alt={`Icono de ${item.title}`} 
+              width={200}
+              height={155}
               className="w-[24px] h-[24px] mt-[16px] ml-[16px] mb-[13px]" 
             />
             <div className="p-4">
