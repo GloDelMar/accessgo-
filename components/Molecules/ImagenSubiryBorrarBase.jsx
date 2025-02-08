@@ -47,7 +47,7 @@ const ImagenSubiryBorrarBase = ({ userId }) => {
 
     try {
       const response = await fetch(
-        'http://localhost:8080/api/uploadacc',
+        'https://backend-r159.onrender.com/api/uploadacc',
         {
           method: 'POST',
           body: formData
