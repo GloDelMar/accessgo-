@@ -870,6 +870,7 @@ export default function MapWithPlaces() {
                           width={400}
                           height={100}
                           className="rounded"
+                          quality={65}
                         />
                       </div>
                       <div className="text-center">

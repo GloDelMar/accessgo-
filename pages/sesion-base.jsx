@@ -140,6 +140,7 @@ const View21 = () => {
                 width={300}
                 height={150}
                 className='rounded-full object-cover justify-self-center w-full h-full'
+                quality={10}
               />
             </div>
           </div>

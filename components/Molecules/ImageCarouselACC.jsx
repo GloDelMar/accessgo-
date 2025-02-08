@@ -72,7 +72,7 @@ const ImageCarouselACC = ({ userId }) => {
                 height={200}
                 className='justify-self-center w-[200px] h-[200px] object-cover rounded-lg cursor-pointer'
                 onClick={() => handleImageClick(image)}
-                quality={20}
+                quality={35}
                 
               />
             </SwiperSlide>
