@@ -49,7 +49,9 @@ const EstablecimientoFiltrado = () => {
           <div key={index} className="relative border rounded-md w-[90%] max-w-[200px] mx-auto h-[251px]">
             <Image 
               src={local.img} 
-              alt={`Imagen de ${local.label}`} 
+              alt={`Imagen de ${local.label}`}
+              width={200}
+              height={251}
               className="w-full h-[251px] rounded object-cover" 
             />
             <div className="absolute bottom-0 left-0 p-2 bg-gradient-to-t from-black to-transparent w-full text-white">
@@ -60,6 +62,8 @@ const EstablecimientoFiltrado = () => {
                     key={i} 
                     src="/estrellita.svg" 
                     alt="Estrellas de calificación" 
+                    width={15}
+                    height={15}
                     className="w-4 h-4 mr-[3px]" 
                   />
                 ))}

@@ -49,6 +49,7 @@ const EstablecimientoModal = ({ isOpen, onClose, establishment, onGetDirections,
                     fill
                     className="object-contain"
                     onError={(e) => (e.target.src = "/placeholder.png")}
+                    quality={65}
                   />
                 </div>
               ) : (

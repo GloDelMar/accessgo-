@@ -157,6 +157,7 @@ const UploadImageUPP = ({ userId }) => {
               width={200}
               height={200}
               className='w-full h-full object-cover cursor-pointer'
+              quality={65}
             />
           ) : (
             <Image
@@ -165,6 +166,7 @@ const UploadImageUPP = ({ userId }) => {
               width={200}
               height={200}
               className='w-full h-full object-cover cursor-pointer'
+              quality={65}
             />
           )}
         </label>

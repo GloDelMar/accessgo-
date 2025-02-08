@@ -5,18 +5,18 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'encrypted-tbn0.gstatic.com',
-        pathname: '**',
+        pathname: '**'
       },
       {
         protocol: 'https',
         hostname: 'accessgo-test-s3-bucket.s3.amazonaws.com',
-        pathname: '**',
-      },
+        pathname: '**'
+      }
     ],
-    minimumCacheTTL: 60, // Reduce la carga en Next.js cacheando imágenes
-    formats: ['image/webp'], // Soporte de formatos optimizados
-    unoptimized: true, // Desactiva optimización si el problema persiste
-  },
+    minimumCacheTTL: 60,
+    formats: ['image/webp'],
+    unoptimized: false
+  }
 };
 
 export default nextConfig;

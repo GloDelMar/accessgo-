@@ -97,6 +97,7 @@ export default function CardFree() {
             alt="Foto principal de empresa"
             fill
             className="object-contain"
+            quality={75}
           />
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-4">
             {companyData?.data?.company?.redesSociales?.facebook && (
@@ -280,6 +281,7 @@ export default function CardFree() {
                             width={350}
                             height={300}
                             className="w-full h-auto object-cover rounded-md"
+                            quality={75}
                           />
                         ) : (
                           <Image
@@ -288,6 +290,7 @@ export default function CardFree() {
                             width={350}
                             height={300}
                             className="w-full h-auto object-cover rounded-md"
+                            quality={75}
                           />
                         )}
                       </div>

@@ -147,6 +147,8 @@ const View18 = () => {
                     <Image
                       src={img}
                       alt={`Preview ${index}`}
+                      width={100}
+                      height={100}
                       className="w-32 h-32 object-cover border border-gray-300 rounded-lg shadow-md"
                     />
                     <button
