@@ -11,10 +11,15 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'accessgo-test-s3-bucket.s3.amazonaws.com',
         pathname: '**'
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn.builder.io',
+        pathname: '**'
       }
     ],
     minimumCacheTTL: 60,
-    formats: ['image/webp'],
+    formats: ['image/webp', 'image/avif'],
     unoptimized: false
   }
 };

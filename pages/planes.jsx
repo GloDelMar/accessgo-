@@ -5,12 +5,10 @@ import Image from 'next/image';
 const PlanCard = ({ title, icon, features, buttonText, link }) => (
   <section className='flex flex-col items-start px-5 pt-7 pb-12 mt-10 w-full text-base bg-white rounded-2xl border border-gray-100 border-solid shadow-lg max-w-[328px] text-slate-700'>
     <div className='flex gap-5 ml-5 text-lg font-bold text-gray-800 whitespace-nowrap'>
-      <Image
+    <img
         loading='lazy'
         src={icon}
         alt={`${title} plan icon`}
-        width={24}
-        height={24}
         className='object-contain shrink-0 aspect-square w-[60px]'
       />
       <h2 className='my-auto'>{title}</h2>
@@ -18,12 +16,10 @@ const PlanCard = ({ title, icon, features, buttonText, link }) => (
     <ul className='list-none p-0'>
       {features.map((feature, index) => (
         <li key={index} className='flex gap-2 mt-5'>
-          <Image
+          <img
             loading='lazy'
             src='https://cdn.builder.io/api/v1/image/assets/TEMP/c570330027866616a4ff9fd294f6b8a3a32f349511a4c11a7dcee980e9ca9f40?placeholderIfAbsent=true&apiKey=94b7d1b7a1ff491ea399fe140abd93c0'
-            alt='promo'
-            width={200}
-            height={100}
+            alt=''
             className='object-contain shrink-0 self-start w-6 aspect-square'
           />
           <p className='flex-auto'>{feature}</p>
