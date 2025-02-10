@@ -137,3 +137,22 @@ export const getCompanyByEmail = async (email) => {
   }
 };
 
+export const deleteCompany = async (companyId) => {
+  try {
+    const response = await fetch(`${API_URL}/api/company/${companyId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Error al eliminar la empresa');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error en la función deleteCompany:', error);
+    throw error; 
+  }
+};
