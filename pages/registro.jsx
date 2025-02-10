@@ -29,20 +29,9 @@ const View4 = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validar email
-    if (!emailRegex.test(email)) {
-      setEmailError("Por favor, ingresa un correo electrónico válido.");
-      return;
-    } else {
-      setEmailError(''); // Limpiar el error si el email es válido
-    }
+    
 
-    // Validar contraseñas
-    if (!passwordRegex.test(password)) {
-      setError('Tu contraseña debe tener al menos 6 caracteres, entre letras y números.');
-      return;
-    }
-
+   
     if (password !== confirmPassword) {
       setError('Las contraseñas no coinciden');
       return;
