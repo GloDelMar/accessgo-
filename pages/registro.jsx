@@ -24,8 +24,7 @@ const View4 = () => {
     }
   }, []);
 
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]$/;
-  const passwordRegex = /^[a-zA-Z0-9]{6,}$/;
+ 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
