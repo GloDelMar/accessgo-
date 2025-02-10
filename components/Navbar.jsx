@@ -1,26 +1,85 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { getUserById } from '@/pages/api/api_getById';
-import { getCompanyById } from '@/pages/api/api_company';
+import { deleteUser, getUserById } from '@/pages/api/api_getById';
+import { deleteCompany, getCompanyById } from '@/pages/api/api_company';
 import { sendVerificationCode } from '@/pages/api/api_verification';
 import Image from 'next/image';
+import ConfirmationModal from './Modals/ConfirmationModal';
+import { House, User, Lock, Trash2, LogOut, Settings } from "lucide-react";
 
 const Navbar = () => {
   const router = useRouter();
   const menuRef = useRef(null);
   const [menuVisible, setMenuVisible] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [modalConfig, setModalConfig] = useState({});
+
 
   const userType = typeof window !== 'undefined' ? localStorage.getItem('tipoUsuario') : null;
 
-  const toggleMenu = () => {
-    setMenuVisible(!menuVisible);
+  // Modal para cerrar sesión
+  const handleOpenLogoutModal = () => {
+    setModalConfig({
+      title: "Confirmar Cierre de Sesión",
+      message: "¿Estás seguro de que deseas cerrar tu sesión?",
+      confirmText: "Sí, Cerrar",
+      finalTitle: "¿Seguro que deseas cerrar sesión?",
+      finalMessage: "Presiona 'Confirmar Cierre' para salir.",
+      finalConfirmText: "Confirmar Cierre",
+      onConfirm: () => {
+        handleLogout();
+        setTimeout(() => setShowModal(false), 200);
+      },
+    });
+    setShowModal(true);
   };
 
-  const closeMenu = () => {
-    setMenuVisible(false);
+  // Modal para eliminar la cuenta
+  const handleOpenDeleteAccountModal = () => {
+    setModalConfig({
+      title: "Eliminar Cuenta",
+      message: "¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.",
+      confirmText: "Eliminar Cuenta",
+      finalTitle: "¿Seguro que desea eliminar su cuenta?",
+      finalMessage: "Presiona 'Confirmar Eliminación' para eliminar tu cuenta permanentemente.",
+      finalConfirmText: "Confirmar Eliminación",
+      onConfirm: () => {
+        handleDeleteAccount();
+        setTimeout(() => setShowModal(false), 200);
+      },
+    });
+    setShowModal(true);
   };
+
+  // Función para eliminar cuenta (ya sea de usuario o empresa)
+  const handleDeleteAccount = async () => {
+    try {
+      const userId = localStorage.getItem("userId");
+      const userType = localStorage.getItem("tipoUsuario");
+
+      if (!userId) {
+        throw new Error("No se encontró el ID del usuario.");
+      }
+
+      if (userType === "user") {
+        await deleteUser(userId);
+      } else if (userType === "company") {
+        await deleteCompany(userId);
+      }
+
+      localStorage.clear();
+      router.push("/");
+    } catch (error) {
+      console.error("Error eliminando la cuenta:", error);
+    }
+  };
+
+
+  const toggleMenu = () => setMenuVisible(!menuVisible);
+
+  const closeMenu = () => setMenuVisible(false);
 
   const handleChangeDatos = () => {
     const userType = localStorage.getItem('tipoUsuario');
@@ -31,9 +90,7 @@ const Navbar = () => {
       router.push('/datos-de-usuario');
     }
   };
-  const handleChangeAccesibilidad = () => {
-    router.push('/formulario-de-accesibilidad');
-  }
+  const handleChangeAccesibilidad = () => router.push('/formulario-de-accesibilidad');
 
   const handleChangePassword = async (event) => {
     event.preventDefault();
@@ -192,51 +249,114 @@ const Navbar = () => {
             </button>
 
             {menuVisible && (
-              <div ref={menuRef} className="absolute right-0 mt-2 w-48 bg-white text-gray-800 rounded shadow-lg">
-                {!isLoggedIn && (
-                  <Link href="/login" className="block px-4 py-2 hover:bg-gray-100" onClick={closeMenu}>
-                    Iniciar Sesión
-                  </Link>
-                )}
-                <Link href="/" className="block px-4 py-2 hover:bg-gray-100" onClick={closeMenu}>
-                  Ir a inicio
-                </Link>
-
-
-                {isLoggedIn && (
-                  <>
-                    <Link href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleChangeDatos}>
-                      Editar datos
-                    </Link>
-                    <Link href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleChangePerfil}>
-                      Ir a mi perfil
-                    </Link>
-                    <Link href="#" className="block px-4 py-2 hover:bg-gray-100" onClick={handleChangePassword}>
-                      Cambiar contraseña
-                    </Link>
-                    {userType === "company" && (
+              <div
+                ref={menuRef}
+                className="absolute right-0 mt-2 w-48 bg-white text-gray-800 rounded shadow-lg"
+              >
+                <div className="py-2">
+                  {!isLoggedIn && (
+                    <>
                       <Link
-                        href="/formulario-de-accesibilidad"
-                        className="block px-4 py-2 hover:bg-gray-100"
-                        onClick={() => {
-                          localStorage.setItem("accesibilidad", "actualización");
-                          closeMenu();
-                        }}
+                        href="/"
+                        className="flex items-center px-5 py-3 text-gray-700 hover:bg-gray-100 transition-all"
+                        onClick={closeMenu}
                       >
-                        Modificar datos sobre accesibilidad
+                        <House className="mr-3 h-5 w-5 text-gray-600" />
+                        <span className="text-sm font-medium">Ir a Inicio</span>
                       </Link>
-                    )}
+                      <Link
+                        href="/login"
+                        className="flex items-center px-5 py-3 text-gray-700 hover:bg-gray-100 transition-all"
+                      >
+                        <LogOut className="mr-3 h-5 w-5 text-gray-600" />
+                        <span className="text-sm font-medium">Iniciar Sesión</span>
+                      </Link>
+                    </>
+                  )}
 
-                    <Link href="/" className="block px-4 py-2 hover:bg-gray-100" onClick={handleLogout}>
-                      Cerrar Sesión
-                    </Link>
-                  </>
-                )}
+                  {isLoggedIn && (
+                    <>
+                      <Link
+                        href="#"
+                        className="flex items-center px-5 py-3 text-gray-700 hover:bg-gray-100 transition-all"
+                        onClick={handleChangeDatos}
+                      >
+                        <Settings className="mr-3 h-5 w-5 text-gray-600" />
+                        <span className="text-sm font-medium">Editar Datos</span>
+                      </Link>
+
+                      <Link
+                        href="#"
+                        className="flex items-center px-5 py-3 text-gray-700 hover:bg-gray-100 transition-all"
+                        onClick={handleChangePerfil}
+                      >
+                        <User className="mr-3 h-5 w-5 text-gray-600" />
+                        <span className="text-sm font-medium">Ir a mi Perfil</span>
+                      </Link>
+
+                      <Link
+                        href="#"
+                        className="flex items-center px-5 py-3 text-gray-700 hover:bg-gray-100 transition-all"
+                        onClick={handleChangePassword}
+                      >
+                        <Lock className="mr-3 h-5 w-5 text-gray-600" />
+                        <span className="text-sm font-medium">Cambiar Contraseña</span>
+                      </Link>
+
+                      <Link
+                        href="#"
+                        className="flex items-center px-5 py-3 text-red-600 hover:bg-red-50 transition-all"
+                        onClick={handleOpenDeleteAccountModal}
+                      >
+                        <Trash2 className="mr-3 h-5 w-5 text-red-600" />
+                        <span className="text-sm font-medium">Eliminar Cuenta</span>
+                      </Link>
+
+                      {userType === "company" && (
+                        <Link
+                          href="/formulario-de-accesibilidad"
+                          className="flex items-center px-5 py-3 text-gray-700 hover:bg-gray-100 transition-all"
+                          onClick={() => {
+                            localStorage.setItem("accesibilidad", "actualización");
+                            closeMenu();
+                          }}
+                        >
+                          <Settings className="mr-3 h-5 w-5 text-gray-600" />
+                          <span className="text-sm font-medium">Modificar Accesibilidad</span>
+                        </Link>
+                      )}
+
+                      <div className="border-t border-gray-200 my-2"></div>
+
+                      <Link
+                        href="#"
+                        className="flex items-center px-5 py-3 text-gray-700 hover:bg-gray-100 transition-all"
+                        onClick={handleOpenLogoutModal}
+                      >
+                        <LogOut className="mr-3 h-5 w-5 text-gray-600" />
+                        <span className="text-sm font-medium">Cerrar Sesión</span>
+                      </Link>
+                    </>
+                  )}
+                </div>
               </div>
             )}
+
           </div>
         </div>
       </nav>
+      <ConfirmationModal
+        isOpen={showModal}
+        title={modalConfig.title}
+        message={modalConfig.message}
+        confirmText={modalConfig.confirmText}
+        finalTitle={modalConfig.finalTitle}
+        finalMessage={modalConfig.finalMessage}
+        finalConfirmText={modalConfig.finalConfirmText}
+        cancelText="Cancelar"
+        onConfirm={modalConfig.onConfirm}
+        onCancel={() => setShowModal(false)}
+      />
     </header>
   );
 };
