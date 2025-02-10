@@ -13,13 +13,13 @@ const View6 = () => {
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
 
-  // Regex para validar solo letras y longitud máxima de 20 caracteres
-  const nameRegex = /^[A-Za-z]{1,20}$/;
+  
+  const nameRegex = /^[A-Za-z ñÑ]{1,20}$/;
 
-  // Función para manejar la actualización de los nombres
+  
   const handleNombreChange = (e) => {
     const value = e.target.value;
-    // Verifica si el valor cumple con el regex
+    
     if (nameRegex.test(value) || value === '') {
       setDataNombre(value);
     }
