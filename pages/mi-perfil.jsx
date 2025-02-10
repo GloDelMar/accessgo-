@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { getUserById } from './api/api_getById';
 import { getCommentByUserId } from './api/api_comment';
 import { getCompanyById } from './api/api_company';
+import CustomModal from '@/components/Molecules/CostumModal';
 
 const defaultProfilePic = '/6073873.png';
 
@@ -14,6 +15,7 @@ const View7 = () => {
   const [comments, setComments] = useState([]);
   const [showComents, setShowComents] = useState(false);
   const router = useRouter();
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -28,6 +30,12 @@ const View7 = () => {
           return;
         }
         const data = await getUserById(userId);
+        const verified = data.data.user.verified;
+        
+        if (!verified) {
+          setShowModal(true); // Activamos el modal
+          return;
+        }
 
         setUserData(data);
 
@@ -43,12 +51,17 @@ const View7 = () => {
 
     fetchUserData();
   }, []);
-
+  
+  const handleModal2Close = () => {
+    setShowModal(false);
+    router.push("/autentificacion");
+  };
   const handleCompanyClick = async (companyId) => {
     if (!companyId) {
       console.error('ID de la compañía no encontrado.');
       return;
     }
+    
 
     try {
       const companyData = await getCompanyById(companyId);
@@ -83,6 +96,15 @@ const View7 = () => {
 
   return (
     <>
+    {showModal && (
+        <CustomModal 
+          isOpen={showModal}
+          onClose={handleModal2Close}
+          title="Verificación requerida"
+          message="Debes verificar tu cuenta para continuar."
+          buttonText="Aceptar"
+        />
+      )}
       <h1 className='text-center text-[#2F4F4F] text-2xl p-10 font-bold'>
         ¡Bienvenid@ a AccessGo!
       </h1>
