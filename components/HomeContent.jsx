@@ -155,7 +155,7 @@ const HomeContent = () => {
   return (
     <div className='flex flex-col text-[#2F4F4F] w-full p-4 justify-center font-sans'>
       <h1 className='text-4xl text-center font-bold mb-4'>
-        ¡Bienvenido a AccessGo!
+        ¡Bienvenido a AccessGo1!
       </h1>
       <h2 className='text-2xl text-center font-bold mt-4 mb-8'>
         El punto de unión entre las empresas accesibles y las personas
