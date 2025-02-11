@@ -8,7 +8,7 @@ export function getUserById(id) {
     },
   })
     .then(response => {
-     
+
       return response.json(); // Convertir la respuesta a JSON
     })
     .catch(error => {
@@ -96,5 +96,26 @@ export const UserProfile = async () => {
     const userData = await response.json();
   } catch (error) {
     console.error('Error:', error);
+  }
+};
+
+export const deleteUser = async (userId) => {
+  try {
+    const response = await fetch(`${API_URL}/api/users/${userId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Error al eliminar el usuario');
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error en la función deleteUser:', error);
+    throw error; 
   }
 };
