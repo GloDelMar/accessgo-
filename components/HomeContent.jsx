@@ -259,8 +259,9 @@ const HomeContent = () => {
                   '/4574c6_19f52cfb1ef44a3d844774c6078ffafc~mv2.png'
                 }
                 alt={company.companyName}
-                fill={true}
-                className='absolute inset-0 w-[80px] object-cover'
+                width={200}
+                height={200}
+                className='w-full h-full absolute inset-0  object-cover'
                 priority={true}
                 quality={35}
               />

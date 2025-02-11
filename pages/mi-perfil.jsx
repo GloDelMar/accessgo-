@@ -112,8 +112,8 @@ const View7 = () => {
         {userData?.data?.user?.firstName || 'Información no disponible.'}
       </p>
 
-      <div className='flex flex-col items-center lg:flex-row lg:justify-center lg:items-start lg:space-x-4 px-2'>
-        <div className='max-w-40 max-h-40 p-4 rounded-md bg-[#F5F0E5] lg:w-1/3 flex flex-col items-center'>
+      <div className='flex flex-col md:flex-row md:justify-between md:items-start md:space-x-8 lg:space-x-8 px-4'>
+        <div className='lg:w-1/3 text-center lg:text-left mb-8 lg:mb-0'>
           <div className='w-32 h-32 rounded-full overflow-hidden'>
             <Image
               src={userData?.data?.user?.profilePicture || defaultProfilePic}

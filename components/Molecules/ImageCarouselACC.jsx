@@ -33,8 +33,10 @@ const ImageCarouselACC = ({ userId }) => {
   };
 
   return (
-    <div className='flex justify-self-center md:w-[750px] lg:w-[900px]' >
+    <div className='flex flex-col justify-self-center items-center md:w-[750px] lg:w-[900px]' >
+      
       {images.length > 0 ? (
+        
         <Swiper
           modules={[Autoplay, Pagination]} 
           pagination={{
@@ -61,7 +63,7 @@ const ImageCarouselACC = ({ userId }) => {
           }}
           className={`flex ${
             images.length === 1 ? 'justify-center' : ''
-          } flex-col justify-self-center max-w-[250px] md:max-w-[450px] lg:max-w-[900px] h-full`}
+          } flex-col justify-self-center max-w-[250px] md:max-w-[450px] lg:max-w-[900px] h-full mt-8`}
         >
           {images.map((image, index) => (
             <SwiperSlide key={index}>
@@ -79,11 +81,12 @@ const ImageCarouselACC = ({ userId }) => {
           ))}
         </Swiper>
       ) : (
-        <p>No images found</p>
+        <p></p>
       )}
 
       {selectedImage && (
         <div  className='max-w-screen max-h-screen fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50'>
+          
           <div className='w-full h-full relative bg-white p-4 rounded-lg'>
             <Image
               src={selectedImage}

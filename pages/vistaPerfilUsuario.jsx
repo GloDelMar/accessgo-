@@ -53,7 +53,7 @@ console.log("el id", id)
           alt="Foto de perfil"
           width={150}
           height={150}
-          className="rounded-full mx-auto mb-4"
+          className="w-full h-full object-cover"
           quality={65}
           
         />
