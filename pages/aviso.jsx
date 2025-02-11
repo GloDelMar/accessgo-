@@ -44,7 +44,7 @@ export default function Aviso() {
     );
   };
 
-  
+
   useEffect(() => {
     setIsModalOpen(true);
   }, []);
@@ -58,38 +58,42 @@ export default function Aviso() {
       {/* Modal - renderizado condicional */}
       {isModalOpen && (
         <Modal closeModal={closeModal}>
-          <h2 className='text-xl text-center font-bold '>¡Información!</h2>
-          <p className='text-center font-semibold'>
-            Es importante que leas los términos antes de aceptar.
+          <h2 className='text-2xl text-center font-bold text-[#2F4F4F]'>
+            🚀 ¡Lleva tu negocio al siguiente nivel con AccessGo Premium! 🌟
+          </h2>
+          <p className='text-center text-lg font-semibold text-gray-700 mt-2'>
+            No solo te mostramos, ¡te impulsamos! Con nuestra versión Premium,
+            harás que más clientes te encuentren y se enamoren de tu espacio.
           </p>
-          <p className='text-center'>
-            AccessGo se pone a tu disposición como una herramienta más en apoyo
-            de tu Empresa. Y queremos ser parte de tu crecimiento mostrando al
-            público todo lo que tienes para ofrecerles. Mostrando a tus
-            clientes:
-          </p>
-          <br />
-          <ol>
-            <li>
-              La geolocalización que los guiará hasta donde te encuentres.
-            </li>
-            <li>Tus redes sociales y números de contacto.</li>
-            <li>Las Promociones y Eventos especiales que tengas para ellos.</li>
-            <li>
-              Recibe retroalimentación en base a sus comentarios y
-              calificaciones.
-            </li>
-            <li>Visualiza las visitas que recibe tu Perfil.</li>
-          </ol>
+          <div className='mt-4'>
+            <h3 className='text-lg font-bold text-[#2F4F4F] text-center'>
+              🔥 Beneficios exclusivos de AccessGo Premium:
+            </h3>
+            <ul className='mt-2 list-disc list-inside text-gray-700 text-center'>
+              <li>📍 Mayor visibilidad con una ubicación destacada.</li>
+              <li>📢 Promociones y eventos con más alcance.</li>
+              <li>📊 Accede a estadísticas detalladas de tu perfil.</li>
+              <li>💬 Recibe y gestiona comentarios de tus clientes.</li>
+              <li>✨ Personalización premium para destacar aún más.</li>
+            </ul>
+          </div>
           <ImageCarousel />
-          <button
-            className='mt-4 bg-[#2F4F4F] flex justify-self-center items-center text-white px-4 py-2 rounded'
-            onClick={closeModal}
-          >
-            Entendido
-          </button>
+          <div className='flex flex-col items-center mt-6 gap-4'>
+            <h3
+              className='bg-[#2F4F4F]  text-center text-white px-6 py-2 font-semibold rounded shadow-md transition-all'
+             >
+              ¡Elige el Plan de AccessGo Premium!
+            </h3>
+            <button
+              className='bg-gray-400 text-white px-6 py-2 rounded shadow-md hover:bg-gray-500 transition-all'
+              onClick={closeModal}
+            >
+              Cerrar
+            </button>
+          </div>
         </Modal>
       )}
+
 
       <div className='flex flex-col text-center'>
         <p className='text-lg sm:text-2xl md:text-[40px] lg:text-[56px] font-bold mt-8'>
