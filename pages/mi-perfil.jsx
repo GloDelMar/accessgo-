@@ -31,7 +31,7 @@ const View7 = () => {
         }
         const data = await getUserById(userId);
         const verified = data.data.user.verified;
-        
+
         if (!verified) {
           setShowModal(true); // Activamos el modal
           return;
@@ -51,17 +51,16 @@ const View7 = () => {
 
     fetchUserData();
   }, []);
-  
+
   const handleModal2Close = () => {
     setShowModal(false);
-    router.push("/autentificacion");
+    router.push('/autentificacion');
   };
   const handleCompanyClick = async (companyId) => {
     if (!companyId) {
       console.error('ID de la compañía no encontrado.');
       return;
     }
-    
 
     try {
       const companyData = await getCompanyById(companyId);
@@ -96,13 +95,13 @@ const View7 = () => {
 
   return (
     <>
-    {showModal && (
-        <CustomModal 
+      {showModal && (
+        <CustomModal
           isOpen={showModal}
           onClose={handleModal2Close}
-          title="Verificación requerida"
-          message="Debes verificar tu cuenta para continuar."
-          buttonText="Aceptar"
+          title='Verificación requerida'
+          message='Debes verificar tu cuenta para continuar.'
+          buttonText='Aceptar'
         />
       )}
       <h1 className='text-center text-[#2F4F4F] text-2xl p-10 font-bold'>
@@ -113,19 +112,20 @@ const View7 = () => {
       </p>
 
       <div className='flex flex-col md:flex-row md:justify-between md:items-start md:space-x-8 lg:space-x-8 px-4'>
-        <div className='lg:w-1/3 text-center lg:text-left mb-8 lg:mb-0'>
-          <div className='w-32 h-32 rounded-full overflow-hidden'>
+        <div className='w-full lg:w-1/2 flex flex-col items-center'>
+          <div className='flex flex-col md:gap-4 bg-[#F5F0E5] md:w-[300px] md:h-[350px] p-4 rounded-[25px] md:justify-center items-center'>
             <Image
               src={userData?.data?.user?.profilePicture || defaultProfilePic}
               alt='Foto de perfil'
               width={150}
               height={150}
-              className='w-full h-full object-cover'
+              className='w-[150px] h-[150px] md:w-[200px] md:h-[200px] rounded-full mx-auto mb-4 object-cover'
+              quality={65}
             />
+            <h2 className='text-xl font-semibold mb-2'>
+              {userData?.data?.user?.firstName} {userData?.data?.user?.lastName}
+            </h2>
           </div>
-          <h2 className='text-xl font-semibold mt-2'>
-            {userData?.data?.user?.firstName} {userData?.data?.user?.lastName}
-          </h2>
         </div>
 
         <div className='flex flex-col space-y-4 py-4 items-center lg:space-y-6'>
