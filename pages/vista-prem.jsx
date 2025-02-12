@@ -104,7 +104,7 @@ export default function CardFree() {
               <a
                 href={companyData.data.company.redesSociales.facebook}
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener no-referrer"
               >
                 <Image src="/pngwing.com (3).png" alt="Facebook" width={40} height={40} className='rounded-lg' />
               </a>
@@ -231,9 +231,7 @@ export default function CardFree() {
         </div>
 
         <div className='flex flex-col w-full justify-self-center gap-5'>
-          <h1 className='text-center text-[#2F4F4F] mt-8'>
-            Imagenes de accesibilidad proporcionadas por la empresa:
-          </h1>
+          
           <div className='flex justify-center w-full h-full'>
             <ImageCarouselACC userId={id} className='sm:max-w-[300px]' />
           </div>

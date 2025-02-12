@@ -155,7 +155,7 @@ const HomeContent = () => {
   return (
     <div className='flex flex-col text-[#2F4F4F] w-full p-4 justify-center font-sans'>
       <h1 className='text-4xl text-center font-bold mb-4'>
-        ¡Bienvenido a AccessGo12!
+        ¡Bienvenido a AccessGo!
       </h1>
       <h2 className='text-2xl text-center font-bold mt-4 mb-8'>
         El punto de unión entre las empresas accesibles y las personas
@@ -259,8 +259,9 @@ const HomeContent = () => {
                   '/4574c6_19f52cfb1ef44a3d844774c6078ffafc~mv2.png'
                 }
                 alt={company.companyName}
-                fill={true}
-                className='absolute inset-0 w-[80px] object-cover'
+                width={200}
+                height={200}
+                className='w-full h-full absolute inset-0  object-cover'
                 priority={true}
                 quality={35}
               />
