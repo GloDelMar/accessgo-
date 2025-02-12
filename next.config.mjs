@@ -21,7 +21,13 @@ const nextConfig = {
     minimumCacheTTL: 60,
     formats: ['image/webp'],
     unoptimized: false
-  }
+  },
+  webpack: (config, { dev }) => {
+    if (!dev) {
+      config.mode = "production";
+    }
+    return config;
+  },
 };
 
 export default nextConfig;
