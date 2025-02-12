@@ -514,7 +514,6 @@ const View23 = () => {
                       value={formValues.redesSociales.facebook}
                       onChange={handleRedesSocialesChange}
                       className='flex-1 p-2 border-0 outline-none'
-                      placeholder='www.facebook.com/'
                     />
                   </div>
 
