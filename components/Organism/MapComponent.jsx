@@ -55,15 +55,17 @@ const MapComponent = ({ userLocation }) => {
       router.push("/MapWithPlaces");
     } else {
       toast.error('Inicia sesión para ver la ubicación de las empresas', {
+        icon: null,
+        duration: 3000, 
         style: {
           background: 'red',
           color: 'white'
         }
-      }
-      );
+      });
     }
-  };
-
+  }
+  
+  
   return (
     <>
       <div
