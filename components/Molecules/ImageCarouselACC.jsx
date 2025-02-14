@@ -24,82 +24,77 @@ const ImageCarouselACC = ({ userId }) => {
     fetchImages();
   }, [userId]);
 
-  const handleImageClick = (image) => {
-    setSelectedImage(image);
-  };
-
-  const handleCloseModal = () => {
-    setSelectedImage(null);
-  };
+  const handleImageClick = (image) => setSelectedImage(image);
+  const handleCloseModal = () => setSelectedImage(null);
 
   return (
-    <div className='flex justify-self-center md:w-[750px] lg:w-[900px]' >
+    <div className="flex justify-center w-full">
       {images.length > 0 ? (
         <Swiper
-          modules={[Autoplay, Pagination]} 
+          modules={[Autoplay, Pagination]}
           pagination={{
-            clickable: images.length > 1,
+            clickable: images.length > 3, // Activa paginación solo si hay más de 3 imágenes
           }}
-          spaceBetween={20}
-          slidesPerView={1}
-          loop={images.length > 1}
-          centeredSlides={images.length === 1}
-          autoplay={{
-            delay: 3000, 
-            disableOnInteraction: false,
-          }}
+          spaceBetween={10} // Espaciado uniforme
+          loop={images.length > 3} // Si hay más de 3, activa loop
+          centeredSlides={false}
+          autoplay={
+            images.length > 3
+              ? { delay: 3000, disableOnInteraction: false }
+              : false // No autoplay si hay 3 imágenes o menos
+          }
+          slidesPerView={1} // 1 imagen en móvil
+          allowTouchMove={images.length > 3} // ❌ Desactiva swipe si hay 3 imágenes o menos
           breakpoints={{
-            320: {
-              slidesPerView: 1
+            640: {
+              slidesPerView: Math.min(images.length, 2), // Hasta 2 imágenes en tablets pequeñas
+              spaceBetween: 8,
             },
             768: {
-              slidesPerView: Math.min(images.length, 2)
+              slidesPerView: Math.min(images.length, 2), // Hasta 2 imágenes en tablets grandes
+              spaceBetween: 8,
             },
             1024: {
-              slidesPerView: Math.min(images.length, 4)
-            }
+              slidesPerView: Math.min(images.length, 3), // Hasta 3 imágenes en laptop
+              spaceBetween: 12,
+            },
           }}
-          className={`flex ${
-            images.length === 1 ? 'justify-center' : ''
-          } flex-col justify-self-center max-w-[250px] md:max-w-[450px] lg:max-w-[900px] h-full`}
+          className="w-full max-w-[95vw] md:max-w-[750px] lg:max-w-[900px]"
         >
           {images.map((image, index) => (
-            <SwiperSlide key={index}>
+            <SwiperSlide key={index} className="flex justify-center items-center">
               <Image
                 src={image}
                 alt={`Slide ${index}`}
                 width={200}
                 height={200}
-                className='justify-self-center w-[200px] h-[200px] object-cover rounded-lg cursor-pointer'
+                className="w-[200px] h-[200px] object-cover rounded-lg cursor-pointer mx-auto"
                 onClick={() => handleImageClick(image)}
-                quality={35}
-                
+                quality={50}
               />
             </SwiperSlide>
           ))}
         </Swiper>
       ) : (
-        <p>No images found</p>
+        <p>Esta empresa no ha subido imágenes de su diseño accesible</p>
       )}
 
       {selectedImage && (
-        <div  className='max-w-screen max-h-screen fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50'>
-          <div className='w-full h-full relative bg-white p-4 rounded-lg'>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="relative bg-white p-4 rounded-lg w-[90%] max-w-[500px] h-[90%] max-h-[500px]">
             <Image
               src={selectedImage}
-              alt='Selected Image'
-              width={1000}
-              height={1000}
-              className='w-full h-full object-contain'
+              alt="Selected Image"
+              width={500}
+              height={500}
+              className="w-full h-full object-contain"
               quality={100}
-
-              
             />
             <button
               onClick={handleCloseModal}
-              className='absolute top-0 right-0 p-2 text-white bg-red-600 rounded-full'
+              className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center text-white bg-red-600 rounded-full"
             >
-              X
+              ✖
             </button>
           </div>
         </div>
@@ -107,4 +102,5 @@ const ImageCarouselACC = ({ userId }) => {
     </div>
   );
 };
+
 export default ImageCarouselACC;
