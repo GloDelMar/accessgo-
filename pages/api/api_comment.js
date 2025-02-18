@@ -164,7 +164,7 @@ export async function addDislike(commentId, userId) {
  */
 export async function removeLike(commentId, userId) {
     try {
-        const response = await fetch(`${API_URL}/api/comments/removeLike/${commentId}`, {
+        const response = await fetch(`${API_URL}/api/comments/${commentId}/removeLike`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -191,7 +191,7 @@ export async function removeLike(commentId, userId) {
  */
 export async function removeDislike(commentId, userId) {
     try {
-        const response = await fetch(`${API_URL}/api/comments/removeDislike/${commentId}`, {
+        const response = await fetch(`${API_URL}/api/comments/${commentId}/removeDislike`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
