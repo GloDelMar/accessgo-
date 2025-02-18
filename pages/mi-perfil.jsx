@@ -40,7 +40,7 @@ const View7 = () => {
         setUserData(data);
 
         const commentsData = await getCommentByUserId(userId);
-        setComments(commentsData || []);
+        setComments(commentsData.data || []);
       } catch (err) {
         setError('Error al cargar los datos.');
         console.error(err);
@@ -147,7 +147,7 @@ const View7 = () => {
           </button>
 
           {showComents && (
-            <ul className='mt-4 space-y-2'>
+            <ul className='space-y-10 mt-4 max-h-96 overflow-y-auto'>
               {comments.length > 0 ? (
                 comments.map((comment) => (
                   <li

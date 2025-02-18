@@ -1,6 +1,6 @@
 'use client';
 
-import { MessageCircle, MoreVertical, Star, Stars, ThumbsDown, ThumbsUp } from 'lucide-react';
+import { MessageCircle, MoreVertical, Star, ThumbsDown, ThumbsUp } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
@@ -39,9 +39,18 @@ export default function CommentSection() {
   useEffect(() => {
     if (userId && Array.isArray(comments)) {
       const sortedComments = comments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-      const userHasCommented = comments.some(comment => comment.userId?._id === userId);
+
+      const userInteractions = {};
+      sortedComments.forEach((comment) => {
+        if (comment.likedBy.includes(userId)) {
+          userInteractions[comment._id] = 'like';
+        } else if (comment.dislikedBy.includes(userId)) {
+          userInteractions[comment._id] = 'dislike';
+        }
+      });
+
       setCommens(sortedComments);
-      setIsButtonDisabled(userHasCommented);
+      setInteractedComments(userInteractions);
     }
   }, [comments, userId]);
 
@@ -51,82 +60,74 @@ export default function CommentSection() {
       const storedUserType = localStorage.getItem('tipoUsuario');
       setUserId(storedUserId);
       setUserType(storedUserType);
+
+      const storedInteractions = localStorage.getItem(`interactions_${storedUserId}`);
+      if (storedInteractions) {
+        setInteractedComments(JSON.parse(storedInteractions));
+      } else {
+        setInteractedComments({});
+      }
     }
   }, []);
 
   /**
-   * handleLike: Cuando el usuario hace clic en "like".
-   * - Si ya tiene "like", no hace nada (doble clic en el mismo botón).
-   * - Si tenía "dislike", lo quita y pone "like" (flipping).
-   * - Si no tenía nada, simplemente agrega "like".
-   */
+ * handleLike: Cuando el usuario hace clic en "like".
+ * - Si ya tiene "like", no hace nada (doble clic en el mismo botón).
+ * - Si tenía "dislike", lo quita y pone "like" (flipping).
+ * - Si no tenía nada, simplemente agrega "like".
+ */
   const handleLike = useCallback(
     async (commentId) => {
       if (!userId) {
         toast.error('Debe estar logueado para poder dar like.', { style: { backgroundColor: 'red', color: 'white' } });
         return;
       }
-
+  
       if (isButtonDisabled) return;
       setIsButtonDisabled(true);
-
+  
       try {
+        const comment = commens.find(c => c._id === commentId);
         const hasLiked = interactedComments[commentId] === 'like';
         const hasDisliked = interactedComments[commentId] === 'dislike';
-
+  
         // 1. Si YA tiene "like", no hace nada
         if (hasLiked) {
           setIsButtonDisabled(false);
           return;
         }
-
-        // 2. Si tenía "dislike", lo quitamos y luego ponemos "like"
+  
+        // 2. Si tenía "dislike", primero lo quitamos antes de poner "like"
         if (hasDisliked) {
-          // Actualiza estado local a "like"
-          setInteractedComments((prev) => ({
-            ...prev,
-            [commentId]: 'like',
-          }));
-          // Ajusta contadores localmente
-          setCommens((prevComments) =>
-            prevComments.map((comment) => {
-              if (comment._id !== commentId) return comment;
-              return {
-                ...comment,
-                dislikes: (comment.dislikes || 0) - 1,
-                likes: (comment.likes || 0) + 1,
-              };
-            })
+          const removeResponse = await removeDislike(commentId, userId);
+          if (!removeResponse.success) {
+            console.error("❌ Error al remover dislike:", removeResponse.message);
+            return;
+          }
+        }
+  
+        // 3. Ahora agregamos el like
+        const response = await addLike(commentId, userId);
+        if (response?.success) {
+          
+          setCommens(prevComments =>
+            prevComments.map(c => 
+              c._id === commentId 
+                ? { ...response.comment, likedBy: [...response.comment.likedBy, userId] }
+                : c
+            )
           );
-          // Llamadas a la API: removeDislike, después addLike
-          await removeDislike(commentId, userId);
-          await addLike(commentId, userId);
-        } else {
-          // 3. Si no tenía nada, se agrega "like"
-          setInteractedComments((prev) => ({
-            ...prev,
-            [commentId]: 'like',
-          }));
-          setCommens((prevComments) =>
-            prevComments.map((comment) => {
-              if (comment._id !== commentId) return comment;
-              return {
-                ...comment,
-                likes: (comment.likes || 0) + 1,
-              };
-            })
-          );
-          await addLike(commentId, userId);
+          setInteractedComments(prev => ({ ...prev, [commentId]: 'like' }));
         }
       } catch (error) {
-        console.error(error.message);
+        console.error("Error en handleLike:", error);
       } finally {
         setIsButtonDisabled(false);
       }
     },
-    [isButtonDisabled, interactedComments, userId]
+    [isButtonDisabled, interactedComments, userId, commens]
   );
-
+  
   /**
    * handleDislike: Cuando el usuario hace clic en "dislike".
    * - Si ya tiene "dislike", no hace nada (doble clic).
@@ -139,65 +140,50 @@ export default function CommentSection() {
         toast.error('Debe estar logueado para poder dar dislike.', { style: { backgroundColor: 'red', color: 'white' } });
         return;
       }
-
+  
       if (isButtonDisabled) return;
       setIsButtonDisabled(true);
-
+  
       try {
+        const comment = commens.find(c => c._id === commentId);
         const hasLiked = interactedComments[commentId] === 'like';
         const hasDisliked = interactedComments[commentId] === 'dislike';
-
-        // 1. Si YA está en "dislike", no hace nada
+  
+        // 1. Si YA tiene "dislike", no hace nada
         if (hasDisliked) {
           setIsButtonDisabled(false);
           return;
         }
-
-        // 2. Si estaba en "like", quitar el like y poner "dislike"
+  
+        // 2. Si tenía "like", lo quitamos antes de poner "dislike"
         if (hasLiked) {
-          // Actualiza estado local
-          setInteractedComments((prev) => ({
-            ...prev,
-            [commentId]: 'dislike',
-          }));
-          // Ajusta contadores localmente
-          setCommens((prevComments) =>
-            prevComments.map((comment) => {
-              if (comment._id !== commentId) return comment;
-              return {
-                ...comment,
-                likes: (comment.likes || 0) - 1,
-                dislikes: (comment.dislikes || 0) + 1,
-              };
-            })
+          const removeResponse = await removeLike(commentId, userId);
+          if (!removeResponse.success) {
+            console.error("❌ Error al remover like:", removeResponse.message);
+            return;
+          }
+        }
+  
+        // 3. Ahora agregamos el dislike
+        const response = await addDislike(commentId, userId);
+        if (response?.success) {
+          // 🔥 Forzamos actualización del estado
+          setCommens(prevComments =>
+            prevComments.map(c => 
+              c._id === commentId 
+                ? { ...response.comment, dislikedBy: [...response.comment.dislikedBy, userId] }
+                : c
+            )
           );
-          // Primero quita el like en el backend, luego agrega el dislike
-          await removeLike(commentId, userId);
-          await addDislike(commentId, userId);
-        } else {
-          // 3. Si no tenía nada, agrega "dislike"
-          setInteractedComments((prev) => ({
-            ...prev,
-            [commentId]: 'dislike',
-          }));
-          setCommens((prevComments) =>
-            prevComments.map((comment) => {
-              if (comment._id !== commentId) return comment;
-              return {
-                ...comment,
-                dislikes: (comment.dislikes || 0) + 1,
-              };
-            })
-          );
-          await addDislike(commentId, userId);
+          setInteractedComments(prev => ({ ...prev, [commentId]: 'dislike' }));
         }
       } catch (error) {
-        console.error(error.message);
+        console.error("Error en handleDislike:", error);
       } finally {
         setIsButtonDisabled(false);
       }
     },
-    [isButtonDisabled, interactedComments, userId]
+    [isButtonDisabled, interactedComments, userId, commens]
   );
 
   // Función para enviar un nuevo comentario
@@ -380,9 +366,7 @@ export default function CommentSection() {
                       <div className="mt-6 flex items-center space-x-8">
                         <button
                           onClick={() => handleLike(comment._id)}
-                          className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-200 group ${interactedComments[comment._id] === 'like'
-                            ? 'bg-blue-100 text-blue-600'
-                            : 'bg-gray-100 text-gray-600'
+                          className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-200 group ${interactedComments[comment._id] === 'like' ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-600'
                             } hover:bg-blue-200 hover:text-blue-700`}
                         >
                           <ThumbsUp className="h-5 w-5 group-hover:scale-110 transition-transform duration-200" />
@@ -390,9 +374,7 @@ export default function CommentSection() {
                         </button>
                         <button
                           onClick={() => handleDislike(comment._id)}
-                          className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-200 group ${interactedComments[comment._id] === 'dislike'
-                            ? 'bg-red-100 text-red-600'
-                            : 'bg-gray-100 text-gray-600'
+                          className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-200 group ${interactedComments[comment._id] === 'dislike' ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-600'
                             } hover:bg-red-200 hover:text-red-700`}
                         >
                           <ThumbsDown className="h-5 w-5 group-hover:scale-110 transition-transform duration-200" />
