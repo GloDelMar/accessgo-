@@ -78,7 +78,7 @@ const SesionPremium = () => {
         const data = await getCompanyById(companyId);
         setCompanyData(data);
         const verified = data.data.company.verified;
-        
+
         if (!verified) {
           setShowModal(true); // Activamos el modal
           return;
@@ -160,7 +160,7 @@ const SesionPremium = () => {
   return (
     <main className='w-full flex overflow-hidden flex-col items-center px-4 sm:px-10 md:px-20 pt-28 bg-white pb-[1572px] max-sm:px-5 max-sm:py-24'>
       {showModal && (
-        <CustomModal 
+        <CustomModal
           isOpen={showModal}
           onClose={handleModal2Close}
           title="Verificación requerida"
@@ -202,11 +202,10 @@ const SesionPremium = () => {
                   {[1, 2, 3, 4, 5].map((star) => (
                     <svg
                       key={star}
-                      className={`w-5 h-5 ${
-                        star <= Math.round(averageRating)
+                      className={`w-5 h-5 ${star <= Math.round(averageRating)
                           ? 'text-yellow-400'
                           : 'text-gray-300'
-                      } fill-current`}
+                        } fill-current`}
                       viewBox='0 0 24 24'
                     >
                       <path d='M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z' />
@@ -317,9 +316,8 @@ const SesionPremium = () => {
                             <div className='mb-4 w-full h-auto'>
                               <Image
                                 src={promocion.image} // Imagen desde la base de datos
-                                alt={`Imagen de la promoción: ${
-                                  promocion.name || 'Sin título'
-                                }`}
+                                alt={`Imagen de la promoción: ${promocion.name || 'Sin título'
+                                  }`}
                                 width={500}
                                 height={300}
                                 className='w-full h-full object-cover rounded-md'
@@ -351,16 +349,16 @@ const SesionPremium = () => {
                               Fecha de inicio:{' '}
                               {promocion.endDate
                                 ? new Date(
-                                    promocion.startDate
-                                  ).toLocaleDateString()
+                                  promocion.startDate
+                                ).toLocaleDateString()
                                 : 'Sin fecha'}
                             </span>
                             <span className='text-xs md:text-sm text-gray-500'>
                               Fecha de vencimiento:{' '}
                               {promocion.endDate
                                 ? new Date(
-                                    promocion.endDate
-                                  ).toLocaleDateString()
+                                  promocion.endDate
+                                ).toLocaleDateString()
                                 : 'Sin fecha'}
                             </span>
                           </div>
@@ -389,6 +387,7 @@ const SesionPremium = () => {
           <EstadisticasVisitas rango={rango} />
 
           <select value={rango} onChange={handleRangoChange}>
+            <option value='día'>Día</option>
             <option value='semana'>Semana</option>
             <option value='mes'>Mes</option>
             <option value='año'>Año</option>
