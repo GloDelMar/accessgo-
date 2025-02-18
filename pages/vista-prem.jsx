@@ -102,7 +102,7 @@ export default function CardFree() {
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-4">
             {companyData?.data?.company?.redesSociales?.facebook && (
               <a
-                href={companyData.data.company.redesSociales.facebook}
+                href={`https://${companyData.data.company.redesSociales.facebook}`}
                 target="_blank"
                 rel="noopener no-referrer"
               >
@@ -111,7 +111,7 @@ export default function CardFree() {
             )}
             {companyData?.data?.company?.redesSociales?.instagram && (
               <a
-                href={companyData.data.company.redesSociales.instagram}
+                href={`https://${companyData.data.company.redesSociales.instagram}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -120,7 +120,7 @@ export default function CardFree() {
             )}
             {companyData?.data?.company?.redesSociales?.twitter && (
               <a
-                href={companyData.data.company.redesSociales.twitter}
+                href={`https://${companyData.data.company.redesSociales.twitter}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
