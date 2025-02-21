@@ -312,10 +312,10 @@ const SesionPremium = () => {
                           <h4 className='text-base md:text-2xl text-center font-bold mb-2'>
                             {promocion.name || 'Sin título'}
                           </h4>
-                          {promocion.image ? (
+                          {promocion.images ? (
                             <div className='mb-4 w-full h-auto'>
                               <Image
-                                src={promocion.image} // Imagen desde la base de datos
+                                src={promocion.images} // Imagen desde la base de datos
                                 alt={`Imagen de la promoción: ${promocion.name || 'Sin título'
                                   }`}
                                 width={500}
