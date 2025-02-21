@@ -21,6 +21,7 @@ export default function CardFree() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [promociones, setPromociones] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const { id } = router.query;
 
@@ -231,7 +232,7 @@ export default function CardFree() {
         </div>
 
         <div className='flex flex-col w-full justify-self-center gap-5'>
-          
+
           <div className='flex justify-center w-full h-full'>
             <ImageCarouselACC userId={id} className='sm:max-w-[300px]' />
           </div>
@@ -269,28 +270,58 @@ export default function CardFree() {
                       className="p-4 md:p-6 border rounded-lg shadow-sm bg-[#F5F0E5] flex flex-col  sm:justify-between   "
                     >
                       <div >
-                        <h4 className="text-base text-center md:text-2xl font-bold mb-2">
+                        <h4 className="text-base text-center  md:text-2xl font-bold mb-2">
                           {promocion.name || 'Sin título'}
                         </h4>
-                        {promocion.image ? (
-                          <Image
-                            src={promocion.image}
-                            alt={`Imagen de la promoción: ${promocion.name || 'Sin título'}`}
-                            width={350}
-                            height={300}
-                            className="w-full h-auto object-cover rounded-md"
-                            quality={75}
-                          />
+                        {promocion.images && promocion.images.length > 0 ? (
+                          <div className={"mb-4 w-auto justify-center h-full flex flex-row gap-4"}>
+                            {promocion.images.map((image, index) => (
+                              <Image
+                                key={index}
+                                src={image}
+                                alt={`Promoción ${index + 1}`}
+                                width={promocion.images.length === 1 ? 320 : 160}
+                                height={promocion.images.length === 1 ? 320 : 160}
+                                className="rounded-lg object-cover cursor-pointer"
+                                onClick={() => setSelectedImage(image)}
+                              />
+                            ))}
+                          </div>
                         ) : (
-                          <Image
-                            src={imageDefault}
-                            alt="Imagen predeterminada de promoción"
-                            width={350}
-                            height={300}
-                            className="w-full h-auto object-cover rounded-md"
-                            quality={75}
-                          />
+                          <div className="mb-4">
+                            <Image
+                              src={imageDefault}
+                              alt="Imagen predeterminada de promoción"
+                              width={500}
+                              height={300}
+                              className="w-full max-w-xl h-auto object-cover rounded-md"
+                            />
+                          </div>
                         )}
+                        {selectedImage && (
+                          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4">
+                            <div className="relative bg-white p-4 rounded-lg max-w-screen-md w-full max-h-[80vh] overflow-auto flex flex-col items-center">
+                              <div className="relative w-auto max-h-[70vh] max-w-full flex justify-center">
+                                <Image
+                                  src={selectedImage}
+                                  alt="Selected Image"
+                                  width={1000}
+                                  height={1000}
+                                  layout="intrinsic"
+                                  className="max-w-full max-h-[90vh] object-contain"
+                                  quality={100}
+                                />
+                              </div>
+                              <button
+                                onClick={() => setSelectedImage(null)}
+                                className="absolute top-2 right-2 p-2 text-white bg-red-600 rounded-full"
+                              >
+                                X
+                              </button>
+                            </div>
+                          </div>
+                        )}
+
                       </div>
                       <div className=" mt-6 sm:mt-0">
                         <div

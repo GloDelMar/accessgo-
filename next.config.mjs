@@ -16,7 +16,12 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'cdn.builder.io',
         pathname: '**'
-      }
+      },
+      {
+        protocol: "https",
+        hostname: "storage.googleapis.com",
+        pathname: "/**",
+      },
     ],
     minimumCacheTTL: 60,
     formats: ['image/webp'],
