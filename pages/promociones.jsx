@@ -1,10 +1,10 @@
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
-import { Editor } from '@tinymce/tinymce-react';
 import { createpromo, getPromoByCompanyId } from './api/api_promos';
 import { InputWithLabel } from '@/components/atoms/Input';
-import Link from 'next/link';
 import Image from 'next/image';
+import { Editor } from '@tinymce/tinymce-react';
+import axios from 'axios';
 
 const View18 = () => {
   const router = useRouter();
@@ -14,6 +14,7 @@ const View18 = () => {
     name: '',
     startDate: '',
     endDate: '',
+    images: []
   });
   const [images, setImages] = useState([]);
 
@@ -38,13 +39,29 @@ const View18 = () => {
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
-    if (files.length + images.length > 2) {
-      alert('Solo se pueden subir un máximo de 2 imágenes.');
+    console.log("Archivos seleccionados (originales):", files);
+  
+    if (files.length + formValues.images.length > 2) {
+      alert("Solo se pueden subir un máximo de 2 imágenes.");
       return;
     }
-    const newImages = files.map((file) => URL.createObjectURL(file));
-    setImages((prevImages) => [...prevImages, ...newImages]);
+  
+    // Asegurar que sean archivos tipo File
+    const validFiles = files.filter(file => file instanceof File);
+    console.log("Archivos válidos después del filtro:", validFiles);
+  
+    setFormValues(prev => {
+      const newImages = [...prev.images, ...validFiles];
+      console.log("Nuevo estado de imágenes:", newImages); // Verifica que aquí sí aparecen
+      return { ...prev, images: newImages };
+    });
   };
+  
+  // Agregar un useEffect para verificar los cambios en formValues.images
+  useEffect(() => {
+    console.log("Imágenes en formValues después de actualizar:", formValues.images);
+  }, [formValues.images]);
+  
 
   const convertDateToISO = (date) => {
     if (!date || !/^\d{2}\/\d{2}\/\d{4}$/.test(date)) return '';
@@ -52,65 +69,58 @@ const View18 = () => {
     return `${year}-${month}-${day}`;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  console.log("Valores de formValues antes de crear FormData:", formValues);
 
-    if (!companyId) {
-      alert('No se encontró el ID del negocio en la URL.');
-      return;
-    }
+  setTimeout(async () => {  // Agregar un pequeño delay para asegurar que el estado está actualizado
+    const formData = new FormData();
+    formData.append("businessId", companyId);
+    formData.append("name", formValues.name);
+    formData.append("description", description);
+    formData.append("startDate", convertDateToISO(formValues.startDate));
+    formData.append("endDate", convertDateToISO(formValues.endDate));
 
-    if (new Date(formValues.startDate) >= new Date(formValues.endDate)) {
-      alert('La fecha de inicio debe ser anterior a la fecha de fin.');
-      return;
-    }
+    formValues.images.forEach((image, index) => {
+      if (image instanceof File) {
+        formData.append("images", image);
+      } else {
+        console.warn(`Se ignoró un elemento en images[${index}] que no es un archivo:`, image);
+      }
+    });
 
-    if (!formValues.name || !formValues.startDate || !formValues.endDate || !description) {
-      alert('Todos los campos son obligatorios.');
-      return;
+    console.log("Contenido de FormData antes de enviar:");
+    for (let pair of formData.entries()) {
+      console.log(pair[0], pair[1]);  // Aquí debes ver los archivos en "images"
     }
 
     try {
-      const promoCount = await getPromoByCompanyId(companyId);
-      console.log("las promos", promoCount)
-      if (promoCount.data.length >= 3) {
-        alert('Este negocio ya alcanzó el límite máximo de 3 promociones.');
-        return;
-      }
+      const response = await axios.post("http://localhost:8080/api/promos", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
-      const promoData = {
-        businessId: companyId,
-        ...formValues,
-        description,
-        startDate: convertDateToISO(formValues.startDate),
-        endDate: convertDateToISO(formValues.endDate),
-        images, // Agrega las imágenes al objeto de datos de la promoción
-      };
+      console.log("Respuesta del servidor:", response.data);
+      alert("Promoción guardada exitosamente");
 
-      const response = await createpromo(promoData);
+   
+      router.push('/sesion-prem');
 
-      if (response.success) {
-        alert('Promoción guardada exitosamente');
-        router.push('/sesion-prem');
-      } else {
-        alert('Error al guardar la promoción');
-      }
     } catch (error) {
-      console.error('Error al guardar la promoción:', error);
-      alert('Ocurrió un error al intentar guardar la promoción.');
+      console.error("Error al guardar la promoción:", error);
+      alert("Error al guardar la promoción. Inténtalo de nuevo.");
     }
-  };
+  }, 500);  // Espera de 500ms para asegurar que los datos se actualizan
+};
 
   const handleRemoveImage = (index) => {
     setImages((prevImages) => prevImages.filter((_, i) => i !== index));
   };
 
-
   return (
     <div className="m-10">
-      <h1 className="text-2xl font-bold text-center mb-6 text-[#263238]">
-        Editar Promoción
-      </h1>
+      <h1 className="text-2xl font-bold text-center mb-6 text-[#263238]">Editar Promoción</h1>
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 space-y-6 w-full">
           <InputWithLabel
@@ -135,7 +145,6 @@ const View18 = () => {
               <button
                 type="button"
                 className="bg-[#2F4F4F] text-white font-semibold py-2 px-6 rounded-full hover:bg-[#004D40] transition duration-200"
-                onClick={() => {/* Aquí podrías agregar lógica si necesitas que el botón haga algo específico */ }}
               >
                 Cargar Imágenes
               </button>
@@ -202,10 +211,17 @@ const View18 = () => {
             />
           </div>
           <div className="mt-10 flex justify-center space-x-4">
-            <button className="w-[155px] h-[40px] bg-white border-2 rounded-lg">
-              <Link legacyBehavior href="/sesion-prem">
-                <a>Cancelar</a>
-              </Link>
+            <button
+              type="button" // Evita el envío del formulario
+              className="w-[155px] h-[40px] bg-white border-2 rounded-lg"
+              onClick={() => {
+                setFormValues({ name: '', startDate: '', endDate: '' });
+                setDescription('');
+                setImages([]);
+                router.push('/sesion-prem');
+              }}
+            >
+              Cancelar
             </button>
             <button
               type="submit"
