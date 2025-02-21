@@ -22,6 +22,7 @@ import ImagenSubiryBorrarPrem from '@/components/Molecules/ImagenSubiryBorrarPre
 import { Toaster } from 'sonner';
 import CustomModal from '@/components/Molecules/CostumModal';
 
+
 const imageDefault = '/4574c6_19f52cfb1ef44a3d844774c6078ffafc~mv2.png';
 
 ChartJS.register(
@@ -51,6 +52,7 @@ const SesionPremium = () => {
   const [rango, setRango] = useState('semana');
   const [promociones, setPromociones] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const handleRangoChange = (event) => {
     setRango(event.target.value);
@@ -91,6 +93,7 @@ const SesionPremium = () => {
 
         const promocionesData = await getPromoByCompanyId(companyId);
         setPromociones(promocionesData.data || []);
+        console.log("promociones", promociones)
       } catch (error) {
         console.error(error);
         setError('Failed to fetch company data');
@@ -203,8 +206,8 @@ const SesionPremium = () => {
                     <svg
                       key={star}
                       className={`w-5 h-5 ${star <= Math.round(averageRating)
-                          ? 'text-yellow-400'
-                          : 'text-gray-300'
+                        ? 'text-yellow-400'
+                        : 'text-gray-300'
                         } fill-current`}
                       viewBox='0 0 24 24'
                     >
@@ -270,96 +273,97 @@ const SesionPremium = () => {
           </Link>
         </div>
 
-        <div className='w-full sm:w-[300px] sm:h-full lg:w-[600px] flex flex-col justify-self-center mt-6 '>
-          <div className='w-full max-w-xxl mx-auto bg-white shadow-md rounded-lg overflow-hidden border border-gray-200 mt-4'>
-            <div className='bg-[#2F4F4F] text-white p-4'>
-              <h2 className='text-2xl lg:text-3xl text-center'>
-                Tus promociones este mes:
-              </h2>
+        <div className="w-full sm:w-[300px] sm:h-full lg:w-[600px] flex flex-col justify-self-center mt-6">
+          <div className="w-full max-w-xxl mx-auto bg-white shadow-md rounded-lg overflow-hidden border border-gray-200 mt-4">
+            <div className="bg-[#2F4F4F] text-white p-4">
+              <h2 className="text-2xl lg:text-3xl text-center">Tus promociones este mes:</h2>
             </div>
-            <div className='p-4'>
-              {loading && (
-                <div className='text-center text-sm md:text-base'>
-                  Cargando promociones...
-                </div>
-              )}
-              {error && (
-                <div className='text-red-500 text-sm md:text-base'>{error}</div>
-              )}
+            <div className="p-4">
+              {loading && <div className="text-center text-sm md:text-base">Cargando promociones...</div>}
+              {error && <div className="text-red-500 text-sm md:text-base">{error}</div>}
               {!loading && promociones && promociones.length === 0 && (
-                <div className='text-gray-500 text-center text-sm md:text-base'>
-                  No hay promociones disponibles.
-                </div>
+                <div className="text-gray-500 text-center text-sm md:text-base">No hay promociones disponibles.</div>
               )}
 
               {!loading && promociones && promociones.length > 0 && (
-                <ul className='space-y-4 md:space-y-6'>
+                <ul className="space-y-4 md:space-y-6">
                   {promociones
                     .sort((a, b) => new Date(b.endDate) - new Date(a.endDate))
                     .map((promocion) => (
                       <li
                         key={promocion._id}
-                        className='p-4 md:p-6 border justify-center items-center rounded-lg shadow-sm bg-[#F5F0E5] relative flex flex-col sm:flex-row sm:justify-between '
+                        className="p-4 md:p-6 border justify-center items-center rounded-lg shadow-sm bg-[#F5F0E5] relative flex flex-col sm:flex-row sm:justify-between"
                       >
                         <button
-                          className='absolute top-2 right-2 px-2 py-1 md:px-3 md:py-1.5 border border-transparent rounded-md shadow-sm text-xs md:text-sm text-white 
-                  bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]'
+                          className="absolute top-2 right-2 px-2 py-1 md:px-3 md:py-1.5 border border-transparent rounded-md shadow-sm text-xs md:text-sm text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]"
                           onClick={() => handleRemovePromotion(promocion._id)}
                         >
                           X
                         </button>
-                        <div className='mt-6 sm:mt-0  sm:ml-6'>
-                          <h4 className='text-base md:text-2xl text-center font-bold mb-2'>
-                            {promocion.name || 'Sin título'}
+                        <div className="mt-6 sm:mt-0 sm:ml-6">
+                          <h4 className="text-base md:text-2xl text-center font-bold mb-2">
+                            {promocion.name || "Sin título"}
                           </h4>
-                          {promocion.images ? (
-                            <div className='mb-4 w-full h-auto'>
-                              <Image
-                                src={promocion.images} // Imagen desde la base de datos
-                                alt={`Imagen de la promoción: ${promocion.name || 'Sin título'
-                                  }`}
-                                width={500}
-                                height={300}
-                                className='w-full h-full object-cover rounded-md'
-                              />
+                          {promocion.images && promocion.images.length > 0 ? (
+                            <div className={"mb-4 w-full h-auto flex justify-center flex-row gap-4"}>
+                              {promocion.images.map((image, index) => (
+                                <Image
+                                  key={index}
+                                  src={image}
+                                  alt={`Promoción ${index + 1}`}
+                                  width={promocion.images.length === 1 ? 320 : 160}
+                                  height={promocion.images.length === 1 ? 320 : 160}
+                                  className="rounded-lg object-cover cursor-pointer"
+                                  onClick={() => setSelectedImage(image)} // 🔹 ACTUALIZA EL ESTADO
+                                />
+                              ))}
                             </div>
                           ) : (
-                            <div className='mb-4'>
+                            <div className="mb-4">
                               <Image
                                 src={imageDefault} // Imagen predeterminada
-                                alt='Imagen predeterminada de promoción'
+                                alt="Imagen predeterminada de promoción"
                                 width={500}
                                 height={300}
-                                className='w-full w-full max-w-xl h-auto object-cover rounded-md'
+                                className="w-full max-w-xl h-auto object-cover rounded-md"
                               />
                             </div>
                           )}
-
+                          {selectedImage && (
+                            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4">
+                              <div className="relative bg-white p-4 rounded-lg max-w-screen-md w-full max-h-[80vh] overflow-auto flex flex-col items-center">
+                                <div className="relative w-auto max-h-[70vh] max-w-full flex justify-center">
+                                  <Image
+                                    src={selectedImage}
+                                    alt="Selected Image"
+                                    width={1000} 
+                                    height={1000} 
+                                    layout="intrinsic" 
+                                    className="max-w-full max-h-[90vh] object-contain"
+                                    quality={100}
+                                  />
+                                </div>
+                                <button
+                                  onClick={() => setSelectedImage(null)}
+                                  className="absolute top-2 right-2 p-2 text-white bg-red-600 rounded-full"
+                                >
+                                  X
+                                </button>
+                              </div>
+                            </div>
+                          )}
                           <div
-                            className='mb-2 text-sm md:text-base text-gray-700'
+                            className="mb-2 text-sm md:text-base text-gray-700"
                             dangerouslySetInnerHTML={{
-                              __html: DOMPurify.sanitize(
-                                promocion.description || 'Sin descripción'
-                              )
+                              __html: DOMPurify.sanitize(promocion.description || "Sin descripción"),
                             }}
                           />
-                          <div className='grid grid-cols-2 space-x-4 md:text-base lg:text-2xl'>
-                            {' '}
-                            <span className='text-xs md:text-sm text-gray-500'>
-                              Fecha de inicio:{' '}
-                              {promocion.endDate
-                                ? new Date(
-                                  promocion.startDate
-                                ).toLocaleDateString()
-                                : 'Sin fecha'}
+                          <div className="grid grid-cols-2 space-x-4 md:text-base lg:text-2xl">
+                            <span className="text-xs md:text-sm text-gray-500">
+                              Fecha de inicio: {promocion.startDate ? new Date(promocion.startDate).toLocaleDateString() : "Sin fecha"}
                             </span>
-                            <span className='text-xs md:text-sm text-gray-500'>
-                              Fecha de vencimiento:{' '}
-                              {promocion.endDate
-                                ? new Date(
-                                  promocion.endDate
-                                ).toLocaleDateString()
-                                : 'Sin fecha'}
+                            <span className="text-xs md:text-sm text-gray-500">
+                              Fecha de vencimiento: {promocion.endDate ? new Date(promocion.endDate).toLocaleDateString() : "Sin fecha"}
                             </span>
                           </div>
                         </div>
@@ -370,8 +374,7 @@ const SesionPremium = () => {
             </div>
             <button
               onClick={() => handleCreatePromotion()}
-              className='block mx-auto my-4 px-4 py-2 border border-transparent rounded-md shadow-sm
-        text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]'
+              className="block mx-auto my-4 px-4 py-2 border border-transparent rounded-md shadow-sm text-white bg-[#2F4F4F] hover:bg-[#004D40] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#00695C]"
             >
               Publicar una Promoción
             </button>
