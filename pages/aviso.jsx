@@ -62,66 +62,68 @@ export default function Aviso() {
       {/* Modal - renderizado condicional */}
       {isModalOpen && (
         <Modal closeModal={closeModal}>
-          <div className='h-screen flex flex-col justify-center items-center p-6 bg-[#1E2A47]'>
-            <h2 className='text-3xl text-center font-bold text-white'>
+          <div className="w-full  md:max-w-[700px]  max-h-[90vh] flex flex-col justify-center items-center p-6 bg-[#1E2A47] rounded-lg shadow-lg overflow-y-auto">
+
+            {/* Título */}
+            <h2 className="text-lg sm:text-xl md:text-2xl text-center font-bold text-white">
               AccessGo Premium: Destaca y crece con nosotros
             </h2>
-            <p className='text-center text-xl font-semibold text-gray-100 mt-2'>
+
+            <p className="text-sm sm:text-md md:text-xl text-center font-semibold text-gray-100 mt-2">
               Impulsa tu negocio y alcanza más clientes con nuestra versión premium.
             </p>
 
-            {/* Imágenes promocionales */}
+            {/* Swiper */}
             <Swiper
               modules={[Autoplay]}
               spaceBetween={10}
               slidesPerView={1}
               loop={true}
               autoplay={{ delay: 3000, disableOnInteraction: false }}
-              className="w-full max-w-md"
+              className="w-full max-w-md h-[40vh] md:h-[50vh] lg:h-[60vh] mt-4"
             >
               <SwiperSlide>
-                <div className="relative w-full h-64">
+                <div className="relative w-full h-full">
                   <Image
                     src="/access ilustracion.webp"
                     alt="Negocio accesible con clientes felices"
-                    layout="fill"
-                    objectFit="contain"
-                    className="rounded-lg shadow-xl"
+                    fill
+                    className="object-contain rounded-lg shadow-xl"
                   />
                 </div>
               </SwiperSlide>
               <SwiperSlide>
-                <div className="relative w-full h-64">
+                <div className="relative w-full h-full">
                   <Image
                     src="/access corportativo.jpg"
                     alt="Empresario analizando métricas"
-                    layout="fill"
-                    objectFit="contain"
-                    className="rounded-lg shadow-xl"
+                    fill
+                    className="object-contain rounded-lg shadow-xl"
                   />
                 </div>
               </SwiperSlide>
             </Swiper>
 
+            {/* Beneficios */}
             <div className='mt-4'>
-              <h3 className='text-2xl font-bold text-[#FF9F00] text-center'>
+              <h3 className="text-md sm:text-lg md:text-xl font-bold text-[#FF9F00] text-center">
                 Beneficios exclusivos de AccessGo Premium
               </h3>
-              <ul className='mt-2 list-disc list-inside text-gray-200 text-center'>
+              <ul className="mt-2 list-disc list-inside text-gray-200 text-left">
                 <li>Ubicación destacada para mayor visibilidad.</li>
                 <li>Promociones y eventos con más alcance.</li>
                 <li>Accede a estadísticas detalladas de tu perfil.</li>
                 <li>Personalización premium para destacar aún más.</li>
               </ul>
             </div>
-            <div className='flex flex-col items-center mt-6 gap-4'>
-              <h3
-                className='bg-[#FF9F00] text-center text-white px-6 py-2 font-semibold rounded shadow-md '
-              >
+
+            {/* Botones */}
+            <div className='flex flex-col items-center mt-6 gap-4 w-full'>
+              <h3 className="bg-[#FF9F00] text-center text-white px-6 py-2 font-semibold rounded shadow-md text-sm sm:text-md">
                 ¡Elige el Plan de AccessGo Premium!
               </h3>
               <button
-                className='bg-[#00C4B4] text-white px-6 py-2 rounded shadow-md hover:bg-[#00A194] transition-all'
+                className="bg-[#00C4B4] text-white px-6 py-2 rounded shadow-md hover:bg-[#00A194] transition-all text-sm sm:text-md"
                 onClick={closeModal}
               >
                 Cerrar
