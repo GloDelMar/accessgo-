@@ -32,7 +32,7 @@ const LoginPage = () => {
       }
     };
 
-    localStorage.setItem('cuenta', "premium");
+    localStorage.setItem('cuentaUsuario', "premium");
 
     updateAccountToPremium();
   }, []);
