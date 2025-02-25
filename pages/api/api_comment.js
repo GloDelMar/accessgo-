@@ -59,7 +59,7 @@ export function getCommentByUserId(userId) {
             if (!response.ok) {
                 // Si no fue exitosa, solo muestra el mensaje en consola y no lanza un error
                 console.log("No existen comentarios");
-                return null; // Retorna null si no hay comentarios
+                // return null; // Retorna null si no hay comentarios
             }
             return response.json();
         })
