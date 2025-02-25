@@ -305,7 +305,7 @@ const SesionPremium = () => {
                             {promocion.name || "Sin título"}
                           </h4>
                           {promocion.images && promocion.images.length > 0 ? (
-                            <div className={"mb-4 w-full h-auto flex justify-center flex-row gap-4"}>
+                            <div className={"mb-4 w-full h-auto flex flex-col lg:flex-row lg:justify-center items-center flex-row gap-4"}>
                               {promocion.images.map((image, index) => (
                                 <Image
                                   key={index}
