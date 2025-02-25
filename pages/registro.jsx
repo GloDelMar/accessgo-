@@ -16,6 +16,7 @@ const View4 = () => {
   const [error, setError] = useState('');
   const [emailError, setEmailError] = useState('');
   const [type, setType] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const userType = localStorage.getItem('tipoUsuario');
@@ -24,24 +25,19 @@ const View4 = () => {
     }
   }, []);
 
- 
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    
-
-   
     if (password !== confirmPassword) {
       setError('Las contraseñas no coinciden');
       return;
     }
 
     try {
-      console.log("tipo de usuario", type);
       let response;
 
-      // Crear cuenta según el tipo de usuario
       if (type === "user") {
         response = await createAccount(email, password, type);
       } else if (type === "company") {
@@ -49,29 +45,14 @@ const View4 = () => {
       }
 
       if (response && response.success) {
-        let userId;
-        if (type === "user") {
-          userId = response.data.user._id;
-        } else if (type === "company") {
-          userId = response.data.company._id;
-        }
-        console.log("respuesta", response);
+        let userId = type === "user" ? response.data.user._id : response.data.company._id;
 
-        // Guardar tipo de usuario en localStorage
         localStorage.setItem('tipoUsuario', type);
-
-        // Iniciar sesión automáticamente después de crear la cuenta
         const data = await login(email, password);
 
         if (data && data.token) {
-          // Guardar token e ID del usuario en localStorage
           localStorage.setItem('token', data.token);
           localStorage.setItem('userId', userId);
-
-          // Establecer el tipo de usuario nuevamente después de login
-          if (!localStorage.getItem('tipoUsuario')) {
-            localStorage.setItem('tipoUsuario', type);
-          }
 
           toast.success('Cuenta creada', {
             style: {
@@ -80,32 +61,21 @@ const View4 = () => {
             }
           });
 
-          // Enviar código de verificación
           await sendVerificationCode(email);
-
-          // Redirigir a la pantalla de autenticación
-          setTimeout(() => {
-            router.push('/autentificacion');
-          }, 2000);
-
-          // Limpiar los campos
-          setEmail('');
-          setPassword('');
-          setConfirmPassword('');
-        } else {
-          setError('Error al crear la cuenta. Inténtalo de nuevo.');
+          setTimeout(() => router.push('/autentificacion'), 2000);
         }
       }
     } catch (error) {
-      console.error("Error al crear cuenta o enviar código:", error);
-      toast.error(`${error.message}`, {
-        style: {
-          background: 'red',
-          color: 'white'
-        }
-      });
+      if (error.message.includes("correo ya está registrado")) {
+        setIsModalOpen(true);
+      } else {
+        toast.error("Error al crear la cuenta. Intenta nuevamente.", {
+          style: { background: 'red', color: 'white' }
+        });
+      }
     }
   };
+
 
   return (
     <div>
@@ -177,6 +147,39 @@ const View4 = () => {
           </button>
         </Form>
       </div>
+      {/* Modal de error */}
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-md text-center w-80 md:w-96">
+            <h2 className="text-xl font-semibold text-[#2F4F4F]">
+              Este correo ya está registrado
+            </h2>
+            <p className="mt-2">
+              Dirígete a iniciar sesión o restablece tu contraseña si la has olvidado.
+            </p>
+            <div className="flex flex-col gap-2 mt-4">
+              <button
+                onClick={() => router.push('/login')}
+                className="w-full px-4 py-2 bg-[#00695C] text-white rounded-md hover:bg-[#004D40] transition duration-200"
+              >
+                Iniciar Sesión
+              </button>
+              <button
+                onClick={() => router.push('/olvidoContrasena')}
+                className="w-full px-4 py-2 bg-[#78909C] text-white rounded-md hover:bg-[#546E7A] transition duration-200"
+              >
+                Restablecer Contraseña
+              </button>
+            </div>
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="mt-4 text-[#546E7A] hover:underline"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      )}
       <Toaster position="top-center" />
     </div>
   );
