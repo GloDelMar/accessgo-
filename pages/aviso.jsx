@@ -62,7 +62,7 @@ export default function Aviso() {
       {/* Modal - renderizado condicional */}
       {isModalOpen && (
         <Modal closeModal={closeModal}>
-          <div className="max-w-[300px] md:max-w-[700px] max-w-full max-h-[90vh] md:max-h-[80vh] flex flex-col justify-center items-center p-6 bg-[#1E2A47] rounded-lg shadow-lg overflow-auto">
+          <div className="max-w-[300px] md:max-w-[700px]  max-h-[90vh] md:max-h-[80vh] flex flex-col justify-center items-center p-6 bg-[#1E2A47] rounded-lg shadow-lg overflow-auto">
 
             {/* Título */}
             <h2 className="text-lg sm:text-xl md:text-2xl text-center font-bold text-white">
