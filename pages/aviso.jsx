@@ -62,7 +62,7 @@ export default function Aviso() {
       {/* Modal - renderizado condicional */}
       {isModalOpen && (
         <Modal closeModal={closeModal}>
-          <div className="w-full  md:max-w-[700px]  max-h-[90vh] flex flex-col justify-center items-center p-6 bg-[#1E2A47] rounded-lg shadow-lg overflow-y-auto">
+          <div className="max-w-[300px] md:max-w-[700px] max-w-full max-h-[90vh] md:max-h-[80vh] flex flex-col justify-center items-center p-6 bg-[#1E2A47] rounded-lg shadow-lg overflow-auto">
 
             {/* Título */}
             <h2 className="text-lg sm:text-xl md:text-2xl text-center font-bold text-white">
@@ -105,7 +105,7 @@ export default function Aviso() {
             </Swiper>
 
             {/* Beneficios */}
-            <div className='mt-4'>
+            <div className="mt-4">
               <h3 className="text-md sm:text-lg md:text-xl font-bold text-[#FF9F00] text-center">
                 Beneficios exclusivos de AccessGo Premium
               </h3>
@@ -118,7 +118,7 @@ export default function Aviso() {
             </div>
 
             {/* Botones */}
-            <div className='flex flex-col items-center mt-6 gap-4 w-full'>
+            <div className="flex flex-col items-center mt-6 gap-4 w-full">
               <h3 className="bg-[#FF9F00] text-center text-white px-6 py-2 font-semibold rounded shadow-md text-sm sm:text-md">
                 ¡Elige el Plan de AccessGo Premium!
               </h3>
@@ -132,6 +132,7 @@ export default function Aviso() {
           </div>
         </Modal>
       )}
+
 
       <div className='flex flex-col text-center'>
         <p className='text-lg sm:text-2xl md:text-[40px] lg:text-[56px] font-bold mt-8'>

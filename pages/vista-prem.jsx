@@ -274,7 +274,7 @@ export default function CardFree() {
                           {promocion.name || 'Sin título'}
                         </h4>
                         {promocion.images && promocion.images.length > 0 ? (
-                          <div className={"mb-4 w-auto justify-center h-full flex flex-row gap-4"}>
+                          <div className={"mb-4 w-auto md:justify-center h-full flex flex-col items-center md:flex-row gap-4"}>
                             {promocion.images.map((image, index) => (
                               <Image
                                 key={index}
