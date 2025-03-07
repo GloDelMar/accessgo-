@@ -35,15 +35,15 @@ const Contact = () => {
     <StyledContactForm>
       <h1>Formulario Para Levantamiento de Ticket de Soporte Técnico</h1>
       <form ref={form} onSubmit={sendEmail} encType="multipart/form-data">
-        <label>Name</label>
+        <label>Nombre:</label>
         <input type="text" name="to_name" required />
-        <label>Email</label>
+        <label>Email:</label>
         <input type="email" name="from_name" required />
-        <label>Message</label>
+        <label>Mensaje:</label>
         <textarea name="message" required />
-        <label>Attach file:</label>
+        <label>Adjunte una imagen del problema (tamaño maximo 500Kb):</label>
         <input type="file" name="my_file" />
-        <input type="submit" value="Send" />
+        <input type="submit" value="Enviar" />
       </form>
       {message && <p>{message}</p>}
     </StyledContactForm>
