@@ -82,21 +82,21 @@ export default function CommentSection() {
         toast.error('Debe estar logueado para poder dar like.', { style: { backgroundColor: 'red', color: 'white' } });
         return;
       }
-  
+
       if (isButtonDisabled) return;
       setIsButtonDisabled(true);
-  
+
       try {
         const comment = commens.find(c => c._id === commentId);
         const hasLiked = interactedComments[commentId] === 'like';
         const hasDisliked = interactedComments[commentId] === 'dislike';
-  
+
         // 1. Si YA tiene "like", no hace nada
         if (hasLiked) {
           setIsButtonDisabled(false);
           return;
         }
-  
+
         // 2. Si tenía "dislike", primero lo quitamos antes de poner "like"
         if (hasDisliked) {
           const removeResponse = await removeDislike(commentId, userId);
@@ -105,17 +105,24 @@ export default function CommentSection() {
             return;
           }
         }
-  
+
         // 3. Ahora agregamos el like
         const response = await addLike(commentId, userId);
         if (response?.success) {
-          
+
           setCommens(prevComments =>
-            prevComments.map(c => 
-              c._id === commentId 
-                ? { ...response.comment, likedBy: [...response.comment.likedBy, userId] }
-                : c
-            )
+            prevComments.map(c => {
+              if (c._id === commentId) {
+                return {
+                  ...c,
+                  ...response.comment,
+                  rankingId: typeof response.comment.rankingId === "object"
+                    ? response.comment.rankingId
+                    : c.rankingId,
+                };
+              }
+              return c;
+            })
           );
           setInteractedComments(prev => ({ ...prev, [commentId]: 'like' }));
         }
@@ -127,7 +134,7 @@ export default function CommentSection() {
     },
     [isButtonDisabled, interactedComments, userId, commens]
   );
-  
+
   /**
    * handleDislike: Cuando el usuario hace clic en "dislike".
    * - Si ya tiene "dislike", no hace nada (doble clic).
@@ -140,21 +147,21 @@ export default function CommentSection() {
         toast.error('Debe estar logueado para poder dar dislike.', { style: { backgroundColor: 'red', color: 'white' } });
         return;
       }
-  
+
       if (isButtonDisabled) return;
       setIsButtonDisabled(true);
-  
+
       try {
         const comment = commens.find(c => c._id === commentId);
         const hasLiked = interactedComments[commentId] === 'like';
         const hasDisliked = interactedComments[commentId] === 'dislike';
-  
+
         // 1. Si YA tiene "dislike", no hace nada
         if (hasDisliked) {
           setIsButtonDisabled(false);
           return;
         }
-  
+
         // 2. Si tenía "like", lo quitamos antes de poner "dislike"
         if (hasLiked) {
           const removeResponse = await removeLike(commentId, userId);
@@ -163,17 +170,23 @@ export default function CommentSection() {
             return;
           }
         }
-  
+
         // 3. Ahora agregamos el dislike
         const response = await addDislike(commentId, userId);
         if (response?.success) {
-          // 🔥 Forzamos actualización del estado
           setCommens(prevComments =>
-            prevComments.map(c => 
-              c._id === commentId 
-                ? { ...response.comment, dislikedBy: [...response.comment.dislikedBy, userId] }
-                : c
-            )
+            prevComments.map(c => {
+              if (c._id === commentId) {
+                return {
+                  ...c,
+                  ...response.comment,
+                  rankingId: typeof response.comment.rankingId === "object"
+                    ? response.comment.rankingId
+                    : c.rankingId,
+                };
+              }
+              return c;
+            })
           );
           setInteractedComments(prev => ({ ...prev, [commentId]: 'dislike' }));
         }
