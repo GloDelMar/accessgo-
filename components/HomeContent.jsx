@@ -148,9 +148,7 @@ const HomeContent = () => {
     }
   };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
+  const handleCloseModal = () =>  setIsModalOpen(false);
 
   return (
     <div className='flex flex-col text-[#2F4F4F] w-full p-4 justify-center font-sans'>
