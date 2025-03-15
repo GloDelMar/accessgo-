@@ -26,7 +26,6 @@ const View4 = () => {
   }, []);
 
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 

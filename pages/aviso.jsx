@@ -133,7 +133,6 @@ export default function Aviso() {
         </Modal>
       )}
 
-
       <div className='flex flex-col text-center'>
         <p className='text-lg sm:text-2xl md:text-[40px] lg:text-[56px] font-bold mt-8'>
           ¡Aviso!

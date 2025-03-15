@@ -22,7 +22,6 @@ import ImagenSubiryBorrarPrem from '@/components/Molecules/ImagenSubiryBorrarPre
 import { Toaster } from 'sonner';
 import CustomModal from '@/components/Molecules/CostumModal';
 
-
 const imageDefault = '/4574c6_19f52cfb1ef44a3d844774c6078ffafc~mv2.png';
 
 ChartJS.register(

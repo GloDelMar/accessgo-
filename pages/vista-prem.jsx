@@ -232,7 +232,6 @@ export default function CardFree() {
         </div>
 
         <div className='flex flex-col w-full justify-self-center gap-5'>
-
           <div className='flex justify-center w-full h-full'>
             <ImageCarouselACC userId={id} className='sm:max-w-[300px]' />
           </div>
