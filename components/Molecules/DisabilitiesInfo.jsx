@@ -9,7 +9,7 @@ const Modal = ({ isOpen, onClose, disabilityType }) => {
 
     return (
         isOpen && (
-            <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
+            <div className="overflow-auto fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
                 <div className="bg-white p-6 rounded-lg w-[90%] md:w-2/3 lg:w-1/2">
                     <h2 className="text-xl font-bold mb-4">Conoce más: </h2>
                     <p>{descriptions[disabilityType]}</p>
