@@ -10,6 +10,7 @@ import { FiUpload, FiX } from "react-icons/fi";
 const View18 = () => {
   const router = useRouter();
   const [companyId, setCompanyId] = useState(null);
+  const [isClient, setIsClient] = useState(false);
   const [description, setDescription] = useState('');
   const [formValues, setFormValues] = useState({
     name: '',
@@ -17,6 +18,11 @@ const View18 = () => {
     endDate: null,
     images: [],
   });
+
+  
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -37,25 +43,26 @@ const View18 = () => {
     }));
   };
 
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     const files = Array.from(e.target.files);
-
     if (files.length + formValues.images.length > 2) {
       alert("Solo puedes subir un máximo de 2 imágenes.");
       return;
     }
-
-    const newImages = files.map((file) => ({
-      file,
-      preview: URL.createObjectURL(file),
-    }));
-
+  
+    // Las imágenes no se suben aquí, simplemente se guardan para el envío posterior
+    const uploadedImages = files.map((file) => {
+      return { preview: URL.createObjectURL(file), file }; // Solo crear vista previa
+    });
+  
     setFormValues((prevValues) => ({
       ...prevValues,
-      images: [...prevValues.images, ...newImages],
+      images: [...prevValues.images, ...uploadedImages],
     }));
+  
   };
-
+  
+  
   const handleRemoveImage = (index) => {
     setFormValues((prevValues) => ({
       ...prevValues,
@@ -64,56 +71,55 @@ const View18 = () => {
   };
 
   const convertDateToISO = (date) => {
-    if (!date) return ''; // Si no hay fecha, retornar vacío
+    if (!date) return '';
     if (date instanceof Date) {
-      return date.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+      return date.toISOString().split('T')[0];
     }
     if (/^\d{2}\/\d{2}\/\d{4}$/.test(date)) {
       const [day, month, year] = date.split('/');
       return `${year}-${month}-${day}`;
     }
-    return ''; // Si no coincide con ninguno de los formatos esperados
+    return '';
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Validación de campos
+  
+  
     if (!formValues.name || !formValues.startDate || !formValues.endDate || formValues.images.length === 0) {
-      alert("Todos los campos son obligatorios.");  // Alerta si falta algún campo
+      alert("Todos los campos son obligatorios.");
       return;
     }
-
+  
+    // Crear FormData
     const formData = new FormData();
     formData.append("businessId", companyId);
     formData.append("name", formValues.name);
     formData.append("description", description);
-
-    const startDate = convertDateToISO(formValues.startDate);
-    const endDate = convertDateToISO(formValues.endDate);
-
-    formData.append("startDate", startDate);
-    formData.append("endDate", endDate);
-
-    formValues.images.forEach((image, index) => {
-      if (image.file instanceof File) {
-        formData.append("images", image.file);
-      }
+    formData.append("startDate", convertDateToISO(formValues.startDate));
+    formData.append("endDate", convertDateToISO(formValues.endDate));
+  
+    // Enviar los archivos de imágenes, no las URLs
+    formValues.images.forEach((image) => {
+       formData.append("images", image.file);  // Enviar solo el archivo, no la URL
     });
-
+  
+    console.log("🚀 FormData a enviar:", formData);
+  
     try {
-      const response = await axios.post("https://backend-r159.onrender.com/api/promos", formData, {
+      // Enviar los datos al backend
+      const response = await axios.post("http://localhost:8080/api/promos", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-
+  
       alert("Promoción guardada exitosamente");
       router.push('/sesion-prem');
-
     } catch (error) {
+      console.error("❌ Error al guardar la promoción:", error);
       alert("Error al guardar la promoción. Inténtalo de nuevo.");
     }
   };
-
+  
   return (
     <div className="m-10">
       <h1 className="text-2xl font-bold text-center mb-6 text-[#263238]">Editar Promoción</h1>
@@ -173,24 +179,19 @@ const View18 = () => {
           </div>
 
           <div className="border p-2 rounded-md">
-            <Editor
-              apiKey="esznwqo0cg68h9ou432ytmrn9h4kv500lnfst1jo8v5r1dwa"
-              value={description}
-              init={{
-                height: 200,
-                menubar: false,
-                plugins: [
-                  'advlist autolink lists link image charmap print preview anchor',
-                  'searchreplace visualblocks code fullscreen',
-                  'insertdatetime media table paste code help wordcount',
-                ],
-                toolbar:
-                  'undo redo | formatselect | bold italic backcolor | \
-                  alignleft aligncenter alignright alignjustify | \
-                  bullist numlist outdent indent | removeformat | help',
-              }}
-              onEditorChange={(content) => setDescription(content)}
-            />
+            {isClient && (
+              <Editor
+                apiKey="esznwqo0cg68h9ou432ytmrn9h4kv500lnfst1jo8v5r1dwa"
+                value={description}
+                init={{
+                  height: 200,
+                  menubar: false,
+                  plugins: ['advlist', 'lists', 'link'], 
+                  toolbar: 'undo redo | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+                }}
+                onEditorChange={(content) => setDescription(content)}
+              />
+            )}
           </div>
 
           <div className="flex flex-col gap-4 md:flex-row md:space-x-4">
