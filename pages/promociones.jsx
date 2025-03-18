@@ -108,7 +108,7 @@ const View18 = () => {
   
     try {
       // Enviar los datos al backend
-      const response = await axios.post("http://localhost:8080/api/promos", formData, {
+      const response = await axios.post("https://backend-r159.onrender.com/api/promos", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
   
